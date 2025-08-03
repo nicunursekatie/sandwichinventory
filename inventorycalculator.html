@@ -465,16 +465,9 @@
                 <strong>💡 Pro Tip:</strong> Consider buying an extra loaf of bread.
             </div>
             
-            <div class="shopping-list">
-                <h3>📝 Costco Shopping Checklist</h3>
-                <ul class="checklist">
-                    <li><input type="checkbox"> Kirkland Turkey 3-packs (42 oz) OR Ham 2-packs (48 oz)</li>
-                    <li><input type="checkbox"> Adams Reserve Cheese slices (44 slices per package)</li>
-                    <li><input type="checkbox"> Loaves of bread (2-packs)</li>
-                    <li><input type="checkbox"> Zip-lock sandwich bags</li>
-                    <li><input type="checkbox"> Ice packs for transport</li>
-                    <li><input type="checkbox"> Disposable gloves</li>
-                    <li><input type="checkbox"> Hair ties/nets and beard nets</li>
+            <div class="shopping-list" id="shoppingList" style="display: none;">
+                <h3>📝 Your Costco Shopping Checklist</h3>
+                <ul class="checklist" id="shoppingChecklist">
                 </ul>
             </div>
         </div>
@@ -751,7 +744,40 @@
                 </div>
             `;
             
+            // Generate dynamic shopping checklist
+            const meatDescription = meatType === 'turkey' ? 'Kirkland Turkey 3-packs (42 oz)' : 'Kirkland Ham 2-packs (48 oz)';
+            let cheeseShoppingDescription;
+            switch(cheeseType) {
+                case 'adams-reserve':
+                    cheeseShoppingDescription = 'Adams Reserve Cheese slices (44 slices per package)';
+                    break;
+                case 'finlandia':
+                    cheeseShoppingDescription = 'Finlandia Variety Cheese slices (40 slices per package)';
+                    break;
+                case 'arla-havarti':
+                    cheeseShoppingDescription = 'Arla Havarti Cheese slices (32 slices per package)';
+                    break;
+                default:
+                    cheeseShoppingDescription = 'Cheese slices';
+            }
+            
+            const bagPackages = Math.ceil(sandwichCount / 480);
+            
+            const icePacksNeeded = coolersNeeded * 4; // 4 ice packs per cooler
+            
+            document.getElementById('shoppingChecklist').innerHTML = `
+                <li><input type="checkbox"> ${meatPackages} × ${meatDescription}</li>
+                <li><input type="checkbox"> ${cheesePackages} × ${cheeseShoppingDescription}</li>
+                <li><input type="checkbox"> ${breadPackages} × Bread ${breadDescription}</li>
+                <li><input type="checkbox"> ${bagPackages} × Zip-lock sandwich bags (480 count)</li>
+                <li><input type="checkbox"> ${coolersNeeded} × Large coolers</li>
+                <li><input type="checkbox"> ${icePacksNeeded} × Ice packs (4 per cooler)</li>
+                <li><input type="checkbox"> Disposable gloves</li>
+                <li><input type="checkbox"> Hair ties/nets and beard nets</li>
+            `;
+            
             document.getElementById('calcResult').style.display = 'block';
+            document.getElementById('shoppingList').style.display = 'block';
         }
     </script>
 </body>
