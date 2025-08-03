@@ -437,6 +437,14 @@
                         <option value="ham">Ham</option>
                     </select>
                     
+                    <label>Cheese type:</label>
+                    <select id="cheeseType">
+                        <option value="">Select cheese type</option>
+                        <option value="adams-reserve">Adams Reserve (44 slices, $13.79)</option>
+                        <option value="finlandia">Finlandia Variety (40 slices, $9.69)</option>
+                        <option value="arla-havarti">Arla Havarti (32 slices, $9.69)</option>
+                    </select>
+                    
                     <label>Bread type:</label>
                     <select id="breadType">
                         <option value="">Select bread type</option>
@@ -596,6 +604,7 @@
         function calculateNeeds() {
             const sandwichCount = parseInt(document.getElementById('sandwichCount').value);
             const meatType = document.getElementById('meatType').value;
+            const cheeseType = document.getElementById('cheeseType').value;
             const breadType = document.getElementById('breadType').value;
             
             if (!sandwichCount || sandwichCount <= 0) {
@@ -605,6 +614,11 @@
             
             if (!meatType) {
                 alert('Please select a meat type');
+                return;
+            }
+            
+            if (!cheeseType) {
+                alert('Please select a cheese type');
                 return;
             }
             
@@ -635,7 +649,30 @@
             
             // Package sizes from updated pricing
             const meatPerPackage = meatType === 'turkey' ? 42 : 48; // Total oz per package
-            const cheesePerPackage = 44; // slices per package
+            
+            // Cheese package sizes and prices
+            let cheesePerPackage, cheesePrice, cheeseDescription;
+            switch(cheeseType) {
+                case 'adams-reserve':
+                    cheesePerPackage = 44;
+                    cheesePrice = 13.79;
+                    cheeseDescription = '44 slices each';
+                    break;
+                case 'finlandia':
+                    cheesePerPackage = 40;
+                    cheesePrice = 9.69;
+                    cheeseDescription = '40 slices each';
+                    break;
+                case 'arla-havarti':
+                    cheesePerPackage = 32;
+                    cheesePrice = 9.69;
+                    cheeseDescription = '32 slices each';
+                    break;
+                default:
+                    cheesePerPackage = 44;
+                    cheesePrice = 13.79;
+                    cheeseDescription = '44 slices each';
+            }
             
             // Bread packages - calculate based on bread type selection
             let breadSandwichesPerPackage;
@@ -670,7 +707,6 @@
             // Calculate costs with updated Costco pricing
             const turkeyPrice = 13.99;
             const hamPrice = 9.89; // Kirkland ham
-            const cheesePrice = 8.59;
             const breadPrice = 5.39; // placeholder - need actual pricing
             const bagPrice = 7.99;
             
@@ -695,7 +731,7 @@
                     <div class="result-item">
                         <h4>Cheese Packages</h4>
                         <div class="number">${cheesePackages}</div>
-                        <div class="description">44 slices each</div>
+                        <div class="description">${cheeseDescription}</div>
                     </div>
                     <div class="result-item">
                         <h4>Bread Packages</h4>
