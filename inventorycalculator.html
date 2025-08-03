@@ -150,47 +150,95 @@
         
         .shopping-calculator {
             background: linear-gradient(135deg, #007E8C 0%, #47B3CB 100%);
-            padding: 30px;
-            border-radius: 15px;
+            padding: 40px;
+            border-radius: 20px;
             color: white;
             margin-bottom: 20px;
+            box-shadow: 0 15px 40px rgba(0,126,140,0.3);
         }
         
-        .calc-input {
+        .calc-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .calc-input-group {
             display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+            flex-direction: column;
+            gap: 8px;
         }
         
-        .calc-input label {
-            font-weight: bold;
+        .calc-input-group label {
+            font-weight: 600;
             font-size: 1.1em;
+            color: rgba(255,255,255,0.95);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 5px;
         }
         
-        .calc-input input, .calc-input select {
-            padding: 10px 15px;
+        .calc-input-group input, .calc-input-group select {
+            padding: 15px 20px;
             border: none;
-            border-radius: 8px;
-            font-size: 1em;
-            min-width: 100px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 500;
+            background: rgba(255,255,255,0.95);
+            color: #2c3e50;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        
+        .calc-input-group input:focus, .calc-input-group select:focus {
+            outline: none;
+            background: white;
+            border-color: #FBAD3F;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+        
+        .calc-input-group input::placeholder {
+            color: #7f8c8d;
+            font-style: italic;
         }
         
         .calc-button {
-            background: #A31C41;
+            background: linear-gradient(135deg, #A31C41 0%, #8B1639 100%);
             color: white;
             border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 500;
+            padding: 18px 40px;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 6px 20px rgba(163,28,65,0.4);
+            margin-top: 10px;
+            width: 100%;
+            max-width: 200px;
+            justify-self: center;
         }
         
         .calc-button:hover {
-            background: #8B1639;
+            background: linear-gradient(135deg, #8B1639 0%, #A31C41 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(163,28,65,0.6);
+        }
+        
+        .calc-button:active {
+            transform: translateY(-1px);
+        }
+        
+        .calc-button-container {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
         }
         
         .calc-result {
@@ -354,9 +402,20 @@
         }
         
         @media (max-width: 768px) {
-            .calc-input {
-                flex-direction: column;
-                align-items: stretch;
+            .calc-form {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .calc-input-group input, .calc-input-group select {
+                padding: 12px 16px;
+                font-size: 1em;
+            }
+            
+            .calc-button {
+                padding: 15px 30px;
+                font-size: 1.1em;
+                max-width: none;
             }
             
             .recipe-ingredients {
@@ -426,35 +485,46 @@
             <h2>🧮 Interactive Calculator</h2>
             <div class="shopping-calculator">
                 <h3>Calculate Your Exact Needs</h3>
-                <div class="calc-input">
-                    <label>Number of sandwiches:</label>
-                    <input type="number" id="sandwichCount" min="20" max="2000" placeholder="Input # of sandwiches you want to make">
+                <div class="calc-form">
+                    <div class="calc-input-group">
+                        <label>Number of sandwiches</label>
+                        <input type="number" id="sandwichCount" min="20" max="2000" placeholder="Enter quantity (e.g., 100)">
+                    </div>
                     
-                    <label>Meat type:</label>
-                    <select id="meatType">
-                        <option value="">Select meat type</option>
-                        <option value="turkey">Turkey</option>
-                        <option value="ham">Ham</option>
-                    </select>
+                    <div class="calc-input-group">
+                        <label>Meat type</label>
+                        <select id="meatType">
+                            <option value="">Choose your meat</option>
+                            <option value="turkey">🦃 Turkey</option>
+                            <option value="ham">🐷 Ham</option>
+                        </select>
+                    </div>
                     
-                    <label>Cheese type:</label>
-                    <select id="cheeseType">
-                        <option value="">Select cheese type</option>
-                        <option value="adams-reserve">Adams Reserve (44 slices, $8.59)</option>
-                        <option value="finlandia">Finlandia Variety (40 slices, $9.69)</option>
-                        <option value="arla-havarti">Arla Havarti (32 slices, $9.69)</option>
-                    </select>
+                    <div class="calc-input-group">
+                        <label>Cheese type</label>
+                        <select id="cheeseType">
+                            <option value="">Choose your cheese</option>
+                            <option value="adams-reserve">🧀 Adams Reserve (44 slices, $7.70)</option>
+                            <option value="finlandia">🧀 Finlandia Variety (40 slices, $9.69)</option>
+                            <option value="arla-havarti">🧀 Arla Havarti (32 slices, $9.69)</option>
+                        </select>
+                    </div>
                     
-                    <label>Bread type:</label>
-                    <select id="breadType">
-                        <option value="">Select bread type</option>
-                        <option value="sunbeam-double">Sunbeam Double Loaf (26 sandwiches)</option>
-                        <option value="sunbeam-single">Sunbeam Single Loaf (13 sandwiches)</option>
-                        <option value="other-double">Other Brands Double Loaf (20 sandwiches)</option>
-                        <option value="other-single">Other Brands Single Loaf (10 sandwiches)</option>
-                    </select>
+                    <div class="calc-input-group">
+                        <label>Bread type</label>
+                        <select id="breadType">
+                            <option value="">Choose your bread</option>
+                            <option value="natures-own-double">🍞 Nature's Own Double Loaf (26 sandwiches, $3.99-4.99)</option>
+                            <option value="sunbeam-double">🍞 Sunbeam Double Loaf (26 sandwiches)</option>
+                            <option value="sunbeam-single">🍞 Sunbeam Single Loaf (13 sandwiches)</option>
+                            <option value="other-double">🍞 Other Brands Double Loaf (20 sandwiches)</option>
+                            <option value="other-single">🍞 Other Brands Single Loaf (10 sandwiches)</option>
+                        </select>
+                    </div>
                     
-                    <button class="calc-button" onclick="calculateNeeds()">Calculate</button>
+                    <div class="calc-button-container">
+                        <button class="calc-button" onclick="calculateNeeds()">Calculate My Order</button>
+                    </div>
                 </div>
                 
                 <div class="calc-result" id="calcResult">
@@ -463,6 +533,38 @@
             
             <div style="background: rgba(255,193,63,0.2); border: 1px solid #FBAD3F; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.9em;">
                 <strong>💡 Pro Tips:</strong> Consider buying an extra loaf of bread. Cool sandwiches in freezer for 20-30 minutes before loading into coolers that have been brought inside to cool down.
+            </div>
+            
+            <div style="background: rgba(236,243,250,1); border: 1px solid #007E8C; padding: 20px; border-radius: 8px; margin-top: 20px; font-size: 0.9em; color: #2c3e50;">
+                <h4 style="color: #007E8C; margin: 0 0 15px 0; font-size: 1.1em;">📊 Pricing Information (Updated 8/3/2025)</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                    <div>
+                        <strong>🥩 Meat Prices (Current):</strong>
+                        <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
+                            <li>Kirkland Turkey 3-pack (42 oz): $13.99</li>
+                            <li>Kirkland Ham 2-pack (48 oz): $9.89</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>🧀 Cheese Prices (Current):</strong>
+                        <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
+                            <li>Adams Reserve (44 slices): $7.70</li>
+                            <li>Finlandia Variety (40 slices): $9.69</li>
+                            <li>Arla Havarti (32 slices): $9.69</li>
+                        </ul>
+                    </div>
+                    <div>
+                        <strong>🍞 Bread Prices:</strong>
+                        <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
+                            <li>Nature's Own Double Loaf (26 sandwiches): $3.99-4.99</li>
+                            <li>Other brands: $2.70-5.39 <em>(estimated - varies by brand)</em></li>
+                            <li>Zip-lock bags (480 count): $7.99</li>
+                        </ul>
+                    </div>
+                </div>
+                <p style="margin: 15px 0 0 0; font-style: italic; color: #7f8c8d;">
+                    <strong>Note:</strong> Nature's Own bread pricing verified at Costco on 8/3/2025. Other bread pricing estimated since sandwich makers use various brands. Meat and cheese prices verified at Costco on 8/3/2025. Please verify current pricing before shopping as prices may vary by location and change over time.
+                </p>
             </div>
             
             <div class="shopping-list" id="shoppingList" style="display: none;">
@@ -649,7 +751,7 @@
             switch(cheeseType) {
                 case 'adams-reserve':
                     cheesePerPackage = 44;
-                    cheesePrice = 8.59;
+                    cheesePrice = 7.70;
                     cheeseDescription = '44 slices each';
                     break;
                 case 'finlandia':
@@ -664,34 +766,45 @@
                     break;
                 default:
                     cheesePerPackage = 44;
-                    cheesePrice = 8.59;
+                    cheesePrice = 7.70;
                     cheeseDescription = '44 slices each';
             }
             
             // Bread packages - calculate based on bread type selection
             let breadSandwichesPerPackage;
             let breadDescription;
+            let breadPrice;
             
             switch(breadType) {
+                case 'natures-own-double':
+                    breadSandwichesPerPackage = 26; // 13 per loaf x 2 loaves
+                    breadDescription = 'double loaves (26 sandwiches each)';
+                    breadPrice = 4.49; // Average of $3.99-4.99 range
+                    break;
                 case 'sunbeam-double':
                     breadSandwichesPerPackage = 26; // 13 per loaf x 2 loaves
                     breadDescription = 'double loaves (26 sandwiches each)';
+                    breadPrice = 5.39; // estimated
                     break;
                 case 'sunbeam-single':
                     breadSandwichesPerPackage = 13; // 13 per single loaf
                     breadDescription = 'single loaves (13 sandwiches each)';
+                    breadPrice = 2.70; // estimated half of double
                     break;
                 case 'other-double':
                     breadSandwichesPerPackage = 20; // 10 per loaf x 2 loaves
                     breadDescription = 'double loaves (20 sandwiches each)';
+                    breadPrice = 5.39; // estimated
                     break;
                 case 'other-single':
                     breadSandwichesPerPackage = 10; // 10 per single loaf
                     breadDescription = 'single loaves (10 sandwiches each)';
+                    breadPrice = 2.70; // estimated
                     break;
                 default:
                     breadSandwichesPerPackage = 20;
                     breadDescription = 'packages';
+                    breadPrice = 5.39; // estimated
             }
             
             const meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
@@ -701,7 +814,6 @@
             // Calculate costs with updated Costco pricing
             const turkeyPrice = 13.99;
             const hamPrice = 9.89; // Kirkland ham
-            const breadPrice = 5.39; // placeholder - need actual pricing
             const bagPrice = 7.99;
             
             const meatCost = meatPackages * (meatType === 'turkey' ? turkeyPrice : hamPrice);
