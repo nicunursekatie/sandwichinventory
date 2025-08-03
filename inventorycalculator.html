@@ -462,7 +462,10 @@
             </div>
             
             <div style="background: rgba(255,193,63,0.2); border: 1px solid #FBAD3F; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.9em;">
-                <strong>💡 Pro Tip:</strong> Consider buying an extra loaf of bread.
+                <strong>💡 Pro Tips:</strong><br>
+                • Consider buying an extra loaf of bread<br>
+                • Cool sandwiches in freezer for 20-30 minutes before loading in cooler<br>
+                • Make sure coolers are cool, NOT HOT - pull them out of your garage to cool down well before loading
             </div>
             
             <div class="shopping-list" id="shoppingList" style="display: none;">
@@ -542,8 +545,9 @@
                 <div class="tip-card">
                     <h3>🚚 Transport Safety</h3>
                     <ul>
-                        <li>Use coolers with ice packs</li>
-                        <li>Sandwiches must be chilled before packing</li>
+                        <li>Cool sandwiches in freezer 20-30 minutes before packing</li>
+                        <li>Ensure coolers are cool before loading (not hot from garage)</li>
+                        <li>Use ice packs - enough to touch every loaf of sandwiches</li>
                         <li>Fill coolers completely (no air circulation)</li>
                         <li>Once packed, do NOT open cooler - it will rapidly heat up</li>
                         <li>Transport directly to host locations</li>
@@ -763,7 +767,9 @@
             
             const bagPackages = Math.ceil(sandwichCount / 480);
             
-            const icePacksNeeded = coolersNeeded * 4; // 4 ice packs per cooler
+            // Calculate ice packs needed - enough to touch every loaf (assume 20 sandwiches per loaf for ice pack calculation)
+            const estimatedLoaves = Math.ceil(sandwichCount / 20);
+            const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4); // At minimum 4 per cooler, but more if needed for loaves
             
             document.getElementById('shoppingChecklist').innerHTML = `
                 <li><input type="checkbox"> ${meatPackages} × ${meatDescription}</li>
@@ -771,9 +777,12 @@
                 <li><input type="checkbox"> ${breadPackages} × Bread ${breadDescription}</li>
                 <li><input type="checkbox"> ${bagPackages} × Zip-lock sandwich bags (480 count)</li>
                 <li><input type="checkbox"> ${coolersNeeded} × Large coolers</li>
-                <li><input type="checkbox"> ${icePacksNeeded} × Ice packs (4 per cooler)</li>
-                <li><input type="checkbox"> Disposable gloves</li>
+                <li><input type="checkbox"> ${icePacksNeeded} × Ice packs (enough to touch every loaf)</li>
+                <li><input type="checkbox"> Disposable gloves (multiple boxes)</li>
                 <li><input type="checkbox"> Hair ties/nets and beard nets</li>
+                <li><input type="checkbox"> Hand sanitizer</li>
+                <li><input type="checkbox"> Paper towels for cleanup</li>
+                <li><input type="checkbox"> Disinfecting wipes for surfaces</li>
             `;
             
             document.getElementById('calcResult').style.display = 'block';
