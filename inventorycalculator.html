@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Sandwich Planning Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            min-height: 100vh;
+        }
+        
+        h1 {
+            font-weight: 700;
+            font-size: 2.5em;
+        }
+        
+        h2 {
+            font-weight: 500;
+            font-size: 1.8em;
+        }
+        
+        h3 {
+            font-weight: 500;
+            font-size: 1.3em;
+        }
+        
+        h4 {
+            font-weight: 500;
+            font-size: 1.1em;
+        }
+        
+        p, li, span {
+            font-weight: 300;
+        }
+        
+        .number, strong {
+            font-weight: 500;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+        
+        .logo {
+            display: inline-block;
+            background: linear-gradient(45deg, #FBAD3F, #A31C41);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 50px;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        
+        .section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .section h2 {
+            color: #236383;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #FBAD3F;
+            font-size: 1.8em;
+        }
+        
+        .quick-ref {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .ref-card {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(35, 99, 131, 0.3);
+            transition: transform 0.3s ease;
+        }
+        
+        .ref-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .ref-card h3 {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        
+        .ref-card .serves {
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+            display: inline-block;
+        }
+        
+        .cost-display {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+        }
+        
+        .cost-item {
+            background: rgba(255,255,255,0.1);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+        
+        .shopping-calculator {
+            background: linear-gradient(135deg, #007E8C 0%, #47B3CB 100%);
+            padding: 30px;
+            border-radius: 15px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        
+        .calc-input {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .calc-input label {
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .calc-input input, .calc-input select {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            min-width: 100px;
+        }
+        
+        .calc-button {
+            background: #A31C41;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        
+        .calc-button:hover {
+            background: #8B1639;
+        }
+        
+        .calc-result {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .result-item {
+            background: rgba(255,255,255,0.1);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .result-item h4 {
+            color: #FBAD3F;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .result-item .number {
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            display: block;
+            color: white;
+        }
+        
+        .result-item .description {
+            font-size: 1em;
+            font-weight: 400;
+            color: rgba(255,255,255,0.9);
+            line-height: 1.3;
+        }
+        
+        .shopping-list {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 10px;
+            border-left: 5px solid #FBAD3F;
+        }
+        
+        .shopping-list h3 {
+            color: #A31C41;
+            margin-bottom: 15px;
+        }
+        
+        .checklist {
+            list-style: none;
+        }
+        
+        .checklist li {
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+        }
+        
+        .checklist input[type="checkbox"] {
+            margin-right: 15px;
+            transform: scale(1.2);
+        }
+        
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .tip-card {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+        }
+        
+        .tip-card h3 {
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+        
+        .tip-card ul {
+            list-style: none;
+        }
+        
+        .tip-card li {
+            padding: 5px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .tip-card li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            top: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 16px;
+            height: 16px;
+            text-align: center;
+            font-size: 12px;
+            line-height: 16px;
+        }
+        
+        .safety-banner {
+            background: linear-gradient(135deg, #A31C41 0%, #8B1639 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 500;
+            font-size: 1em;
+            margin: 20px 0;
+        }
+        
+        .recipe-card {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .recipe-ingredients {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .ingredient {
+            background: rgba(255,255,255,0.2);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            line-height: 1.4;
+        }
+        
+        .ingredient .amount {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+        
+        .ingredient .item {
+            font-size: 1.1em;
+            font-weight: 400;
+        }
+        
+        @media (max-width: 768px) {
+            .calc-input {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .recipe-ingredients {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">🥪 TSP</div>
+            <h1>The Sandwich Project</h1>
+            <p>Interactive Group Event Planning Guide</p>
+        </div>
+        
+        <div class="section">
+            <h2>🎯 Quick Reference: Popular Quantities</h2>
+            <div class="quick-ref">
+                <div class="ref-card">
+                    <h3>100</h3>
+                    <div class="serves">Serves 50-75 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">Turkey: $190</div>
+                        <div class="cost-item">Ham: $147</div>
+                    </div>
+                    <div>🧊 1 large cooler</div>
+                </div>
+                
+                <div class="ref-card">
+                    <h3>200</h3>
+                    <div class="serves">Serves 100-150 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">Turkey: $358</div>
+                        <div class="cost-item">Ham: $276</div>
+                    </div>
+                    <div>🧊 2 large coolers</div>
+                </div>
+                
+                <div class="ref-card">
+                    <h3>500</h3>
+                    <div class="serves">Serves 250-375 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">Turkey: $852</div>
+                        <div class="cost-item">Ham: $665</div>
+                    </div>
+                    <div>🧊 4-5 large coolers</div>
+                </div>
+                
+                <div class="ref-card">
+                    <h3>1000</h3>
+                    <div class="serves">Serves 500-750 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">Turkey: $1,696</div>
+                        <div class="cost-item">Ham: $1,312</div>
+                    </div>
+                    <div>🧊 8-10 large coolers</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🧮 Interactive Calculator</h2>
+            <div class="shopping-calculator">
+                <h3>Calculate Your Exact Needs</h3>
+                <div class="calc-input">
+                    <label>Number of sandwiches:</label>
+                    <input type="number" id="sandwichCount" min="20" max="2000" placeholder="Input # of sandwiches you want to make">
+                    
+                    <label>Meat type:</label>
+                    <select id="meatType">
+                        <option value="">Select meat type</option>
+                        <option value="turkey">Turkey</option>
+                        <option value="ham">Ham</option>
+                    </select>
+                    
+                    <label>Bread type:</label>
+                    <select id="breadType">
+                        <option value="">Select bread type</option>
+                        <option value="sunbeam-double">Sunbeam Double Loaf (26 sandwiches)</option>
+                        <option value="sunbeam-single">Sunbeam Single Loaf (13 sandwiches)</option>
+                        <option value="other-double">Other Brands Double Loaf (20 sandwiches)</option>
+                        <option value="other-single">Other Brands Single Loaf (10 sandwiches)</option>
+                    </select>
+                    
+                    <button class="calc-button" onclick="calculateNeeds()">Calculate</button>
+                </div>
+                
+                <div class="calc-result" id="calcResult">
+                </div>
+            </div>
+            
+            <div style="background: rgba(255,193,63,0.2); border: 1px solid #FBAD3F; padding: 15px; border-radius: 8px; margin-top: 20px; font-size: 0.9em;">
+                <strong>💡 Pro Tip:</strong> Consider buying an extra loaf of bread.
+            </div>
+            
+            <div class="shopping-list">
+                <h3>📝 Costco Shopping Checklist</h3>
+                <ul class="checklist">
+                    <li><input type="checkbox"> Kirkland Turkey 3-packs (42 oz) OR Ham 2-packs (48 oz)</li>
+                    <li><input type="checkbox"> Adams Reserve Cheese slices (44 slices per package)</li>
+                    <li><input type="checkbox"> Loaves of bread (2-packs)</li>
+                    <li><input type="checkbox"> Zip-lock sandwich bags</li>
+                    <li><input type="checkbox"> Ice packs for transport</li>
+                    <li><input type="checkbox"> Disposable gloves</li>
+                    <li><input type="checkbox"> Hair ties/nets and beard nets</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🥪 Perfect Sandwich Recipe</h2>
+            <div class="recipe-card">
+                <h3>Every Sandwich Contains</h3>
+                <div class="recipe-ingredients">
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">slices bread (no heels)</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">slices cheese (one per bread slice)</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">3</span><span class="item">slices deli meat (turkey or ham)</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="safety-banner">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; text-align: left;">
+                <div>🛡️ <strong>Keep ingredients refrigerated</strong></div>
+                <div>🧤 <strong>Please use gloves & hair ties + hair/beard nets</strong></div>
+                <div>📦 <strong>Remove only 1 package of meat at a time</strong></div>
+                <div>❄️ <strong>Return completed loaves immediately</strong></div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>🛡️ Food Safety Requirements</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3>🧤 Personal Hygiene</h3>
+                    <ul>
+                        <li>Wash hands with soap and warm water</li>
+                        <li>Wear disposable gloves (required)</li>
+                        <li>Change gloves if touching non-food items</li>
+                        <li>Use hair ties or nets for long hair</li>
+                        <li>Use beard nets if applicable</li>
+                        <li>Clean and cover all prep surfaces</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-card">
+                    <h3>❄️ Temperature Control</h3>
+                    <ul>
+                        <li>Keep all ingredients at 40°F or below</li>
+                        <li>Never leave ingredients at 80°F or above</li>
+                        <li>Remove only 1 package of meat at a time from fridge</li>
+                        <li>Return completed loaves immediately</li>
+                        <li>Never put warm sandwiches in coolers</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-card">
+                    <h3>📦 Ingredient Standards</h3>
+                    <ul>
+                        <li>Use same quality you'd feed your family</li>
+                        <li>Pre-packaged deli meat only (no deli counter)</li>
+                        <li>Check expiration: 10+ days after purchase</li>
+                        <li>Keep nut products away from deli area</li>
+                        <li>When in doubt, throw it out!</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-card">
+                    <h3>🚚 Transport Safety</h3>
+                    <ul>
+                        <li>Use coolers with ice packs</li>
+                        <li>Sandwiches must be chilled before packing</li>
+                        <li>Fill coolers completely (no air circulation)</li>
+                        <li>Once packed, do NOT open cooler - it will rapidly heat up</li>
+                        <li>Transport directly to host locations</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="safety-banner" style="margin-top: 30px;">
+                ⚠️ REMEMBER: Recipients may be children, elderly, or immunocompromised. Food safety protects our most vulnerable community members.
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>💡 Planning Tips</h2>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h3>⏱️ Timing Guidelines</h3>
+                    <ul>
+                        <li>Small (50-100): 45-90 minutes</li>
+                        <li>Medium (200-300): 2-3 hours</li>
+                        <li>Large (500+): 4-8 hours</li>
+                        <li>Add 20 min for setup/cleanup</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-card">
+                    <h3>❄️ Storage & Transport</h3>
+                    <ul>
+                        <li>~100 sandwiches per large cooler</li>
+                        <li>Plan 2-3 hours ingredient storage</li>
+                        <li>Use your own coolers with ice packs</li>
+                        <li>Never put warm sandwiches in coolers</li>
+                        <li>Once packed, don't open cooler during transport</li>
+                    </ul>
+                </div>
+                
+                <div class="tip-card">
+                    <h3>✅ Quality Standards</h3>
+                    <ul>
+                        <li>Same quality you'd serve family</li>
+                        <li>10+ days until expiration</li>
+                        <li>Pre-packaged deli meat only</li>
+                        <li>Add 5-10% buffer for extras</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function calculateNeeds() {
+            const sandwichCount = parseInt(document.getElementById('sandwichCount').value);
+            const meatType = document.getElementById('meatType').value;
+            const breadType = document.getElementById('breadType').value;
+            
+            if (!sandwichCount || sandwichCount <= 0) {
+                alert('Please enter a valid number of sandwiches');
+                return;
+            }
+            
+            if (!meatType) {
+                alert('Please select a meat type');
+                return;
+            }
+            
+            if (!breadType) {
+                alert('Please select a bread type');
+                return;
+            }
+            
+            // Show warning for small quantities
+            if (sandwichCount < 20) {
+                document.getElementById('calcResult').innerHTML = `
+                    <div style="background: rgba(255,255,255,0.9); color: #A31C41; padding: 20px; border-radius: 10px; text-align: center; font-weight: bold;">
+                        ⚠️ For ${sandwichCount} sandwich${sandwichCount > 1 ? 'es' : ''}, you might already have ingredients at home!<br>
+                        This calculator is designed for larger group events (20+ sandwiches).<br><br>
+                        <div style="color: #236383; margin-top: 15px;">
+                            <strong>Quick estimate:</strong><br>
+                            Cost: ~$${Math.round(sandwichCount * (meatType === 'turkey' ? 1.90 : 1.47))}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('calcResult').style.display = 'block';
+                return;
+            }
+            
+            // Calculate packages needed (based on updated Costco prices)
+            const meatPerSandwich = 3; // 3 oz per sandwich
+            const cheesePerSandwich = 2; // 2 slices per sandwich
+            
+            // Package sizes from updated pricing
+            const meatPerPackage = meatType === 'turkey' ? 42 : 48; // Total oz per package
+            const cheesePerPackage = 44; // slices per package
+            
+            // Bread packages - calculate based on bread type selection
+            let breadSandwichesPerPackage;
+            let breadDescription;
+            
+            switch(breadType) {
+                case 'sunbeam-double':
+                    breadSandwichesPerPackage = 26; // 13 per loaf x 2 loaves
+                    breadDescription = 'double loaves (26 sandwiches each)';
+                    break;
+                case 'sunbeam-single':
+                    breadSandwichesPerPackage = 13; // 13 per single loaf
+                    breadDescription = 'single loaves (13 sandwiches each)';
+                    break;
+                case 'other-double':
+                    breadSandwichesPerPackage = 20; // 10 per loaf x 2 loaves
+                    breadDescription = 'double loaves (20 sandwiches each)';
+                    break;
+                case 'other-single':
+                    breadSandwichesPerPackage = 10; // 10 per single loaf
+                    breadDescription = 'single loaves (10 sandwiches each)';
+                    break;
+                default:
+                    breadSandwichesPerPackage = 20;
+                    breadDescription = 'packages';
+            }
+            
+            const meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
+            const cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
+            const breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
+            
+            // Calculate costs with updated Costco pricing
+            const turkeyPrice = 13.99;
+            const hamPrice = 9.89; // Kirkland ham
+            const cheesePrice = 8.59;
+            const breadPrice = 5.39; // placeholder - need actual pricing
+            const bagPrice = 7.99;
+            
+            const meatCost = meatPackages * (meatType === 'turkey' ? turkeyPrice : hamPrice);
+            const cheeseCost = cheesePackages * cheesePrice;
+            const breadCost = breadPackages * breadPrice;
+            const bagCost = Math.ceil(sandwichCount / 480) * bagPrice;
+            
+            const totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
+            
+            // Calculate coolers needed (100 sandwiches per cooler)
+            const coolersNeeded = Math.ceil(sandwichCount / 100);
+            
+            // Create the result grid
+            document.getElementById('calcResult').innerHTML = `
+                <div class="result-grid">
+                    <div class="result-item">
+                        <h4>Meat Packages</h4>
+                        <div class="number">${meatPackages}</div>
+                        <div class="description">${meatType === 'turkey' ? '3-packs (42 oz each)' : '2-packs (48 oz each)'}</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Cheese Packages</h4>
+                        <div class="number">${cheesePackages}</div>
+                        <div class="description">44 slices each</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Bread Packages</h4>
+                        <div class="number">${breadPackages}</div>
+                        <div class="description">${breadDescription}</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Total Cost</h4>
+                        <div class="number">$${totalCost}</div>
+                        <div class="description">estimated Costco pricing</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Coolers Needed</h4>
+                        <div class="number">${coolersNeeded}</div>
+                        <div class="description">large coolers recommended</div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('calcResult').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
