@@ -563,8 +563,11 @@
         </div>
         
         <div class="section">
-            <div style="margin-bottom: 24px; background: #f8f8e7; border: 1px solid #e0e0b0; border-radius: 8px; padding: 16px; font-size: 1em;">
-                <strong>🛒 Ingredient Price Summary</strong>
+            <!-- Ingredient Price Summary moved to bottom -->
+        <!-- Collapsible Ingredient Price Summary at the bottom -->
+        <details style="margin-top: 32px; background: #f8f8e7; border: 1px solid #e0e0b0; border-radius: 8px; padding: 0 0 16px 0; font-size: 1em;">
+            <summary style="padding: 16px; font-weight: bold; cursor: pointer; outline: none;">🛒 Ingredient Price Summary (click to view all ingredient prices used in calculations)</summary>
+            <div style="padding: 0 16px;">
                 <table style="width:100%; margin-top: 8px; border-collapse: collapse;">
                     <tr><th style="text-align:left; padding: 4px 8px;">Item</th><th style="text-align:left; padding: 4px 8px;">Price</th><th style="text-align:left; padding: 4px 8px;">Notes</th></tr>
                     <tr><td>Turkey (Kirkland 3-pack, 42oz)</td><td>$13.99</td><td>42 oz total</td></tr>
@@ -580,6 +583,7 @@
                     <tr><td>Zip-lock Sandwich Bags</td><td>$7.99</td><td>480 count</td></tr>
                 </table>
             </div>
+        </details>
             <h2>🧮 Interactive Calculator</h2>
             <div class="shopping-calculator">
                 <h3>Calculate Your Exact Needs</h3>
