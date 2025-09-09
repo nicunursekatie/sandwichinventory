@@ -527,7 +527,7 @@
                         <div class="cost-item">Turkey: $190</div>
                         <div class="cost-item">Ham: $147</div>
                     </div>
-                    <div>🧊 1 large cooler</div>
+                    
                 </div>
                 
                 <div class="ref-card">
@@ -537,7 +537,7 @@
                         <div class="cost-item">Turkey: $358</div>
                         <div class="cost-item">Ham: $276</div>
                     </div>
-                    <div>🧊 2 large coolers</div>
+                    
                 </div>
                 
                 <div class="ref-card">
@@ -547,7 +547,7 @@
                         <div class="cost-item">Turkey: $852</div>
                         <div class="cost-item">Ham: $665</div>
                     </div>
-                    <div>🧊 4-5 large coolers</div>
+                    
                 </div>
                 
                 <div class="ref-card">
@@ -557,7 +557,7 @@
                         <div class="cost-item">Turkey: $1,696</div>
                         <div class="cost-item">Ham: $1,312</div>
                     </div>
-                    <div>🧊 8-10 large coolers</div>
+                    
                 </div>
             </div>
         </div>
@@ -934,11 +934,6 @@
                         <div class="number">$${totalCost}</div>
                         <div class="description">estimated Costco pricing</div>
                     </div>
-                    <div class="result-item">
-                        <h4>Coolers Needed</h4>
-                        <div class="number">${coolersNeeded}</div>
-                        <div class="description">large coolers recommended</div>
-                    </div>
                 </div>
             `;
             
@@ -1086,7 +1081,6 @@
                                 <p><strong>Meat packages needed:</strong> ${meatPackages}</p>
                                 <p><strong>Cheese packages needed:</strong> ${cheesePackages}</p>
                                 <p><strong>Bread packages needed:</strong> ${breadPackages}</p>
-                                <p><strong>Coolers needed:</strong> ${coolersNeeded}</p>
                             </div>
                             <div>
                                 <p style="font-size: 18px; font-weight: bold; color: #236383;">
@@ -1103,11 +1097,10 @@
                             <li>☐ ${cheesePackages} × ${cheeseText.replace('🧀 ', '').split(' (')[0]} cheese slices</li>
                             <li>☐ ${breadPackages} × ${breadText.replace('🍞 ', '').split(' (')[0]}</li>
                             <li>☐ ${Math.ceil(sandwichCount / 480)} × Zip-lock sandwich bags (480 count)</li>
-                            <li>☐ ${coolersNeeded} × Large coolers</li>
-                            <li>☐ ${Math.max(Math.ceil(sandwichCount / 20), coolersNeeded * 4)} × Ice packs (enough to touch every loaf)</li>
-                            <li>☐ Disposable gloves (multiple boxes)</li>
+                            <li>☐ ${Math.max(Math.ceil(sandwichCount / 20), 4)} × Ice packs (enough to touch every loaf)</li>
+                            <li>☐ Food-safe disposable gloves (multiple boxes)</li>
                             <li>☐ Hair ties/nets and beard nets</li>
-                            <li>☐ Hand sanitizer</li>
+                            <li>☐ Hand soap</li>
                             <li>☐ Paper towels for cleanup</li>
                             <li>☐ Disinfecting wipes for surfaces</li>
                         </ul>
