@@ -646,7 +646,7 @@
                     <div>
                         <strong>🥩 Meat Prices (Current):</strong>
                         <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
-                            <li>Kirkland Turkey 3-pack (42 oz): $13.99</li>
+                            <li>Kirkland Turkey 2-pack (40 oz): $13.99</li>
                             <li>Kirkland Ham 2-pack (48 oz): $9.89</li>
                         </ul>
                     </div>
@@ -849,7 +849,7 @@
             const cheesePerSandwich = 2; // 2 slices per sandwich
             
             // Package sizes from updated pricing
-            const meatPerPackage = meatType === 'turkey' ? 42 : 48; // Total oz per package
+            const meatPerPackage = meatType === 'turkey' ? 40 : 48; // Total oz per package
             
             // Cheese package sizes and prices
             let cheesePerPackage, cheesePrice, cheeseDescription;
@@ -937,7 +937,7 @@
                     <div class="result-item">
                         <h4>Meat Packages</h4>
                         <div class="number">${meatPackages}</div>
-                        <div class="description">${meatType === 'turkey' ? '3-packs (42 oz each)' : '2-packs (48 oz each)'}</div>
+                        <div class="description">${meatType === 'turkey' ? '2-packs (40 oz each)' : '2-packs (48 oz each)'}</div>
                     </div>
                     <div class="result-item">
                         <h4>Cheese Packages</h4>
@@ -958,7 +958,7 @@
             `;
             
             // Generate dynamic shopping checklist
-            const meatDescription = meatType === 'turkey' ? 'Kirkland Turkey 3-packs (42 oz)' : 'Kirkland Ham 2-packs (48 oz)';
+            const meatDescription = meatType === 'turkey' ? 'Kirkland Turkey 2-packs (40 oz)' : 'Kirkland Ham 2-packs (48 oz)';
             let cheeseShoppingDescription;
             switch(cheeseType) {
                 case 'adams-reserve':
@@ -1012,7 +1012,7 @@
             // Calculate the results (same logic as in calculateNeeds)
             const meatPerSandwich = 3;
             const cheesePerSandwich = 2;
-            const meatPerPackage = meatType.value === 'turkey' ? 42 : 48;
+            const meatPerPackage = meatType.value === 'turkey' ? 40 : 48;
             
             let cheesePerPackage, cheesePrice;
             switch(cheeseType.value) {
@@ -1112,7 +1112,7 @@
                     <div class="pdf-section">
                         <h3>Shopping Checklist</h3>
                         <ul class="pdf-checklist">
-                            <li>☐ ${meatPackages} × Kirkland ${meatType.value === 'turkey' ? 'Turkey 3-packs (42 oz)' : 'Ham 2-packs (48 oz)'}</li>
+                            <li>☐ ${meatPackages} × Kirkland ${meatType.value === 'turkey' ? 'Turkey 2-packs (40 oz)' : 'Ham 2-packs (48 oz)'}</li>
                             <li>☐ ${cheesePackages} × ${cheeseText.replace('🧀 ', '').split(' (')[0]} cheese slices</li>
                             <li>☐ ${breadPackages} × ${breadText.replace('🍞 ', '').split(' (')[0]}</li>
                             <li>☐ ${Math.ceil(sandwichCount / 480)} × Zip-lock sandwich bags (480 count)</li>
@@ -1171,7 +1171,7 @@
         <div style="padding: 0 18px;">
             <table style="width:100%; margin-top: 10px; border-collapse: collapse;">
                 <tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>
-                <tr><td>Turkey (Kirkland 3-pack, 42oz)</td><td>$13.99</td><td>42 oz total</td></tr>
+                <tr><td>Turkey (Kirkland 2-pack, 40oz)</td><td>$13.99</td><td>40 oz total</td></tr>
                 <tr><td>Ham (Kirkland 2-pack, 48oz)</td><td>$9.89</td><td>48 oz total</td></tr>
                 <tr><td>Adams Reserve Cheese</td><td>$7.70</td><td>44 slices</td></tr>
                 <tr><td>Finlandia Swiss Cheese</td><td>$9.69</td><td>40 slices</td></tr>
