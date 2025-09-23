@@ -600,13 +600,16 @@
             <h2>🧮 Interactive Calculator</h2>
             <div class="shopping-calculator">
                 <h3>Plan Your Sandwich Order</h3>
-                <div style="margin-bottom: 24px; padding: 18px 20px; background: #f8f9fa; border-radius: 10px; border: 1.5px solid #e0e0e0;">
-                    <div style="display: flex; gap: 16px; margin-bottom: 10px;">
-                        <label class="plan-mode-label" style="cursor:pointer; flex:1; text-align:center; border: 2px solid #236383; background: white; color: #236383; border-radius: 8px; padding: 10px 0; font-weight: 700; font-size: 1.08em; transition: background 0.2s, color 0.2s;">
-                            <input type="radio" name="planMode" id="planByBudget" value="budget" onchange="togglePlanMode()" style="margin-right: 8px;">Plan by $ amount
+                <div style="margin-bottom: 24px; padding: 18px 32px; background: #f8f9fa; border-radius: 10px; border: 1.5px solid #e0e0e0;">
+                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 10px; color: #236383;">How would you like to plan your sandwich order?</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px; padding-left: 8px; padding-right: 8px;">
+                        <label class="plan-mode-label" style="display: flex; align-items: center; gap: 10px; font-size: 1.05em; cursor:pointer;">
+                            <input type="radio" name="planMode" id="planBySandwiches" value="sandwiches" checked onchange="togglePlanMode()">
+                            I know how many sandwiches I want to make
                         </label>
-                        <label class="plan-mode-label" style="cursor:pointer; flex:1; text-align:center; border: 2px solid #236383; background: white; color: #236383; border-radius: 8px; padding: 10px 0; font-weight: 700; font-size: 1.08em; transition: background 0.2s, color 0.2s;">
-                            <input type="radio" name="planMode" id="planBySandwiches" value="sandwiches" checked onchange="togglePlanMode()" style="margin-right: 8px;">Plan by # of sandwiches
+                        <label class="plan-mode-label" style="display: flex; align-items: center; gap: 10px; font-size: 1.05em; cursor:pointer;">
+                            <input type="radio" name="planMode" id="planByBudget" value="budget" onchange="togglePlanMode()">
+                            I know how much money I want to spend
                         </label>
                     </div>
                 </div>
