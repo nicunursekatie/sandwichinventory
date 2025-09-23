@@ -507,6 +507,21 @@
                 font-size: 2em;
             }
         }
+        .plan-mode-label {
+            color: #236383 !important;
+            background: rgba(255,255,255,0.95) !important;
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-weight: 600;
+            font-size: 1.05em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 4px;
+        }
+        .plan-mode-label input[type="radio"] {
+            accent-color: #A31C41;
+        }
     </style>
 </head>
 <body>
@@ -588,11 +603,11 @@
                 <div style="margin-bottom: 24px; padding: 18px 20px; background: #f8f9fa; border-radius: 10px; border: 1.5px solid #e0e0e0;">
                     <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 10px; color: #236383;">How would you like to plan your sandwich order?</label>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <label style="display: flex; align-items: center; gap: 10px; font-size: 1.05em;">
+                        <label class="plan-mode-label">
                             <input type="radio" name="planMode" id="planBySandwiches" value="sandwiches" checked onchange="togglePlanMode()">
                             I know how many sandwiches I want to make
                         </label>
-                        <label style="display: flex; align-items: center; gap: 10px; font-size: 1.05em;">
+                        <label class="plan-mode-label">
                             <input type="radio" name="planMode" id="planByBudget" value="budget" onchange="togglePlanMode()">
                             I know how much money I want to spend
                         </label>
