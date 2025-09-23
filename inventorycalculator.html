@@ -584,11 +584,30 @@
     <!-- Collapsible Ingredient Price Summary moved to very bottom -->
             <h2>🧮 Interactive Calculator</h2>
             <div class="shopping-calculator">
-                <h3>Calculate Your Exact Needs</h3>
+                <h3>Plan Your Sandwich Order</h3>
+                <div style="margin-bottom: 24px; padding: 18px 20px; background: #f8f9fa; border-radius: 10px; border: 1.5px solid #e0e0e0;">
+                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 10px; color: #236383;">How would you like to plan your sandwich order?</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <label style="display: flex; align-items: center; gap: 10px; font-size: 1.05em;">
+                            <input type="radio" name="planMode" id="planBySandwiches" value="sandwiches" checked onchange="togglePlanMode()">
+                            I know how many sandwiches I want to make
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px; font-size: 1.05em;">
+                            <input type="radio" name="planMode" id="planByBudget" value="budget" onchange="togglePlanMode()">
+                            I know how much money I want to spend
+                        </label>
+                    </div>
+                </div>
                 <div class="calc-form">
-                    <div class="calc-input-group">
-                        <label>Number of sandwiches</label>
+                    <div class="calc-input-group" id="sandwichCountGroup">
+                        <label for="sandwichCount">Number of sandwiches</label>
                         <input type="number" id="sandwichCount" min="20" max="2000" placeholder="Enter quantity (e.g., 100)">
+                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of sandwiches you want to make.</span>
+                    </div>
+                    <div class="calc-input-group" id="budgetGroup" style="display: none;">
+                        <label for="budgetAmount">Budget ($)</label>
+                        <input type="number" id="budgetAmount" min="10" max="10000" placeholder="Enter your budget (e.g., 200)">
+                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the total amount you want to spend.</span>
                     </div>
                     
                     <div class="calc-input-group">
@@ -657,6 +676,9 @@
                             <li>Finlandia Variety (40 slices): $9.69</li>
                             <li>Arla Havarti (32 slices): $9.69</li>
                         </ul>
+                        <div style="margin-top: 8px; color: #c0392b; font-weight: bold;">
+                            Please do <u>NOT</u> buy individually wrapped American cheese. It gets gross and melts on the sandwich!
+                        </div>
                     </div>
                     <div>
                         <strong>🍞 Bread Prices:</strong>
@@ -803,55 +825,21 @@
     
     <script>
         function calculateNeeds() {
-            const sandwichCount = parseInt(document.getElementById('sandwichCount').value);
+            const bySandwiches = document.getElementById('planBySandwiches').checked;
+            let sandwichCount;
             const meatType = document.getElementById('meatType').value;
             const cheeseType = document.getElementById('cheeseType').value;
             const breadType = document.getElementById('breadType').value;
-            
-            if (!sandwichCount || sandwichCount <= 0) {
-                alert('Please enter a valid number of sandwiches');
-                return;
-            }
-            
-            if (!meatType) {
-                alert('Please select a meat type');
-                return;
-            }
-            
-            if (!cheeseType) {
-                alert('Please select a cheese type');
-                return;
-            }
-            
-            if (!breadType) {
-                alert('Please select a bread type');
-                return;
-            }
-            
-            // Show warning for small quantities
-            if (sandwichCount < 20) {
-                document.getElementById('calcResult').innerHTML = `
-                    <div style="background: rgba(255,255,255,0.9); color: #A31C41; padding: 20px; border-radius: 10px; text-align: center; font-weight: bold;">
-                        ⚠️ For ${sandwichCount} sandwich${sandwichCount > 1 ? 'es' : ''}, you might already have ingredients at home!<br>
-                        This calculator is designed for larger group events (20+ sandwiches).<br><br>
-                        <div style="color: #236383; margin-top: 15px;">
-                            <strong>Quick estimate:</strong><br>
-                            Cost: ~$${Math.round(sandwichCount * (meatType === 'turkey' ? 1.90 : 1.47))}
-                        </div>
-                    </div>
-                `;
-                document.getElementById('calcResult').style.display = 'block';
-                return;
-            }
-            
-            // Calculate packages needed (based on updated Costco prices)
+
+            // Ingredient constants
             const meatPerSandwich = 3; // 3 oz per sandwich
             const cheesePerSandwich = 2; // 2 slices per sandwich
-            
-            // Package sizes from updated pricing
-            const meatPerPackage = meatType === 'turkey' ? 40 : 48; // Total oz per package
-            
-            // Cheese package sizes and prices
+
+            // Package sizes and prices
+            const meatPerPackage = meatType === 'turkey' ? 40 : 48;
+            const turkeyPrice = 13.99;
+            const hamPrice = 9.89;
+            const bagPrice = 7.99;
             let cheesePerPackage, cheesePrice, cheeseDescription;
             switch(cheeseType) {
                 case 'adams-reserve':
@@ -874,63 +862,107 @@
                     cheesePrice = 7.70;
                     cheeseDescription = '44 slices each';
             }
-            
-            // Bread packages - calculate based on bread type selection
-            let breadSandwichesPerPackage;
-            let breadDescription;
-            let breadPrice;
-            
+            let breadSandwichesPerPackage, breadDescription, breadPrice;
             switch(breadType) {
                 case 'natures-own-double':
-                    breadSandwichesPerPackage = 26; // 13 per loaf x 2 loaves
+                    breadSandwichesPerPackage = 26;
                     breadDescription = 'double loaves (26 sandwiches each)';
-                    breadPrice = 4.49; // Average of $3.99-4.99 range
+                    breadPrice = 4.49;
                     break;
                 case 'sunbeam-double':
-                    breadSandwichesPerPackage = 26; // 13 per loaf x 2 loaves
+                    breadSandwichesPerPackage = 26;
                     breadDescription = 'double loaves (26 sandwiches each)';
-                    breadPrice = 5.39; // estimated
+                    breadPrice = 5.39;
                     break;
                 case 'sunbeam-single':
-                    breadSandwichesPerPackage = 13; // 13 per single loaf
+                    breadSandwichesPerPackage = 13;
                     breadDescription = 'single loaves (13 sandwiches each)';
-                    breadPrice = 2.70; // estimated half of double
+                    breadPrice = 2.70;
                     break;
                 case 'other-double':
-                    breadSandwichesPerPackage = 20; // 10 per loaf x 2 loaves
+                    breadSandwichesPerPackage = 20;
                     breadDescription = 'double loaves (20 sandwiches each)';
-                    breadPrice = 5.39; // estimated
+                    breadPrice = 5.39;
                     break;
                 case 'other-single':
-                    breadSandwichesPerPackage = 10; // 10 per single loaf
+                    breadSandwichesPerPackage = 10;
                     breadDescription = 'single loaves (10 sandwiches each)';
-                    breadPrice = 2.70; // estimated
+                    breadPrice = 2.70;
                     break;
                 default:
                     breadSandwichesPerPackage = 20;
                     breadDescription = 'packages';
-                    breadPrice = 5.39; // estimated
+                    breadPrice = 5.39;
             }
-            
+
+            // Validation for ingredient selections
+            if (!meatType) {
+                alert('Please select a meat type');
+                return;
+            }
+            if (!cheeseType) {
+                alert('Please select a cheese type');
+                return;
+            }
+            if (!breadType) {
+                alert('Please select a bread type');
+                return;
+            }
+
+            if (bySandwiches) {
+                sandwichCount = parseInt(document.getElementById('sandwichCount').value);
+                if (!sandwichCount || sandwichCount <= 0) {
+                    alert('Please enter a valid number of sandwiches');
+                    return;
+                }
+            } else {
+                const budget = parseFloat(document.getElementById('budgetAmount').value);
+                if (!budget || budget < 10) {
+                    alert('Please enter a valid budget (minimum $10)');
+                    return;
+                }
+                // Estimate max sandwiches for this budget
+                // Cost per sandwich = (meat + cheese + bread + bag) per sandwich
+                const meatCostPerSandwich = (meatType === 'turkey' ? turkeyPrice : hamPrice) / (meatPerPackage / meatPerSandwich);
+                const cheeseCostPerSandwich = cheesePrice / (cheesePerPackage / cheesePerSandwich);
+                const breadCostPerSandwich = breadPrice / breadSandwichesPerPackage;
+                const bagCostPerSandwich = bagPrice / 480;
+                const totalCostPerSandwich = meatCostPerSandwich + cheeseCostPerSandwich + breadCostPerSandwich + bagCostPerSandwich;
+                sandwichCount = Math.floor(budget / totalCostPerSandwich);
+                if (sandwichCount < 1) {
+                    alert('Budget too low for even 1 sandwich with selected ingredients.');
+                    return;
+                }
+            }
+
+            // Show warning for small quantities
+            if (sandwichCount < 20) {
+                document.getElementById('calcResult').innerHTML = `
+                    <div style="background: rgba(255,255,255,0.9); color: #A31C41; padding: 20px; border-radius: 10px; text-align: center; font-weight: bold;">
+                        ⚠️ For ${sandwichCount} sandwich${sandwichCount > 1 ? 'es' : ''}, you might already have ingredients at home!<br>
+                        This calculator is designed for larger group events (20+ sandwiches).<br><br>
+                        <div style="color: #236383; margin-top: 15px;">
+                            <strong>Quick estimate:</strong><br>
+                            Cost: ~$${Math.round(sandwichCount * (meatType === 'turkey' ? 1.90 : 1.47))}
+                        </div>
+                    </div>
+                `;
+                document.getElementById('calcResult').style.display = 'block';
+                return;
+            }
+
+            // Calculate packages needed
             const meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
             const cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
             const breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
-            
-            // Calculate costs with updated Costco pricing
-            const turkeyPrice = 13.99;
-            const hamPrice = 9.89; // Kirkland ham
-            const bagPrice = 7.99;
-            
             const meatCost = meatPackages * (meatType === 'turkey' ? turkeyPrice : hamPrice);
             const cheeseCost = cheesePackages * cheesePrice;
             const breadCost = breadPackages * breadPrice;
-            const bagCost = Math.ceil(sandwichCount / 480) * bagPrice;
-            
+            const bagPackages = Math.ceil(sandwichCount / 480);
+            const bagCost = bagPackages * bagPrice;
             const totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
-            
-            // Calculate coolers needed (100 sandwiches per cooler)
             const coolersNeeded = Math.ceil(sandwichCount / 100);
-            
+
             // Create the result grid
             document.getElementById('calcResult').innerHTML = `
                 <div class="result-grid">
@@ -956,7 +988,7 @@
                     </div>
                 </div>
             `;
-            
+
             // Generate dynamic shopping checklist
             const meatDescription = meatType === 'turkey' ? 'Kirkland Turkey 2-packs (40 oz)' : 'Kirkland Ham 2-packs (48 oz)';
             let cheeseShoppingDescription;
@@ -973,13 +1005,8 @@
                 default:
                     cheeseShoppingDescription = 'Cheese slices';
             }
-            
-            const bagPackages = Math.ceil(sandwichCount / 480);
-            
-            // Calculate ice packs needed - enough to touch every loaf (assume 20 sandwiches per loaf for ice pack calculation)
             const estimatedLoaves = Math.ceil(sandwichCount / 20);
-            const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4); // At minimum 4 per cooler, but more if needed for loaves
-            
+            const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4);
             document.getElementById('shoppingChecklist').innerHTML = `
                 <li><input type="checkbox"> ${meatPackages} × ${meatDescription}</li>
                 <li><input type="checkbox"> ${cheesePackages} × ${cheeseShoppingDescription}</li>
@@ -992,7 +1019,6 @@
                 <li><input type="checkbox"> Paper towels for cleanup</li>
                 <li><input type="checkbox"> Disinfecting wipes for surfaces</li>
             `;
-            
             document.getElementById('calcResult').style.display = 'block';
             document.getElementById('shoppingList').style.display = 'block';
             document.getElementById('exportButton').style.display = 'block';
@@ -1158,6 +1184,12 @@
                     window.location.reload();
                 }
             }, 1000);
+        }
+
+        function togglePlanMode() {
+            const bySandwiches = document.getElementById('planBySandwiches').checked;
+            document.getElementById('sandwichCountGroup').style.display = bySandwiches ? '' : 'none';
+            document.getElementById('budgetGroup').style.display = bySandwiches ? 'none' : '';
         }
     </script>
 </div>
