@@ -549,6 +549,72 @@
             margin-left: 2px;
             display: inline-block;
         }
+
+        .cta-banner {
+            background: linear-gradient(135deg, #A31C41 0%, #8B1639 100%);
+            color: white;
+            padding: 24px 32px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(163, 28, 65, 0.35);
+            margin-bottom: 28px;
+            text-align: center;
+            border: 3px solid rgba(251, 173, 63, 0.5);
+        }
+
+        .cta-banner h2 {
+            color: white !important;
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            border: none;
+            padding: 0;
+        }
+
+        .cta-banner p {
+            font-size: 1.15em;
+            margin-bottom: 18px;
+            line-height: 1.5;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #FBAD3F 0%, #F39C12 100%);
+            color: #fff;
+            text-decoration: none;
+            padding: 16px 40px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 6px 20px rgba(251, 173, 63, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .cta-button:hover {
+            background: linear-gradient(135deg, #F39C12 0%, #FBAD3F 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(251, 173, 63, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            .cta-banner {
+                padding: 20px 24px;
+            }
+
+            .cta-banner h2 {
+                font-size: 1.5em;
+            }
+
+            .cta-banner p {
+                font-size: 1.05em;
+            }
+
+            .cta-button {
+                padding: 14px 32px;
+                font-size: 1.1em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -558,7 +624,13 @@
             <h1>The Sandwich Project</h1>
             <p>Interactive Group Event Planning Guide</p>
         </div>
-        
+
+        <div class="cta-banner">
+            <h2>🧮 Don't Miss Our Free Calculator!</h2>
+            <p>Plan your sandwich-making event in seconds—calculate costs, quantities, and get a complete shopping list based on your exact needs.</p>
+            <a href="#pricing-info" class="cta-button">Jump to Calculator ↓</a>
+        </div>
+
         <div class="section" id="intro-section" style="margin-bottom: 28px; background: linear-gradient(135deg, #f8f9fa 80%, #e3f6f9 100%); border: 2px solid #FBAD3F; box-shadow: 0 4px 16px #FBAD3F22;">
             <h2 style="color: #A31C41; font-size: 1.7em; font-weight: 700; margin-bottom: 10px;">Welcome to the Sandwich Project Planning Tool!</h2>
             <p style="font-size: 1.15em; color: #236383; margin-bottom: 10px;">
