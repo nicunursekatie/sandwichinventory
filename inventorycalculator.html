@@ -103,18 +103,31 @@
         .quick-ref {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
+            gap: 2.5em; /* Increased gap for more space between cards */
             margin-bottom: 30px;
         }
         
         .ref-card {
-            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
-            color: white;
+            background: #fff;
+            color: inherit;
             padding: 25px;
             border-radius: 15px;
             text-align: center;
-            box-shadow: 0 8px 25px rgba(35, 99, 131, 0.3);
+            box-shadow: 0 8px 25px rgba(35, 99, 131, 0.13), 0 1.5px 0 #fff;
+            border: 4px solid #fff;
             transition: transform 0.3s ease;
+            position: relative;
+        }
+        .ref-card[style*='#A31C41'] { background: #A31C41; color: #fff; }
+        .ref-card[style*='#236383'] { background: #236383; color: #fff; }
+        .ref-card[style*='#FBAD3F'] { background: #FBAD3F; color: #A31C41; }
+        @media (max-width: 900px) {
+          .quick-ref {
+            gap: 1.2em;
+          }
+          .ref-card {
+            margin-bottom: 18px;
+          }
         }
         
         .ref-card:hover {
