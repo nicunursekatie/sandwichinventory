@@ -604,62 +604,329 @@
             </div>
             
             <!-- Pricing cards - clean, no wild gradients -->
-            <div class="quick-ref" style="margin-bottom: 0;">
-                <div class="ref-card" style="background: #A31C41;">
-                    <h3 style="font-size: 1.5em; margin-bottom: 14px; letter-spacing: 0.5px;">🥩 Meat</h3>
-                    <ul style="list-style: none; padding: 0; font-size: 1.13em; line-height: 2.1;">
-                        <li style="margin-bottom: 16px;">
-                            <span style="display: block; font-weight: 700; color: #fff; font-size: 1.08em; background:rgba(255,255,255,0.10); border-radius:6px; padding: 4px 10px 2px 10px; margin-bottom: 2px;">Kirkland Turkey</span>
-                            <span style="color: #ffe6b3; font-size: 1.05em; font-weight: 600;">2-pack (40 oz): <span class='price-badge'>$13.99</span> <span style="color:#fff; font-size:0.97em; font-weight:400; opacity:0.85;">• $0.35/slice</span></span>
-                        </li>
-                        <li>
-                            <span style="display: block; font-weight: 700; color: #fff; font-size: 1.08em; background:rgba(255,255,255,0.10); border-radius:6px; padding: 4px 10px 2px 10px; margin-bottom: 2px;">Kirkland Ham</span>
-                            <span style="color: #ffe6b3; font-size: 1.05em; font-weight: 600;">2-pack (48 oz): <span class='price-badge'>$9.89</span> <span style="color:#fff; font-size:0.97em; font-weight:400; opacity:0.85;">• $0.21/slice</span></span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="ref-card" style="background: #236383;">
-                    <h3 style="font-size: 1.5em; margin-bottom: 14px; letter-spacing: 0.5px;">🧀 Cheese</h3>
-                    <ul style="list-style: none; padding: 0; font-size: 1.13em; line-height: 2.1;">
-                        <li style="margin-bottom: 16px;">
-                            <span style="display: block; font-weight: 700; color: #fff; font-size: 1.08em; background:rgba(255,255,255,0.10); border-radius:6px; padding: 4px 10px 2px 10px; margin-bottom: 2px;">Adams Reserve</span>
-                            <span style="color: #ffe6b3; font-size: 1.05em; font-weight: 600;">44 slices: <span class='price-badge'>$7.70</span> <span style="color:#fff; font-size:0.97em; font-weight:400; opacity:0.85;">• $0.18/slice</span></span>
-                        </li>
-                        <li style="margin-bottom: 16px;">
-                            <span style="display: block; font-weight: 700; color: #fff; font-size: 1.08em; background:rgba(255,255,255,0.10); border-radius:6px; padding: 4px 10px 2px 10px; margin-bottom: 2px;">Finlandia Variety</span>
-                            <span style="color: #ffe6b3; font-size: 1.05em; font-weight: 600;">40 slices: <span class='price-badge'>$9.69</span> <span style="color:#fff; font-size:0.97em; font-weight:400; opacity:0.85;">• $0.24/slice</span></span>
-                        </li>
-                        <li>
-                            <span style="display: block; font-weight: 700; color: #fff; font-size: 1.08em; background:rgba(255,255,255,0.10); border-radius:6px; padding: 4px 10px 2px 10px; margin-bottom: 2px;">Arla Havarti</span>
-                            <span style="color: #ffe6b3; font-size: 1.05em; font-weight: 600;">32 slices: <span class='price-badge'>$9.69</span> <span style="color:#fff; font-size:0.97em; font-weight:400; opacity:0.85;">• $0.30/slice</span></span>
-                        </li>
-                    </ul>
-                </div>
-                
-                <div class="ref-card" style="background: #FBAD3F;">
-                    <h3 style="font-size: 1.5em; margin-bottom: 14px; letter-spacing: 0.5px;">🍞 Bread & Bags</h3>
-                    <ul style="list-style: none; padding: 0; font-size: 1.13em; line-height: 2.1;">
-                        <li style="margin-bottom: 16px;">
-                            <span style="display: block; font-weight: 700; color: #A31C41; font-size: 1.08em; background:rgba(255,255,255,0.13); border-radius:6px; padding: 4px 10px 2px 10px; margin-bottom: 2px;">Nature's Own Double</span>
-                            <span style="color: #fff; font-size: 1.05em; font-weight: 600;">20 sandwiches: <span class='price-badge'>$3.99-4.99</span></span>
-                        </li>
-                        <li style="margin-bottom: 16px;">
-                            <span style="display: block; font-weight: 700; color: #A31C41; font-size: 1.08em; background:rgba(255,255,255,0.13); border-radius:6px; padding: 4px 10px 2px 10px; margin-bottom: 2px;">Other brands</span>
-                            <span style="color: #fff; font-size: 1.05em; font-weight: 600;"><span class='price-badge'>$2.70-5.39</span> <em>(varies)</em></span>
-                        </li>
-                        <li>
-                            <span style="display: block; font-weight: 700; color: #A31C41; font-size: 1.08em; background:rgba(255,255,255,0.13); border-radius:6px; padding: 4px 10px 2px 10px; margin-bottom: 2px;">Zip-lock bags</span>
-                            <span style="color: #fff; font-size: 1.05em; font-weight: 600;">480 count: <span class='price-badge'>$7.99</span></span>
-                        </li>
-                    </ul>
+            <!-- Pricing Section - Compact & Colorful -->
+<style>
+    .pricing-section {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 20px;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    .pricing-header {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+    
+    .pricing-header h2 {
+        color: #236383;
+        font-size: 1.8em;
+        margin-bottom: 4px;
+        font-weight: 700;
+    }
+    
+    .pricing-meta {
+        color: #007E8C;
+        font-size: 0.9em;
+    }
+    
+    /* Shopping requirements banner */
+    .shopping-requirements {
+        background: #e8f5f9;
+        border: 2px solid #47B3CB;
+        color: #236383;
+        padding: 14px 20px;
+        border-radius: 8px;
+        margin-bottom: 24px;
+        font-weight: 500;
+    }
+    
+    .requirements-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-top: 12px;
+    }
+    
+    .requirement-item {
+        font-size: 0.95em;
+    }
+    
+    .requirement-header {
+        font-weight: 700;
+        color: #A31C41;
+        margin-bottom: 4px;
+        font-size: 1.05em;
+    }
+    
+    .requirement-text {
+        color: #555;
+        line-height: 1.3;
+    }
+    
+    /* Category sections */
+    .price-category {
+        margin-bottom: 20px;
+    }
+    
+    .category-label {
+        color: #236383;
+        font-weight: 700;
+        font-size: 1.1em;
+        margin-bottom: 10px;
+        padding-left: 4px;
+    }
+    
+    /* Product grid */
+    .price-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 10px;
+    }
+    
+    .price-card {
+        border-radius: 8px;
+        padding: 12px;
+        text-align: center;
+        color: white;
+        transition: transform 0.2s;
+        cursor: pointer;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+    
+    .price-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    /* Card colors using brand palette */
+    .card-meat {
+        background: linear-gradient(135deg, #A31C41 0%, #8B1639 100%);
+        box-shadow: 0 4px 12px rgba(163, 28, 65, 0.3);
+    }
+    
+    .card-cheese {
+        background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+        box-shadow: 0 4px 12px rgba(35, 99, 131, 0.3);
+    }
+    
+    .card-bread {
+        background: linear-gradient(135deg, #FBAD3F 0%, #F39C12 100%);
+        box-shadow: 0 4px 12px rgba(251, 173, 63, 0.3);
+    }
+    
+    .card-supplies {
+        background: linear-gradient(135deg, #47B3CB 0%, #007E8C 100%);
+        box-shadow: 0 4px 12px rgba(71, 179, 203, 0.3);
+    }
+    
+    .product-emoji {
+        font-size: 1.5em;
+        margin-bottom: 4px;
+    }
+    
+    .product-title {
+        font-size: 0.95em;
+        font-weight: 700;
+        line-height: 1.2;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+        padding-bottom: 6px;
+        margin-bottom: 4px;
+    }
+    
+    .product-size {
+        font-size: 0.75em;
+        opacity: 0.9;
+        margin-bottom: 3px;
+    }
+    
+    .product-price {
+        font-size: 1.3em;
+        font-weight: 800;
+        margin-top: 3px;
+        margin-bottom: 3px;
+    }
+    
+    .price-note {
+        font-size: 1.05em;
+        font-weight: 600;
+        background: rgba(255,255,255,0.2);
+        padding: 3px 8px;
+        border-radius: 5px;
+        margin-top: 2px;
+    }
+    
+    /* Cheese guide - compact */
+    .cheese-guide {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+        margin-top: 16px;
+        margin-bottom: 12px;
+    }
+    
+    .cheese-do, .cheese-dont {
+        padding: 12px;
+        border-radius: 8px;
+        font-size: 0.9em;
+    }
+    
+    .cheese-do {
+        background: #d4edda;
+        border: 2px solid #28a745;
+        color: #155724;
+    }
+    
+    .cheese-dont {
+        background: #f8d7da;
+        border: 2px solid #dc3545;
+        color: #721c24;
+    }
+    
+    .cheese-do strong, .cheese-dont strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 1.1em;
+    }
+    
+    /* Mobile responsive */
+    @media (max-width: 768px) {
+        .price-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+        
+        .cheese-guide {
+            grid-template-columns: 1fr;
+        }
+        
+        .requirements-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="pricing-section">
+    <div class="pricing-header">
+        <h2>Ingredient Cost Guide</h2>
+        <div class="pricing-meta">Based on recent shopping • Prices vary by location</div>
+    </div>
+    
+    <div class="shopping-requirements">
+        <strong>Important Shopping Guidelines:</strong>
+        <div class="requirements-grid">
+            <div class="requirement-item" style="padding-right: 16px; border-right: 2px solid #47B3CB;">
+                <div class="requirement-header">🥩 MEAT: Must be pre-packaged</div>
+                <div class="requirement-text">
+                    Please buy pre-packaged deli meat from the refrigerated section.<br>
+                    For food safety, we can't use meat sliced fresh at the deli counter.
                 </div>
             </div>
-            
-            <div style="margin-top: 18px; font-size: 0.95em; color: #888; font-style: italic; text-align:center;">
-                <strong>Note:</strong> Prices verified at Costco 8/3/2025. Check your location for current pricing.
+            <div class="requirement-item" style="padding-left: 16px;">
+                <div class="requirement-header">🧀 CHEESE: Real cheese, not "cheese product"</div>
+                <div class="requirement-text">
+                    Please get real cheese (cheddar, swiss, provolone, etc).<br>
+                    Skip the individually wrapped "cheese product" slices—they're processed and don't hold up well.
+                </div>
             </div>
         </div>
+    </div>
+    
+    <!-- Meat Section -->
+    <div class="price-category">
+        <div class="category-label">MEAT</div>
+        <div class="price-grid">
+            <div class="price-card card-meat">
+                <div class="product-emoji">🦃</div>
+                <div class="product-title">Kirkland Turkey</div>
+                <div class="product-size">2-pack • 40 oz</div>
+                <div class="product-price">$13.99</div>
+                <div class="price-note">~$0.35/slice</div>
+            </div>
+            
+            <div class="price-card card-meat">
+                <div class="product-emoji">🐷</div>
+                <div class="product-title">Kirkland Ham</div>
+                <div class="product-size">2-pack • 48 oz</div>
+                <div class="product-price">$9.89</div>
+                <div class="price-note">~$0.21/slice</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Cheese Section -->
+    <div class="price-category">
+        <div class="category-label">CHEESE</div>
+        <div class="price-grid">
+            <div class="price-card card-cheese">
+                <div class="product-emoji">🧀</div>
+                <div class="product-title">Adams Reserve</div>
+                <div class="product-size">44 slices</div>
+                <div class="product-price">$7.70</div>
+                <div class="price-note">~$0.18/slice</div>
+            </div>
+            
+            <div class="price-card card-cheese">
+                <div class="product-emoji">🧀</div>
+                <div class="product-title">Finlandia</div>
+                <div class="product-size">40 slices</div>
+                <div class="product-price">$9.69</div>
+                <div class="price-note">~$0.24/slice</div>
+            </div>
+            
+            <div class="price-card card-cheese">
+                <div class="product-emoji">🧀</div>
+                <div class="product-title">Arla Havarti</div>
+                <div class="product-size">32 slices</div>
+                <div class="product-price">$9.69</div>
+                <div class="price-note">~$0.30/slice</div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bread & Supplies Section -->
+    <div class="price-category">
+        <div class="category-label">BREAD & SUPPLIES</div>
+        <div class="price-grid">
+            <div class="price-card card-bread">
+                <div class="product-emoji">🍞</div>
+                <div class="product-title">Nature's Own</div>
+                <div class="product-size">Double loaf</div>
+                <div class="product-price">$4.49</div>
+                <div class="price-note">~$0.22/sandwich</div>
+            </div>
+            
+            <div class="price-card card-bread">
+                <div class="product-emoji">🍞</div>
+                <div class="product-title">Store Brand</div>
+                <div class="product-size">Double loaf</div>
+                <div class="product-price">$5.39</div>
+                <div class="price-note">~$0.27/sandwich</div>
+            </div>
+            
+            <div class="price-card card-supplies">
+                <div class="product-emoji">📦</div>
+                <div class="product-title">Sandwich Bags</div>
+                <div class="product-size">480 count</div>
+                <div class="product-price">$7.99</div>
+                <div class="price-note">~$0.02/bag</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="cheese-guide">
+        <div class="cheese-do">
+            <strong>✅ Right Cheese</strong>
+            Regular sliced cheese: cheddar, swiss, provolone
+        </div>
+        <div class="cheese-dont">
+            <strong>❌ Wrong Cheese</strong>
+            Kraft singles or any individually plastic-wrapped slices
+        </div>
+    </div>
+</div>
     <!-- Collapsible Ingredient Price Summary moved to very bottom -->
             <h2>🧮 Interactive Calculator</h2>
             <div class="shopping-calculator">
