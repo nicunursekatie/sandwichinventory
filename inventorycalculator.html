@@ -536,65 +536,41 @@
             <p>Interactive Group Event Planning Guide</p>
         </div>
         
-        <div class="section">
-            <h2>🎯 Quick Reference: Popular Quantities</h2>
-            <div class="quick-ref">
-                <div class="ref-card">
-                    <h3>100</h3>
-                    <div class="serves">Serves 50-75 people</div>
-                    <div class="cost-display">
-                        <div class="cost-item">Turkey: $190</div>
-                        <div class="cost-item">Ham: $147</div>
+        <!-- Move Pricing Information section up here -->
+        <div class="section" id="pricing-info" style="margin-bottom: 32px;">
+            <div style="background: rgba(236,243,250,1); border: 2px solid #007E8C; padding: 32px 24px; border-radius: 14px; margin-top: 0; font-size: 1.25em; color: #2c3e50; box-shadow: 0 4px 16px #007E8C22;">
+                <h2 style="color: #007E8C; margin: 0 0 24px 0; font-size: 2em; font-weight: 800; letter-spacing: 0.01em;">📊 Pricing Information <span style='font-size:0.7em; font-weight:400;'>(Updated 8/3/2025)</span></h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px;">
+                    <div>
+                        <strong style="font-size:1.15em;">🥩 Meat Prices (Current):</strong>
+                        <ul style="margin: 12px 0 0 24px; line-height: 2.1; font-size:1.08em;">
+                            <li>Kirkland Turkey 2-pack (40 oz): $13.99</li>
+                            <li>Kirkland Ham 2-pack (48 oz): $9.89</li>
+                        </ul>
                     </div>
-                    
-                </div>
-                
-                <div class="ref-card">
-                    <h3>200</h3>
-                    <div class="serves">Serves 100-150 people</div>
-                    <div class="cost-display">
-                        <div class="cost-item">Turkey: $358</div>
-                        <div class="cost-item">Ham: $276</div>
+                    <div>
+                        <strong style="font-size:1.15em;">🧀 Cheese Prices (Current):</strong>
+                        <ul style="margin: 12px 0 0 24px; line-height: 2.1; font-size:1.08em;">
+                            <li>Adams Reserve (44 slices): $7.70</li>
+                            <li>Finlandia Variety (40 slices): $9.69</li>
+                            <li>Arla Havarti (32 slices): $9.69</li>
+                        </ul>
+                        <div style="margin-top: 12px; color: #c0392b; font-weight: bold; font-size:1.08em;">
+                            Please do <u>NOT</u> buy individually wrapped American cheese. It does not hold up well and degrades quickly on sandwiches.
+                        </div>
                     </div>
-                    
-                </div>
-                
-                <div class="ref-card">
-                    <h3>500</h3>
-                    <div class="serves">Serves 250-375 people</div>
-                    <div class="cost-display">
-                        <div class="cost-item">Turkey: $852</div>
-                        <div class="cost-item">Ham: $665</div>
+                    <div>
+                        <strong style="font-size:1.15em;">🍞 Bread Prices:</strong>
+                        <ul style="margin: 12px 0 0 24px; line-height: 2.1; font-size:1.08em;">
+                            <li>Nature's Own Double Loaf (26 sandwiches): $3.99-4.99</li>
+                            <li>Other brands: $2.70-5.39 <em>(estimated - varies by brand)</em></li>
+                            <li>Zip-lock bags (480 count): $7.99</li>
+                        </ul>
                     </div>
-                    
                 </div>
-                
-                <div class="ref-card">
-                    <h3>1000</h3>
-                    <div class="serves">Serves 500-750 people</div>
-                    <div class="cost-display">
-                        <div class="cost-item">Turkey: $1,696</div>
-                        <div class="cost-item">Ham: $1,312</div>
-                    </div>
-                    
+                <div style="margin-top: 24px; font-size: 0.98em; color: #888; font-style: italic;">
+                    <strong>Note:</strong> Nature's Own bread pricing verified at Costco on 8/3/2025. Other bread pricing estimated since sandwich makers use various brands. Meat and cheese prices verified at Costco on 8/3/2025. Please verify current pricing before shopping as prices may vary by location and change over time.
                 </div>
-            </div>
-        </div>
-
-        <!-- Food Safety Reminder Section -->
-        <div class="section">
-            <div style="background: rgba(255,193,63,0.2); border: 1px solid #FBAD3F; padding: 20px; border-radius: 10px; margin: 20px auto; max-width: 800px; font-size: 1em;">
-                <h3 style="margin-top: 0; color: #236383; display: flex; align-items: center; gap: 8px;">
-                    🧤 Food Safety Requirements
-                </h3>
-                <p style="margin-bottom: 12px; font-weight: 500;">When preparing sandwiches for distribution, proper food safety practices are essential:</p>
-                <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-                    <li><strong>Wear food-safe disposable gloves</strong> - Change gloves frequently and never touch other surfaces while wearing them</li>
-                    <li><strong>Tie back hair and wear hair nets</strong> - All hair must be completely covered and secured</li>
-                    <li><strong>Wash hands thoroughly with soap and water</strong> - Do this before starting and regularly throughout preparation</li>
-                    <li><strong>Do NOT use hand sanitizer instead of washing</strong> - Soap and water are required for proper food safety</li>
-                </ul>
-                <p style="margin-top: 12px; margin-bottom: 0; font-style: italic; color: #8B4513;">Remember: These requirements help ensure the safety of everyone who will receive the sandwiches.</p>
             </div>
         </div>
         
@@ -633,8 +609,8 @@
                         <label>Meat type</label>
                         <select id="meatType">
                             <option value="">Choose your meat</option>
-                            <option value="turkey">🦃 Turkey</option>
-                            <option value="ham">🐷 Ham</option>
+                            <option value="turkey">🦃 Kirkland Turkey (2-pack, 40oz, $13.99)</option>
+                            <option value="ham">🐷 Kirkland Ham (2-pack, 48oz, $9.89)</option>
                         </select>
                     </div>
                     
@@ -678,45 +654,49 @@
                 <strong>💡 Pro Tips:</strong> Consider buying an extra loaf of bread. Cool sandwiches in freezer for 20-30 minutes before loading into coolers that have been brought inside to cool down.
             </div>
             
-            <div style="background: rgba(236,243,250,1); border: 1px solid #007E8C; padding: 20px; border-radius: 8px; margin-top: 20px; font-size: 0.9em; color: #2c3e50;">
-                <h4 style="color: #007E8C; margin: 0 0 15px 0; font-size: 1.1em;">📊 Pricing Information (Updated 8/3/2025)</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
-                    <div>
-                        <strong>🥩 Meat Prices (Current):</strong>
-                        <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
-                            <li>Kirkland Turkey 2-pack (40 oz): $13.99</li>
-                            <li>Kirkland Ham 2-pack (48 oz): $9.89</li>
-                        </ul>
-                    </div>
-                    <div>
-                        <strong>🧀 Cheese Prices (Current):</strong>
-                        <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
-                            <li>Adams Reserve (44 slices): $7.70</li>
-                            <li>Finlandia Variety (40 slices): $9.69</li>
-                            <li>Arla Havarti (32 slices): $9.69</li>
-                        </ul>
-                        <div style="margin-top: 8px; color: #c0392b; font-weight: bold;">
-                            Please do <u>NOT</u> buy individually wrapped American cheese. It does not hold up well and degrades quickly on sandwiches.
-                        </div>
-                    </div>
-                    <div>
-                        <strong>🍞 Bread Prices:</strong>
-                        <ul style="margin: 8px 0 0 20px; line-height: 1.6;">
-                            <li>Nature's Own Double Loaf (26 sandwiches): $3.99-4.99</li>
-                            <li>Other brands: $2.70-5.39 <em>(estimated - varies by brand)</em></li>
-                            <li>Zip-lock bags (480 count): $7.99</li>
-                        </ul>
-                    </div>
-                </div>
-                <p style="margin: 15px 0 0 0; font-style: italic; color: #7f8c8d;">
-                    <strong>Note:</strong> Nature's Own bread pricing verified at Costco on 8/3/2025. Other bread pricing estimated since sandwich makers use various brands. Meat and cheese prices verified at Costco on 8/3/2025. Please verify current pricing before shopping as prices may vary by location and change over time.
-                </p>
-            </div>
-            
             <div class="shopping-list" id="shoppingList" style="display: none;">
                 <h3>📝 Your Costco Shopping Checklist</h3>
                 <ul class="checklist" id="shoppingChecklist">
                 </ul>
+            </div>
+        </div>
+        
+        <!-- Move Quick Reference section below calculator -->
+        <div class="section">
+            <h2>🎯 Quick Reference: Popular Quantities</h2>
+            <div class="quick-ref">
+                <div class="ref-card">
+                    <h3>100</h3>
+                    <div class="serves">Serves 50-75 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">Turkey: $190</div>
+                        <div class="cost-item">Ham: $147</div>
+                    </div>
+                </div>
+                <div class="ref-card">
+                    <h3>200</h3>
+                    <div class="serves">Serves 100-150 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">Turkey: $358</div>
+                        <div class="cost-item">Ham: $276</div>
+                    </div>
+                </div>
+                <div class="ref-card">
+                    <h3>500</h3>
+                    <div class="serves">Serves 250-375 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">Turkey: $852</div>
+                        <div class="cost-item">Ham: $665</div>
+                    </div>
+                </div>
+                <div class="ref-card">
+                    <h3>1000</h3>
+                    <div class="serves">Serves 500-750 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">Turkey: $1,696</div>
+                        <div class="cost-item">Ham: $1,312</div>
+                    </div>
+                </div>
             </div>
         </div>
         
@@ -1239,3 +1219,4 @@
 </div>
 </body>
 </html>
+
