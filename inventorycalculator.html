@@ -1078,7 +1078,7 @@
                 <div class="calc-form">
                     <div class="calc-input-group" id="sandwichCountGroup">
                         <label for="sandwichCount">Number of sandwiches</label>
-                        <input type="number" id="sandwichCount" min="20" max="2000" placeholder="Enter quantity (e.g., 100)">
+                        <input type="number" id="sandwichCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
                         <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of sandwiches you want to make.</span>
                     </div>
                     <div class="calc-input-group" id="budgetGroup" style="display: none;">
@@ -1450,21 +1450,6 @@
                 
             }
 
-            // Show warning for small quantities
-            if (sandwichCount < 20) {
-                document.getElementById('calcResult').innerHTML = `
-                    <div style="background: rgba(255,255,255,0.9); color: #A31C41; padding: 20px; border-radius: 10px; text-align: center; font-weight: bold;">
-                        ⚠️ For ${sandwichCount} sandwich${sandwichCount > 1 ? 'es' : ''}, you might already have ingredients at home!<br>
-                        This calculator is designed for larger group events (20+ sandwiches).<br><br>
-                        <div style="color: #236383; margin-top: 15px;">
-                            <strong>Quick estimate:</strong><br>
-                            Cost: ~$${Math.round(sandwichCount * (meatType === 'turkey' ? 1.90 : 1.47))}
-                        </div>
-                    </div>
-                `;
-                document.getElementById('calcResult').style.display = 'block';
-                return;
-            }
 
             // Calculate packages needed
             let meatPackages, cheesePackages, breadPackages, bagPackages;
@@ -1583,6 +1568,33 @@
                 }
             }
             
+            // Calculate excess ingredients
+            const meatNeeded = sandwichCount * meatPerSandwich;
+            const cheeseNeeded = sandwichCount * cheesePerSandwich;
+            const breadNeeded = sandwichCount;
+            
+            const meatProvided = meatPackages * meatPerPackage;
+            const cheeseProvided = cheesePackages * cheesePerPackage;
+            const breadProvided = breadPackages * breadSandwichesPerPackage;
+            
+            const meatExcess = meatProvided - meatNeeded;
+            const cheeseExcess = cheeseProvided - cheeseNeeded;
+            const breadExcess = breadProvided - breadNeeded;
+            
+            // Create excess info string
+            let excessInfo = '';
+            if (meatExcess > 0 || cheeseExcess > 0 || breadExcess > 0) {
+                excessInfo = `
+                    <div style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 15px; margin-top: 15px; font-size: 0.9em;">
+                        <div style="font-weight: 600; margin-bottom: 8px; color: #FBAD3F;">📦 Extra Ingredients:</div>
+                        ${meatExcess > 0 ? `<div>• ${meatExcess} extra meat slices (${Math.round(meatExcess/meatPerSandwich)} extra sandwiches)</div>` : ''}
+                        ${cheeseExcess > 0 ? `<div>• ${cheeseExcess} extra cheese slices (${Math.round(cheeseExcess/cheesePerSandwich)} extra sandwiches)</div>` : ''}
+                        ${breadExcess > 0 ? `<div>• ${breadExcess} extra bread slices (${Math.round(breadExcess/2)} extra sandwiches)</div>` : ''}
+                        <div style="margin-top: 8px; font-size: 0.85em; opacity: 0.8;">Package sizes require rounding up - this ensures you have enough ingredients.</div>
+                    </div>
+                `;
+            }
+
             document.getElementById('calcResult').innerHTML = `
                 ${budgetStatusMessage}
                 <div class="result-grid">
@@ -1607,6 +1619,7 @@
                         <div class="description">estimated Costco pricing</div>
                     </div>
                 </div>
+                ${excessInfo}
             `;
 
             // Generate dynamic shopping checklist
