@@ -1413,15 +1413,65 @@
             }
 
             // Calculate packages needed
-            const meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
-            const cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
-            const breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
-            const meatCost = meatPackages * meatPrice;
-            const cheeseCost = cheesePackages * cheesePrice;
-            const breadCost = breadPackages * breadPrice;
-            const bagPackages = Math.ceil(sandwichCount / 480);
-            const bagCost = bagPackages * bagPrice;
-            const totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
+            let meatPackages, cheesePackages, breadPackages, bagPackages;
+            let meatCost, cheeseCost, breadCost, bagCost, totalCost;
+            
+            // For budget mode, we need to ensure we stay within budget
+            if (!bySandwiches) {
+                const budget = parseFloat(document.getElementById('budgetAmount').value);
+                
+                // Start with the estimated sandwich count and reduce if needed to stay within budget
+                let adjustedSandwichCount = sandwichCount;
+                let iterations = 0;
+                const maxIterations = 10; // Prevent infinite loops
+                
+                do {
+                    meatPackages = Math.ceil((adjustedSandwichCount * meatPerSandwich) / meatPerPackage);
+                    cheesePackages = Math.ceil((adjustedSandwichCount * cheesePerSandwich) / cheesePerPackage);
+                    breadPackages = Math.ceil(adjustedSandwichCount / breadSandwichesPerPackage);
+                    bagPackages = Math.ceil(adjustedSandwichCount / 480);
+                    
+                    meatCost = meatPackages * meatPrice;
+                    cheeseCost = cheesePackages * cheesePrice;
+                    breadCost = breadPackages * breadPrice;
+                    bagCost = bagPackages * bagPrice;
+                    totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
+                    
+                    if (totalCost <= budget) {
+                        break;
+                    }
+                    
+                    adjustedSandwichCount--;
+                    iterations++;
+                } while (totalCost > budget && adjustedSandwichCount > 0 && iterations < maxIterations);
+                
+                // Update the sandwich count to the adjusted amount
+                sandwichCount = adjustedSandwichCount;
+                
+                // Recalculate final costs with the adjusted count
+                meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
+                cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
+                breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
+                bagPackages = Math.ceil(sandwichCount / 480);
+                
+                meatCost = meatPackages * meatPrice;
+                cheeseCost = cheesePackages * cheesePrice;
+                breadCost = breadPackages * breadPrice;
+                bagCost = bagPackages * bagPrice;
+                totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
+            } else {
+                // For sandwich count mode, use normal calculation
+                meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
+                cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
+                breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
+                bagPackages = Math.ceil(sandwichCount / 480);
+                
+                meatCost = meatPackages * meatPrice;
+                cheeseCost = cheesePackages * cheesePrice;
+                breadCost = breadPackages * breadPrice;
+                bagCost = bagPackages * bagPrice;
+                totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
+            }
             const coolersNeeded = Math.ceil(sandwichCount / 100);
 
             // In budget mode, we've already calculated the optimal sandwich count above
