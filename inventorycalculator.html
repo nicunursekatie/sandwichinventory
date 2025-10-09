@@ -1513,61 +1513,6 @@
             }
             const coolersNeeded = Math.ceil(sandwichCount / 100);
 
-            // In budget mode, we've already calculated the optimal sandwich count above
-            // The sandwichCount variable already represents the maximum sandwiches within budget
-
-            // Create the result grid with budget status
-            let budgetStatusMessage = '';
-            if (!bySandwiches) {
-                const budget = parseFloat(document.getElementById('budgetAmount').value);
-                const remaining = budget - totalCost;
-                const savingsPercent = Math.round((remaining / budget) * 100);
-                
-                if (remaining > 5) { // More than $5 remaining
-                    budgetStatusMessage = `
-                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
-                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${sandwichCount} sandwiches</strong> for <strong>$${totalCost}</strong> | 
-                                Remaining budget: <strong>$${remaining}</strong> (${savingsPercent}% under budget)
-                            </p>
-                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                This is the maximum number of sandwiches you can make within your $${budget} budget with your selected ingredients.
-                            </p>
-                        </div>
-                    `;
-                } else if (remaining > 0) { // Small amount remaining
-                    budgetStatusMessage = `
-                        <div style="background: rgba(255,152,0,0.2); border: 3px solid #FF9800; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
-                            <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
-                            <p style="color: #BF360C; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${sandwichCount} sandwiches</strong> for <strong>$${totalCost}</strong> | 
-                                Only <strong>$${remaining}</strong> remaining (${savingsPercent}% under budget)
-                            </p>
-                            <p style="color: #E65100; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                This maximizes your sandwich count within your $${budget} budget.
-                            </p>
-                        </div>
-                    `;
-                } else { // Exactly at budget
-                    budgetStatusMessage = `
-                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">🎯</div>
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Perfect Budget Match!</h4>
-                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${sandwichCount} sandwiches</strong> for exactly <strong>$${totalCost}</strong> | 
-                                Uses your entire $${budget} budget
-                            </p>
-                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                This is the maximum number of sandwiches you can make with your selected ingredients and budget.
-                            </p>
-                        </div>
-                    `;
-                }
-            }
-            
             // Calculate excess ingredients
             const meatNeeded = sandwichCount * meatPerSandwich;
             const cheeseNeeded = sandwichCount * cheesePerSandwich;
@@ -1588,9 +1533,67 @@
             
             const actualExtraSandwiches = Math.min(possibleExtraFromMeat, possibleExtraFromCheese, possibleExtraFromBread);
             
-            // Create excess info string
+            // For budget mode, update the total sandwich count to include extra sandwiches
+            let totalSandwichesPossible = sandwichCount;
+            if (!bySandwiches && actualExtraSandwiches > 0) {
+                totalSandwichesPossible = sandwichCount + actualExtraSandwiches;
+            }
+
+            // Create the result grid with budget status
+            let budgetStatusMessage = '';
+            if (!bySandwiches) {
+                const budget = parseFloat(document.getElementById('budgetAmount').value);
+                const remaining = budget - totalCost;
+                const savingsPercent = Math.round((remaining / budget) * 100);
+                
+                if (remaining > 5) { // More than $5 remaining
+                    budgetStatusMessage = `
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
+                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong> | 
+                                Remaining budget: <strong>$${remaining}</strong> (${savingsPercent}% under budget)
+                            </p>
+                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
+                                This is the maximum number of sandwiches you can make within your $${budget} budget with your selected ingredients.
+                            </p>
+                        </div>
+                    `;
+                } else if (remaining > 0) { // Small amount remaining
+                    budgetStatusMessage = `
+                        <div style="background: rgba(255,152,0,0.2); border: 3px solid #FF9800; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
+                            <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
+                            <p style="color: #BF360C; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong> | 
+                                Only <strong>$${remaining}</strong> remaining (${savingsPercent}% under budget)
+                            </p>
+                            <p style="color: #E65100; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
+                                This maximizes your sandwich count within your $${budget} budget.
+                            </p>
+                        </div>
+                    `;
+                } else { // Exactly at budget
+                    budgetStatusMessage = `
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">🎯</div>
+                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Perfect Budget Match!</h4>
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for exactly <strong>$${totalCost}</strong> | 
+                                Uses your entire $${budget} budget
+                            </p>
+                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
+                                This is the maximum number of sandwiches you can make with your selected ingredients and budget.
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+            
+            // Create excess info string (only for sandwich count mode)
             let excessInfo = '';
-            if (meatExcess > 0 || cheeseExcess > 0 || breadExcess > 0) {
+            if (bySandwiches && (meatExcess > 0 || cheeseExcess > 0 || breadExcess > 0)) {
                 excessInfo = `
                     <div style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 15px; margin-top: 15px; font-size: 0.9em;">
                         <div style="font-weight: 600; margin-bottom: 8px; color: #FBAD3F;">📦 Extra Ingredients:</div>
