@@ -948,7 +948,7 @@
             <div class="price-card card-meat">
                 <div class="product-emoji">🦃</div>
                 <div class="product-title">Kirkland Turkey</div>
-                <div class="product-size">2-pack • 40 oz</div>
+                <div class="product-size">2-pack • 40 slices</div>
                 <div class="product-price">$13.99</div>
                 <div class="price-note">~$0.35/slice</div>
             </div>
@@ -956,7 +956,7 @@
             <div class="price-card card-meat">
                 <div class="product-emoji">🐷</div>
                 <div class="product-title">Kirkland Ham</div>
-                <div class="product-size">2-pack • 48 oz</div>
+                <div class="product-size">2-pack • 48 slices</div>
                 <div class="product-price">$9.89</div>
                 <div class="price-note">~$0.21/slice</div>
             </div>
@@ -964,25 +964,25 @@
             <div class="price-card card-meat">
                 <div class="product-emoji">🦃</div>
                 <div class="product-title">Publix Turkey Breast</div>
-                <div class="product-size">16 oz • Thin Sliced</div>
+                <div class="product-size">16 slices • Thin Sliced</div>
                 <div class="product-price">$7.07</div>
-                <div class="price-note">~$0.44/oz</div>
+                <div class="price-note">~$0.44/slice</div>
             </div>
             
             <div class="price-card card-meat">
                 <div class="product-emoji">🦃</div>
                 <div class="product-title">Land O'Frost Premium</div>
-                <div class="product-size">16 oz • Oven Roasted</div>
+                <div class="product-size">16 slices • Oven Roasted</div>
                 <div class="product-price">$9.53</div>
-                <div class="price-note">~$0.60/oz</div>
+                <div class="price-note">~$0.60/slice</div>
             </div>
             
             <div class="price-card card-meat">
                 <div class="product-emoji">🦃</div>
                 <div class="product-title">Hillshire Farm Ultra Thin</div>
-                <div class="product-size">9 oz • Oven Roasted</div>
+                <div class="product-size">9 slices • Oven Roasted</div>
                 <div class="product-price">$6.07</div>
-                <div class="price-note">~$0.67/oz</div>
+                <div class="price-note">~$0.67/slice</div>
             </div>
         </div>
     </div>
@@ -1091,11 +1091,11 @@
                         <label>Meat type</label>
                         <select id="meatType">
                             <option value="">Choose your meat</option>
-                            <option value="turkey">🦃 Kirkland Turkey (2-pack, 40oz, $13.99)</option>
-                            <option value="ham">🐷 Kirkland Ham (2-pack, 48oz, $9.89)</option>
-                            <option value="publix-turkey">🦃 Publix Turkey Breast, Roasted, Thin Sliced (16oz, $7.07)</option>
-                            <option value="land-o-frost-turkey">🦃 Land O'Frost Premium Oven Roasted Turkey Breast (16oz, $9.53)</option>
-                            <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9oz, $6.07)</option>
+                            <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices, $13.99)</option>
+                            <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89)</option>
+                            <option value="publix-turkey">🦃 Publix Turkey Breast, Roasted, Thin Sliced (16 slices, $7.07)</option>
+                            <option value="land-o-frost-turkey">🦃 Land O'Frost Premium Oven Roasted Turkey Breast (16 slices, $9.53)</option>
+                            <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 slices, $6.07)</option>
                         </select>
                     </div>
                     
@@ -1317,7 +1317,7 @@
             const breadType = document.getElementById('breadType').value;
 
             // Ingredient constants
-            const meatPerSandwich = 3; // 3 oz per sandwich
+            const meatPerSandwich = 3; // 3 slices per sandwich (1 slice = 1 oz)
             const cheesePerSandwich = 2; // 2 slices per sandwich
 
             // Package sizes and prices
@@ -1326,27 +1326,27 @@
                 case 'turkey':
                     meatPerPackage = 40;
                     meatPrice = 13.99;
-                    meatDescription = '2-packs (40 oz each)';
+                    meatDescription = '2-packs (40 slices each)';
                     break;
                 case 'ham':
                     meatPerPackage = 48;
                     meatPrice = 9.89;
-                    meatDescription = '2-packs (48 oz each)';
+                    meatDescription = '2-packs (48 slices each)';
                     break;
                 case 'publix-turkey':
                     meatPerPackage = 16;
                     meatPrice = 7.07;
-                    meatDescription = '16 oz packages';
+                    meatDescription = '16 slice packages';
                     break;
                 case 'land-o-frost-turkey':
                     meatPerPackage = 16;
                     meatPrice = 9.53;
-                    meatDescription = '16 oz packages';
+                    meatDescription = '16 slice packages';
                     break;
                 case 'hillshire-turkey':
                     meatPerPackage = 9;
                     meatPrice = 6.07;
-                    meatDescription = '9 oz packages';
+                    meatDescription = '9 slice packages';
                     break;
                 default:
                     meatPerPackage = 40;
@@ -1613,19 +1613,19 @@
             let meatShoppingDescription;
             switch(meatType) {
                 case 'turkey':
-                    meatShoppingDescription = 'Kirkland Turkey 2-packs (40 oz)';
+                    meatShoppingDescription = 'Kirkland Turkey 2-packs (40 slices)';
                     break;
                 case 'ham':
-                    meatShoppingDescription = 'Kirkland Ham 2-packs (48 oz)';
+                    meatShoppingDescription = 'Kirkland Ham 2-packs (48 slices)';
                     break;
                 case 'publix-turkey':
-                    meatShoppingDescription = 'Publix Turkey Breast, Roasted, Thin Sliced (16 oz)';
+                    meatShoppingDescription = 'Publix Turkey Breast, Roasted, Thin Sliced (16 slices)';
                     break;
                 case 'land-o-frost-turkey':
-                    meatShoppingDescription = 'Land O\'Frost Premium Oven Roasted Turkey Breast (16 oz)';
+                    meatShoppingDescription = 'Land O\'Frost Premium Oven Roasted Turkey Breast (16 slices)';
                     break;
                 case 'hillshire-turkey':
-                    meatShoppingDescription = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 oz)';
+                    meatShoppingDescription = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 slices)';
                     break;
                 default:
                     meatShoppingDescription = 'Meat packages';
@@ -1675,7 +1675,7 @@
             const breadText = breadType.options[breadType.selectedIndex].text;
             
             // Calculate the results (same logic as in calculateNeeds)
-            const meatPerSandwich = 3;
+            const meatPerSandwich = 3; // 3 slices per sandwich (1 slice = 1 oz)
             const cheesePerSandwich = 2;
             let meatPerPackage, meatPrice;
             switch(meatType.value) {
@@ -1867,11 +1867,11 @@
         <div style="padding: 0 18px;">
             <table style="width:100%; margin-top: 10px; border-collapse: collapse;">
                 <tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>
-                <tr><td>Turkey (Kirkland 2-pack, 40oz)</td><td>$13.99</td><td>40 oz total</td></tr>
-                <tr><td>Ham (Kirkland 2-pack, 48oz)</td><td>$9.89</td><td>48 oz total</td></tr>
-                <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 oz</td></tr>
-                <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 oz</td></tr>
-                <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 oz</td></tr>
+                <tr><td>Turkey (Kirkland 2-pack, 40 slices)</td><td>$13.99</td><td>40 slices total</td></tr>
+                <tr><td>Ham (Kirkland 2-pack, 48 slices)</td><td>$9.89</td><td>48 slices total</td></tr>
+                <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 slices</td></tr>
+                <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 slices</td></tr>
+                <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 slices</td></tr>
                 <tr><td>Adams Reserve Cheese</td><td>$7.70</td><td>44 slices</td></tr>
                 <tr><td>Finlandia Swiss Cheese</td><td>$9.69</td><td>40 slices</td></tr>
                 <tr><td>Arla Havarti Cheese</td><td>$9.69</td><td>32 slices</td></tr>
