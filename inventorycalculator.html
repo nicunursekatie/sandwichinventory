@@ -1337,6 +1337,9 @@
                     alert('Budget too low for even 1 sandwich with selected ingredients.');
                     return;
                 }
+                
+                // Store the original budget calculation for later use
+                window.budgetOptimizedSandwichCount = sandwichCount;
             }
 
             // Show warning for small quantities
@@ -1367,8 +1370,126 @@
             const totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
             const coolersNeeded = Math.ceil(sandwichCount / 100);
 
-            // Create the result grid
+            // Check if we're in budget mode and if cost exceeds budget
+            if (!bySandwiches) {
+                const budget = parseFloat(document.getElementById('budgetAmount').value);
+                if (totalCost > budget) {
+                    const overage = totalCost - budget;
+                    const overagePercent = Math.round((overage / budget) * 100);
+                    
+                    // Calculate cost per sandwich to suggest alternatives
+                    const meatCostPerSandwich = (meatType === 'turkey' ? turkeyPrice : hamPrice) / (meatPerPackage / meatPerSandwich);
+                    const cheeseCostPerSandwich = cheesePrice / (cheesePerPackage / cheesePerSandwich);
+                    const breadCostPerSandwich = breadPrice / breadSandwichesPerPackage;
+                    const bagCostPerSandwich = bagPrice / 480;
+                    const totalCostPerSandwich = meatCostPerSandwich + cheeseCostPerSandwich + breadCostPerSandwich + bagCostPerSandwich;
+                    
+                    // Suggest cheaper alternatives
+                    let alternativeSuggestions = '';
+                    
+                    // Check if ham would be cheaper than turkey
+                    if (meatType === 'turkey') {
+                        const hamCostPerSandwich = hamPrice / (48 / meatPerSandwich);
+                        const hamSavingsPerSandwich = meatCostPerSandwich - hamCostPerSandwich;
+                        if (hamSavingsPerSandwich > 0) {
+                            alternativeSuggestions += `<li><strong>Switch to Ham:</strong> Save ~$${hamSavingsPerSandwich.toFixed(2)} per sandwich</li>`;
+                        }
+                    }
+                    
+                    // Check if Adams Reserve would be cheaper than other cheeses
+                    if (cheeseType !== 'adams-reserve') {
+                        const adamsCostPerSandwich = 7.70 / (44 / cheesePerSandwich);
+                        const currentCheeseSavings = cheeseCostPerSandwich - adamsCostPerSandwich;
+                        if (currentCheeseSavings > 0) {
+                            alternativeSuggestions += `<li><strong>Switch to Adams Reserve Cheese:</strong> Save ~$${currentCheeseSavings.toFixed(2)} per sandwich</li>`;
+                        }
+                    }
+                    
+                    // Check if different bread would help
+                    const naturesOwnCostPerSandwich = 4.49 / 20;
+                    const currentBreadSavings = breadCostPerSandwich - naturesOwnCostPerSandwich;
+                    if (currentBreadSavings > 0) {
+                        alternativeSuggestions += `<li><strong>Switch to Nature's Own Double Loaf:</strong> Save ~$${currentBreadSavings.toFixed(2)} per sandwich</li>`;
+                    }
+                    
+                    document.getElementById('calcResult').innerHTML = `
+                        <div style="background: rgba(255,255,255,0.95); color: #A31C41; padding: 25px; border-radius: 12px; border: 2px solid #A31C41; margin-bottom: 20px;">
+                            <div style="text-align: center; margin-bottom: 20px;">
+                                <div style="font-size: 2.5em; margin-bottom: 10px;">⚠️</div>
+                                <h3 style="color: #A31C41; margin-bottom: 10px;">Budget Exceeded!</h3>
+                                <p style="font-size: 1.2em; margin-bottom: 15px;">
+                                    Your selections cost <strong>$${totalCost}</strong>, which is <strong>$${overage}</strong> over your $${budget} budget (${overagePercent}% over).
+                                </p>
+                            </div>
+                            
+                            <div style="background: rgba(255,255,255,0.3); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                                <h4 style="color: #236383; margin-bottom: 10px;">💰 Current Order Summary:</h4>
+                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.9em;">
+                                    <div>${meatPackages} × ${meatType === 'turkey' ? 'Turkey packages' : 'Ham packages'}</div>
+                                    <div>${cheesePackages} × Cheese packages</div>
+                                    <div>${breadPackages} × Bread packages</div>
+                                    <div><strong>Total: $${totalCost}</strong></div>
+                                </div>
+                            </div>
+                            
+                            <div style="background: rgba(35,99,131,0.1); padding: 15px; border-radius: 8px;">
+                                <h4 style="color: #236383; margin-bottom: 10px;">💡 Cost-Saving Suggestions:</h4>
+                                <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                                    ${alternativeSuggestions || '<li>Try switching to cheaper ingredient options above</li>'}
+                                    <li><strong>Reduce quantity:</strong> Make ${Math.floor(budget / totalCostPerSandwich)} sandwiches instead of ${sandwichCount} to stay within budget</li>
+                                </ul>
+                                
+                                <div style="margin-top: 15px; text-align: center;">
+                                    <button onclick="applyBudgetOptimization()" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">
+                                        🔧 Quick Fix: Use Budget-Optimized Quantity
+                                    </button>
+                                    <p style="font-size: 0.85em; color: #666; margin-top: 8px; margin-bottom: 0;">
+                                        This will automatically adjust to ${Math.floor(budget / totalCostPerSandwich)} sandwiches to stay within your $${budget} budget
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.getElementById('calcResult').style.display = 'block';
+                    return;
+                }
+            }
+
+            // Create the result grid (only if budget is not exceeded)
+            let budgetStatusMessage = '';
+            if (!bySandwiches) {
+                const budget = parseFloat(document.getElementById('budgetAmount').value);
+                const remaining = budget - totalCost;
+                const savingsPercent = Math.round((remaining / budget) * 100);
+                
+                if (remaining > 0) {
+                    budgetStatusMessage = `
+                        <div style="background: rgba(76,175,80,0.1); border: 2px solid #4CAF50; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                            <div style="font-size: 1.5em; margin-bottom: 8px;">✅</div>
+                            <h4 style="color: #4CAF50; margin-bottom: 8px;">Budget-Friendly!</h4>
+                            <p style="color: #2E7D32; margin: 0;">
+                                Total cost: <strong>$${totalCost}</strong> | 
+                                Remaining budget: <strong>$${remaining}</strong> (${savingsPercent}% under budget)
+                            </p>
+                        </div>
+                    `;
+                } else {
+                    budgetStatusMessage = `
+                        <div style="background: rgba(255,152,0,0.1); border: 2px solid #FF9800; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                            <div style="font-size: 1.5em; margin-bottom: 8px;">⚠️</div>
+                            <h4 style="color: #FF9800; margin-bottom: 8px;">Budget Tight!</h4>
+                            <p style="color: #E65100; margin: 0;">
+                                Total cost: <strong>$${totalCost}</strong> | 
+                                Exactly matches your $${budget} budget
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+            
             document.getElementById('calcResult').innerHTML = `
+                ${budgetStatusMessage}
                 <div class="result-grid">
                     <div class="result-item">
                         <h4>Meat Packages</h4>
@@ -1594,6 +1715,20 @@
             const bySandwiches = document.getElementById('planBySandwiches').checked;
             document.getElementById('sandwichCountGroup').style.display = bySandwiches ? '' : 'none';
             document.getElementById('budgetGroup').style.display = bySandwiches ? 'none' : '';
+        }
+        
+        function applyBudgetOptimization() {
+            // Switch to sandwich count mode and set the optimized quantity
+            document.getElementById('planBySandwiches').checked = true;
+            togglePlanMode();
+            
+            // Set the optimized sandwich count
+            if (window.budgetOptimizedSandwichCount) {
+                document.getElementById('sandwichCount').value = window.budgetOptimizedSandwichCount;
+            }
+            
+            // Recalculate with the new settings
+            calculateNeeds();
         }
     </script>
 </div>
