@@ -907,6 +907,30 @@
                 <div class="product-price">$9.89</div>
                 <div class="price-note">~$0.21/slice</div>
             </div>
+            
+            <div class="price-card card-meat">
+                <div class="product-emoji">🦃</div>
+                <div class="product-title">Publix Turkey Breast</div>
+                <div class="product-size">16 oz • Thin Sliced</div>
+                <div class="product-price">$7.07</div>
+                <div class="price-note">~$0.44/oz</div>
+            </div>
+            
+            <div class="price-card card-meat">
+                <div class="product-emoji">🦃</div>
+                <div class="product-title">Land O'Frost Premium</div>
+                <div class="product-size">16 oz • Oven Roasted</div>
+                <div class="product-price">$9.53</div>
+                <div class="price-note">~$0.60/oz</div>
+            </div>
+            
+            <div class="price-card card-meat">
+                <div class="product-emoji">🦃</div>
+                <div class="product-title">Hillshire Farm Ultra Thin</div>
+                <div class="product-size">9 oz • Oven Roasted</div>
+                <div class="product-price">$6.07</div>
+                <div class="price-note">~$0.67/oz</div>
+            </div>
         </div>
     </div>
     
@@ -1016,6 +1040,9 @@
                             <option value="">Choose your meat</option>
                             <option value="turkey">🦃 Kirkland Turkey (2-pack, 40oz, $13.99)</option>
                             <option value="ham">🐷 Kirkland Ham (2-pack, 48oz, $9.89)</option>
+                            <option value="publix-turkey">🦃 Publix Turkey Breast, Roasted, Thin Sliced (16oz, $7.07)</option>
+                            <option value="land-o-frost-turkey">🦃 Land O'Frost Premium Oven Roasted Turkey Breast (16oz, $9.53)</option>
+                            <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9oz, $6.07)</option>
                         </select>
                     </div>
                     
@@ -1240,9 +1267,38 @@
             const cheesePerSandwich = 2; // 2 slices per sandwich
 
             // Package sizes and prices
-            const meatPerPackage = meatType === 'turkey' ? 40 : 48;
-            const turkeyPrice = 13.99;
-            const hamPrice = 9.89;
+            let meatPerPackage, meatPrice, meatDescription;
+            switch(meatType) {
+                case 'turkey':
+                    meatPerPackage = 40;
+                    meatPrice = 13.99;
+                    meatDescription = '2-packs (40 oz each)';
+                    break;
+                case 'ham':
+                    meatPerPackage = 48;
+                    meatPrice = 9.89;
+                    meatDescription = '2-packs (48 oz each)';
+                    break;
+                case 'publix-turkey':
+                    meatPerPackage = 16;
+                    meatPrice = 7.07;
+                    meatDescription = '16 oz packages';
+                    break;
+                case 'land-o-frost-turkey':
+                    meatPerPackage = 16;
+                    meatPrice = 9.53;
+                    meatDescription = '16 oz packages';
+                    break;
+                case 'hillshire-turkey':
+                    meatPerPackage = 9;
+                    meatPrice = 6.07;
+                    meatDescription = '9 oz packages';
+                    break;
+                default:
+                    meatPerPackage = 40;
+                    meatPrice = 13.99;
+                    meatDescription = 'packages';
+            }
             const bagPrice = 7.99;
             let cheesePerPackage, cheesePrice, cheeseDescription;
             switch(cheeseType) {
@@ -1327,7 +1383,7 @@
                 }
                 // Estimate max sandwiches for this budget
                 // Cost per sandwich = (meat + cheese + bread + bag) per sandwich
-                const meatCostPerSandwich = (meatType === 'turkey' ? turkeyPrice : hamPrice) / (meatPerPackage / meatPerSandwich);
+                const meatCostPerSandwich = meatPrice / (meatPerPackage / meatPerSandwich);
                 const cheeseCostPerSandwich = cheesePrice / (cheesePerPackage / cheesePerSandwich);
                 const breadCostPerSandwich = breadPrice / breadSandwichesPerPackage;
                 const bagCostPerSandwich = bagPrice / 480;
@@ -1338,8 +1394,6 @@
                     return;
                 }
                 
-                // Store the original budget calculation for later use
-                window.budgetOptimizedSandwichCount = sandwichCount;
             }
 
             // Show warning for small quantities
@@ -1362,7 +1416,7 @@
             const meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
             const cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
             const breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
-            const meatCost = meatPackages * (meatType === 'turkey' ? turkeyPrice : hamPrice);
+            const meatCost = meatPackages * meatPrice;
             const cheeseCost = cheesePackages * cheesePrice;
             const breadCost = breadPackages * breadPrice;
             const bagPackages = Math.ceil(sandwichCount / 480);
@@ -1370,118 +1424,55 @@
             const totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
             const coolersNeeded = Math.ceil(sandwichCount / 100);
 
-            // Check if we're in budget mode and if cost exceeds budget
-            if (!bySandwiches) {
-                const budget = parseFloat(document.getElementById('budgetAmount').value);
-                if (totalCost > budget) {
-                    const overage = totalCost - budget;
-                    const overagePercent = Math.round((overage / budget) * 100);
-                    
-                    // Calculate cost per sandwich to suggest alternatives
-                    const meatCostPerSandwich = (meatType === 'turkey' ? turkeyPrice : hamPrice) / (meatPerPackage / meatPerSandwich);
-                    const cheeseCostPerSandwich = cheesePrice / (cheesePerPackage / cheesePerSandwich);
-                    const breadCostPerSandwich = breadPrice / breadSandwichesPerPackage;
-                    const bagCostPerSandwich = bagPrice / 480;
-                    const totalCostPerSandwich = meatCostPerSandwich + cheeseCostPerSandwich + breadCostPerSandwich + bagCostPerSandwich;
-                    
-                    // Suggest cheaper alternatives
-                    let alternativeSuggestions = '';
-                    
-                    // Check if ham would be cheaper than turkey
-                    if (meatType === 'turkey') {
-                        const hamCostPerSandwich = hamPrice / (48 / meatPerSandwich);
-                        const hamSavingsPerSandwich = meatCostPerSandwich - hamCostPerSandwich;
-                        if (hamSavingsPerSandwich > 0) {
-                            alternativeSuggestions += `<li><strong>Switch to Ham:</strong> Save ~$${hamSavingsPerSandwich.toFixed(2)} per sandwich</li>`;
-                        }
-                    }
-                    
-                    // Check if Adams Reserve would be cheaper than other cheeses
-                    if (cheeseType !== 'adams-reserve') {
-                        const adamsCostPerSandwich = 7.70 / (44 / cheesePerSandwich);
-                        const currentCheeseSavings = cheeseCostPerSandwich - adamsCostPerSandwich;
-                        if (currentCheeseSavings > 0) {
-                            alternativeSuggestions += `<li><strong>Switch to Adams Reserve Cheese:</strong> Save ~$${currentCheeseSavings.toFixed(2)} per sandwich</li>`;
-                        }
-                    }
-                    
-                    // Check if different bread would help
-                    const naturesOwnCostPerSandwich = 4.49 / 20;
-                    const currentBreadSavings = breadCostPerSandwich - naturesOwnCostPerSandwich;
-                    if (currentBreadSavings > 0) {
-                        alternativeSuggestions += `<li><strong>Switch to Nature's Own Double Loaf:</strong> Save ~$${currentBreadSavings.toFixed(2)} per sandwich</li>`;
-                    }
-                    
-                    document.getElementById('calcResult').innerHTML = `
-                        <div style="background: rgba(255,255,255,0.95); color: #A31C41; padding: 25px; border-radius: 12px; border: 2px solid #A31C41; margin-bottom: 20px;">
-                            <div style="text-align: center; margin-bottom: 20px;">
-                                <div style="font-size: 2.5em; margin-bottom: 10px;">⚠️</div>
-                                <h3 style="color: #A31C41; margin-bottom: 10px;">Budget Exceeded!</h3>
-                                <p style="font-size: 1.2em; margin-bottom: 15px;">
-                                    Your selections cost <strong>$${totalCost}</strong>, which is <strong>$${overage}</strong> over your $${budget} budget (${overagePercent}% over).
-                                </p>
-                            </div>
-                            
-                            <div style="background: rgba(255,255,255,0.3); padding: 15px; border-radius: 8px; margin-bottom: 15px;">
-                                <h4 style="color: #236383; margin-bottom: 10px;">💰 Current Order Summary:</h4>
-                                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.9em;">
-                                    <div>${meatPackages} × ${meatType === 'turkey' ? 'Turkey packages' : 'Ham packages'}</div>
-                                    <div>${cheesePackages} × Cheese packages</div>
-                                    <div>${breadPackages} × Bread packages</div>
-                                    <div><strong>Total: $${totalCost}</strong></div>
-                                </div>
-                            </div>
-                            
-                            <div style="background: rgba(35,99,131,0.1); padding: 15px; border-radius: 8px;">
-                                <h4 style="color: #236383; margin-bottom: 10px;">💡 Cost-Saving Suggestions:</h4>
-                                <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
-                                    ${alternativeSuggestions || '<li>Try switching to cheaper ingredient options above</li>'}
-                                    <li><strong>Reduce quantity:</strong> Make ${Math.floor(budget / totalCostPerSandwich)} sandwiches instead of ${sandwichCount} to stay within budget</li>
-                                </ul>
-                                
-                                <div style="margin-top: 15px; text-align: center;">
-                                    <button onclick="applyBudgetOptimization()" style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(76,175,80,0.3);">
-                                        🔧 Quick Fix: Use Budget-Optimized Quantity
-                                    </button>
-                                    <p style="font-size: 0.85em; color: #666; margin-top: 8px; margin-bottom: 0;">
-                                        This will automatically adjust to ${Math.floor(budget / totalCostPerSandwich)} sandwiches to stay within your $${budget} budget
-                                    </p>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.getElementById('calcResult').style.display = 'block';
-                    return;
-                }
-            }
+            // In budget mode, we've already calculated the optimal sandwich count above
+            // The sandwichCount variable already represents the maximum sandwiches within budget
 
-            // Create the result grid (only if budget is not exceeded)
+            // Create the result grid with budget status
             let budgetStatusMessage = '';
             if (!bySandwiches) {
                 const budget = parseFloat(document.getElementById('budgetAmount').value);
                 const remaining = budget - totalCost;
                 const savingsPercent = Math.round((remaining / budget) * 100);
                 
-                if (remaining > 0) {
+                if (remaining > 5) { // More than $5 remaining
                     budgetStatusMessage = `
                         <div style="background: rgba(76,175,80,0.1); border: 2px solid #4CAF50; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
                             <div style="font-size: 1.5em; margin-bottom: 8px;">✅</div>
-                            <h4 style="color: #4CAF50; margin-bottom: 8px;">Budget-Friendly!</h4>
+                            <h4 style="color: #4CAF50; margin-bottom: 8px;">Optimal Budget Planning!</h4>
                             <p style="color: #2E7D32; margin: 0;">
-                                Total cost: <strong>$${totalCost}</strong> | 
+                                <strong>${sandwichCount} sandwiches</strong> for <strong>$${totalCost}</strong> | 
                                 Remaining budget: <strong>$${remaining}</strong> (${savingsPercent}% under budget)
+                            </p>
+                            <p style="color: #4CAF50; font-size: 0.9em; margin: 8px 0 0 0;">
+                                This is the maximum number of sandwiches you can make within your $${budget} budget with your selected ingredients.
                             </p>
                         </div>
                     `;
-                } else {
+                } else if (remaining > 0) { // Small amount remaining
                     budgetStatusMessage = `
                         <div style="background: rgba(255,152,0,0.1); border: 2px solid #FF9800; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
                             <div style="font-size: 1.5em; margin-bottom: 8px;">⚠️</div>
-                            <h4 style="color: #FF9800; margin-bottom: 8px;">Budget Tight!</h4>
+                            <h4 style="color: #FF9800; margin-bottom: 8px;">Budget Optimized!</h4>
                             <p style="color: #E65100; margin: 0;">
-                                Total cost: <strong>$${totalCost}</strong> | 
-                                Exactly matches your $${budget} budget
+                                <strong>${sandwichCount} sandwiches</strong> for <strong>$${totalCost}</strong> | 
+                                Only <strong>$${remaining}</strong> remaining (${savingsPercent}% under budget)
+                            </p>
+                            <p style="color: #FF9800; font-size: 0.9em; margin: 8px 0 0 0;">
+                                This maximizes your sandwich count within your $${budget} budget.
+                            </p>
+                        </div>
+                    `;
+                } else { // Exactly at budget
+                    budgetStatusMessage = `
+                        <div style="background: rgba(76,175,80,0.1); border: 2px solid #4CAF50; border-radius: 10px; padding: 15px; margin-bottom: 20px; text-align: center;">
+                            <div style="font-size: 1.5em; margin-bottom: 8px;">🎯</div>
+                            <h4 style="color: #4CAF50; margin-bottom: 8px;">Perfect Budget Match!</h4>
+                            <p style="color: #2E7D32; margin: 0;">
+                                <strong>${sandwichCount} sandwiches</strong> for exactly <strong>$${totalCost}</strong> | 
+                                Uses your entire $${budget} budget
+                            </p>
+                            <p style="color: #4CAF50; font-size: 0.9em; margin: 8px 0 0 0;">
+                                This is the maximum number of sandwiches you can make with your selected ingredients and budget.
                             </p>
                         </div>
                     `;
@@ -1494,7 +1485,7 @@
                     <div class="result-item">
                         <h4>Meat Packages</h4>
                         <div class="number">${meatPackages}</div>
-                        <div class="description">${meatType === 'turkey' ? '2-packs (40 oz each)' : '2-packs (48 oz each)'}</div>
+                        <div class="description">${meatDescription}</div>
                     </div>
                     <div class="result-item">
                         <h4>Cheese Packages</h4>
@@ -1515,7 +1506,26 @@
             `;
 
             // Generate dynamic shopping checklist
-            const meatDescription = meatType === 'turkey' ? 'Kirkland Turkey 2-packs (40 oz)' : 'Kirkland Ham 2-packs (48 oz)';
+            let meatShoppingDescription;
+            switch(meatType) {
+                case 'turkey':
+                    meatShoppingDescription = 'Kirkland Turkey 2-packs (40 oz)';
+                    break;
+                case 'ham':
+                    meatShoppingDescription = 'Kirkland Ham 2-packs (48 oz)';
+                    break;
+                case 'publix-turkey':
+                    meatShoppingDescription = 'Publix Turkey Breast, Roasted, Thin Sliced (16 oz)';
+                    break;
+                case 'land-o-frost-turkey':
+                    meatShoppingDescription = 'Land O\'Frost Premium Oven Roasted Turkey Breast (16 oz)';
+                    break;
+                case 'hillshire-turkey':
+                    meatShoppingDescription = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 oz)';
+                    break;
+                default:
+                    meatShoppingDescription = 'Meat packages';
+            }
             let cheeseShoppingDescription;
             switch(cheeseType) {
                 case 'adams-reserve':
@@ -1533,7 +1543,7 @@
             const estimatedLoaves = Math.ceil(sandwichCount / 20);
             const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4);
             document.getElementById('shoppingChecklist').innerHTML = `
-                <li><input type="checkbox"> ${meatPackages} × ${meatDescription}</li>
+                <li><input type="checkbox"> ${meatPackages} × ${meatShoppingDescription}</li>
                 <li><input type="checkbox"> ${cheesePackages} × ${cheeseShoppingDescription}</li>
                 <li><input type="checkbox"> ${breadPackages} × Bread ${breadDescription}</li>
                 <li><input type="checkbox"> ${bagPackages} × Zip-lock sandwich bags (480 count)</li>
@@ -1563,7 +1573,32 @@
             // Calculate the results (same logic as in calculateNeeds)
             const meatPerSandwich = 3;
             const cheesePerSandwich = 2;
-            const meatPerPackage = meatType.value === 'turkey' ? 40 : 48;
+            let meatPerPackage, meatPrice;
+            switch(meatType.value) {
+                case 'turkey':
+                    meatPerPackage = 40;
+                    meatPrice = 13.99;
+                    break;
+                case 'ham':
+                    meatPerPackage = 48;
+                    meatPrice = 9.89;
+                    break;
+                case 'publix-turkey':
+                    meatPerPackage = 16;
+                    meatPrice = 7.07;
+                    break;
+                case 'land-o-frost-turkey':
+                    meatPerPackage = 16;
+                    meatPrice = 9.53;
+                    break;
+                case 'hillshire-turkey':
+                    meatPerPackage = 9;
+                    meatPrice = 6.07;
+                    break;
+                default:
+                    meatPerPackage = 40;
+                    meatPrice = 13.99;
+            }
             
             let cheesePerPackage, cheesePrice;
             switch(cheeseType.value) {
@@ -1615,11 +1650,10 @@
             const cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
             const breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
             
-            const turkeyPrice = 13.99;
-            const hamPrice = 9.89;
+            // meatPrice already defined above in the switch statement
             const bagPrice = 7.99;
             
-            const meatCost = meatPackages * (meatType.value === 'turkey' ? turkeyPrice : hamPrice);
+            const meatCost = meatPackages * meatPrice;
             const cheeseCost = cheesePackages * cheesePrice;
             const breadCost = breadPackages * breadPrice;
             const bagCost = Math.ceil(sandwichCount / 480) * bagPrice;
@@ -1663,7 +1697,7 @@
                     <div class="pdf-section">
                         <h3>Shopping Checklist</h3>
                         <ul class="pdf-checklist">
-                            <li>☐ ${meatPackages} × Kirkland ${meatType.value === 'turkey' ? 'Turkey 2-packs (40 oz)' : 'Ham 2-packs (48 oz)'}</li>
+                            <li>☐ ${meatPackages} × ${meatText.replace('🦃 ', '').replace('🐷 ', '')}</li>
                             <li>☐ ${cheesePackages} × ${cheeseText.replace('🧀 ', '').split(' (')[0]} cheese slices</li>
                             <li>☐ ${breadPackages} × ${breadText.replace('🍞 ', '').split(' (')[0]}</li>
                             <li>☐ ${Math.ceil(sandwichCount / 480)} × Zip-lock sandwich bags (480 count)</li>
@@ -1717,19 +1751,6 @@
             document.getElementById('budgetGroup').style.display = bySandwiches ? 'none' : '';
         }
         
-        function applyBudgetOptimization() {
-            // Switch to sandwich count mode and set the optimized quantity
-            document.getElementById('planBySandwiches').checked = true;
-            togglePlanMode();
-            
-            // Set the optimized sandwich count
-            if (window.budgetOptimizedSandwichCount) {
-                document.getElementById('sandwichCount').value = window.budgetOptimizedSandwichCount;
-            }
-            
-            // Recalculate with the new settings
-            calculateNeeds();
-        }
     </script>
 </div>
 <div class="section" style="max-width: 700px; margin: 40px auto 24px auto;">
@@ -1744,6 +1765,9 @@
                 <tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>
                 <tr><td>Turkey (Kirkland 2-pack, 40oz)</td><td>$13.99</td><td>40 oz total</td></tr>
                 <tr><td>Ham (Kirkland 2-pack, 48oz)</td><td>$9.89</td><td>48 oz total</td></tr>
+                <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 oz</td></tr>
+                <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 oz</td></tr>
+                <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 oz</td></tr>
                 <tr><td>Adams Reserve Cheese</td><td>$7.70</td><td>44 slices</td></tr>
                 <tr><td>Finlandia Swiss Cheese</td><td>$9.69</td><td>40 slices</td></tr>
                 <tr><td>Arla Havarti Cheese</td><td>$9.69</td><td>32 slices</td></tr>
