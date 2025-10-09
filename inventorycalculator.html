@@ -1581,15 +1581,23 @@
             const cheeseExcess = cheeseProvided - cheeseNeeded;
             const breadExcess = breadProvided - breadNeeded;
             
+            // Calculate actual possible extra sandwiches (limited by the scarcest ingredient)
+            const possibleExtraFromMeat = Math.floor(meatExcess / meatPerSandwich);
+            const possibleExtraFromCheese = Math.floor(cheeseExcess / cheesePerSandwich);
+            const possibleExtraFromBread = Math.floor(breadExcess / 2); // 2 slices bread per sandwich
+            
+            const actualExtraSandwiches = Math.min(possibleExtraFromMeat, possibleExtraFromCheese, possibleExtraFromBread);
+            
             // Create excess info string
             let excessInfo = '';
             if (meatExcess > 0 || cheeseExcess > 0 || breadExcess > 0) {
                 excessInfo = `
                     <div style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); border-radius: 8px; padding: 15px; margin-top: 15px; font-size: 0.9em;">
                         <div style="font-weight: 600; margin-bottom: 8px; color: #FBAD3F;">📦 Extra Ingredients:</div>
-                        ${meatExcess > 0 ? `<div>• ${meatExcess} extra meat slices (${Math.round(meatExcess/meatPerSandwich)} extra sandwiches)</div>` : ''}
-                        ${cheeseExcess > 0 ? `<div>• ${cheeseExcess} extra cheese slices (${Math.round(cheeseExcess/cheesePerSandwich)} extra sandwiches)</div>` : ''}
-                        ${breadExcess > 0 ? `<div>• ${breadExcess} extra bread slices (${Math.round(breadExcess/2)} extra sandwiches)</div>` : ''}
+                        ${meatExcess > 0 ? `<div>• ${meatExcess} extra meat slices</div>` : ''}
+                        ${cheeseExcess > 0 ? `<div>• ${cheeseExcess} extra cheese slices</div>` : ''}
+                        ${breadExcess > 0 ? `<div>• ${breadExcess} extra bread slices</div>` : ''}
+                        ${actualExtraSandwiches > 0 ? `<div style="margin-top: 8px; font-weight: 600; color: #4CAF50;">🎯 You can make ${actualExtraSandwiches} additional sandwiches with these extra ingredients!</div>` : ''}
                         <div style="margin-top: 8px; font-size: 0.85em; opacity: 0.8;">Package sizes require rounding up - this ensures you have enough ingredients.</div>
                     </div>
                 `;
