@@ -282,13 +282,21 @@
             </svg>
             <h1>Sandwich Project Calculator</h1>
         </div>
-        <p class="subtitle">Estimate sandwich production based on volunteers and time</p>
+        <p class="subtitle">Estimate sandwich production based on adult and student volunteers</p>
         
         <div class="input-group">
-            <label for="volunteers">Number of Volunteers</label>
-            <input type="number" id="volunteers" min="1" max="500" value="15" placeholder="Enter number of volunteers">
+            <label for="adults">Number of Adults</label>
+            <input type="number" id="adults" min="0" max="500" value="10" placeholder="Enter number of adults">
             <div class="slider-container" style="margin-top: 10px;">
-                <input type="range" id="volunteersSlider" min="1" max="200" value="15" style="opacity: 0.6;">
+                <input type="range" id="adultsSlider" min="0" max="200" value="10" style="opacity: 0.6;">
+            </div>
+        </div>
+        
+        <div class="input-group">
+            <label for="students">Number of Students/Kids</label>
+            <input type="number" id="students" min="0" max="500" value="5" placeholder="Enter number of students/kids">
+            <div class="slider-container" style="margin-top: 10px;">
+                <input type="range" id="studentsSlider" min="0" max="200" value="5" style="opacity: 0.6;">
             </div>
         </div>
         
@@ -348,8 +356,10 @@
     </div>
     
     <script>
-        const volunteersInput = document.getElementById('volunteers');
-        const volunteersSlider = document.getElementById('volunteersSlider');
+        const adultsInput = document.getElementById('adults');
+        const adultsSlider = document.getElementById('adultsSlider');
+        const studentsInput = document.getElementById('students');
+        const studentsSlider = document.getElementById('studentsSlider');
         const hoursInput = document.getElementById('hours');
         const hoursSlider = document.getElementById('hoursSlider');
         const budgetInput = document.getElementById('budget');
@@ -366,6 +376,12 @@
         
         const COST_PER_SANDWICH = 1.50;
         
+        // Productivity rates per hour (based on loaves of bread)
+        // Students: 2 loaves per hour (2 loaves × ~12 sandwiches per loaf = ~24 sandwiches/hour)
+        // Adults: faster than students, roughly 3-4 loaves per hour (36-48 sandwiches/hour)
+        const STUDENT_PRODUCTIVITY = 24; // Students: 2 loaves per hour = ~24 sandwiches per hour
+        const ADULT_PRODUCTIVITY = 40; // Adults: ~3.3 loaves per hour = ~40 sandwiches per hour
+        
         function roundToSensibleNumber(num) {
             // Round to practical numbers for event planning
             if (num <= 50) {
@@ -379,83 +395,88 @@
             }
         }
         
-        function calculateEfficiency(volunteers) {
-            // Efficiency scaling based on group size
-            // Solo: 2 sandwiches/person/hour
-            // 20+ people: 25 sandwiches/person/hour (max efficiency)
+        function calculateProductivity(adults, students) {
+            // Calculate total productivity based on adult vs student rates
+            const totalAdults = adults || 0;
+            const totalStudents = students || 0;
             
-            if (volunteers === 1) return 2;
-            if (volunteers >= 20) return 25; // Plateau at 20 people
+            if (totalAdults === 0 && totalStudents === 0) return 0;
             
-            // Aggressive S-curve scaling from 1-20 people
-            // Slow growth 1-5, rapid growth 5-15, tapering 15-20
-            const minRate = 2;
-            const maxRate = 25;
+            const adultProductivity = totalAdults * ADULT_PRODUCTIVITY;
+            const studentProductivity = totalStudents * STUDENT_PRODUCTIVITY;
             
-            // Using a sigmoid curve for more realistic scaling
-            const midpoint = 10; // Steepest efficiency gain around 10 people
-            const steepness = 0.3; // Controls how sharp the transition is
-            
-            const x = (volunteers - midpoint) * steepness;
-            const sigmoid = 1 / (1 + Math.exp(-x));
-            
-            return minRate + (maxRate - minRate) * sigmoid;
+            return adultProductivity + studentProductivity;
         }
         
-        function getEfficiencyDescription(volunteers, rate) {
-            if (volunteers < 5) {
+        function getEfficiencyDescription(adults, students, totalProductivity) {
+            const totalVolunteers = adults + students;
+            const adultRatio = totalVolunteers > 0 ? adults / totalVolunteers : 0;
+            
+            if (totalVolunteers === 0) {
                 return {
-                    level: "Individual pace",
-                    tip: "Small groups work at a steady pace. Consider recruiting more volunteers for assembly-line efficiency."
+                    level: "No volunteers",
+                    tip: "Add some volunteers to start making sandwiches!"
                 };
-            } else if (volunteers < 10) {
+            } else if (adultRatio >= 0.8) {
                 return {
-                    level: "Small team efficiency",
-                    tip: "Good teamwork emerging. You're getting some division of labor benefits."
+                    level: "Adult-led production",
+                    tip: "Great adult leadership! High productivity with experienced volunteers."
                 };
-            } else if (volunteers < 15) {
+            } else if (adultRatio >= 0.5) {
                 return {
-                    level: "Strong team production",
-                    tip: "Great efficiency gains! Assembly line starting to work really well."
+                    level: "Balanced team",
+                    tip: "Good mix of adults and students. Adults provide guidance while students learn."
                 };
-            } else if (volunteers < 20) {
+            } else if (adultRatio >= 0.2) {
                 return {
-                    level: "Near-peak efficiency",
-                    tip: "Almost at maximum efficiency! Well-organized assembly line in action."
+                    level: "Student-heavy team",
+                    tip: "More students than adults. Consider recruiting more adult volunteers for better efficiency."
                 };
             } else {
                 return {
-                    level: "Peak assembly line ✨",
-                    tip: "Maximum efficiency achieved! Full assembly line with specialized stations. Adding more people adds parallel lines."
+                    level: "Student-led production",
+                    tip: "Mostly students volunteering. Great learning opportunity, but consider adult supervision for safety."
                 };
             }
         }
         
         function updateCalculations() {
-            const volunteers = parseInt(volunteersInput.value) || 1;
+            const adults = parseInt(adultsInput.value) || 0;
+            const students = parseInt(studentsInput.value) || 0;
             const hours = parseFloat(hoursInput.value) || 0.5;
             const budget = parseFloat(budgetInput.value) || 0;
+            const totalVolunteers = adults + students;
             
             // Keep sliders in sync
-            if (volunteers <= 200) {
-                volunteersSlider.value = volunteers;
+            if (adults <= 200) {
+                adultsSlider.value = adults;
+            }
+            if (students <= 200) {
+                studentsSlider.value = students;
             }
             if (hours <= 4) {
                 hoursSlider.value = hours;
             }
             
-            // Calculate sandwiches based on efficiency curve
-            const ratePerPersonPerHour = calculateEfficiency(volunteers);
-            const rawTotalSandwiches = volunteers * ratePerPersonPerHour * hours;
+            // Calculate sandwiches based on adult/student productivity rates
+            const totalProductivityPerHour = calculateProductivity(adults, students);
+            const rawTotalSandwiches = totalProductivityPerHour * hours;
             const totalSandwiches = roundToSensibleNumber(rawTotalSandwiches);
-            const sandwichesPerHour = roundToSensibleNumber(volunteers * ratePerPersonPerHour);
+            const sandwichesPerHour = roundToSensibleNumber(totalProductivityPerHour);
             
             sandwichCount.textContent = totalSandwiches.toLocaleString();
             hourlyRate.textContent = sandwichesPerHour.toLocaleString();
-            perPersonRate.textContent = `~${Math.round(ratePerPersonPerHour)} sandwiches per person/hour`;
+            
+            // Update per-person rate display
+            if (totalVolunteers > 0) {
+                const avgRatePerPerson = totalProductivityPerHour / totalVolunteers;
+                perPersonRate.textContent = `~${Math.round(avgRatePerPerson)} sandwiches per person/hour`;
+            } else {
+                perPersonRate.textContent = `(No volunteers)`;
+            }
             
             // Update efficiency description
-            const efficiencyInfo = getEfficiencyDescription(volunteers, ratePerPersonPerHour);
+            const efficiencyInfo = getEfficiencyDescription(adults, students, totalProductivityPerHour);
             efficiencyLevel.textContent = efficiencyInfo.level;
             efficiencyTip.textContent = efficiencyInfo.tip;
             
@@ -493,12 +514,14 @@
         }
         
         // Event listeners for inputs
-        volunteersInput.addEventListener('input', updateCalculations);
+        adultsInput.addEventListener('input', updateCalculations);
+        studentsInput.addEventListener('input', updateCalculations);
         hoursInput.addEventListener('input', updateCalculations);
         budgetInput.addEventListener('input', updateCalculations);
         
         // Event listeners for sliders
-        volunteersSlider.addEventListener('input', () => syncFromSlider(volunteersSlider, volunteersInput));
+        adultsSlider.addEventListener('input', () => syncFromSlider(adultsSlider, adultsInput));
+        studentsSlider.addEventListener('input', () => syncFromSlider(studentsSlider, studentsInput));
         hoursSlider.addEventListener('input', () => syncFromSlider(hoursSlider, hoursInput));
         
         // Initial calculation
