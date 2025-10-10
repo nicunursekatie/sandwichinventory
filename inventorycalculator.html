@@ -659,13 +659,6 @@
             <p>Interactive Group Event Planning Guide</p>
         </div>
 
-        <div style="background: #fffbe8; border: 1.5px solid #FBAD3F; border-radius: 8px; padding: 14px 20px; margin: 0 auto 18px auto; max-width: 650px; display: flex; align-items: center; gap: 14px; font-size: 1.08em;">
-  <span style="font-size: 1.3em;">🧮</span>
-  <span>
-    Know your budget or how many sandwiches you're planning to make? 
-    <a href="#calculator" style="margin-left: 6px; color: #A31C41; font-weight: 600; text-decoration: underline;">Click here to use our interactive calculator tool to plan your shopping trip or refine your budget!</a>
-  </span>
-</div>
 
         <div class="section" id="intro-section" style="margin-bottom: 28px; background: linear-gradient(135deg, #f8f9fa 80%, #e3f6f9 100%); border: 2px solid #FBAD3F; box-shadow: 0 4px 16px #FBAD3F22;">
             <h2 style="color: #A31C41; font-size: 1.7em; font-weight: 700; margin-bottom: 10px;">Welcome to the Sandwich Project Planning Tool!</h2>
@@ -684,7 +677,97 @@
             </p>
         </div>
         
-        <!-- Move Pricing Information section up here -->
+        <!-- Interactive Calculator Section -->
+        <div class="section" id="calculator">
+            <h2>🧮 Interactive Calculator</h2>
+            <div class="shopping-calculator">
+                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your Sandwich Making Shopping Trip</h3>
+                <div style="margin-bottom: 24px; padding: 18px 32px; background: #f8f9fa; border-radius: 10px; border: 1.5px solid #e0e0e0;">
+                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 10px; color: #236383;">How would you like to plan your sandwich making shopping trip?</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px; padding-left: 8px; padding-right: 8px;">
+                        <label class="plan-mode-label" style="display: flex; align-items: center; gap: 10px; font-size: 1.05em; cursor:pointer;">
+                            <input type="radio" name="planMode" id="planBySandwiches" value="sandwiches" checked onchange="togglePlanMode()">
+                            How much will it cost us to make ___ # of sandwiches?
+                        </label>
+                        <label class="plan-mode-label" style="display: flex; align-items: center; gap: 10px; font-size: 1.05em; cursor:pointer;">
+                            <input type="radio" name="planMode" id="planByBudget" value="budget" onchange="togglePlanMode()">
+                            How many sandwiches can we make with a budget of $____?
+                        </label>
+                    </div>
+                </div>
+                <div class="calc-form">
+                    <div class="calc-input-group" id="sandwichCountGroup">
+                        <label for="sandwichCount">Number of sandwiches</label>
+                        <input type="number" id="sandwichCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
+                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of sandwiches you want to make.</span>
+                    </div>
+                    <div class="calc-input-group" id="budgetGroup" style="display: none;">
+                        <label for="budgetAmount">Budget ($)</label>
+                        <input type="number" id="budgetAmount" min="10" max="10000" placeholder="Enter your budget (e.g., 200)">
+                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the total amount you want to spend.</span>
+                    </div>
+                    
+                    <div class="calc-input-group">
+                        <label>Meat type</label>
+                        <select id="meatType">
+                            <option value="">Choose your meat</option>
+                            <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices, $13.99)</option>
+                            <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89)</option>
+                            <option value="publix-turkey">🦃 Publix Turkey Breast, Roasted, Thin Sliced (16 slices, $7.07)</option>
+                            <option value="land-o-frost-turkey">🦃 Land O'Frost Premium Oven Roasted Turkey Breast (16 slices, $9.53)</option>
+                            <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 slices, $6.07)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="calc-input-group">
+                        <label>Cheese type</label>
+                        <select id="cheeseType">
+                            <option value="">Choose your cheese</option>
+                            <option value="adams-reserve">🧀 Adams Reserve (44 slices, $7.70)</option>
+                            <option value="finlandia">🧀 Finlandia Variety (40 slices, $9.69)</option>
+                            <option value="arla-havarti">🧀 Arla Havarti (32 slices, $9.69)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="calc-input-group">
+                        <label>Bread type</label>
+                        <select id="breadType">
+                            <option value="">Choose your bread</option>
+                            <option value="natures-own-double">🍞 Nature's Own Double Loaf (20 sandwiches, $3.99-4.99)</option>
+                            <option value="sunbeam-double">🍞 Sunbeam Double Loaf (26 sandwiches, $5.39)</option>
+                            <option value="sunbeam-single">🍞 Sunbeam Single Loaf (13 sandwiches, $2.70)</option>
+                            <option value="other-double">🍞 Other Brands Double Loaf (20 sandwiches, $5.39)</option>
+                            <option value="other-single">🍞 Other Brands Single Loaf (10 sandwiches, $2.70)</option>
+                        </select>
+                        </select>
+                    </div>
+                    
+                    <div class="calc-button-container">
+                        <button class="calc-button" onclick="calculateNeeds()">Calculate My Order</button>
+                    </div>
+                </div>
+                
+                <div class="calc-result" id="calcResult">
+                </div>
+                
+                <button class="export-button" id="exportButton" onclick="generatePDF()" style="display: none;">
+                    📄 Export to PDF
+                </button>
+            </div>
+            
+            <div style="background: rgba(255,193,63,0.25); border: 2px solid #FBAD3F; padding: 20px; border-radius: 12px; margin-top: 25px; font-size: 1.1em;">
+                <strong style="color: #B8860B; font-size: 1.2em;">💡 Pro Tips:</strong> 
+                <span style="color: #8B4513; font-weight: 500;">Consider buying an extra loaf of bread. Cool sandwiches in freezer for 20-30 minutes before loading into coolers that have been brought inside to cool down.</span>
+            </div>
+            
+            <div class="shopping-list" id="shoppingList" style="display: none;">
+                <h3>📝 Your Costco Shopping Checklist</h3>
+                <ul class="checklist" id="shoppingChecklist">
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Move Pricing Information section down here -->
         <div class="section" id="pricing-info" style="margin-bottom: 32px;">
             <h2>📊 Pricing Information <span style='font-size:0.7em; font-weight:400;'>(Updated 9/17/2025)</span></h2>
             
@@ -1059,93 +1142,6 @@
     </div>
 </div>
     <!-- Collapsible Ingredient Price Summary moved to very bottom -->
-            <h2 id="calculator">🧮 Interactive Calculator</h2>
-            <div class="shopping-calculator">
-                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your Sandwich Making Shopping Trip</h3>
-                <div style="margin-bottom: 24px; padding: 18px 32px; background: #f8f9fa; border-radius: 10px; border: 1.5px solid #e0e0e0;">
-                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 10px; color: #236383;">How would you like to plan your sandwich making shopping trip?</label>
-                    <div style="display: flex; flex-direction: column; gap: 12px; padding-left: 8px; padding-right: 8px;">
-                        <label class="plan-mode-label" style="display: flex; align-items: center; gap: 10px; font-size: 1.05em; cursor:pointer;">
-                            <input type="radio" name="planMode" id="planBySandwiches" value="sandwiches" checked onchange="togglePlanMode()">
-                            How much will it cost us to make ___ # of sandwiches?
-                        </label>
-                        <label class="plan-mode-label" style="display: flex; align-items: center; gap: 10px; font-size: 1.05em; cursor:pointer;">
-                            <input type="radio" name="planMode" id="planByBudget" value="budget" onchange="togglePlanMode()">
-                            How many sandwiches can we make with a budget of $____?
-                        </label>
-                    </div>
-                </div>
-                <div class="calc-form">
-                    <div class="calc-input-group" id="sandwichCountGroup">
-                        <label for="sandwichCount">Number of sandwiches</label>
-                        <input type="number" id="sandwichCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of sandwiches you want to make.</span>
-                    </div>
-                    <div class="calc-input-group" id="budgetGroup" style="display: none;">
-                        <label for="budgetAmount">Budget ($)</label>
-                        <input type="number" id="budgetAmount" min="10" max="10000" placeholder="Enter your budget (e.g., 200)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the total amount you want to spend.</span>
-                    </div>
-                    
-                    <div class="calc-input-group">
-                        <label>Meat type</label>
-                        <select id="meatType">
-                            <option value="">Choose your meat</option>
-                            <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices, $13.99)</option>
-                            <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89)</option>
-                            <option value="publix-turkey">🦃 Publix Turkey Breast, Roasted, Thin Sliced (16 slices, $7.07)</option>
-                            <option value="land-o-frost-turkey">🦃 Land O'Frost Premium Oven Roasted Turkey Breast (16 slices, $9.53)</option>
-                            <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 slices, $6.07)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="calc-input-group">
-                        <label>Cheese type</label>
-                        <select id="cheeseType">
-                            <option value="">Choose your cheese</option>
-                            <option value="adams-reserve">🧀 Adams Reserve (44 slices, $7.70)</option>
-                            <option value="finlandia">🧀 Finlandia Variety (40 slices, $9.69)</option>
-                            <option value="arla-havarti">🧀 Arla Havarti (32 slices, $9.69)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="calc-input-group">
-                        <label>Bread type</label>
-                        <select id="breadType">
-                            <option value="">Choose your bread</option>
-                            <option value="natures-own-double">🍞 Nature's Own Double Loaf (20 sandwiches, $3.99-4.99)</option>
-                            <option value="sunbeam-double">🍞 Sunbeam Double Loaf (26 sandwiches, $5.39)</option>
-                            <option value="sunbeam-single">🍞 Sunbeam Single Loaf (13 sandwiches, $2.70)</option>
-                            <option value="other-double">🍞 Other Brands Double Loaf (20 sandwiches, $5.39)</option>
-                            <option value="other-single">🍞 Other Brands Single Loaf (10 sandwiches, $2.70)</option>
-                        </select>
-                        </select>
-                    </div>
-                    
-                    <div class="calc-button-container">
-                        <button class="calc-button" onclick="calculateNeeds()">Calculate My Order</button>
-                    </div>
-                </div>
-                
-                <div class="calc-result" id="calcResult">
-                </div>
-                
-                <button class="export-button" id="exportButton" onclick="generatePDF()" style="display: none;">
-                    📄 Export to PDF
-                </button>
-            </div>
-            
-            <div style="background: rgba(255,193,63,0.25); border: 2px solid #FBAD3F; padding: 20px; border-radius: 12px; margin-top: 25px; font-size: 1.1em;">
-                <strong style="color: #B8860B; font-size: 1.2em;">💡 Pro Tips:</strong> 
-                <span style="color: #8B4513; font-weight: 500;">Consider buying an extra loaf of bread. Cool sandwiches in freezer for 20-30 minutes before loading into coolers that have been brought inside to cool down.</span>
-            </div>
-            
-            <div class="shopping-list" id="shoppingList" style="display: none;">
-                <h3>📝 Your Costco Shopping Checklist</h3>
-                <ul class="checklist" id="shoppingChecklist">
-                </ul>
-            </div>
-        </div>
         
         <!-- Move Quick Reference section below calculator -->
         <div class="section">
@@ -1459,16 +1455,18 @@
             if (!bySandwiches) {
                 const budget = parseFloat(document.getElementById('budgetAmount').value);
                 
-                // Start with the estimated sandwich count and reduce if needed to stay within budget
-                let adjustedSandwichCount = sandwichCount;
-                let iterations = 0;
-                const maxIterations = 10; // Prevent infinite loops
+                // Use binary search to find the optimal sandwich count within budget
+                let low = 1;
+                let high = Math.floor(budget / 0.50); // Assume minimum $0.50 per sandwich
+                let bestSandwichCount = 1;
                 
-                do {
-                    meatPackages = Math.ceil((adjustedSandwichCount * meatPerSandwich) / meatPerPackage);
-                    cheesePackages = Math.ceil((adjustedSandwichCount * cheesePerSandwich) / cheesePerPackage);
-                    breadPackages = Math.ceil(adjustedSandwichCount / breadSandwichesPerPackage);
-                    bagPackages = Math.ceil(adjustedSandwichCount / 480);
+                while (low <= high) {
+                    let mid = Math.floor((low + high) / 2);
+                    
+                    meatPackages = Math.ceil((mid * meatPerSandwich) / meatPerPackage);
+                    cheesePackages = Math.ceil((mid * cheesePerSandwich) / cheesePerPackage);
+                    breadPackages = Math.ceil(mid / breadSandwichesPerPackage);
+                    bagPackages = Math.ceil(mid / 480);
                     
                     meatCost = meatPackages * meatPrice;
                     cheeseCost = cheesePackages * cheesePrice;
@@ -1477,15 +1475,14 @@
                     totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
                     
                     if (totalCost <= budget) {
-                        break;
+                        bestSandwichCount = mid;
+                        low = mid + 1;
+                    } else {
+                        high = mid - 1;
                     }
-                    
-                    adjustedSandwichCount--;
-                    iterations++;
-                } while (totalCost > budget && adjustedSandwichCount > 0 && iterations < maxIterations);
+                }
                 
-                // Update the sandwich count to the adjusted amount
-                sandwichCount = adjustedSandwichCount;
+                sandwichCount = bestSandwichCount;
                 
                 // Recalculate final costs with the adjusted count
                 meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
