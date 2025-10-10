@@ -711,11 +711,18 @@
                         <label>Meat type</label>
                         <select id="meatType">
                             <option value="">Choose your meat</option>
-                            <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices, $13.99)</option>
-                            <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89)</option>
-                            <option value="publix-turkey">🦃 Publix Turkey Breast, Roasted, Thin Sliced (16 slices, $7.07)</option>
-                            <option value="land-o-frost-turkey">🦃 Land O'Frost Premium Oven Roasted Turkey Breast (16 slices, $9.53)</option>
-                            <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 slices, $6.07)</option>
+                            <optgroup label="⭐ Best Value Options">
+                                <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89) - $0.21/slice</option>
+                                <option value="publix-turkey">🦃 Publix Turkey Breast, Thin Sliced (16 oz / 32 slices, $7.07) - $0.22/slice</option>
+                                <option value="kroger-turkey-thin">🦃 Kroger Turkey Thin Sliced (9 oz / 18 slices, $3.99) - $0.22/slice</option>
+                                <option value="kroger-turkey-family">🦃 Kroger Turkey Family Size (1 lb / 30-32 slices, $4.39) - $0.14/slice ⭐ BEST!</option>
+                            </optgroup>
+                            <optgroup label="More Options">
+                                <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices, $13.99) - $0.35/slice</option>
+                                <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin (9 oz / 18 slices, $6.07) - $0.34/slice</option>
+                                <option value="land-o-frost-turkey">🦃 Land O'Frost Premium (16 oz / 32 slices, $9.53) - $0.30/slice</option>
+                                <option value="kroger-turkey-regular">🦃 Kroger Private Selection® (8 oz / 11-12 slices, $6.49) - $0.56/slice</option>
+                            </optgroup>
                         </select>
                     </div>
                     
@@ -1026,14 +1033,14 @@
     
     <!-- Meat Section -->
     <div class="price-category">
-        <div class="category-label">MEAT</div>
+        <div class="category-label">MEAT - Best Value Options</div>
         <div class="price-grid">
-            <div class="price-card card-meat">
+            <div class="price-card card-meat" style="border: 2px solid #FBAD3F;">
                 <div class="product-emoji">🦃</div>
-                <div class="product-title">Kirkland Turkey</div>
-                <div class="product-size">2-pack • 40 slices</div>
-                <div class="product-price">$13.99</div>
-                <div class="price-note">~$0.35/slice</div>
+                <div class="product-title">Kroger Turkey Family Size ⭐</div>
+                <div class="product-size">1 lb • 30-32 slices</div>
+                <div class="product-price">$4.39</div>
+                <div class="price-note">~$0.14/slice • BEST VALUE!</div>
             </div>
             
             <div class="price-card card-meat">
@@ -1047,27 +1054,58 @@
             <div class="price-card card-meat">
                 <div class="product-emoji">🦃</div>
                 <div class="product-title">Publix Turkey Breast</div>
-                <div class="product-size">16 slices • Thin Sliced</div>
+                <div class="product-size">16 oz • 32 slices</div>
                 <div class="product-price">$7.07</div>
-                <div class="price-note">~$0.44/slice</div>
+                <div class="price-note">~$0.22/slice</div>
             </div>
             
             <div class="price-card card-meat">
                 <div class="product-emoji">🦃</div>
-                <div class="product-title">Land O'Frost Premium</div>
-                <div class="product-size">16 slices • Oven Roasted</div>
-                <div class="product-price">$9.53</div>
-                <div class="price-note">~$0.60/slice</div>
-            </div>
-            
-            <div class="price-card card-meat">
-                <div class="product-emoji">🦃</div>
-                <div class="product-title">Hillshire Farm Ultra Thin</div>
-                <div class="product-size">9 slices • Oven Roasted</div>
-                <div class="product-price">$6.07</div>
-                <div class="price-note">~$0.67/slice</div>
+                <div class="product-title">Kroger Turkey Thin Sliced</div>
+                <div class="product-size">9 oz • 18 slices</div>
+                <div class="product-price">$3.99</div>
+                <div class="price-note">~$0.22/slice</div>
             </div>
         </div>
+        
+        <details style="margin-top: 20px;">
+            <summary style="cursor: pointer; font-weight: 600; color: #1a4d66; font-size: 1.1em; padding: 12px; background: rgba(251,173,63,0.15); border-radius: 8px; margin-bottom: 15px;">
+                ➕ Show More Meat Options
+            </summary>
+            <div class="price-grid" style="margin-top: 15px;">
+                <div class="price-card card-meat">
+                    <div class="product-emoji">🦃</div>
+                    <div class="product-title">Land O'Frost Premium</div>
+                    <div class="product-size">16 oz • 32 slices</div>
+                    <div class="product-price">$9.53</div>
+                    <div class="price-note">~$0.30/slice</div>
+                </div>
+                
+                <div class="price-card card-meat">
+                    <div class="product-emoji">🦃</div>
+                    <div class="product-title">Hillshire Farm Ultra Thin</div>
+                    <div class="product-size">9 oz • 18 slices</div>
+                    <div class="product-price">$6.07</div>
+                    <div class="price-note">~$0.34/slice</div>
+                </div>
+                
+                <div class="price-card card-meat">
+                    <div class="product-emoji">🦃</div>
+                    <div class="product-title">Kirkland Turkey</div>
+                    <div class="product-size">2-pack • 40 slices</div>
+                    <div class="product-price">$13.99</div>
+                    <div class="price-note">~$0.35/slice</div>
+                </div>
+                
+                <div class="price-card card-meat">
+                    <div class="product-emoji">🦃</div>
+                    <div class="product-title">Kroger Private Selection®</div>
+                    <div class="product-size">8 oz • 11-12 slices</div>
+                    <div class="product-price">$6.49</div>
+                    <div class="price-note">~$0.56/slice</div>
+                </div>
+            </div>
+        </details>
     </div>
     
     <!-- Cheese Section -->
@@ -1313,7 +1351,7 @@
             const breadType = document.getElementById('breadType').value;
 
             // Ingredient constants
-            const meatPerSandwich = 3; // 3 slices per sandwich (1 slice = 1 oz)
+            const meatPerSandwich = 3; // 3 slices per sandwich (standard portion)
             const cheesePerSandwich = 2; // 2 slices per sandwich
 
             // Package sizes and prices
@@ -1330,19 +1368,34 @@
                     meatDescription = '2-packs (48 slices each)';
                     break;
                 case 'publix-turkey':
-                    meatPerPackage = 16;
+                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
                     meatPrice = 7.07;
-                    meatDescription = '16 slice packages';
+                    meatDescription = '16 oz packages (32 slices)';
                     break;
                 case 'land-o-frost-turkey':
-                    meatPerPackage = 16;
+                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
                     meatPrice = 9.53;
-                    meatDescription = '16 slice packages';
+                    meatDescription = '16 oz packages (32 slices)';
                     break;
                 case 'hillshire-turkey':
-                    meatPerPackage = 9;
+                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
                     meatPrice = 6.07;
-                    meatDescription = '9 slice packages';
+                    meatDescription = '9 oz packages (18 slices)';
+                    break;
+                case 'kroger-turkey-regular':
+                    meatPerPackage = 11.5; // 8 oz = 11-12 slices average (0.7 oz per slice)
+                    meatPrice = 6.49;
+                    meatDescription = '8 oz packages (11-12 slices)';
+                    break;
+                case 'kroger-turkey-thin':
+                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPrice = 3.99;
+                    meatDescription = '9 oz packages (18 slices)';
+                    break;
+                case 'kroger-turkey-family':
+                    meatPerPackage = 31; // 16 oz (1 lb) = 30-32 slices average (0.5 oz per slice)
+                    meatPrice = 4.39;
+                    meatDescription = '1 lb packages (30-32 slices)';
                     break;
                 default:
                     meatPerPackage = 40;
@@ -1640,13 +1693,22 @@
                     meatShoppingDescription = 'Kirkland Ham 2-packs (48 slices)';
                     break;
                 case 'publix-turkey':
-                    meatShoppingDescription = 'Publix Turkey Breast, Roasted, Thin Sliced (16 slices)';
+                    meatShoppingDescription = 'Publix Turkey Breast, Roasted, Thin Sliced (16 oz / 32 slices)';
                     break;
                 case 'land-o-frost-turkey':
-                    meatShoppingDescription = 'Land O\'Frost Premium Oven Roasted Turkey Breast (16 slices)';
+                    meatShoppingDescription = 'Land O\'Frost Premium Oven Roasted Turkey Breast (16 oz / 32 slices)';
                     break;
                 case 'hillshire-turkey':
-                    meatShoppingDescription = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 slices)';
+                    meatShoppingDescription = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 oz / 18 slices)';
+                    break;
+                case 'kroger-turkey-regular':
+                    meatShoppingDescription = 'Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced (8 oz / 11-12 slices)';
+                    break;
+                case 'kroger-turkey-thin':
+                    meatShoppingDescription = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced (9 oz / 18 slices)';
+                    break;
+                case 'kroger-turkey-family':
+                    meatShoppingDescription = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size (1 lb / 30-32 slices)';
                     break;
                 default:
                     meatShoppingDescription = 'Meat packages';
@@ -1696,7 +1758,7 @@
             const breadText = breadType.options[breadType.selectedIndex].text;
             
             // Calculate the results (same logic as in calculateNeeds)
-            const meatPerSandwich = 3; // 3 slices per sandwich (1 slice = 1 oz)
+            const meatPerSandwich = 3; // 3 slices per sandwich (standard portion)
             const cheesePerSandwich = 2;
             let meatPerPackage, meatPrice;
             switch(meatType.value) {
@@ -1709,16 +1771,28 @@
                     meatPrice = 9.89;
                     break;
                 case 'publix-turkey':
-                    meatPerPackage = 16;
+                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
                     meatPrice = 7.07;
                     break;
                 case 'land-o-frost-turkey':
-                    meatPerPackage = 16;
+                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
                     meatPrice = 9.53;
                     break;
                 case 'hillshire-turkey':
-                    meatPerPackage = 9;
+                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
                     meatPrice = 6.07;
+                    break;
+                case 'kroger-turkey-regular':
+                    meatPerPackage = 11.5; // 8 oz = 11-12 slices average (0.7 oz per slice)
+                    meatPrice = 6.49;
+                    break;
+                case 'kroger-turkey-thin':
+                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPrice = 3.99;
+                    break;
+                case 'kroger-turkey-family':
+                    meatPerPackage = 31; // 16 oz (1 lb) = 30-32 slices average (0.5 oz per slice)
+                    meatPrice = 4.39;
                     break;
                 default:
                     meatPerPackage = 40;
@@ -1890,9 +1964,12 @@
                 <tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>
                 <tr><td>Turkey (Kirkland 2-pack, 40 slices)</td><td>$13.99</td><td>40 slices total</td></tr>
                 <tr><td>Ham (Kirkland 2-pack, 48 slices)</td><td>$9.89</td><td>48 slices total</td></tr>
-                <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 slices</td></tr>
-                <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 slices</td></tr>
-                <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 slices</td></tr>
+                <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 oz / 32 slices</td></tr>
+                <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 oz / 32 slices</td></tr>
+                <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 oz / 18 slices</td></tr>
+                <tr><td>Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced</td><td>$6.49</td><td>8 oz / 11-12 slices</td></tr>
+                <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced</td><td>$3.99</td><td>9 oz / 18 slices</td></tr>
+                <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size</td><td>$4.39</td><td>1 lb / 30-32 slices</td></tr>
                 <tr><td>Adams Reserve Cheese</td><td>$7.70</td><td>44 slices</td></tr>
                 <tr><td>Finlandia Swiss Cheese</td><td>$9.69</td><td>40 slices</td></tr>
                 <tr><td>Arla Havarti Cheese</td><td>$9.69</td><td>32 slices</td></tr>
