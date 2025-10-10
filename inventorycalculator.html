@@ -106,9 +106,15 @@
         
         .quick-ref {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 2.5em; /* Increased gap for more space between cards */
             margin-bottom: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .quick-ref {
+                grid-template-columns: 1fr;
+            }
         }
         
         .ref-card {
