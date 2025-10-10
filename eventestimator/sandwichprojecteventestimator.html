@@ -376,11 +376,12 @@
         
         const COST_PER_SANDWICH = 1.50;
         
-        // Productivity rates per hour (based on loaves of bread)
-        // Students: 2 loaves per hour (2 loaves × ~12 sandwiches per loaf = ~24 sandwiches/hour)
-        // Adults: faster than students, roughly 3-4 loaves per hour (36-48 sandwiches/hour)
-        const STUDENT_PRODUCTIVITY = 24; // Students: 2 loaves per hour = ~24 sandwiches per hour
-        const ADULT_PRODUCTIVITY = 40; // Adults: ~3.3 loaves per hour = ~40 sandwiches per hour
+        // Productivity rates per hour (based on actual experience)
+        // 10 adults = 250 sandwiches/hour = 25 sandwiches per adult per hour
+        // 20 people = 500 sandwiches/hour = 25 sandwiches per person per hour
+        // Students are slower than adults
+        const ADULT_PRODUCTIVITY = 25; // Adults: 25 sandwiches per hour (based on real data)
+        const STUDENT_PRODUCTIVITY = 15; // Students: ~15 sandwiches per hour (slower than adults)
         
         function roundToSensibleNumber(num) {
             // Round to practical numbers for event planning
