@@ -673,7 +673,7 @@
                 <li>💡 <strong>Planning Tips:</strong> Advice for smooth, safe, and successful events.</li>
             </ul>
             <p style="font-size: 1em; color: #888; margin-bottom: 0;">
-                <strong>How to use:</strong> Start with the calculator below, or jump to any section for details and tips. All pricing is based on recent Costco shopping and may vary by location.
+                <strong>How to use:</strong> Start with the calculator below, or jump to any section for details and tips. All pricing is based on recent shopping at various retailers (Costco, Kroger, Publix, etc.) and may vary by location.
             </p>
         </div>
         
@@ -703,7 +703,7 @@
                     </div>
                     <div class="calc-input-group" id="budgetGroup" style="display: none;">
                         <label for="budgetAmount">Budget ($)</label>
-                        <input type="number" id="budgetAmount" min="10" max="10000" placeholder="Enter your budget (e.g., 200)">
+                        <input type="number" id="budgetAmount" min="1" max="10000" placeholder="Enter your budget (e.g., 200)">
                         <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the total amount you want to spend.</span>
                     </div>
                     
@@ -768,7 +768,7 @@
             </div>
             
             <div class="shopping-list" id="shoppingList" style="display: none;">
-                <h3>📝 Your Costco Shopping Checklist</h3>
+                <h3>📝 Your Shopping Checklist</h3>
                 <ul class="checklist" id="shoppingChecklist">
                 </ul>
             </div>
@@ -1480,8 +1480,8 @@
                 }
             } else {
                 const budget = parseFloat(document.getElementById('budgetAmount').value);
-                if (!budget || budget < 10) {
-                    alert('Please enter a valid budget (minimum $10)');
+                if (!budget) {
+                    alert('Please enter a budget amount');
                     return;
                 }
                 // Estimate max sandwiches for this budget
@@ -1596,6 +1596,16 @@
                 const remaining = budget - totalCost;
                 const savingsPercent = Math.round((remaining / budget) * 100);
                 
+                // Add warning for tight budgets
+                let tightBudgetWarning = '';
+                if (budget <= 50) {
+                    tightBudgetWarning = `
+                        <p style="color: #E65100; margin-top: 12px; font-size: 1em; font-weight: 600;">
+                            ⚠️ Note: Budgets under $50 are quite tight and yield limited quantities. Consider increasing your budget for better value and more sandwiches.
+                        </p>
+                    `;
+                }
+                
                 if (remaining > 5) { // More than $5 remaining
                     budgetStatusMessage = `
                         <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
@@ -1608,6 +1618,7 @@
                             <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
                                 This is the maximum number of sandwiches you can make within your $${budget} budget with your selected ingredients.
                             </p>
+                            ${tightBudgetWarning}
                         </div>
                     `;
                 } else if (remaining > 0) { // Small amount remaining
@@ -1622,6 +1633,7 @@
                             <p style="color: #E65100; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
                                 This maximizes your sandwich count within your $${budget} budget.
                             </p>
+                            ${tightBudgetWarning}
                         </div>
                     `;
                 } else { // Exactly at budget
@@ -1636,6 +1648,7 @@
                             <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
                                 This is the maximum number of sandwiches you can make with your selected ingredients and budget.
                             </p>
+                            ${tightBudgetWarning}
                         </div>
                     `;
                 }
@@ -1677,7 +1690,7 @@
                     <div class="result-item">
                         <h4>Total Cost</h4>
                         <div class="number">$${totalCost}</div>
-                        <div class="description">estimated Costco pricing</div>
+                        <div class="description">estimated retail pricing</div>
                     </div>
                 </div>
                 ${excessInfo}
