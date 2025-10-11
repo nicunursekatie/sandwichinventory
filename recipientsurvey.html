@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipient Organization Survey</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .header-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .header-logo img {
+            max-width: 120px;
+            height: auto;
+        }
+
+        h1 {
+            color: #236383;
+            margin-bottom: 10px;
+            font-size: 28px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+
+        .subtitle p {
+            margin-bottom: 12px;
+        }
+
+        .subtitle strong {
+            color: #236383;
+            font-weight: 600;
+        }
+
+        .form-note {
+            background: #f7fafc;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border-left: 3px solid #47B3CB;
+            margin-bottom: 30px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .section-header {
+            color: #236383;
+            font-size: 18px;
+            font-weight: 600;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #FBAD3F;
+        }
+
+        .section-header:first-of-type {
+            margin-top: 0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .footer p {
+            margin-bottom: 8px;
+        }
+
+        .footer a {
+            color: #236383;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group.hidden {
+            display: none;
+        }
+
+        label {
+            display: block;
+            color: #2d3748;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 15px;
+        }
+
+        .helper-text {
+            color: #718096;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="url"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 15px;
+            transition: border-color 0.2s;
+            font-family: inherit;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            outline: none;
+            border-color: #FBAD3F;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .checkbox-group,
+        .radio-group {
+            margin-top: 10px;
+        }
+
+        .checkbox-item,
+        .radio-item {
+            margin-bottom: 10px;
+        }
+
+        .checkbox-item label,
+        .radio-item label {
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        .checkbox-item input[type="checkbox"],
+        .radio-item input {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .time-input {
+            margin-left: 28px;
+            margin-top: 8px;
+            font-size: 14px;
+        }
+
+        .time-input.hidden {
+            display: none;
+        }
+
+        .same-time-option {
+            margin-bottom: 15px;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 6px;
+            border-left: 3px solid #FBAD3F;
+        }
+
+        .same-time-option label {
+            font-weight: 400;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            margin-bottom: 8px;
+        }
+
+        .same-time-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+        }
+
+        .same-time-option .time-input {
+            margin-left: 0;
+        }
+
+        button {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 14px 32px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(35, 99, 131, 0.3);
+        }
+
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background: #e2e8f0;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #FBAD3F 0%, #236383 100%);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .success-message {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .success-message h2 {
+            color: #48bb78;
+            margin-bottom: 10px;
+        }
+
+        .success-message.hidden {
+            display: none;
+        }
+
+        .error-message {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <div class="header-logo">
+            <svg width="120" height="120" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+                <g fill="#FBAD3F" stroke="none">
+                    <circle cx="250" cy="80" r="35"/>
+                    <rect x="235" y="80" width="30" height="120" rx="5"/>
+                    <path d="M 100 150 Q 100 120 130 120 L 370 120 Q 400 120 400 150 L 390 200 Q 390 210 380 210 L 120 210 Q 110 210 110 200 Z"/>
+                    <ellipse cx="250" cy="250" rx="180" ry="15"/>
+                    <path d="M 100 270 Q 95 265 100 260 L 400 260 Q 405 265 400 270 L 380 300 Q 375 310 365 310 L 135 310 Q 125 310 120 300 Z"/>
+                    <ellipse cx="250" cy="350" rx="170" ry="15"/>
+                    <path d="M 110 370 Q 105 365 110 360 L 390 360 Q 395 365 390 370 L 370 410 Q 365 420 355 420 L 145 420 Q 135 420 130 410 Z"/>
+                </g>
+            </svg>
+        </div>
+
+        <h1>The Sandwich Project Recipient Survey</h1>
+        <div class="subtitle">
+            <p><strong>Why we're asking:</strong> This survey helps us understand the organizations we work with so that as we grow, we can do so thoughtfully and with the individuals you serve in mind.</p>
+            
+            <p><strong>What won't change:</strong> Nothing here will change what we're already providing you or how we're providing it. If something comes to light that we could accommodate, we'll discuss it with you first before making any changes.</p>
+            
+            <p><strong>Have more to share?</strong> Use the "Anything else we should know?" field at the bottom or reply directly to this email.</p>
+            
+            <p style="margin-top: 15px; color: #236383;">The work you do is incredible and invaluable to your communities, and we're honored to support your efforts.</p>
+        </div>
+
+        <div class="form-note">
+            <strong>Estimated time:</strong> 5-7 minutes • <strong>*</strong> Required fields
+        </div>
+
+        <div class="error-message" id="errorMessage"></div>
+
+        <form id="surveyForm">
+            <h2 class="section-header">Contact Information</h2>
+            <div class="form-group">
+                <label for="orgName">Organization Name *</label>
+                <input type="text" id="orgName" name="orgName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contactName">Primary Contact Name *</label>
+                <input type="text" id="contactName" name="contactName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contactEmail">Email *</label>
+                <input type="email" id="contactEmail" name="contactEmail" required>
+            </div>
+
+            <div class="form-group">
+                <label for="contactPhone">Phone Number *</label>
+                <input type="tel" id="contactPhone" name="contactPhone" required>
+            </div>
+
+            <div class="form-group">
+                <label for="orgAddress">Organization Address *</label>
+                <textarea id="orgAddress" name="orgAddress" placeholder="Street address, city, state, zip" required style="min-height: 80px;"></textarea>
+            </div>
+
+
+            <div class="form-group">
+                <label for="backupContact">Backup Contact (Name & Phone/Email)</label>
+                <input type="text" id="backupContact" name="backupContact" placeholder="Optional but recommended">
+            </div>
+
+            <div class="form-group">
+                <label>Preferred Contact Method *</label>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <label><input type="radio" name="contactMethod" value="Email" required> Email</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="contactMethod" value="Text"> Text</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="contactMethod" value="Phone"> Phone Call</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Organization Profile -->
+            <h2 class="section-header">Organization Profile</h2>
+            
+            <div class="form-group">
+                <label for="website">Website</label>
+                <input type="url" id="website" name="website" placeholder="https://yourorganization.org">
+            </div>
+
+            <div class="form-group">
+                <label for="socialMedia">Instagram or Social Media Handle</label>
+                <input type="text" id="socialMedia" name="socialMedia" placeholder="@yourorganization">
+            </div>
+
+            <div class="form-group">
+                <label for="populationFocus">Do you focus on a specific population?</label>
+                <input type="text" id="populationFocus" name="populationFocus" placeholder="E.g., youth, veterans, families, seniors, etc.">
+            </div>
+
+            <div class="form-group">
+                <label for="serviceArea">General service area *</label>
+                <input type="text" id="serviceArea" name="serviceArea" placeholder="E.g., Downtown Atlanta, Fulton County, etc." required>
+            </div>
+
+            <!-- Operations -->
+            <h2 class="section-header">Operations</h2>
+            
+            <div class="form-group">
+                <label>What day(s) do you feed people? *</label>
+                <div class="same-time-option">
+                    <label><input type="checkbox" id="feedingSameTime"> Same time for all days</label>
+                    <input type="text" id="feedingUniformTime" name="feedingUniformTime" placeholder="Enter time for all days (e.g., 11am-1pm)" class="time-input hidden">
+                </div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="feedMonday" name="feedingDays" value="Monday"> Monday</label>
+                        <input type="text" id="feedMondayTime" name="feedMondayTime" placeholder="Time (e.g., 11am-1pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="feedTuesday" name="feedingDays" value="Tuesday"> Tuesday</label>
+                        <input type="text" id="feedTuesdayTime" name="feedTuesdayTime" placeholder="Time (e.g., 11am-1pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="feedWednesday" name="feedingDays" value="Wednesday"> Wednesday</label>
+                        <input type="text" id="feedWednesdayTime" name="feedWednesdayTime" placeholder="Time (e.g., 11am-1pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="feedThursday" name="feedingDays" value="Thursday"> Thursday</label>
+                        <input type="text" id="feedThursdayTime" name="feedThursdayTime" placeholder="Time (e.g., 11am-1pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="feedFriday" name="feedingDays" value="Friday"> Friday</label>
+                        <input type="text" id="feedFridayTime" name="feedFridayTime" placeholder="Time (e.g., 11am-1pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="feedSaturday" name="feedingDays" value="Saturday"> Saturday</label>
+                        <input type="text" id="feedSaturdayTime" name="feedSaturdayTime" placeholder="Time (e.g., 11am-1pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="feedSunday" name="feedingDays" value="Sunday"> Sunday</label>
+                        <input type="text" id="feedSundayTime" name="feedSundayTime" placeholder="Time (e.g., 11am-1pm)" class="time-input hidden">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>What day(s) and time(s) can you accept food donations? *</label>
+                <div class="same-time-option">
+                    <label><input type="checkbox" id="donationSameTime"> Same time for all days</label>
+                    <input type="text" id="donationUniformTime" name="donationUniformTime" placeholder="Enter time for all days (e.g., 9am-3pm)" class="time-input hidden">
+                </div>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="donateMonday" name="donationDays" value="Monday"> Monday</label>
+                        <input type="text" id="donateMondayTime" name="donateMondayTime" placeholder="Time (e.g., 9am-3pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="donateTuesday" name="donationDays" value="Tuesday"> Tuesday</label>
+                        <input type="text" id="donateTuesdayTime" name="donateTuesdayTime" placeholder="Time (e.g., 9am-3pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="donateWednesday" name="donationDays" value="Wednesday"> Wednesday</label>
+                        <input type="text" id="donateWednesdayTime" name="donateWednesdayTime" placeholder="Time (e.g., 9am-3pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="donateThursday" name="donationDays" value="Thursday"> Thursday</label>
+                        <input type="text" id="donateThursdayTime" name="donateThursdayTime" placeholder="Time (e.g., 9am-3pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="donateFriday" name="donationDays" value="Friday"> Friday</label>
+                        <input type="text" id="donateFridayTime" name="donateFridayTime" placeholder="Time (e.g., 9am-3pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="donateSaturday" name="donationDays" value="Saturday"> Saturday</label>
+                        <input type="text" id="donateSaturdayTime" name="donateSaturdayTime" placeholder="Time (e.g., 9am-3pm)" class="time-input hidden">
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="donateSunday" name="donationDays" value="Sunday"> Sunday</label>
+                        <input type="text" id="donateSundayTime" name="donateSundayTime" placeholder="Time (e.g., 9am-3pm)" class="time-input hidden">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>What's the average number of people you serve? *</label>
+                <p class="helper-text">Provide whichever statistic you track (daily, weekly, or monthly average).</p>
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <input type="number" id="peopleCount" name="peopleCount" min="1" placeholder="Enter number" required style="flex: 0 0 150px; margin-bottom: 0;">
+                    <div class="radio-group" style="margin-top: 0; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                        <div class="radio-item" style="margin-bottom: 0;">
+                            <label><input type="radio" name="countFrequency" value="Per Day" required> Per Day</label>
+                        </div>
+                        <div class="radio-item" style="margin-bottom: 0;">
+                            <label><input type="radio" name="countFrequency" value="Per Week"> Per Week</label>
+                        </div>
+                        <div class="radio-item" style="margin-bottom: 0;">
+                            <label><input type="radio" name="countFrequency" value="Per Month"> Per Month</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dietary & Preferences -->
+            <h2 class="section-header">Food Preferences</h2>
+            
+            <div class="form-group">
+                <label for="cannotServe">Are there any types of sandwiches that you cannot serve at your organization?</label>
+                <textarea id="cannotServe" name="cannotServe" placeholder="E.g., pork products, anything with nuts, etc. (Leave blank if none)"></textarea>
+            </div>
+
+            <div class="form-group hidden" id="cannotServeReasonGroup">
+                <label>If so, do you mind sharing why not?</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="cannotServeReason" value="Religious"> Religious</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="cannotServeReason" value="Cultural"> Cultural</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="cannotServeReason" value="Preference"> Preference</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="cannotServeReason" value="Safety"> Safety (allergies, etc.)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="cannotServeReasonOther" name="cannotServeReason" value="Other"> Other</label>
+                        <input type="text" id="cannotServeReasonOtherText" name="cannotServeReasonOtherText" placeholder="Please specify" class="time-input hidden">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>What types of sandwiches would the people you serve PREFER?</label>
+                <p class="helper-text">This is not a guarantee that we can get you these sandwiches, but we'd like to have the information as we plan & grow so that we can TRY!</p>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Turkey"> Turkey</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Ham"> Ham</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Peanut Butter & Jelly"> Peanut Butter & Jelly</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" id="sandwichPreferencesOther" name="sandwichPreferences" value="Other"> Other</label>
+                        <input type="text" id="sandwichPreferencesOtherText" name="sandwichPreferencesOtherText" placeholder="Please specify" class="time-input hidden">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Open Feedback -->
+            <div class="form-group">
+                <label for="additionalInfo">Anything else we should know?</label>
+                <textarea id="additionalInfo" name="additionalInfo" placeholder="Optional"></textarea>
+            </div>
+
+            <button type="submit" id="submitBtn">Submit Survey</button>
+        </form>
+
+        <div class="success-message hidden" id="successMessage">
+            <h2>✓ Thank you!</h2>
+            <p style="margin-bottom: 10px;">Your responses have been submitted successfully.</p>
+            <p style="font-size: 14px; color: #666;">We'll review your information and may reach out if we have any questions. If you need to make changes or have additional information to share, please email us directly.</p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Questions?</strong></p>
+            <p>Email us at <a href="mailto:info@sandwichproject.org">info@sandwichproject.org</a></p>
+            <p style="margin-top: 12px; font-size: 13px; color: #999;">© 2025 The Sandwich Project</p>
+        </div>
+    </div>
+
+    <script>
+        const feedingDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+        
+        // Feeding days logic
+        const feedingSameTimeCheckbox = document.getElementById('feedingSameTime');
+        const feedingUniformTime = document.getElementById('feedingUniformTime');
+        
+        feedingDays.forEach(day => {
+            const checkbox = document.getElementById(`feed${day}`);
+            checkbox.addEventListener('change', function() {
+                updateFeedingTimeInputs();
+            });
+        });
+
+        feedingSameTimeCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                feedingUniformTime.classList.remove('hidden');
+                // Hide individual time inputs
+                feedingDays.forEach(day => {
+                    const timeInput = document.getElementById(`feed${day}Time`);
+                    timeInput.classList.add('hidden');
+                    timeInput.value = '';
+                });
+            } else {
+                feedingUniformTime.classList.add('hidden');
+                feedingUniformTime.value = '';
+                updateFeedingTimeInputs();
+            }
+        });
+
+        function updateFeedingTimeInputs() {
+            if (!feedingSameTimeCheckbox.checked) {
+                feedingDays.forEach(day => {
+                    const checkbox = document.getElementById(`feed${day}`);
+                    const timeInput = document.getElementById(`feed${day}Time`);
+                    if (checkbox.checked) {
+                        timeInput.classList.remove('hidden');
+                    } else {
+                        timeInput.classList.add('hidden');
+                        timeInput.value = '';
+                    }
+                });
+            }
+        }
+
+        // Donation days logic
+        const donationSameTimeCheckbox = document.getElementById('donationSameTime');
+        const donationUniformTime = document.getElementById('donationUniformTime');
+        
+        feedingDays.forEach(day => {
+            const checkbox = document.getElementById(`donate${day}`);
+            checkbox.addEventListener('change', function() {
+                updateDonationTimeInputs();
+            });
+        });
+
+        donationSameTimeCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                donationUniformTime.classList.remove('hidden');
+                // Hide individual time inputs
+                feedingDays.forEach(day => {
+                    const timeInput = document.getElementById(`donate${day}Time`);
+                    timeInput.classList.add('hidden');
+                    timeInput.value = '';
+                });
+            } else {
+                donationUniformTime.classList.add('hidden');
+                donationUniformTime.value = '';
+                updateDonationTimeInputs();
+            }
+        });
+
+        function updateDonationTimeInputs() {
+            if (!donationSameTimeCheckbox.checked) {
+                feedingDays.forEach(day => {
+                    const checkbox = document.getElementById(`donate${day}`);
+                    const timeInput = document.getElementById(`donate${day}Time`);
+                    if (checkbox.checked) {
+                        timeInput.classList.remove('hidden');
+                    } else {
+                        timeInput.classList.add('hidden');
+                        timeInput.value = '';
+                    }
+                });
+            }
+        }
+
+        // Conditional logic for cannot serve reasons
+        const cannotServeTextarea = document.getElementById('cannotServe');
+        const cannotServeReasonGroup = document.getElementById('cannotServeReasonGroup');
+
+        cannotServeTextarea.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                cannotServeReasonGroup.classList.remove('hidden');
+            } else {
+                cannotServeReasonGroup.classList.add('hidden');
+            }
+        });
+
+        // Conditional logic for cannot serve reason "Other"
+        const cannotServeReasonOther = document.getElementById('cannotServeReasonOther');
+        const cannotServeReasonOtherText = document.getElementById('cannotServeReasonOtherText');
+
+        cannotServeReasonOther.addEventListener('change', function() {
+            if (this.checked) {
+                cannotServeReasonOtherText.classList.remove('hidden');
+            } else {
+                cannotServeReasonOtherText.classList.add('hidden');
+                cannotServeReasonOtherText.value = '';
+            }
+        });
+
+        // Conditional logic for sandwich preferences "Other"
+        const sandwichPreferencesOther = document.getElementById('sandwichPreferencesOther');
+        const sandwichPreferencesOtherText = document.getElementById('sandwichPreferencesOtherText');
+
+        sandwichPreferencesOther.addEventListener('change', function() {
+            if (this.checked) {
+                sandwichPreferencesOtherText.classList.remove('hidden');
+            } else {
+                sandwichPreferencesOtherText.classList.add('hidden');
+                sandwichPreferencesOtherText.value = '';
+            }
+        });
+
+        // Progress bar
+        const form = document.getElementById('surveyForm');
+        const progressFill = document.getElementById('progressFill');
+        const allInputs = form.querySelectorAll('input, select, textarea');
+
+        function updateProgress() {
+            const requiredInputs = Array.from(allInputs).filter(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    return input.required || input.name === 'feedingDays' || input.name === 'donationDays';
+                }
+                return input.required;
+            });
+
+            const filledInputs = requiredInputs.filter(input => {
+                if (input.type === 'checkbox') {
+                    const checkboxGroup = document.querySelectorAll(`input[name="${input.name}"]`);
+                    return Array.from(checkboxGroup).some(cb => cb.checked);
+                }
+                if (input.type === 'radio') {
+                    return document.querySelector(`input[name="${input.name}"]:checked`) !== null;
+                }
+                return input.value.trim() !== '';
+            });
+
+            const uniqueRequired = new Set();
+            requiredInputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    uniqueRequired.add(input.name);
+                } else {
+                    uniqueRequired.add(input.id);
+                }
+            });
+
+            const uniqueFilled = new Set();
+            filledInputs.forEach(input => {
+                if (input.type === 'checkbox' || input.type === 'radio') {
+                    uniqueFilled.add(input.name);
+                } else {
+                    uniqueFilled.add(input.id);
+                }
+            });
+
+            const progress = (uniqueFilled.size / uniqueRequired.size) * 100;
+            progressFill.style.width = progress + '%';
+        }
+
+        allInputs.forEach(input => {
+            input.addEventListener('change', updateProgress);
+            input.addEventListener('input', updateProgress);
+        });
+
+        // Form submission
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+            errorMessage.classList.remove('show');
+
+            // Collect all form data
+            const formData = new FormData(form);
+            const data = {};
+
+            // Handle regular inputs
+            for (let [key, value] of formData.entries()) {
+                if (key === 'feedingDays' || key === 'donationDays' || key === 'cannotServeReason' || key === 'sandwichPreferences') {
+                    if (!data[key]) data[key] = [];
+                    data[key].push(value);
+                } else {
+                    data[key] = value;
+                }
+            }
+
+            // Collect feeding days with times
+            const feedingSchedule = [];
+            const feedingUniform = document.getElementById('feedingUniformTime').value;
+            feedingDays.forEach(day => {
+                const checkbox = document.getElementById(`feed${day}`);
+                if (checkbox.checked) {
+                    if (feedingSameTimeCheckbox.checked && feedingUniform) {
+                        feedingSchedule.push(`${day} (${feedingUniform})`);
+                    } else {
+                        const timeInput = document.getElementById(`feed${day}Time`);
+                        const time = timeInput.value ? ` (${timeInput.value})` : '';
+                        feedingSchedule.push(day + time);
+                    }
+                }
+            });
+            data.feedingDays = feedingSchedule.join(', ');
+
+            // Collect donation days with times
+            const donationSchedule = [];
+            const donationUniform = document.getElementById('donationUniformTime').value;
+            feedingDays.forEach(day => {
+                const checkbox = document.getElementById(`donate${day}`);
+                if (checkbox.checked) {
+                    if (donationSameTimeCheckbox.checked && donationUniform) {
+                        donationSchedule.push(`${day} (${donationUniform})`);
+                    } else {
+                        const timeInput = document.getElementById(`donate${day}Time`);
+                        const time = timeInput.value ? ` (${timeInput.value})` : '';
+                        donationSchedule.push(day + time);
+                    }
+                }
+            });
+            data.donationDays = donationSchedule.join(', ');
+
+            // Handle sandwich preferences with "Other" text
+            if (data.sandwichPreferences) {
+                const otherText = document.getElementById('sandwichPreferencesOtherText').value;
+                if (otherText && data.sandwichPreferences.includes('Other')) {
+                    // Replace "Other" with the actual text
+                    data.sandwichPreferences = data.sandwichPreferences.map(pref => 
+                        pref === 'Other' ? `Other (${otherText})` : pref
+                    );
+                }
+                data.sandwichPreferences = data.sandwichPreferences.join(', ');
+            }
+
+            // Handle cannot serve reasons with "Other" text
+            if (data.cannotServeReason) {
+                const reasonOtherText = document.getElementById('cannotServeReasonOtherText').value;
+                if (reasonOtherText && data.cannotServeReason.includes('Other')) {
+                    // Replace "Other" with the actual text
+                    data.cannotServeReason = data.cannotServeReason.map(reason => 
+                        reason === 'Other' ? `Other (${reasonOtherText})` : reason
+                    );
+                }
+                data.cannotServeReason = data.cannotServeReason.join(', ');
+            }
+
+            // Add timestamp
+            data.timestamp = new Date().toISOString();
+
+            try {
+                // REPLACE THIS URL WITH YOUR GOOGLE APPS SCRIPT WEB APP URL
+                const scriptURL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
+                
+                const response = await fetch(scriptURL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                // Show success message
+                form.style.display = 'none';
+                document.getElementById('successMessage').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                errorMessage.textContent = 'There was an error submitting the form. Please try again or contact us directly.';
+                errorMessage.classList.add('show');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Survey';
+            }
+        });
+
+        // Initial progress update
+        updateProgress();
+    </script>
+</body>
+</html>

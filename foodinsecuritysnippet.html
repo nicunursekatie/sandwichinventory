@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hunger Hits Home - The Sandwich Project</title>
+    <style>
+        .food-insecurity-section {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 40px 50px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: transparent;
+            border: 2px solid #FBAD3F;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-header {
+            border-bottom: 4px solid #FBAD3F;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #ffffff;
+            font-size: 42px;
+            font-weight: 700;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .stats-container {
+            margin: 30px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            color: #ffffff;
+            font-size: 32px;
+            flex: 1 1 48%;
+        }
+
+        .stat-bullet {
+            width: 6px !important;
+            height: 6px !important;
+            background: #A31C41 !important;
+            border-radius: 50% !important;
+            margin-right: 16px !important;
+            margin-top: 12px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .stat-text {
+            flex: 1;
+        }
+
+        .stat-number {
+            font-weight: 800;
+            color: #FBAD3F;
+            font-size: 28px;
+            margin-right: 4px;
+        }
+
+        .emphasis {
+            font-weight: 700;
+            color: #FBAD3F;
+        }
+
+        .highlight {
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .source {
+            margin-top: 30px;
+            padding: 20px 24px;
+            background: #f8f9fa;
+            border-left: 4px solid #007E8C;
+            font-size: 16px;
+            color: #236383;
+            line-height: 1.6;
+        }
+
+        .source a {
+            color: #007E8C !important;
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        .source a:hover {
+            color: #47B3CB !important;
+            text-decoration: underline;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            .food-insecurity-section {
+                margin: 20px auto;
+                padding: 30px 20px;
+            }
+            
+            .section-title {
+                font-size: 32px;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+            }
+            
+            .stat-item {
+                font-size: 18px;
+                margin-bottom: 20px;
+                flex: 1 1 100%;
+            }
+            
+            .stat-number {
+                font-size: 24px;
+            }
+
+            .source {
+                font-size: 16px;
+                padding: 18px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="food-insecurity-section">
+        <div class="section-header">
+            <h2 class="section-title">Hunger Hits Home</h2>
+        </div>
+        
+        <div class="stats-container">
+            <div class="stat-item">
+                <div class="stat-bullet"></div>
+                <div class="stat-text">
+                    <span class="stat-number">36%</span> of Georgia families with children face food insecurity—<span class="emphasis">more than double</span> the national average
+                </div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-bullet"></div>
+                <div class="stat-text">
+                    <span class="stat-number">1 in 6</span> children in <span class="emphasis">Metro Atlanta</span> go to bed hungry
+                </div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-bullet"></div>
+                <div class="stat-text">
+                    <span class="stat-number">57%</span> of food-insecure Georgians <span class="emphasis">earn too much for SNAP</span>
+                </div>
+            </div>
+            
+            <div class="stat-item">
+                <div class="stat-bullet"></div>
+                <div class="stat-text">
+                    Most food-insecure families <span class="emphasis">have jobs</span>—they're <span class="emphasis">choosing between rent and groceries</span>, gas and dinner
+                </div>
+            </div>
+        </div>
+
+        <div class="source">
+            Source: <a href="https://emoryrsphmain.widen.net/s/zq6d55zm9s/child-health-well-being-georgia-2025" target="_blank" rel="noopener noreferrer">The State of Child Health and Well-Being in Georgia 2025</a>, Emory University Rollins School of Public Health
+        </div>
+    </div>
+</body>
+</html>
