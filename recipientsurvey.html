@@ -322,6 +322,10 @@
         </div>
 
         <div class="error-message" id="errorMessage"></div>
+        
+        <div class="save-status" id="saveStatus" style="display: none;">
+            <span>💾 Progress saved automatically</span>
+        </div>
 
         <form id="surveyForm" action="https://script.google.com/macros/s/AKfycbzSeKM9FHQslxbmQmx4yZ9GwzbvCExJtX1f1QIjnQGh8J5DQZNiOfTlHpNffeNfPvDwwA/exec" method="POST">
             <h2 class="section-header">Contact Information</h2>
@@ -376,7 +380,7 @@
             
             <div class="form-group">
                 <label for="website">Website</label>
-                <input type="url" id="website" name="website" placeholder="https://yourorganization.org">
+                <input type="text" id="website" name="website" placeholder="www.yourorganization.org or yourorganization.org">
             </div>
 
             <div class="form-group">
