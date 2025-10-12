@@ -439,16 +439,22 @@
             <!-- Backup Contact & Preferred Method Row -->
             <div class="form-row">
                 <div class="form-group">
-                    <label for="backupContact">Backup Contact</label>
-                    <input type="text" id="backupContact" name="backupContact" placeholder="Optional but recommended">
+                    <label for="backupContactName">Backup Contact Name</label>
+                    <input type="text" id="backupContactName" name="backupContactName" placeholder="Optional but recommended">
                 </div>
                 <div class="form-group">
-                    <label>Preferred Contact Method *</label>
-                    <div class="radio-group horizontal">
-                        <label><input type="radio" name="contactMethod" value="Email" required> Email</label>
-                        <label><input type="radio" name="contactMethod" value="Text"> Text</label>
-                        <label><input type="radio" name="contactMethod" value="Phone"> Phone</label>
-                    </div>
+                    <label for="backupContactInfo">Backup Contact Email/Phone</label>
+                    <input type="text" id="backupContactInfo" name="backupContactInfo" placeholder="Email or phone number">
+                </div>
+            </div>
+
+            <!-- Preferred Contact Method Row -->
+            <div class="form-group">
+                <label>Preferred Contact Method *</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="contactMethod" value="Email" required> Email</label>
+                    <label><input type="radio" name="contactMethod" value="Text"> Text</label>
+                    <label><input type="radio" name="contactMethod" value="Phone"> Phone</label>
                 </div>
             </div>
 
@@ -522,10 +528,39 @@
                 <textarea id="sandwichRestrictions" name="sandwichRestrictions" placeholder="E.g., No pork for religious reasons, no nuts due to allergies (Leave blank if none)" rows="2"></textarea>
             </div>
 
+            <div class="form-group hidden" id="restrictionReasonGroup">
+                <label for="restrictionReason">Can you tell us why? (Optional)</label>
+                <p class="helper-text">This helps us understand and plan better for future partnerships.</p>
+                <textarea id="restrictionReason" name="restrictionReason" placeholder="E.g., Religious dietary laws, allergy concerns in our facility, cultural preferences of our community, etc." rows="2"></textarea>
+            </div>
+
             <div class="form-group">
-                <label for="sandwichPreferences">What types of sandwiches would the people you serve prefer?</label>
+                <label>What types of sandwiches would the people you serve prefer?</label>
                 <p class="helper-text">This helps us plan & grow! Not a guarantee, but we'd like to try.</p>
-                <textarea id="sandwichPreferences" name="sandwichPreferences" placeholder="E.g., Turkey, ham, PB&J, veggie options, etc." rows="2"></textarea>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Turkey"> Turkey</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Ham"> Ham</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Peanut Butter & Jelly"> Peanut Butter & Jelly</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Veggie"> Veggie options</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Chicken"> Chicken</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Cheese"> Cheese only</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichPreferences" value="Other"> Other</label>
+                    </div>
+                </div>
+                <input type="text" id="sandwichPreferencesOther" name="sandwichPreferencesOther" placeholder="Please specify other preferences" class="time-input hidden" style="margin-top: 10px;">
             </div>
 
             <!-- Open Feedback -->
@@ -656,6 +691,33 @@
         // Initialize auto-save and restore on page load
         setupAutoSave();
         restoreFormProgress();
+
+        // Show/hide "Other" text field for sandwich preferences
+        const sandwichPreferencesOther = document.getElementById('sandwichPreferencesOther');
+        const sandwichPreferencesOtherCheckbox = document.querySelector('input[name="sandwichPreferences"][value="Other"]');
+        
+        sandwichPreferencesOtherCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                sandwichPreferencesOther.classList.remove('hidden');
+            } else {
+                sandwichPreferencesOther.classList.add('hidden');
+                sandwichPreferencesOther.value = '';
+            }
+        });
+
+        // Show/hide "why" field when restrictions are mentioned
+        const sandwichRestrictions = document.getElementById('sandwichRestrictions');
+        const restrictionReasonGroup = document.getElementById('restrictionReasonGroup');
+        const restrictionReason = document.getElementById('restrictionReason');
+
+        sandwichRestrictions.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                restrictionReasonGroup.classList.remove('hidden');
+            } else {
+                restrictionReasonGroup.classList.add('hidden');
+                restrictionReason.value = '';
+            }
+        });
 
         // Progress bar
         const form = document.getElementById('surveyForm');
