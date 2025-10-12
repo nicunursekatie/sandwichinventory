@@ -683,6 +683,28 @@
         setupAutoSave();
         restoreFormProgress();
 
+        // Auto-capitalize contact name and organization name
+        function toTitleCase(str) {
+            return str.replace(/\w\S*/g, function(txt) {
+                return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+            });
+        }
+
+        const orgNameField = document.getElementById('orgName');
+        const contactNameField = document.getElementById('contactName');
+
+        orgNameField.addEventListener('blur', function() {
+            if (this.value.trim()) {
+                this.value = toTitleCase(this.value);
+            }
+        });
+
+        contactNameField.addEventListener('blur', function() {
+            if (this.value.trim()) {
+                this.value = toTitleCase(this.value);
+            }
+        });
+
         // Show/hide "Other" text field for sandwich preferences
         const sandwichPreferencesOther = document.getElementById('sandwichPreferencesOther');
         const sandwichPreferencesOtherCheckbox = document.querySelector('input[name="sandwichPreferences"][value="Other"]');
