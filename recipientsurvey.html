@@ -504,36 +504,53 @@
                 <div id="feedingStructured">
                     <div class="checkbox-group">
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="feedingDays" value="Monday"> Monday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Monday" name="feedingDays" value="Monday"> Monday</label>
+                            <div class="time-inputs hidden" id="feedingMonday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="feedingMondayStart" placeholder="Start">
+                                <input type="time" name="feedingMondayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="feedingDays" value="Tuesday"> Tuesday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Tuesday" name="feedingDays" value="Tuesday"> Tuesday</label>
+                            <div class="time-inputs hidden" id="feedingTuesday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="feedingTuesdayStart" placeholder="Start">
+                                <input type="time" name="feedingTuesdayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="feedingDays" value="Wednesday"> Wednesday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Wednesday" name="feedingDays" value="Wednesday"> Wednesday</label>
+                            <div class="time-inputs hidden" id="feedingWednesday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="feedingWednesdayStart" placeholder="Start">
+                                <input type="time" name="feedingWednesdayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="feedingDays" value="Thursday"> Thursday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Thursday" name="feedingDays" value="Thursday"> Thursday</label>
+                            <div class="time-inputs hidden" id="feedingThursday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="feedingThursdayStart" placeholder="Start">
+                                <input type="time" name="feedingThursdayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="feedingDays" value="Friday"> Friday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Friday" name="feedingDays" value="Friday"> Friday</label>
+                            <div class="time-inputs hidden" id="feedingFriday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="feedingFridayStart" placeholder="Start">
+                                <input type="time" name="feedingFridayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="feedingDays" value="Saturday"> Saturday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Saturday" name="feedingDays" value="Saturday"> Saturday</label>
+                            <div class="time-inputs hidden" id="feedingSaturday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="feedingSaturdayStart" placeholder="Start">
+                                <input type="time" name="feedingSaturdayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="feedingDays" value="Sunday"> Sunday</label>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                        <div>
-                            <label for="feedingStartTime" style="font-size: 14px; font-weight: 400; color: #718096;">Start Time</label>
-                            <input type="time" id="feedingStartTime" name="feedingStartTime" style="margin-top: 5px;">
-                        </div>
-                        <div>
-                            <label for="feedingEndTime" style="font-size: 14px; font-weight: 400; color: #718096;">End Time</label>
-                            <input type="time" id="feedingEndTime" name="feedingEndTime" style="margin-top: 5px;">
+                            <label><input type="checkbox" class="day-checkbox" data-day="Sunday" name="feedingDays" value="Sunday"> Sunday</label>
+                            <div class="time-inputs hidden" id="feedingSunday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="feedingSundayStart" placeholder="Start">
+                                <input type="time" name="feedingSundayEnd" placeholder="End">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -555,36 +572,53 @@
                 <div id="donationStructured">
                     <div class="checkbox-group">
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="donationDays" value="Monday"> Monday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Monday" name="donationDays" value="Monday"> Monday</label>
+                            <div class="time-inputs hidden" id="donationMonday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="donationMondayStart" placeholder="Start">
+                                <input type="time" name="donationMondayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="donationDays" value="Tuesday"> Tuesday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Tuesday" name="donationDays" value="Tuesday"> Tuesday</label>
+                            <div class="time-inputs hidden" id="donationTuesday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="donationTuesdayStart" placeholder="Start">
+                                <input type="time" name="donationTuesdayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="donationDays" value="Wednesday"> Wednesday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Wednesday" name="donationDays" value="Wednesday"> Wednesday</label>
+                            <div class="time-inputs hidden" id="donationWednesday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="donationWednesdayStart" placeholder="Start">
+                                <input type="time" name="donationWednesdayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="donationDays" value="Thursday"> Thursday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Thursday" name="donationDays" value="Thursday"> Thursday</label>
+                            <div class="time-inputs hidden" id="donationThursday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="donationThursdayStart" placeholder="Start">
+                                <input type="time" name="donationThursdayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="donationDays" value="Friday"> Friday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Friday" name="donationDays" value="Friday"> Friday</label>
+                            <div class="time-inputs hidden" id="donationFriday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="donationFridayStart" placeholder="Start">
+                                <input type="time" name="donationFridayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="donationDays" value="Saturday"> Saturday</label>
+                            <label><input type="checkbox" class="day-checkbox" data-day="Saturday" name="donationDays" value="Saturday"> Saturday</label>
+                            <div class="time-inputs hidden" id="donationSaturday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="donationSaturdayStart" placeholder="Start">
+                                <input type="time" name="donationSaturdayEnd" placeholder="End">
+                            </div>
                         </div>
                         <div class="checkbox-item">
-                            <label><input type="checkbox" name="donationDays" value="Sunday"> Sunday</label>
-                        </div>
-                    </div>
-
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                        <div>
-                            <label for="donationStartTime" style="font-size: 14px; font-weight: 400; color: #718096;">Start Time</label>
-                            <input type="time" id="donationStartTime" name="donationStartTime" style="margin-top: 5px;">
-                        </div>
-                        <div>
-                            <label for="donationEndTime" style="font-size: 14px; font-weight: 400; color: #718096;">End Time</label>
-                            <input type="time" id="donationEndTime" name="donationEndTime" style="margin-top: 5px;">
+                            <label><input type="checkbox" class="day-checkbox" data-day="Sunday" name="donationDays" value="Sunday"> Sunday</label>
+                            <div class="time-inputs hidden" id="donationSunday" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-left: 28px; margin-top: 8px;">
+                                <input type="time" name="donationSundayStart" placeholder="Start">
+                                <input type="time" name="donationSundayEnd" placeholder="End">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -809,6 +843,35 @@
                 } else {
                     donationStructured.classList.add('hidden');
                     donationText.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Show/hide time pickers when day checkboxes are checked
+        document.querySelectorAll('#feedingStructured .day-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const day = this.getAttribute('data-day');
+                const timeInputs = document.getElementById('feeding' + day);
+                if (this.checked) {
+                    timeInputs.classList.remove('hidden');
+                } else {
+                    timeInputs.classList.add('hidden');
+                    // Clear time values when unchecked
+                    timeInputs.querySelectorAll('input[type="time"]').forEach(input => input.value = '');
+                }
+            });
+        });
+
+        document.querySelectorAll('#donationStructured .day-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const day = this.getAttribute('data-day');
+                const timeInputs = document.getElementById('donation' + day);
+                if (this.checked) {
+                    timeInputs.classList.remove('hidden');
+                } else {
+                    timeInputs.classList.add('hidden');
+                    // Clear time values when unchecked
+                    timeInputs.querySelectorAll('input[type="time"]').forEach(input => input.value = '');
                 }
             });
         });
