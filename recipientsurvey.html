@@ -489,15 +489,89 @@
             <h2 class="section-header">Operations</h2>
             
             <div class="form-group">
-                <label for="feedingSchedule">When do you serve meals to your community? (days & times) *</label>
-                <p class="helper-text">Just give us the general info - e.g., "Mondays & Wednesdays 11am-1pm" or "Weekdays at noon"</p>
-                <textarea id="feedingSchedule" name="feedingSchedule" placeholder="E.g., Monday-Friday 12pm-2pm, or Tuesdays and Thursdays 11am" required rows="2"></textarea>
+                <label>When do you serve meals to your community? *</label>
+                <p class="helper-text">Select days and times, or describe your schedule in the text box below</p>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="feedingDays" value="Monday"> Monday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="feedingDays" value="Tuesday"> Tuesday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="feedingDays" value="Wednesday"> Wednesday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="feedingDays" value="Thursday"> Thursday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="feedingDays" value="Friday"> Friday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="feedingDays" value="Saturday"> Saturday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="feedingDays" value="Sunday"> Sunday</label>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <div>
+                        <label for="feedingStartTime" style="font-size: 14px; font-weight: 400; color: #718096;">Start Time</label>
+                        <input type="time" id="feedingStartTime" name="feedingStartTime" style="margin-top: 5px;">
+                    </div>
+                    <div>
+                        <label for="feedingEndTime" style="font-size: 14px; font-weight: 400; color: #718096;">End Time</label>
+                        <input type="time" id="feedingEndTime" name="feedingEndTime" style="margin-top: 5px;">
+                    </div>
+                </div>
+
+                <label for="feedingScheduleText" style="font-size: 14px; font-weight: 400; color: #718096; margin-top: 15px;">Or describe your schedule:</label>
+                <textarea id="feedingScheduleText" name="feedingScheduleText" placeholder="E.g., Varies by week, or first Monday of each month, etc." rows="2" style="margin-top: 5px;"></textarea>
             </div>
 
             <div class="form-group">
-                <label for="donationSchedule">What day(s) and time(s) can you accept food donations? *</label>
-                <p class="helper-text">When is best for drop-offs?</p>
-                <textarea id="donationSchedule" name="donationSchedule" placeholder="E.g., Anytime Monday-Friday 9am-5pm, or Tuesdays before 10am" required rows="2"></textarea>
+                <label>What day(s) and time(s) can you accept food donations? *</label>
+                <p class="helper-text">Select days and times, or describe your availability in the text box below</p>
+
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="donationDays" value="Monday"> Monday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="donationDays" value="Tuesday"> Tuesday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="donationDays" value="Wednesday"> Wednesday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="donationDays" value="Thursday"> Thursday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="donationDays" value="Friday"> Friday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="donationDays" value="Saturday"> Saturday</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="donationDays" value="Sunday"> Sunday</label>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                    <div>
+                        <label for="donationStartTime" style="font-size: 14px; font-weight: 400; color: #718096;">Start Time</label>
+                        <input type="time" id="donationStartTime" name="donationStartTime" style="margin-top: 5px;">
+                    </div>
+                    <div>
+                        <label for="donationEndTime" style="font-size: 14px; font-weight: 400; color: #718096;">End Time</label>
+                        <input type="time" id="donationEndTime" name="donationEndTime" style="margin-top: 5px;">
+                    </div>
+                </div>
+
+                <label for="donationScheduleText" style="font-size: 14px; font-weight: 400; color: #718096; margin-top: 15px;">Or describe your availability:</label>
+                <textarea id="donationScheduleText" name="donationScheduleText" placeholder="E.g., Anytime during business hours, or by appointment only, etc." rows="2" style="margin-top: 5px;"></textarea>
             </div>
 
             <div class="form-group">
@@ -756,7 +830,27 @@
 
             const submitBtn = document.getElementById('submitBtn');
             const errorMessage = document.getElementById('errorMessage');
-            
+
+            // Validate feeding schedule
+            const feedingDaysChecked = document.querySelectorAll('input[name="feedingDays"]:checked').length > 0;
+            const feedingText = document.getElementById('feedingScheduleText').value.trim();
+
+            if (!feedingDaysChecked && !feedingText) {
+                errorMessage.textContent = 'Please either select days/times for when you serve meals, or describe your schedule in the text box.';
+                errorMessage.classList.add('show');
+                return;
+            }
+
+            // Validate donation schedule
+            const donationDaysChecked = document.querySelectorAll('input[name="donationDays"]:checked').length > 0;
+            const donationText = document.getElementById('donationScheduleText').value.trim();
+
+            if (!donationDaysChecked && !donationText) {
+                errorMessage.textContent = 'Please either select days/times for when you can accept donations, or describe your availability in the text box.';
+                errorMessage.classList.add('show');
+                return;
+            }
+
             submitBtn.disabled = true;
             submitBtn.textContent = 'Submitting...';
             errorMessage.classList.remove('show');
@@ -765,10 +859,26 @@
             const formData = new FormData(form);
             const data = {};
 
-            // Handle regular inputs
+            // Handle regular inputs and combine multiple checkbox values
             for (let [key, value] of formData.entries()) {
-                data[key] = value;
+                if (data[key]) {
+                    // If key already exists, convert to array or append to array
+                    if (Array.isArray(data[key])) {
+                        data[key].push(value);
+                    } else {
+                        data[key] = [data[key], value];
+                    }
+                } else {
+                    data[key] = value;
+                }
             }
+
+            // Convert arrays to comma-separated strings for easier storage
+            Object.keys(data).forEach(key => {
+                if (Array.isArray(data[key])) {
+                    data[key] = data[key].join(', ');
+                }
+            });
 
             // Add timestamp
             data.timestamp = new Date().toISOString();
