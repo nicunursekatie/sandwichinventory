@@ -490,88 +490,104 @@
             
             <div class="form-group">
                 <label>When do you serve meals to your community? *</label>
-                <p class="helper-text">Select days and times, or describe your schedule in the text box below</p>
+                <p class="helper-text">Choose how you'd like to provide this information</p>
 
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="feedingDays" value="Monday"> Monday</label>
+                <div class="radio-group horizontal" style="margin-bottom: 15px;">
+                    <label><input type="radio" name="feedingInputType" value="structured" checked> Select days & times</label>
+                    <label><input type="radio" name="feedingInputType" value="text"> Describe in text</label>
+                </div>
+
+                <div id="feedingStructured">
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="feedingDays" value="Monday"> Monday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="feedingDays" value="Tuesday"> Tuesday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="feedingDays" value="Wednesday"> Wednesday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="feedingDays" value="Thursday"> Thursday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="feedingDays" value="Friday"> Friday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="feedingDays" value="Saturday"> Saturday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="feedingDays" value="Sunday"> Sunday</label>
+                        </div>
                     </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="feedingDays" value="Tuesday"> Tuesday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="feedingDays" value="Wednesday"> Wednesday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="feedingDays" value="Thursday"> Thursday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="feedingDays" value="Friday"> Friday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="feedingDays" value="Saturday"> Saturday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="feedingDays" value="Sunday"> Sunday</label>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div>
+                            <label for="feedingStartTime" style="font-size: 14px; font-weight: 400; color: #718096;">Start Time</label>
+                            <input type="time" id="feedingStartTime" name="feedingStartTime" style="margin-top: 5px;">
+                        </div>
+                        <div>
+                            <label for="feedingEndTime" style="font-size: 14px; font-weight: 400; color: #718096;">End Time</label>
+                            <input type="time" id="feedingEndTime" name="feedingEndTime" style="margin-top: 5px;">
+                        </div>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                    <div>
-                        <label for="feedingStartTime" style="font-size: 14px; font-weight: 400; color: #718096;">Start Time</label>
-                        <input type="time" id="feedingStartTime" name="feedingStartTime" style="margin-top: 5px;">
-                    </div>
-                    <div>
-                        <label for="feedingEndTime" style="font-size: 14px; font-weight: 400; color: #718096;">End Time</label>
-                        <input type="time" id="feedingEndTime" name="feedingEndTime" style="margin-top: 5px;">
-                    </div>
+                <div id="feedingText" class="hidden">
+                    <textarea id="feedingScheduleText" name="feedingScheduleText" placeholder="E.g., Monday-Friday 12pm-2pm, or Tuesdays and Thursdays 11am, or Varies by week" rows="3"></textarea>
                 </div>
-
-                <label for="feedingScheduleText" style="font-size: 14px; font-weight: 400; color: #718096; margin-top: 15px;">Or describe your schedule:</label>
-                <textarea id="feedingScheduleText" name="feedingScheduleText" placeholder="E.g., Varies by week, or first Monday of each month, etc." rows="2" style="margin-top: 5px;"></textarea>
             </div>
 
             <div class="form-group">
                 <label>What day(s) and time(s) can you accept food donations? *</label>
-                <p class="helper-text">Select days and times, or describe your availability in the text box below</p>
+                <p class="helper-text">Choose how you'd like to provide this information</p>
 
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="donationDays" value="Monday"> Monday</label>
+                <div class="radio-group horizontal" style="margin-bottom: 15px;">
+                    <label><input type="radio" name="donationInputType" value="structured" checked> Select days & times</label>
+                    <label><input type="radio" name="donationInputType" value="text"> Describe in text</label>
+                </div>
+
+                <div id="donationStructured">
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="donationDays" value="Monday"> Monday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="donationDays" value="Tuesday"> Tuesday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="donationDays" value="Wednesday"> Wednesday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="donationDays" value="Thursday"> Thursday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="donationDays" value="Friday"> Friday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="donationDays" value="Saturday"> Saturday</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <label><input type="checkbox" name="donationDays" value="Sunday"> Sunday</label>
+                        </div>
                     </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="donationDays" value="Tuesday"> Tuesday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="donationDays" value="Wednesday"> Wednesday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="donationDays" value="Thursday"> Thursday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="donationDays" value="Friday"> Friday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="donationDays" value="Saturday"> Saturday</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="donationDays" value="Sunday"> Sunday</label>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                        <div>
+                            <label for="donationStartTime" style="font-size: 14px; font-weight: 400; color: #718096;">Start Time</label>
+                            <input type="time" id="donationStartTime" name="donationStartTime" style="margin-top: 5px;">
+                        </div>
+                        <div>
+                            <label for="donationEndTime" style="font-size: 14px; font-weight: 400; color: #718096;">End Time</label>
+                            <input type="time" id="donationEndTime" name="donationEndTime" style="margin-top: 5px;">
+                        </div>
                     </div>
                 </div>
 
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                    <div>
-                        <label for="donationStartTime" style="font-size: 14px; font-weight: 400; color: #718096;">Start Time</label>
-                        <input type="time" id="donationStartTime" name="donationStartTime" style="margin-top: 5px;">
-                    </div>
-                    <div>
-                        <label for="donationEndTime" style="font-size: 14px; font-weight: 400; color: #718096;">End Time</label>
-                        <input type="time" id="donationEndTime" name="donationEndTime" style="margin-top: 5px;">
-                    </div>
+                <div id="donationText" class="hidden">
+                    <textarea id="donationScheduleText" name="donationScheduleText" placeholder="E.g., Anytime Monday-Friday 9am-5pm, or by appointment only, or Tuesdays before 10am" rows="3"></textarea>
                 </div>
-
-                <label for="donationScheduleText" style="font-size: 14px; font-weight: 400; color: #718096; margin-top: 15px;">Or describe your availability:</label>
-                <textarea id="donationScheduleText" name="donationScheduleText" placeholder="E.g., Anytime during business hours, or by appointment only, etc." rows="2" style="margin-top: 5px;"></textarea>
             </div>
 
             <div class="form-group">
@@ -759,6 +775,40 @@
             }
         });
 
+        // Toggle between structured and text input for feeding schedule
+        const feedingInputTypeRadios = document.querySelectorAll('input[name="feedingInputType"]');
+        const feedingStructured = document.getElementById('feedingStructured');
+        const feedingText = document.getElementById('feedingText');
+
+        feedingInputTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'structured') {
+                    feedingStructured.classList.remove('hidden');
+                    feedingText.classList.add('hidden');
+                } else {
+                    feedingStructured.classList.add('hidden');
+                    feedingText.classList.remove('hidden');
+                }
+            });
+        });
+
+        // Toggle between structured and text input for donation schedule
+        const donationInputTypeRadios = document.querySelectorAll('input[name="donationInputType"]');
+        const donationStructured = document.getElementById('donationStructured');
+        const donationText = document.getElementById('donationText');
+
+        donationInputTypeRadios.forEach(radio => {
+            radio.addEventListener('change', function() {
+                if (this.value === 'structured') {
+                    donationStructured.classList.remove('hidden');
+                    donationText.classList.add('hidden');
+                } else {
+                    donationStructured.classList.add('hidden');
+                    donationText.classList.remove('hidden');
+                }
+            });
+        });
+
         // Show/hide "why" field when restrictions are mentioned
         const sandwichRestrictions = document.getElementById('sandwichRestrictions');
         const restrictionReasonGroup = document.getElementById('restrictionReasonGroup');
@@ -832,23 +882,39 @@
             const errorMessage = document.getElementById('errorMessage');
 
             // Validate feeding schedule
-            const feedingDaysChecked = document.querySelectorAll('input[name="feedingDays"]:checked').length > 0;
-            const feedingText = document.getElementById('feedingScheduleText').value.trim();
-
-            if (!feedingDaysChecked && !feedingText) {
-                errorMessage.textContent = 'Please either select days/times for when you serve meals, or describe your schedule in the text box.';
-                errorMessage.classList.add('show');
-                return;
+            const feedingInputType = document.querySelector('input[name="feedingInputType"]:checked').value;
+            if (feedingInputType === 'structured') {
+                const feedingDaysChecked = document.querySelectorAll('input[name="feedingDays"]:checked').length > 0;
+                if (!feedingDaysChecked) {
+                    errorMessage.textContent = 'Please select at least one day for when you serve meals.';
+                    errorMessage.classList.add('show');
+                    return;
+                }
+            } else {
+                const feedingTextValue = document.getElementById('feedingScheduleText').value.trim();
+                if (!feedingTextValue) {
+                    errorMessage.textContent = 'Please describe when you serve meals.';
+                    errorMessage.classList.add('show');
+                    return;
+                }
             }
 
             // Validate donation schedule
-            const donationDaysChecked = document.querySelectorAll('input[name="donationDays"]:checked').length > 0;
-            const donationText = document.getElementById('donationScheduleText').value.trim();
-
-            if (!donationDaysChecked && !donationText) {
-                errorMessage.textContent = 'Please either select days/times for when you can accept donations, or describe your availability in the text box.';
-                errorMessage.classList.add('show');
-                return;
+            const donationInputType = document.querySelector('input[name="donationInputType"]:checked').value;
+            if (donationInputType === 'structured') {
+                const donationDaysChecked = document.querySelectorAll('input[name="donationDays"]:checked').length > 0;
+                if (!donationDaysChecked) {
+                    errorMessage.textContent = 'Please select at least one day for when you can accept donations.';
+                    errorMessage.classList.add('show');
+                    return;
+                }
+            } else {
+                const donationTextValue = document.getElementById('donationScheduleText').value.trim();
+                if (!donationTextValue) {
+                    errorMessage.textContent = 'Please describe when you can accept donations.';
+                    errorMessage.classList.add('show');
+                    return;
+                }
             }
 
             submitBtn.disabled = true;
