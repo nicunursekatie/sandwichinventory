@@ -534,26 +534,6 @@
                 <textarea id="restrictionReason" name="restrictionReason" placeholder="E.g., Religious dietary laws, allergy concerns in our facility, cultural preferences of our community, etc." rows="2"></textarea>
             </div>
 
-            <div class="form-group">
-                <label>What types of sandwiches would the people you serve prefer?</label>
-                <p class="helper-text">This helps us plan & grow! Not a guarantee, but we'd like to try.</p>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="sandwichPreferences" value="Turkey"> Turkey</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="sandwichPreferences" value="Ham"> Ham</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="sandwichPreferences" value="Peanut Butter & Jelly"> Peanut Butter & Jelly</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="sandwichPreferences" value="Other"> Other (please specify)</label>
-                    </div>
-                </div>
-                <input type="text" id="sandwichPreferencesOther" name="sandwichPreferencesOther" placeholder="What other type would you prefer?" class="time-input hidden" style="margin-top: 10px;">
-            </div>
-
             <!-- Open Feedback -->
             <div class="form-group">
                 <label for="additionalInfo">Anything else we should know?</label>
@@ -702,19 +682,6 @@
         contactNameField.addEventListener('blur', function() {
             if (this.value.trim()) {
                 this.value = toTitleCase(this.value);
-            }
-        });
-
-        // Show/hide "Other" text field for sandwich preferences
-        const sandwichPreferencesOther = document.getElementById('sandwichPreferencesOther');
-        const sandwichPreferencesOtherCheckbox = document.querySelector('input[name="sandwichPreferences"][value="Other"]');
-        
-        sandwichPreferencesOtherCheckbox.addEventListener('change', function() {
-            if (this.checked) {
-                sandwichPreferencesOther.classList.remove('hidden');
-            } else {
-                sandwichPreferencesOther.classList.add('hidden');
-                sandwichPreferencesOther.value = '';
             }
         });
 
