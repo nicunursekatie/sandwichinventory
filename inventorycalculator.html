@@ -598,9 +598,11 @@
         
         #pbj-calculator .calc-input-group span {
             font-size: 0.95em;
-            color: rgba(255,255,255,0.9);
+            color: white;
             margin-top: 5px;
             line-height: 1.4;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            font-weight: 500;
         }
         
         .ingredient {
@@ -969,20 +971,20 @@
                     <div class="calc-input-group">
                         <label>Peanut butter type</label>
                         <select id="pbType">
-                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~80 tbsp) - $7.99</option>
-                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~80 tbsp) - $7.99</option>
-                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~32 tbsp) - $3.59</option>
-                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~33 tbsp) - $3.59</option>
+                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
+                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
+                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~30 tbsp) - $3.59</option>
+                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~31 tbsp) - $3.59</option>
                         </select>
                     </div>
 
                     <div class="calc-input-group">
                         <label>Jelly type</label>
                         <select id="jellyType">
-                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz - $4.99</option>
-                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz - $3.59</option>
-                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz - $3.59</option>
-                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz - $3.83</option>
+                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz (~60 tbsp) - $4.99</option>
+                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz (~56 tbsp) - $3.59</option>
+                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz (~38 tbsp) - $3.59</option>
+                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz (~34 tbsp) - $3.83</option>
                         </select>
                         <span style="font-size: 0.95em; color: #236383; margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
                     </div>
@@ -1006,7 +1008,7 @@
                         <span class="amount">3</span><span class="item">tbsp peanut butter</span>
                     </div>
                     <div class="ingredient">
-                        <span class="amount">2</span><span class="item">tbsp jelly</span>
+                        <span class="amount">1.5</span><span class="item">tbsp jelly</span>
                     </div>
                     <div class="ingredient">
                         <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
@@ -2206,73 +2208,73 @@
 
             // Constants
             const pbPerSandwich = 3; // 3 tbsp per sandwich
-            const jellyPerSandwich = 2; // 2 tbsp per sandwich (fixed)
+            const jellyPerSandwich = 1.5; // 1.5 tbsp per sandwich
             const breadSlicesPerSandwich = 2;
 
-            // Peanut butter options
+            // Peanut butter options (1 oz PB = 1.875 tbsp)
             let pbJarSize, pbTbspPerJar, pbJarPrice, pbDescription;
             switch(pbType) {
                 case 'jif-40':
                     pbJarSize = 40;
-                    pbTbspPerJar = 80;
+                    pbTbspPerJar = 75;
                     pbJarPrice = 7.99;
                     pbDescription = 'Jif Creamy 40 oz (1.13kg)';
                     break;
                 case 'skippy-40':
                     pbJarSize = 40;
-                    pbTbspPerJar = 80;
+                    pbTbspPerJar = 75;
                     pbJarPrice = 7.99;
                     pbDescription = 'Skippy Creamy 40 oz (1.13kg)';
                     break;
                 case 'jif-16':
                     pbJarSize = 16;
-                    pbTbspPerJar = 32;
+                    pbTbspPerJar = 30;
                     pbJarPrice = 3.59;
                     pbDescription = 'Jif Creamy 16 oz (454g)';
                     break;
                 case 'skippy-16':
                     pbJarSize = 16.3;
-                    pbTbspPerJar = 33;
+                    pbTbspPerJar = 31;
                     pbJarPrice = 3.59;
                     pbDescription = 'Skippy Creamy 16.3 oz (462g)';
                     break;
                 default:
                     pbJarSize = 40;
-                    pbTbspPerJar = 80;
+                    pbTbspPerJar = 75;
                     pbJarPrice = 7.99;
                     pbDescription = 'Jif Creamy 40 oz (1.13kg)';
             }
 
-            // Jelly options (assuming 1 oz = ~2 tbsp for jelly)
+            // Jelly options (1 oz jelly = 1.875 tbsp)
             let jellyJarSize, jellyTbspPerJar, jellyJarPrice, jellyDescription;
             switch(jellyType) {
                 case 'smuckers-32':
                     jellyJarSize = 32;
-                    jellyTbspPerJar = 64; // 32 oz × 2 tbsp/oz
+                    jellyTbspPerJar = 60;
                     jellyJarPrice = 4.99;
                     jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
                     break;
                 case 'welchs-30':
                     jellyJarSize = 30;
-                    jellyTbspPerJar = 60; // 30 oz × 2 tbsp/oz
+                    jellyTbspPerJar = 56;
                     jellyJarPrice = 3.59;
                     jellyDescription = "Welch's Concord Grape Jelly 30 oz";
                     break;
                 case 'smuckers-squeeze-20':
                     jellyJarSize = 20;
-                    jellyTbspPerJar = 40; // 20 oz × 2 tbsp/oz
+                    jellyTbspPerJar = 38;
                     jellyJarPrice = 3.59;
                     jellyDescription = "Smucker's Squeeze Grape Jelly 20 oz";
                     break;
                 case 'welchs-squeeze-18':
                     jellyJarSize = 18;
-                    jellyTbspPerJar = 36; // 18 oz × 2 tbsp/oz
+                    jellyTbspPerJar = 34;
                     jellyJarPrice = 3.83;
                     jellyDescription = "Welch's Natural Concord Grape Squeeze 18 oz";
                     break;
                 default:
                     jellyJarSize = 32;
-                    jellyTbspPerJar = 64;
+                    jellyTbspPerJar = 60;
                     jellyJarPrice = 4.99;
                     jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
             }
