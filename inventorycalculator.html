@@ -820,7 +820,68 @@
                 </ul>
             </div>
         </div>
-        
+
+        <!-- PB&J Calculator Section -->
+        <div class="section" id="pbj-calculator">
+            <h2>🥜 Peanut Butter & Jelly Calculator</h2>
+            <div class="shopping-calculator">
+                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
+                <div class="calc-form">
+                    <div class="calc-input-group">
+                        <label for="pbjCount">Number of PB&J sandwiches</label>
+                        <input type="number" id="pbjCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
+                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Peanut butter type</label>
+                        <select id="pbType">
+                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~80 tbsp) - $7.99</option>
+                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~80 tbsp) - $7.99</option>
+                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~32 tbsp) - $3.59</option>
+                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~33 tbsp) - $3.59</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Jelly type</label>
+                        <select id="jellyType">
+                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz - $4.99</option>
+                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz - $3.59</option>
+                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz - $3.59</option>
+                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz - $3.83</option>
+                        </select>
+                        <span style="font-size: 0.95em; color: #236383; margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
+                    </div>
+
+                    <div class="calc-button-container">
+                        <button class="calc-button" onclick="calculatePBJ()">Calculate PB&J Needs</button>
+                    </div>
+                </div>
+
+                <div class="calc-result" id="pbjResult">
+                </div>
+            </div>
+
+            <div class="recipe-card" style="margin-top: 25px;">
+                <h3>Every PB&J Sandwich Contains</h3>
+                <div class="recipe-ingredients">
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">slices bread</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">3</span><span class="item">tbsp peanut butter</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">tbsp jelly</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Move Pricing Information section down here -->
         <div class="section" id="pricing-info" style="margin-bottom: 32px;">
             <h2>📊 Pricing Information <span style='font-size:0.7em; font-weight:400;'>(Updated 9/17/2025)</span></h2>
@@ -1292,75 +1353,6 @@
             </div>
         </div>
 
-        <!-- PB&J Calculator Section -->
-        <div class="section" id="pbj-calculator">
-            <h2>🥜 Peanut Butter & Jelly Calculator</h2>
-            <div class="shopping-calculator">
-                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
-                <div class="calc-form">
-                    <div class="calc-input-group">
-                        <label for="pbjCount">Number of PB&J sandwiches</label>
-                        <input type="number" id="pbjCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
-                    </div>
-
-                    <div class="calc-input-group">
-                        <label>Peanut butter type</label>
-                        <select id="pbType">
-                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~80 tbsp) - $7.99</option>
-                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~80 tbsp) - $7.99</option>
-                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~32 tbsp) - $3.59</option>
-                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~33 tbsp) - $3.59</option>
-                        </select>
-                    </div>
-
-                    <div class="calc-input-group">
-                        <label>Jelly type</label>
-                        <select id="jellyType">
-                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz - $4.99</option>
-                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz - $3.59</option>
-                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz - $3.59</option>
-                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz - $3.83</option>
-                        </select>
-                        <span style="font-size: 0.95em; color: #236383; margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
-                    </div>
-
-                    <div class="calc-input-group">
-                        <label>Jelly amount per sandwich</label>
-                        <select id="jellyAmount">
-                            <option value="1.5">1.5 tbsp (light jelly)</option>
-                            <option value="2" selected>2 tbsp (standard jelly)</option>
-                        </select>
-                    </div>
-
-                    <div class="calc-button-container">
-                        <button class="calc-button" onclick="calculatePBJ()">Calculate PB&J Needs</button>
-                    </div>
-                </div>
-
-                <div class="calc-result" id="pbjResult">
-                </div>
-            </div>
-
-            <div class="recipe-card" style="margin-top: 25px;">
-                <h3>Every PB&J Sandwich Contains</h3>
-                <div class="recipe-ingredients">
-                    <div class="ingredient">
-                        <span class="amount">2</span><span class="item">slices bread</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">3</span><span class="item">tbsp peanut butter</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1.5-2</span><span class="item">tbsp jelly</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
         <div class="safety-banner">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; text-align: left;">
                 <div>🛡️ <strong>Keep ingredients refrigerated</strong></div>
@@ -2071,7 +2063,6 @@
 
         function calculatePBJ() {
             const pbjCount = parseInt(document.getElementById('pbjCount').value);
-            const jellyAmount = parseFloat(document.getElementById('jellyAmount').value);
             const pbType = document.getElementById('pbType').value;
             const jellyType = document.getElementById('jellyType').value;
 
@@ -2082,6 +2073,7 @@
 
             // Constants
             const pbPerSandwich = 3; // 3 tbsp per sandwich
+            const jellyPerSandwich = 2; // 2 tbsp per sandwich (fixed)
             const breadSlicesPerSandwich = 2;
 
             // Peanut butter options
@@ -2163,7 +2155,7 @@
 
             // Calculate total needs
             const totalPbTbsp = pbjCount * pbPerSandwich;
-            const totalJellyTbsp = pbjCount * jellyAmount;
+            const totalJellyTbsp = pbjCount * jellyPerSandwich;
             const totalBreadSlices = pbjCount * breadSlicesPerSandwich;
 
             // Calculate jars/packages needed
