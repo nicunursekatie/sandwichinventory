@@ -743,6 +743,57 @@
                 font-size: 1.1em;
             }
         }
+
+        .nav-menu {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .nav-menu h3 {
+            color: #1a4d66;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .nav-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .nav-link {
+            background: linear-gradient(135deg, #007E8C 0%, #47B3CB 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,126,140,0.2);
+        }
+
+        .nav-link:hover {
+            background: linear-gradient(135deg, #47B3CB 0%, #007E8C 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,126,140,0.3);
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                flex-direction: column;
+            }
+
+            .nav-link {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -751,6 +802,17 @@
             <div class="logo">🥪 TSP</div>
             <h1>The Sandwich Project</h1>
             <p>Interactive Group Event Planning Guide</p>
+        </div>
+
+        <div class="nav-menu">
+            <h3>Quick Navigation</h3>
+            <div class="nav-links">
+                <a href="#calculator" class="nav-link">🧮 Deli Calculator</a>
+                <a href="#pbj-calculator" class="nav-link">🥜 PB&J Calculator</a>
+                <a href="#pricing-info" class="nav-link">📊 Pricing Info</a>
+                <a href="#recipe" class="nav-link">🥪 Recipes</a>
+                <a href="#food-safety" class="nav-link">🛡️ Food Safety</a>
+            </div>
         </div>
 
 
@@ -1378,8 +1440,8 @@
                 </div>
             </div>
         </div>
-        
-        <div class="section">
+
+        <div class="section" id="recipe">
             <h2>🥪 Perfect Sandwich Recipe</h2>
             <div class="recipe-card">
                 <h3>Every Sandwich Contains</h3>
@@ -1408,8 +1470,8 @@
                 <div>❄️ <strong>Return completed loaves immediately</strong></div>
             </div>
         </div>
-        
-        <div class="section">
+
+        <div class="section" id="food-safety">
             <h2>🛡️ Food Safety Requirements</h2>
             <div class="tips-grid">
                 <div class="tip-card">
