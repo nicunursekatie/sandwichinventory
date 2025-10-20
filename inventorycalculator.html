@@ -1307,12 +1307,22 @@
                     <div class="calc-input-group">
                         <label>Peanut butter type</label>
                         <select id="pbType">
-                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~80 tbsp) - $8.99</option>
-                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~80 tbsp) - $8.99</option>
-                            <option value="kirkland-28">🥜 Kirkland Organic 28 oz (794g, ~56 tbsp) - $9.99</option>
-                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~32 tbsp) - $4.49</option>
-                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~33 tbsp) - $4.49</option>
+                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~80 tbsp) - $7.99</option>
+                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~80 tbsp) - $7.99</option>
+                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~32 tbsp) - $3.59</option>
+                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~33 tbsp) - $3.59</option>
                         </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Jelly type</label>
+                        <select id="jellyType">
+                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz - $4.99</option>
+                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz - $3.59</option>
+                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz - $3.59</option>
+                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz - $3.83</option>
+                        </select>
+                        <span style="font-size: 0.95em; color: #236383; margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
                     </div>
 
                     <div class="calc-input-group">
@@ -2063,6 +2073,7 @@
             const pbjCount = parseInt(document.getElementById('pbjCount').value);
             const jellyAmount = parseFloat(document.getElementById('jellyAmount').value);
             const pbType = document.getElementById('pbType').value;
+            const jellyType = document.getElementById('jellyType').value;
 
             if (!pbjCount || pbjCount <= 0) {
                 alert('Please enter a valid number of PB&J sandwiches');
@@ -2079,49 +2090,74 @@
                 case 'jif-40':
                     pbJarSize = 40;
                     pbTbspPerJar = 80;
-                    pbJarPrice = 8.99;
+                    pbJarPrice = 7.99;
                     pbDescription = 'Jif Creamy 40 oz (1.13kg)';
                     break;
                 case 'skippy-40':
                     pbJarSize = 40;
                     pbTbspPerJar = 80;
-                    pbJarPrice = 8.99;
+                    pbJarPrice = 7.99;
                     pbDescription = 'Skippy Creamy 40 oz (1.13kg)';
-                    break;
-                case 'kirkland-28':
-                    pbJarSize = 28;
-                    pbTbspPerJar = 56;
-                    pbJarPrice = 9.99;
-                    pbDescription = 'Kirkland Organic 28 oz (794g)';
                     break;
                 case 'jif-16':
                     pbJarSize = 16;
                     pbTbspPerJar = 32;
-                    pbJarPrice = 4.49;
+                    pbJarPrice = 3.59;
                     pbDescription = 'Jif Creamy 16 oz (454g)';
                     break;
                 case 'skippy-16':
                     pbJarSize = 16.3;
                     pbTbspPerJar = 33;
-                    pbJarPrice = 4.49;
+                    pbJarPrice = 3.59;
                     pbDescription = 'Skippy Creamy 16.3 oz (462g)';
                     break;
                 default:
                     pbJarSize = 40;
                     pbTbspPerJar = 80;
-                    pbJarPrice = 8.99;
+                    pbJarPrice = 7.99;
                     pbDescription = 'Jif Creamy 40 oz (1.13kg)';
             }
 
+            // Jelly options (assuming 1 oz = ~2 tbsp for jelly)
+            let jellyJarSize, jellyTbspPerJar, jellyJarPrice, jellyDescription;
+            switch(jellyType) {
+                case 'smuckers-32':
+                    jellyJarSize = 32;
+                    jellyTbspPerJar = 64; // 32 oz × 2 tbsp/oz
+                    jellyJarPrice = 4.99;
+                    jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
+                    break;
+                case 'welchs-30':
+                    jellyJarSize = 30;
+                    jellyTbspPerJar = 60; // 30 oz × 2 tbsp/oz
+                    jellyJarPrice = 3.59;
+                    jellyDescription = "Welch's Concord Grape Jelly 30 oz";
+                    break;
+                case 'smuckers-squeeze-20':
+                    jellyJarSize = 20;
+                    jellyTbspPerJar = 40; // 20 oz × 2 tbsp/oz
+                    jellyJarPrice = 3.59;
+                    jellyDescription = "Smucker's Squeeze Grape Jelly 20 oz";
+                    break;
+                case 'welchs-squeeze-18':
+                    jellyJarSize = 18;
+                    jellyTbspPerJar = 36; // 18 oz × 2 tbsp/oz
+                    jellyJarPrice = 3.83;
+                    jellyDescription = "Welch's Natural Concord Grape Squeeze 18 oz";
+                    break;
+                default:
+                    jellyJarSize = 32;
+                    jellyTbspPerJar = 64;
+                    jellyJarPrice = 4.99;
+                    jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
+            }
+
             // Other container sizes
-            const jellyJarSize = 32; // 32 oz jar
-            const jellyTbspPerJar = 60; // Approximately 60 tbsp in a 32 oz jar
             const breadSlicesPerLoaf = 22; // Standard loaf (20 usable + 2 heels)
             const usableBreadSlicesPerLoaf = 20; // Excluding heels
             const bagsPerBox = 480;
 
             // Other prices
-            const jellyJarPrice = 4.99; // ~$5 for 32oz jar
             const breadPrice = 2.70; // Average single loaf price
             const bagBoxPrice = 7.99;
 
@@ -2149,26 +2185,26 @@
                     <div class="result-item">
                         <h4>Peanut Butter</h4>
                         <div class="number">${pbJarsNeeded}</div>
-                        <div class="description">${pbJarSize} oz jars<br>(~${pbTbspPerJar} tbsp each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">≈ $${pbCost.toFixed(2)}</div>
+                        <div class="description">${pbDescription}<br>(~${pbTbspPerJar} tbsp each)</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">$${pbCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
                         <h4>Jelly</h4>
                         <div class="number">${jellyJarsNeeded}</div>
-                        <div class="description">${jellyJarSize} oz jars<br>(~${jellyTbspPerJar} tbsp each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">≈ $${jellyCost.toFixed(2)}</div>
+                        <div class="description">${jellyDescription}<br>(~${jellyTbspPerJar} tbsp each)</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">$${jellyCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
                         <h4>Bread Loaves</h4>
                         <div class="number">${breadLoavesNeeded}</div>
                         <div class="description">single loaves<br>(${usableBreadSlicesPerLoaf} usable slices each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">≈ $${breadCost.toFixed(2)}</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">$${breadCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
                         <h4>Sandwich Bags</h4>
                         <div class="number">${bagBoxesNeeded}</div>
                         <div class="description">${bagsPerBox} count boxes</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">≈ $${bagCost.toFixed(2)}</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">$${bagCost.toFixed(2)}</div>
                     </div>
                 </div>
                 <div style="margin-top: 25px; padding: 20px; background: rgba(251,173,63,0.2); border-radius: 12px; text-align: center;">
