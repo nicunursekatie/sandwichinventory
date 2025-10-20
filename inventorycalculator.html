@@ -888,7 +888,15 @@
                         <input type="number" id="budgetAmount" min="1" max="10000" placeholder="Enter your budget (e.g., 200)">
                         <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the total amount you want to spend.</span>
                     </div>
-                    
+
+                    <div class="calc-input-group">
+                        <label>Meat amount per sandwich</label>
+                        <select id="meatAmount">
+                            <option value="2">2 slices of meat (lighter sandwich)</option>
+                            <option value="3" selected>3 slices of meat (standard sandwich)</option>
+                        </select>
+                    </div>
+
                     <div class="calc-input-group">
                         <label>Meat type</label>
                         <select id="meatType">
@@ -1479,7 +1487,7 @@
                         <span class="amount">2</span><span class="item">slices cheese (one per bread slice)</span>
                     </div>
                     <div class="ingredient">
-                        <span class="amount">3</span><span class="item">slices deli meat (turkey or ham)</span>
+                        <span class="amount">2-3</span><span class="item">slices deli meat (turkey or ham)</span>
                     </div>
                     <div class="ingredient">
                         <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
@@ -1596,9 +1604,10 @@
             const meatType = document.getElementById('meatType').value;
             const cheeseType = document.getElementById('cheeseType').value;
             const breadType = document.getElementById('breadType').value;
+            const meatAmount = parseInt(document.getElementById('meatAmount').value);
 
             // Ingredient constants
-            const meatPerSandwich = 3; // 3 slices per sandwich (standard portion)
+            const meatPerSandwich = meatAmount; // 2 or 3 slices per sandwich (user selected)
             const cheesePerSandwich = 2; // 2 slices per sandwich
 
             // Package sizes and prices
