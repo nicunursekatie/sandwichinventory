@@ -1291,6 +1291,65 @@
                 </div>
             </div>
         </div>
+
+        <!-- PB&J Calculator Section -->
+        <div class="section" id="pbj-calculator">
+            <h2>🥜 Peanut Butter & Jelly Calculator</h2>
+            <div class="shopping-calculator">
+                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
+                <div class="calc-form">
+                    <div class="calc-input-group">
+                        <label for="pbjCount">Number of PB&J sandwiches</label>
+                        <input type="number" id="pbjCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
+                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Peanut butter type</label>
+                        <select id="pbType">
+                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~80 tbsp) - $8.99</option>
+                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~80 tbsp) - $8.99</option>
+                            <option value="kirkland-28">🥜 Kirkland Organic 28 oz (794g, ~56 tbsp) - $9.99</option>
+                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~32 tbsp) - $4.49</option>
+                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~33 tbsp) - $4.49</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Jelly amount per sandwich</label>
+                        <select id="jellyAmount">
+                            <option value="1.5">1.5 tbsp (light jelly)</option>
+                            <option value="2" selected>2 tbsp (standard jelly)</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-button-container">
+                        <button class="calc-button" onclick="calculatePBJ()">Calculate PB&J Needs</button>
+                    </div>
+                </div>
+
+                <div class="calc-result" id="pbjResult">
+                </div>
+            </div>
+
+            <div class="recipe-card" style="margin-top: 25px;">
+                <h3>Every PB&J Sandwich Contains</h3>
+                <div class="recipe-ingredients">
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">slices bread</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">3</span><span class="item">tbsp peanut butter</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1.5-2</span><span class="item">tbsp jelly</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         <div class="safety-banner">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; text-align: left;">
@@ -1999,7 +2058,132 @@
             document.getElementById('sandwichCountGroup').style.display = bySandwiches ? '' : 'none';
             document.getElementById('budgetGroup').style.display = bySandwiches ? 'none' : '';
         }
-        
+
+        function calculatePBJ() {
+            const pbjCount = parseInt(document.getElementById('pbjCount').value);
+            const jellyAmount = parseFloat(document.getElementById('jellyAmount').value);
+            const pbType = document.getElementById('pbType').value;
+
+            if (!pbjCount || pbjCount <= 0) {
+                alert('Please enter a valid number of PB&J sandwiches');
+                return;
+            }
+
+            // Constants
+            const pbPerSandwich = 3; // 3 tbsp per sandwich
+            const breadSlicesPerSandwich = 2;
+
+            // Peanut butter options
+            let pbJarSize, pbTbspPerJar, pbJarPrice, pbDescription;
+            switch(pbType) {
+                case 'jif-40':
+                    pbJarSize = 40;
+                    pbTbspPerJar = 80;
+                    pbJarPrice = 8.99;
+                    pbDescription = 'Jif Creamy 40 oz (1.13kg)';
+                    break;
+                case 'skippy-40':
+                    pbJarSize = 40;
+                    pbTbspPerJar = 80;
+                    pbJarPrice = 8.99;
+                    pbDescription = 'Skippy Creamy 40 oz (1.13kg)';
+                    break;
+                case 'kirkland-28':
+                    pbJarSize = 28;
+                    pbTbspPerJar = 56;
+                    pbJarPrice = 9.99;
+                    pbDescription = 'Kirkland Organic 28 oz (794g)';
+                    break;
+                case 'jif-16':
+                    pbJarSize = 16;
+                    pbTbspPerJar = 32;
+                    pbJarPrice = 4.49;
+                    pbDescription = 'Jif Creamy 16 oz (454g)';
+                    break;
+                case 'skippy-16':
+                    pbJarSize = 16.3;
+                    pbTbspPerJar = 33;
+                    pbJarPrice = 4.49;
+                    pbDescription = 'Skippy Creamy 16.3 oz (462g)';
+                    break;
+                default:
+                    pbJarSize = 40;
+                    pbTbspPerJar = 80;
+                    pbJarPrice = 8.99;
+                    pbDescription = 'Jif Creamy 40 oz (1.13kg)';
+            }
+
+            // Other container sizes
+            const jellyJarSize = 32; // 32 oz jar
+            const jellyTbspPerJar = 60; // Approximately 60 tbsp in a 32 oz jar
+            const breadSlicesPerLoaf = 22; // Standard loaf (20 usable + 2 heels)
+            const usableBreadSlicesPerLoaf = 20; // Excluding heels
+            const bagsPerBox = 480;
+
+            // Other prices
+            const jellyJarPrice = 4.99; // ~$5 for 32oz jar
+            const breadPrice = 2.70; // Average single loaf price
+            const bagBoxPrice = 7.99;
+
+            // Calculate total needs
+            const totalPbTbsp = pbjCount * pbPerSandwich;
+            const totalJellyTbsp = pbjCount * jellyAmount;
+            const totalBreadSlices = pbjCount * breadSlicesPerSandwich;
+
+            // Calculate jars/packages needed
+            const pbJarsNeeded = Math.ceil(totalPbTbsp / pbTbspPerJar);
+            const jellyJarsNeeded = Math.ceil(totalJellyTbsp / jellyTbspPerJar);
+            const breadLoavesNeeded = Math.ceil(totalBreadSlices / usableBreadSlicesPerLoaf);
+            const bagBoxesNeeded = Math.ceil(pbjCount / bagsPerBox);
+
+            // Calculate costs
+            const pbCost = pbJarsNeeded * pbJarPrice;
+            const jellyCost = jellyJarsNeeded * jellyJarPrice;
+            const breadCost = breadLoavesNeeded * breadPrice;
+            const bagCost = bagBoxesNeeded * bagBoxPrice;
+            const totalCost = Math.round((pbCost + jellyCost + breadCost + bagCost) * 100) / 100;
+
+            // Display results
+            document.getElementById('pbjResult').innerHTML = `
+                <div class="result-grid">
+                    <div class="result-item">
+                        <h4>Peanut Butter</h4>
+                        <div class="number">${pbJarsNeeded}</div>
+                        <div class="description">${pbJarSize} oz jars<br>(~${pbTbspPerJar} tbsp each)</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">≈ $${pbCost.toFixed(2)}</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Jelly</h4>
+                        <div class="number">${jellyJarsNeeded}</div>
+                        <div class="description">${jellyJarSize} oz jars<br>(~${jellyTbspPerJar} tbsp each)</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">≈ $${jellyCost.toFixed(2)}</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Bread Loaves</h4>
+                        <div class="number">${breadLoavesNeeded}</div>
+                        <div class="description">single loaves<br>(${usableBreadSlicesPerLoaf} usable slices each)</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">≈ $${breadCost.toFixed(2)}</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Sandwich Bags</h4>
+                        <div class="number">${bagBoxesNeeded}</div>
+                        <div class="description">${bagsPerBox} count boxes</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">≈ $${bagCost.toFixed(2)}</div>
+                    </div>
+                </div>
+                <div style="margin-top: 25px; padding: 20px; background: rgba(251,173,63,0.2); border-radius: 12px; text-align: center;">
+                    <h4 style="color: #fff; font-size: 1.4em; margin-bottom: 10px;">Total Estimated Cost</h4>
+                    <div style="font-size: 3em; font-weight: 700; color: #fff;">$${totalCost.toFixed(2)}</div>
+                    <div style="color: rgba(255,255,255,0.9); font-size: 1.1em; margin-top: 8px;">
+                        for ${pbjCount} PB&J sandwiches<br>
+                        (≈ $${(totalCost / pbjCount).toFixed(2)} per sandwich)
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('pbjResult').style.display = 'block';
+        }
+
     </script>
 </div>
 <div class="section" style="max-width: 700px; margin: 40px auto 24px auto;">
