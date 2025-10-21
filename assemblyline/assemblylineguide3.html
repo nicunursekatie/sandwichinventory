@@ -13,18 +13,18 @@
       --accent:#47B3CB;    /* light teal accents */
       --danger:#A31C41;    /* crimson for critical */
 
-      /* UI neutrals tuned for dark mode */
-      --bg:#0e1b22;        /* background (kept dark for contrast) */
-      --card:#11313a;      /* card background (teal-tinted) */
-      --fg:#ffffff;        /* primary text */
-      --muted:#c8d9df;     /* secondary text */
+      /* Light mode UI */
+      --bg:#ffffff;        /* white background */
+      --card:#f7fafc;      /* light gray card background */
+      --fg:#2c3e50;        /* dark text */
+      --muted:#666666;     /* secondary text */
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
-    .wrap{max-width:1000px;margin-inline:auto;padding:32px 20px}
+    html,body{margin:0;padding:0;background:linear-gradient(135deg, #236383 0%, #007E8C 100%);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;min-height:100vh}
+    .wrap{max-width:1000px;margin-inline:auto;padding:32px 20px;background:var(--bg);border-radius:15px;box-shadow:0 10px 30px rgba(0,0,0,0.15);margin-top:20px;margin-bottom:20px}
 
     header{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin-bottom:20px}
-    header h1{font-size:clamp(1.6rem,2.5vw,2.3rem);line-height:1.15;margin:0}
+    header h1{font-size:clamp(1.6rem,2.5vw,2.3rem);line-height:1.15;margin:0;color:var(--accent-2)}
     header .sub{color:var(--muted)}
 
     /* At-a-glance flow */
@@ -40,8 +40,8 @@
     .callout p{margin:6px 0}
 
     /* Sections */
-    section{margin:28px 0;padding:18px 16px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.02)}
-    section h2{margin:0 0 10px;font-size:clamp(1.15rem,2vw,1.35rem)}
+    section{margin:28px 0;padding:18px 16px;border:1px solid #e0e0e0;border-radius:14px;background:var(--card)}
+    section h2{margin:0 0 10px;font-size:clamp(1.15rem,2vw,1.35rem);color:var(--accent-2)}
     section .lead{color:var(--muted);margin:6px 0 4px}
 
     /* Steps */
