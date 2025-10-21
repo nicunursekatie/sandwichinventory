@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Group Assembly Guide - The Sandwich Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
+        }
+        
+        .subtitle {
+            opacity: 0.95;
+            font-size: 1rem;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .quick-flow {
+            background: #236383;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .arrow {
+            color: #FBAD3F;
+            margin: 0 0.5rem;
+        }
+        
+        h2 {
+            color: #236383;
+            font-size: 1.5rem;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #FBAD3F;
+        }
+        
+        .roles-table {
+            background: #f8fbfc;
+            border: 2px solid #47B3CB;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .roles-table h3 {
+            color: #007E8C;
+            margin-bottom: 1rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th {
+            background: #007E8C;
+            color: white;
+            padding: 0.5rem;
+            text-align: left;
+        }
+        
+        td {
+            padding: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .role-name {
+            font-weight: bold;
+            color: #236383;
+        }
+        
+        .safety-alert {
+            background: #FFEBEE;
+            border: 3px solid #A31C41;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 2rem 0;
+            position: relative;
+        }
+        
+        .safety-alert::before {
+            content: "🛑 CRITICAL SAFETY RULE";
+            position: absolute;
+            top: -14px;
+            left: 20px;
+            background: white;
+            padding: 0 10px;
+            color: #A31C41;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .safety-alert .timer {
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-align: center;
+            color: #A31C41;
+            margin: 0.5rem 0;
+        }
+        
+        .stage {
+            margin-bottom: 2rem;
+            border-left: 4px solid #47B3CB;
+            padding-left: 1.5rem;
+        }
+        
+        .stage h3 {
+            color: #236383;
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .stage-number {
+            background: #FBAD3F;
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .stage ol {
+            margin-left: 1.5rem;
+            line-height: 1.8;
+        }
+        
+        .stage li {
+            margin-bottom: 0.5rem;
+        }
+        
+        .why-note {
+            font-size: 0.85rem;
+            color: #666;
+            font-style: italic;
+            margin-top: 0.25rem;
+            margin-left: 1rem;
+        }
+        
+        .meat-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin: 1rem 0 1rem 1.5rem;
+        }
+        
+        .meat-option {
+            background: #FFF5E6;
+            border: 2px solid #FBAD3F;
+            border-radius: 8px;
+            padding: 0.75rem;
+        }
+        
+        .meat-option strong {
+            color: #236383;
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+        
+        .highlight {
+            background: yellow;
+            padding: 2px 4px;
+            font-weight: bold;
+        }
+        
+        .divider {
+            border: none;
+            border-top: 2px solid #e0e0e0;
+            margin: 3rem 0 2rem 0;
+        }
+        
+        footer {
+            background: #236383;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .content {
+                padding: 1.5rem;
+            }
+            .meat-options {
+                grid-template-columns: 1fr;
+            }
+            .quick-flow {
+                font-size: 0.9rem;
+            }
+        }
+        
+        @media print {
+            .container {
+                max-width: 100%;
+            }
+            .safety-alert {
+                break-inside: avoid;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Group Assembly Guide</h1>
+            <div class="subtitle">The Sandwich Project - For Event Organizers</div>
+        </header>
+        
+        <div class="content">
+            <div class="quick-flow">
+                <strong>At-A-Glance:</strong> 
+                Bread <span class="arrow">→</span> 
+                Cheese <span class="arrow">→</span> 
+                Meat <span class="arrow">→</span> 
+                Close <span class="arrow">→</span> 
+                Bag <span class="arrow">→</span> 
+                CHILL
+            </div>
+            
+            <div class="safety-alert">
+                <div class="timer">⏱️ 20-30 MINUTES MAXIMUM</div>
+                From meat leaving fridge to sandwiches back in fridge.<br>
+                Work in smaller batches if you can't meet this timeline.
+            </div>
+            
+            <div class="roles-table">
+                <h3>Key Roles</h3>
+                <table>
+                    <tr>
+                        <th style="width: 25%;">Role</th>
+                        <th>Responsibilities</th>
+                    </tr>
+                    <tr>
+                        <td class="role-name">Runner</td>
+                        <td>ONLY person who touches fridge • Brings supplies • Returns completed sandwiches • Tracks time</td>
+                    </tr>
+                    <tr>
+                        <td class="role-name">Assembly Team</td>
+                        <td>Works through stages together • Stays at workspace • Never touches fridge</td>
+                    </tr>
+                    <tr>
+                        <td class="role-name">Quality Checker</td>
+                        <td>Verifies 2 cheese slices per sandwich • Ensures proper sealing • Confirms correct labels</td>
+                    </tr>
+                </table>
+            </div>
+            
+            <h2>Assembly Process</h2>
+            
+            <div class="stage">
+                <h3><span class="stage-number">1</span> Lay Out Bread</h3>
+                <ol>
+                    <li>Everyone spreads around table/counter</li>
+                    <li>Lay bread slices side by side until workspace is filled</li>
+                    <li>Remove and discard ends/heels</li>
+                    <li>Count slices (2 slices = 1 sandwich)</li>
+                </ol>
+                <div class="why-note">Why: Counting now prevents confusion later</div>
+            </div>
+            
+            <div class="stage">
+                <h3><span class="stage-number">2</span> Add Cheese</h3>
+                <ol>
+                    <li>Place ONE slice of cheese on EACH piece of bread</li>
+                    <li>Work systematically left to right</li>
+                    <li>Call out any bread without cheese</li>
+                </ol>
+                <div class="why-note">Why: Every sandwich needs exactly 2 cheese slices total</div>
+            </div>
+            
+            <div class="stage">
+                <h3><span class="stage-number">3</span> Add Meat</h3>
+                <ol>
+                    <li>Check your portion plan (see options below)</li>
+                    <li>Work systematically to avoid missing pieces</li>
+                    <li>Keep track of which pieces have 1 vs 2 slices</li>
+                </ol>
+                <div class="meat-options">
+                    <div class="meat-option">
+                        <strong>2 Slices Total:</strong>
+                        1 slice on EACH piece
+                    </div>
+                    <div class="meat-option">
+                        <strong>3 Slices Total:</strong>
+                        1 slice on half, 2 on other half
+                    </div>
+                </div>
+            </div>
+            
+            <div class="stage">
+                <h3><span class="stage-number">4</span> Close & Bag Singles</h3>
+                <ol>
+                    <li>Match halves carefully (especially if using 1+2 meat method)</li>
+                    <li>Close sandwiches</li>
+                    <li>Place each in individual zip-lock bag</li>
+                    <li>Press out excess air and seal tightly</li>
+                </ol>
+            </div>
+            
+            <div class="stage">
+                <h3><span class="stage-number">5</span> Pack & Refrigerate</h3>
+                <ol>
+                    <li>Place bagged sandwiches into loaf bags</li>
+                    <li>Secure with twist tie (NO knots or rubber bands)</li>
+                    <li>Add correct label (Deli or PB&J)</li>
+                    <li><span class="highlight">IMMEDIATELY to refrigerator</span></li>
+                </ol>
+                <div class="why-note">Why: Every minute counts toward the 2-hour safety limit</div>
+            </div>
+            
+            <hr class="divider">
+            
+            <h2>Batch Guidelines</h2>
+            
+            <div style="background: #f8fbfc; border-left: 4px solid #47B3CB; padding: 1rem; margin-top: 1rem; border-radius: 0 8px 8px 0;">
+                <strong>Start Small:</strong> First-time groups should start with a small batch (20-30 sandwiches) to establish your pace.<br><br>
+                <strong>Key Rule:</strong> Only prep what you can complete within the safety window. Better to do multiple small batches than risk food safety with one large batch.
+            </div>
+            
+            <div class="safety-alert" style="margin-top: 2rem;">
+                <strong>Remember:</strong> Complete current batch FULLY before starting next batch. 
+                Never have two batches out at once.
+            </div>
+        </div>
+        
+        <footer>
+            The Sandwich Project is a 501(c)(3) non-profit organization<br>
+            thesandwichproject.org
+        </footer>
+    </div>
+</body>
+</html>
