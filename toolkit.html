@@ -190,6 +190,46 @@
             object-fit: cover;
         }
 
+        .calculator-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .calculator-section h2 {
+            color: #1a4d66;
+            font-size: 1.8em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .calculator-section p {
+            color: #555;
+            font-size: 1.1em;
+            margin-bottom: 25px;
+        }
+
+        .calculator-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(35, 99, 131, 0.3);
+        }
+
+        .calculator-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(35, 99, 131, 0.4);
+        }
+
         footer {
             text-align: center;
             color: white;
@@ -255,12 +295,12 @@
                 <p>Printable labels for deli sandwiches with ingredient information and allergen warnings.</p>
                 <span class="learn-more">Download PDF</span>
             </a>
+        </div>
 
-            <a href="inventorycalculator.html" class="tool-card">
-                <h2>Inventory Calculator</h2>
-                <p>Interactive calculator to determine exact ingredient quantities needed based on number of participants.</p>
-                <span class="learn-more">Open Calculator</span>
-            </a>
+        <div class="calculator-section">
+            <h2>Interactive Inventory Calculator</h2>
+            <p>Calculate the exact ingredients you need for your sandwich-making event based on the number of participants.</p>
+            <a href="inventorycalculator.html" class="calculator-button">Open Inventory Calculator</a>
         </div>
 
         <footer>
