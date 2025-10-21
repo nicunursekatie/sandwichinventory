@@ -231,6 +231,31 @@
             box-shadow: 0 8px 25px rgba(35, 99, 131, 0.4);
         }
 
+        .download-all-section {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .download-all-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #FBAD3F 0%, #A31C41 100%);
+            color: white;
+            padding: 15px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.1em;
+            font-weight: 600;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 5px 15px rgba(163, 28, 65, 0.3);
+            border: none;
+            cursor: pointer;
+        }
+
+        .download-all-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(163, 28, 65, 0.4);
+        }
+
         footer {
             text-align: center;
             color: white;
@@ -252,6 +277,10 @@
             </div>
             <h1>Group Event Planning Toolkit</h1>
             <p>Tools and resources to help you plan and organize your sandwich-making events</p>
+        </div>
+
+        <div class="download-all-section">
+            <button class="download-all-button" onclick="downloadAll()">📥 Download All PDFs</button>
         </div>
 
         <div class="toolkit-grid">
@@ -308,5 +337,29 @@
             <p>&copy; 2025 The Sandwich Project. All rights reserved.</p>
         </footer>
     </div>
+
+    <script>
+        function downloadAll() {
+            const pdfFiles = [
+                'toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf',
+                'toolkit/20250205-TSP-Deli Sandwich Making 101-Groups (2).pdf',
+                'toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf',
+                'toolkit/TSP Sandwich Inventory List for 3 ozs.xlsx - Sheet1.pdf',
+                'toolkit/Pbj labels.pdf',
+                'toolkit/Deli labels_1749341916236.pdf'
+            ];
+
+            pdfFiles.forEach((file, index) => {
+                setTimeout(() => {
+                    const link = document.createElement('a');
+                    link.href = file;
+                    link.download = file.split('/').pop();
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                }, index * 300); // Stagger downloads by 300ms
+            });
+        }
+    </script>
 </body>
 </html>
