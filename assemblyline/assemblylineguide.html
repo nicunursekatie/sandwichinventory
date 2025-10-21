@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Event Assembly Guide - The Sandwich Project</title>
+    <title>Group Assembly Guide - The Sandwich Project</title>
     <style>
         * {
             margin: 0;
@@ -13,47 +13,31 @@
         
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            line-height: 1.6;
-            color: #333;
             background-color: #f5f5f5;
+            line-height: 1.6;
         }
         
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background-color: white;
-            min-height: 100vh;
         }
         
         header {
             background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
             color: white;
-            padding: 2rem;
+            padding: 1.5rem;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        header::after {
-            content: "🥪";
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            font-size: 3rem;
-            opacity: 0.3;
         }
         
         h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+            font-size: 1.8rem;
+            margin-bottom: 0.25rem;
         }
         
         .subtitle {
-            font-size: 1.1rem;
             opacity: 0.95;
-            font-style: italic;
+            font-size: 1rem;
         }
         
         .content {
@@ -62,162 +46,172 @@
         
         h2 {
             color: #236383;
-            font-size: 1.8rem;
-            margin-top: 2rem;
+            font-size: 1.5rem;
             margin-bottom: 1rem;
             padding-bottom: 0.5rem;
             border-bottom: 3px solid #FBAD3F;
         }
         
-        h3 {
-            color: #007E8C;
-            font-size: 1.3rem;
-            margin-top: 1.5rem;
-            margin-bottom: 0.8rem;
+        .how-it-works {
+            background: #f8fbfc;
+            border-left: 4px solid #47B3CB;
+            padding: 1rem 1.5rem;
+            margin-bottom: 2rem;
+            border-radius: 0 8px 8px 0;
+        }
+        
+        .stages-container {
+            margin: 2rem 0;
         }
         
         .stage {
-            background: linear-gradient(90deg, #47B3CB 0%, transparent 3px);
-            border-left: 4px solid #47B3CB;
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+        
+        .stage-number {
+            background: #FBAD3F;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            margin-right: 1rem;
+        }
+        
+        .stage-content {
+            flex: 1;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
             padding: 1rem;
-            padding-left: 1.5rem;
-            margin: 1.5rem 0;
-            border-radius: 0 8px 8px 0;
-            background-color: #f8fbfc;
         }
         
         .stage h3 {
             color: #236383;
-            margin-top: 0;
+            font-size: 1.2rem;
+            margin-bottom: 0.5rem;
         }
         
         .stage ul {
             list-style: none;
-            padding-left: 0;
+            margin-left: 0;
         }
         
         .stage li {
-            padding: 0.5rem 0;
+            padding: 0.3rem 0;
             padding-left: 1.5rem;
             position: relative;
         }
         
         .stage li:before {
             content: "•";
-            color: #FBAD3F;
+            color: #47B3CB;
             font-weight: bold;
-            font-size: 1.2rem;
             position: absolute;
             left: 0;
-            top: 0.5rem;
         }
         
-        .critical-box {
-            background-color: #FFF5E6;
-            border: 2px solid #FBAD3F;
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            position: relative;
-        }
-        
-        .critical-box::before {
-            content: "⚠️ CRITICAL";
-            position: absolute;
-            top: -12px;
-            left: 20px;
-            background: white;
-            padding: 0 10px;
-            color: #A31C41;
-            font-weight: bold;
-            font-size: 0.9rem;
-        }
-        
-        .warning {
-            background-color: #FFEBEE;
-            border-left: 4px solid #A31C41;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 4px 4px 0;
-        }
-        
-        .warning strong {
-            color: #A31C41;
-        }
-        
-        .method-choice {
-            display: flex;
+        .meat-options {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 1rem;
             margin: 1rem 0;
-            flex-wrap: wrap;
         }
         
-        .method {
-            flex: 1;
-            min-width: 250px;
-            padding: 1rem;
-            border: 2px solid #47B3CB;
+        .meat-option {
+            background: #FFF5E6;
+            border: 2px solid #FBAD3F;
             border-radius: 8px;
-            background-color: #F0FAFB;
+            padding: 1rem;
         }
         
-        .method h4 {
-            color: #007E8C;
-            margin-bottom: 0.5rem;
-        }
-        
-        .highlight {
-            background-color: #FFF4DC;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-weight: 600;
+        .meat-option h4 {
             color: #236383;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
         }
         
-        .timer-note {
+        .critical-rules {
+            margin: 2rem 0;
+        }
+        
+        .rule {
+            background: #FFEBEE;
+            border: 2px solid #A31C41;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .rule h3 {
+            color: #A31C41;
+            font-size: 1.2rem;
+            margin-bottom: 0.75rem;
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, #A31C41 0%, #D14B6A 100%);
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1.5rem 0;
+            gap: 0.5rem;
         }
         
-        .timer-note::before {
-            content: "⏱️";
-            font-size: 1.5rem;
+        .rule.timer-warning {
+            background: linear-gradient(90deg, #FFEBEE 0%, #FFE5E5 100%);
+        }
+        
+        .timer-highlight {
+            background: #A31C41;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            margin: 0.5rem 0;
+            font-weight: bold;
+            text-align: center;
+        }
+        
+        .rule.batch-sizing {
+            background: #FFF5E6;
+            border-color: #FBAD3F;
+        }
+        
+        .rule.batch-sizing h3 {
+            color: #B8860B;
+        }
+        
+        .rule.runner {
+            background: #E8F5F9;
+            border-color: #007E8C;
+        }
+        
+        .rule.runner h3 {
+            color: #007E8C;
         }
         
         footer {
-            background-color: #236383;
+            background: #236383;
             color: white;
             text-align: center;
-            padding: 1.5rem;
-            margin-top: 3rem;
+            padding: 1rem;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 600px) {
+            .content {
+                padding: 1.5rem;
+            }
+            .meat-options {
+                grid-template-columns: 1fr;
+            }
         }
         
         @media print {
             .container {
                 max-width: 100%;
-            }
-            header {
-                background: #236383 !important;
-                -webkit-print-color-adjust: exact;
-                print-color-adjust: exact;
-            }
-        }
-        
-        @media (max-width: 600px) {
-            .content {
-                padding: 1rem;
-            }
-            h1 {
-                font-size: 1.5rem;
-            }
-            h2 {
-                font-size: 1.4rem;
             }
         }
     </style>
@@ -225,118 +219,131 @@
 <body>
     <div class="container">
         <header>
-            <h1>Group Event Assembly Guide</h1>
+            <h1>Group Assembly Guide</h1>
             <div class="subtitle">The Sandwich Project - For Event Organizers</div>
         </header>
         
         <div class="content">
-            <h2>The Assembly Line Method</h2>
-            
-            <h3>How It Works</h3>
-            <p>The entire group works on <strong>one stage at a time</strong>, filling your workspace with bread before moving to the next step together. This ensures consistency and food safety while making the process fun and efficient for volunteers.</p>
-            
-            <div class="stage">
-                <h3>Stage 1: Lay Out Bread</h3>
-                <ul>
-                    <li><strong>Everyone</strong> spreads out around your table/counter</li>
-                    <li>Lay out bread slices side by side until workspace is filled</li>
-                    <li>No ends/heels</li>
-                    <li>Count your slices to track sandwich count</li>
-                </ul>
+            <div class="how-it-works">
+                <strong>How It Works:</strong> The entire group works on ONE stage at a time. 
+                Fill your workspace with bread, then everyone moves together to the next step.
             </div>
             
-            <div class="stage">
-                <h3>Stage 2: Add Cheese</h3>
-                <ul>
-                    <li><strong>Everyone</strong> adds one slice of cheese to EACH piece of bread</li>
-                    <li>Work systematically so no bread gets missed</li>
-                    <li>Call out if you notice any bread without cheese</li>
-                </ul>
-            </div>
+            <h2>Assembly Stages</h2>
             
-            <div class="stage">
-                <h3>Stage 3: Add Meat</h3>
-                <ul>
-                    <li><strong>Everyone</strong> adds meat based on your portion plan</li>
-                </ul>
-                <div class="method-choice">
-                    <div class="method">
-                        <h4>For 2 Slices Total</h4>
-                        <p>Put 1 slice on EACH piece of bread/cheese. When closed, each sandwich will have 2 slices.</p>
+            <div class="stages-container">
+                <div class="stage">
+                    <div class="stage-number">1</div>
+                    <div class="stage-content">
+                        <h3>Lay Out Bread</h3>
+                        <ul>
+                            <li>Everyone spreads out around table/counter</li>
+                            <li>Lay bread slices side by side until workspace is filled</li>
+                            <li>No ends or heels</li>
+                            <li>Count slices to track sandwich count</li>
+                        </ul>
                     </div>
-                    <div class="method">
-                        <h4>For 3 Slices Total</h4>
-                        <p>Put 1 slice on half the pieces, 2 slices on the other half. Carefully match them when closing for 3 slices per sandwich.</p>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">2</div>
+                    <div class="stage-content">
+                        <h3>Add Cheese</h3>
+                        <ul>
+                            <li>Everyone adds one slice of cheese to EACH piece of bread</li>
+                            <li>Work systematically so no bread gets missed</li>
+                            <li>Call out if you see any bread without cheese</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">3</div>
+                    <div class="stage-content">
+                        <h3>Add Meat</h3>
+                        <ul>
+                            <li>Everyone adds meat based on your portion plan:</li>
+                        </ul>
+                        <div class="meat-options">
+                            <div class="meat-option">
+                                <h4>2 Slices Total</h4>
+                                <p>Put 1 slice on EACH piece of bread. When closed = 2 slices per sandwich.</p>
+                            </div>
+                            <div class="meat-option">
+                                <h4>3 Slices Total</h4>
+                                <p>Put 1 slice on half, 2 slices on other half. Match carefully when closing.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">4</div>
+                    <div class="stage-content">
+                        <h3>Close & Bag</h3>
+                        <ul>
+                            <li>Match up halves and close sandwiches</li>
+                            <li>Place each sandwich in individual zip-lock bag</li>
+                            <li>Press out excess air, seal tightly</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="stage">
+                    <div class="stage-number">5</div>
+                    <div class="stage-content">
+                        <h3>Pack Loaves & Refrigerate</h3>
+                        <ul>
+                            <li>Place bagged sandwiches into loaf bags</li>
+                            <li>Secure with twist tie (no knots or rubber bands)</li>
+                            <li><strong style="color: #A31C41;">IMMEDIATELY to refrigerator - no delays!</strong></li>
+                        </ul>
                     </div>
                 </div>
             </div>
             
-            <div class="stage">
-                <h3>Stage 4: Close & Bag</h3>
-                <ul>
-                    <li>Match up halves and close sandwiches</li>
-                    <li>Each sandwich goes into individual zip-lock bag</li>
-                    <li>Press out excess air, seal tightly</li>
-                </ul>
-            </div>
+            <h2>Critical Safety Rules</h2>
             
-            <div class="stage">
-                <h3>Stage 5: Pack Loaves</h3>
-                <ul>
-                    <li>Place bagged sandwiches into loaf bags</li>
-                    <li>Secure with twist tie (no knots or bands)</li>
-                    <li><span class="highlight">IMMEDIATELY to refrigerator</span></li>
-                </ul>
-            </div>
-            
-            <h2>Critical Rules for This Method</h2>
-            
-            <div class="critical-box">
-                <h3>The Two-Hour Rule</h3>
-                <div class="timer-note">
-                    Once meat comes out of refrigeration, you're on the clock!
+            <div class="critical-rules">
+                <div class="rule timer-warning">
+                    <h3>⏱️ The Two-Hour Rule</h3>
+                    <div class="timer-highlight">
+                        Once meat leaves the fridge, you have 20-30 minutes MAX to complete and refrigerate
+                    </div>
+                    <ul>
+                        <li>This includes ALL time meat is above 40°F</li>
+                        <li>Timer starts when runner removes meat from refrigerator</li>
+                        <li>If you can't finish in 20 minutes, work in smaller batches</li>
+                    </ul>
                 </div>
-                <ul style="margin-top: 1rem;">
-                    <li style="padding-left: 1.5rem;">• All sandwiches from this batch must be completed and refrigerated within <strong>20-30 minutes</strong></li>
-                    <li style="padding-left: 1.5rem;">• If you can't complete all stages that fast, work in smaller batches</li>
-                    <li style="padding-left: 1.5rem;">• Remember: the two-hour rule is cumulative and includes shopping, transport, and prep time</li>
-                </ul>
-            </div>
-            
-            <h3>Batch Sizing</h3>
-            <div class="warning">
-                <strong>Safety First:</strong> Only lay out as much bread as you can complete in 20 minutes
-            </div>
-            <ul style="margin-left: 1.5rem; margin-top: 1rem;">
-                <li>Better to do multiple smaller batches than risk food safety</li>
-                <li>Typical safe batch: 20-40 sandwiches depending on group size and experience</li>
-                <li>First-time groups: start with 20 sandwiches to establish your pace</li>
-            </ul>
-            
-            <h3>Designated Runner Role</h3>
-            <p style="margin-bottom: 1rem;">Assign one person who <strong>DOESN'T participate in assembly</strong>. This person:</p>
-            <ul style="margin-left: 1.5rem;">
-                <li>Brings out only enough meat/cheese for current batch</li>
-                <li>Returns completed sandwiches to refrigeration immediately</li>
-                <li>Tracks time and calls out warnings at 15 and 20 minutes</li>
-                <li>Prepares supplies for next batch while current batch is being assembled</li>
-                <li>Ensures everyone has gloves and replaces them as needed</li>
-            </ul>
-            
-            <div class="critical-box" style="margin-top: 2rem;">
-                <h3>Never Break These Rules</h3>
-                <ol style="margin-left: 1.5rem;">
-                    <li><strong>Complete batches fully</strong> - Don't start new bread until current batch is refrigerated</li>
-                    <li><strong>20-minute maximum</strong> - From meat out to sandwiches refrigerated</li>
-                    <li><strong>Runner controls the fridge</strong> - No one else opens it</li>
-                    <li><strong>No accumulation</strong> - Sandwiches don't sit waiting to be bagged</li>
-                </ol>
+                
+                <div class="rule batch-sizing">
+                    <h3>📦 Batch Sizing</h3>
+                    <ul>
+                        <li>Only lay out what you can complete in 20 minutes</li>
+                        <li>First-time groups: Start with 20 sandwiches</li>
+                        <li>Experienced groups: 30-40 sandwiches per batch</li>
+                        <li>Better to do multiple small batches than risk food safety</li>
+                    </ul>
+                </div>
+                
+                <div class="rule runner">
+                    <h3>🏃 Designated Runner (Required!)</h3>
+                    <p style="margin-bottom: 0.75rem;"><strong>One person who does NOT make sandwiches:</strong></p>
+                    <ul>
+                        <li>Only person who touches the refrigerator</li>
+                        <li>Brings out meat/cheese for current batch only</li>
+                        <li>Immediately refrigerates completed sandwiches</li>
+                        <li>Tracks time and announces 10, 15, and 20-minute warnings</li>
+                        <li>Prepares next batch supplies while group finishes current batch</li>
+                    </ul>
+                </div>
             </div>
         </div>
         
         <footer>
-            <p>The Sandwich Project is a 501(c)(3) non-profit organization</p>
-            <p>thesandwichproject.org</p>
+            The Sandwich Project is a 501(c)(3) non-profit organization<br>
+            thesandwichproject.org
         </footer>
     </div>
 </body>
