@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sandwich Assembly Line Guide (Formatted Template)</title>
+  <style>
+    :root{
+      --bg:#0f2230;        /* deep teal-blue background */
+      --fg:#ffffff;        /* text */
+      --muted:#b9ceda;     /* secondary text */
+      --accent:#47b3ce;    /* light teal accent */
+      --accent-2:#236383;  /* brand deep teal */
+      --warn:#ffc857;      /* warm highlight for safety */
+      --danger:#d7263d;    /* red for critical */
+      --card:#163447;      /* card background */
+      --border:#2c4e61;    /* subtle borders */
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial}
+    .wrap{max-width:1000px;margin-inline:auto;padding:32px 20px}
+
+    header{display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px;margin-bottom:20px}
+    header h1{font-size:clamp(1.6rem,2.5vw,2.3rem);line-height:1.15;margin:0}
+    header .sub{color:var(--muted)}
+
+    /* At-a-glance flow */
+    .flow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding:14px 16px;border:1px solid var(--border);border-radius:14px;background:linear-gradient(180deg,rgba(71,179,206,0.06),rgba(71,179,206,0.02))}
+    .badge{border:1px solid var(--accent);color:var(--fg);padding:8px 10px;border-radius:999px;font-weight:600;white-space:nowrap}
+    .arrow{opacity:.6}
+
+    /* Callouts */
+    .callout{border-left:6px solid var(--accent);background:var(--card);padding:14px 16px;border-radius:12px;margin:16px 0}
+    .callout--safety{border-left-color:var(--warn)}
+    .callout--critical{border-left-color:var(--danger)}
+    .callout h3{margin:0 0 6px;font-size:1rem}
+    .callout p{margin:6px 0}
+
+    /* Sections */
+    section{margin:28px 0;padding:18px 16px;border:1px solid var(--border);border-radius:14px;background:rgba(255,255,255,0.02)}
+    section h2{margin:0 0 10px;font-size:clamp(1.15rem,2vw,1.35rem)}
+    section .lead{color:var(--muted);margin:6px 0 4px}
+
+    /* Steps */
+    .step{display:grid;grid-template-columns:48px 1fr;gap:14px;align-items:start;padding:14px 0;border-top:1px dashed var(--border)}
+    .step:first-of-type{border-top:none}
+    .step .num{width:48px;height:48px;display:grid;place-items:center;border:2px solid var(--accent-2);border-radius:12px;font-weight:800}
+    .step h3{margin:0;font-size:1.05rem}
+    .step ol,.step ul{margin:8px 0 0 1.2rem}
+
+    .note{font-size:.95rem;color:var(--muted);margin-top:6px}
+    strong{font-weight:700}
+
+    /* Two-column layout for long sections on wide screens */
+    @media (min-width: 900px){
+      .two-col{columns:2;column-gap:26px}
+      .two-col > *{break-inside:avoid}
+    }
+
+    /* Print styles: clean, high-contrast, page breaks between sections */
+    @media print{
+      :root{--bg:#fff;--fg:#000;--muted:#444;--card:#fff;--border:#bbb}
+      .wrap{padding:0}
+      body{background:#fff}
+      .flow{border-color:#999}
+      section{page-break-inside:avoid}
+      a[href]::after{content:" (" attr(href) ")";font-size:10px;color:#666}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>Sandwich Assembly Line Guide</h1>
+      <div class="sub">(Formatted for clarity — content unchanged. Replace placeholders with your existing wording.)</div>
+    </header>
+
+    <!-- At‑a‑glance flow (same steps, just visual) -->
+    <div class="flow" aria-label="Process overview">
+      <span class="badge">Bread</span>
+      <span class="arrow">→</span>
+      <span class="badge">Cheese</span>
+      <span class="arrow">→</span>
+      <span class="badge">Meat</span>
+      <span class="arrow">→</span>
+      <span class="badge">Close</span>
+      <span class="arrow">→</span>
+      <span class="badge">Bag</span>
+      <span class="arrow">→</span>
+      <span class="badge">Refrigerate</span>
+    </div>
+
+    <!-- Safety callout (same rule, emphasized) -->
+    <div class="callout callout--safety" role="note">
+      <h3>Food Safety (as already stated in your guide)</h3>
+      <p><strong>Keep ingredients cold</strong> and <strong>limit time out of the fridge</strong> as specified in your guide (e.g., <em>20–30 minutes max</em>). Return completed loaf bags to refrigeration immediately.</p>
+    </div>
+
+    <!-- Setup section (title only; keep your existing bullet points/text) -->
+    <section id="setup">
+      <h2>Before You Start</h2>
+      <p class="lead">Use your existing setup text here (no changes to content).</p>
+      <div class="two-col">
+        <div class="step">
+          <div class="num">•</div>
+          <div>
+            <h3>Workspace Ready</h3>
+            <ul>
+              <li>[Paste your existing wording about clean surfaces / staging ingredients / gloves here]</li>
+            </ul>
+          </div>
+        </div>
+        <div class="step">
+          <div class="num">•</div>
+          <div>
+            <h3>Roles / Stations</h3>
+            <ul>
+              <li>[Paste your existing wording about who does what (e.g., Runner) here]</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Assembly sections: keep your text, just structured -->
+    <section id="bread">
+      <h2>Step 1 — Bread</h2>
+      <p class="lead">[Paste your existing bread layout instructions]</p>
+      <div class="step">
+        <div class="num">1</div>
+        <div>
+          <h3>Lay Bread</h3>
+          <ol>
+            <li>[Your existing action sentence 1]</li>
+            <li>[Your existing action sentence 2]</li>
+          </ol>
+          <p class="note">[Optional: keep any short <em>why</em> note you already include]</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="cheese">
+      <h2>Step 2 — Cheese</h2>
+      <p class="lead">[Paste your existing cheese instructions]</p>
+      <div class="step">
+        <div class="num">2</div>
+        <div>
+          <h3>Add Cheese</h3>
+          <ol>
+            <li>[Your existing instruction]</li>
+            <li>[Your existing instruction]</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="meat">
+      <h2>Step 3 — Meat</h2>
+      <p class="lead">[Paste your existing meat instructions]</p>
+      <div class="step">
+        <div class="num">3</div>
+        <div>
+          <h3>Add Meat</h3>
+          <ol>
+            <li>[Your existing instruction]</li>
+            <li>[Your existing instruction]</li>
+          </ol>
+          <p class="note">[Keep any existing portion notes exactly as written]</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="close">
+      <h2>Step 4 — Close Sandwich</h2>
+      <p class="lead">[Paste your existing closing instructions]</p>
+      <div class="step">
+        <div class="num">4</div>
+        <div>
+          <h3>Close & Align</h3>
+          <ol>
+            <li>[Your existing instruction]</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section id="bag">
+      <h2>Step 5 — Bag & Seal</h2>
+      <p class="lead">[Paste your existing bagging instructions]</p>
+      <div class="step">
+        <div class="num">5</div>
+        <div>
+          <h3>Bagging</h3>
+          <ol>
+            <li>[Your existing instruction]</li>
+            <li>[Your existing instruction]</li>
+          </ol>
+          <p class="note">[Any existing notes such as removing air/seal flat]</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="refrigerate">
+      <h2>Step 6 — Loaf & Refrigerate</h2>
+      <p class="lead">[Paste your existing refrigeration instructions]</p>
+      <div class="step">
+        <div class="num">6</div>
+        <div>
+          <h3>Count, Loaf, Refrigerate</h3>
+          <ol>
+            <li>[Your existing instruction]</li>
+            <li>[Your existing instruction]</li>
+          </ol>
+          <div class="callout" role="note">
+            <p><strong>Reminder:</strong> Follow your stated time limit strictly (e.g., 20–30 minutes max out of fridge) and return completed loaf bags to refrigeration immediately.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Optional: FAQs / Notes — only if you already have them -->
+    <section id="notes">
+      <h2>Notes</h2>
+      <p class="lead">[Paste any existing tips/notes from your guide. Leave blank if not applicable.]</p>
+      <ul>
+        <li>[Existing note]</li>
+        <li>[Existing note]</li>
+      </ul>
+    </section>
+
+    <footer class="callout" role="contentinfo">
+      <p style="margin:0">This page is a formatting template. Replace the bracketed placeholders with the exact wording from your current guide (no new content added).</p>
+    </footer>
+  </div>
+</body>
+</html>
