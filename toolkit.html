@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sandwich Project - Toolkit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            margin-bottom: 40px;
+        }
+
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo-container img {
+            max-width: 300px;
+            height: auto;
+        }
+
+        .header h1 {
+            color: #1a4d66;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .toolkit-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .tool-card {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .tool-card:nth-child(1) {
+            border-top: 5px solid #236383;
+        }
+
+        .tool-card:nth-child(2) {
+            border-top: 5px solid #FBAD3F;
+        }
+
+        .tool-card:nth-child(3) {
+            border-top: 5px solid #A31C41;
+        }
+
+        .tool-card:nth-child(4) {
+            border-top: 5px solid #47B3CB;
+        }
+
+        .tool-card:nth-child(5) {
+            border-top: 5px solid #007E8C;
+        }
+
+        .tool-card:nth-child(6) {
+            border-top: 5px solid #FBAD3F;
+        }
+
+        .tool-card:nth-child(7) {
+            border-top: 5px solid #A31C41;
+        }
+
+        .tool-card h2 {
+            color: #236383;
+            font-size: 1.6em;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+
+        .tool-card:nth-child(2) h2 {
+            color: #FBAD3F;
+        }
+
+        .tool-card:nth-child(3) h2 {
+            color: #A31C41;
+        }
+
+        .tool-card:nth-child(4) h2 {
+            color: #47B3CB;
+        }
+
+        .tool-card:nth-child(5) h2 {
+            color: #007E8C;
+        }
+
+        .tool-card:nth-child(6) h2 {
+            color: #FBAD3F;
+        }
+
+        .tool-card:nth-child(7) h2 {
+            color: #A31C41;
+        }
+
+        .tool-card p {
+            color: #555;
+            font-size: 1.05em;
+            margin-bottom: 15px;
+        }
+
+        .tool-card .learn-more {
+            color: #007E8C;
+            font-weight: 600;
+            font-size: 1em;
+        }
+
+        .tool-card:nth-child(1) .learn-more {
+            color: #236383;
+        }
+
+        .tool-card:nth-child(2) .learn-more {
+            color: #FBAD3F;
+        }
+
+        .tool-card:nth-child(3) .learn-more {
+            color: #A31C41;
+        }
+
+        .tool-card:nth-child(4) .learn-more {
+            color: #47B3CB;
+        }
+
+        .tool-card:nth-child(5) .learn-more {
+            color: #007E8C;
+        }
+
+        .tool-card:nth-child(6) .learn-more {
+            color: #FBAD3F;
+        }
+
+        .tool-card:nth-child(7) .learn-more {
+            color: #A31C41;
+        }
+
+        .tool-card .learn-more::after {
+            content: " →";
+        }
+
+        .pdf-preview {
+            width: 100%;
+            height: 200px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            object-fit: cover;
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 20px;
+            font-size: 0.95em;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo">
+            </div>
+            <h1>The Sandwich Project Toolkit</h1>
+            <p>Tools and resources to help you plan and organize your sandwich-making events</p>
+        </div>
+
+        <div class="toolkit-grid">
+            <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf" class="tool-card" target="_blank">
+                <embed src="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf#page=1&view=FitH" class="pdf-preview" type="application/pdf">
+                <h2>PB&J Sandwich Making 101</h2>
+                <p>Complete guide for groups making peanut butter and jelly sandwiches, including best practices and procedures.</p>
+                <span class="learn-more">Download PDF</span>
+            </a>
+
+            <a href="toolkit/20240622-TSP-Deli Sandwich Making 101_1749341916236.jpg" class="tool-card" target="_blank">
+                <img src="toolkit/20240622-TSP-Deli Sandwich Making 101_1749341916236.jpg" class="pdf-preview" alt="Deli Sandwich Making Guide">
+                <h2>Deli Sandwich Making 101</h2>
+                <p>Complete guide for groups making deli sandwiches, including assembly instructions and best practices.</p>
+                <span class="learn-more">Download Guide</span>
+            </a>
+
+            <a href="toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf" class="tool-card" target="_blank">
+                <embed src="toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf#page=1&view=FitH" class="pdf-preview" type="application/pdf">
+                <h2>Food Safety for Volunteers</h2>
+                <p>Essential food safety guidelines and protocols to ensure safe sandwich preparation and distribution.</p>
+                <span class="learn-more">Download PDF</span>
+            </a>
+
+            <a href="toolkit/TSP Sandwich Inventory List for 3 ozs.xlsx - Sheet1.pdf" class="tool-card" target="_blank">
+                <embed src="toolkit/TSP Sandwich Inventory List for 3 ozs.xlsx - Sheet1.pdf#page=1&view=FitH" class="pdf-preview" type="application/pdf">
+                <h2>Sandwich Inventory List</h2>
+                <p>Detailed inventory checklist for tracking ingredients and supplies needed for your sandwich-making event.</p>
+                <span class="learn-more">Download PDF</span>
+            </a>
+
+            <a href="toolkit/Pbj labels.pdf" class="tool-card" target="_blank">
+                <embed src="toolkit/Pbj labels.pdf#page=1&view=FitH" class="pdf-preview" type="application/pdf">
+                <h2>PB&J Labels</h2>
+                <p>Printable labels for peanut butter and jelly sandwiches to ensure proper identification and allergen awareness.</p>
+                <span class="learn-more">Download PDF</span>
+            </a>
+
+            <a href="toolkit/Deli labels_1749341916236.pdf" class="tool-card" target="_blank">
+                <embed src="toolkit/Deli labels_1749341916236.pdf#page=1&view=FitH" class="pdf-preview" type="application/pdf">
+                <h2>Deli Sandwich Labels</h2>
+                <p>Printable labels for deli sandwiches with ingredient information and allergen warnings.</p>
+                <span class="learn-more">Download PDF</span>
+            </a>
+
+            <a href="inventorycalculator.html" class="tool-card">
+                <h2>Inventory Calculator</h2>
+                <p>Interactive calculator to determine exact ingredient quantities needed based on number of participants.</p>
+                <span class="learn-more">Open Calculator</span>
+            </a>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 The Sandwich Project. All rights reserved.</p>
+        </footer>
+    </div>
+</body>
+</html>
