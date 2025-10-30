@@ -903,6 +903,7 @@
                             <option value="">Choose your meat</option>
                             <optgroup label="⭐ Best Value Options">
                                 <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89) - $0.21/slice</option>
+                                <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $3.50) - $0.19/slice</option>
                                 <option value="publix-turkey">🦃 Publix Turkey Breast, Thin Sliced (16 oz / 32 slices, $7.07) - $0.22/slice</option>
                                 <option value="kroger-turkey-thin">🦃 Kroger Turkey Thin Sliced (9 oz / 18 slices, $3.99) - $0.22/slice</option>
                                 <option value="kroger-turkey-family">🦃 Kroger Turkey Family Size (1 lb / 30-32 slices, $4.39) - $0.14/slice ⭐ BEST!</option>
@@ -912,6 +913,8 @@
                                 <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin (9 oz / 18 slices, $6.07) - $0.34/slice</option>
                                 <option value="land-o-frost-turkey">🦃 Land O'Frost Premium (16 oz / 32 slices, $9.53) - $0.30/slice</option>
                                 <option value="kroger-turkey-regular">🦃 Kroger Private Selection® (8 oz / 11-12 slices, $6.49) - $0.56/slice</option>
+                                <option value="oscar-mayer-chicken-blackened">🐔 Oscar Mayer Blackened Chicken (8 oz / 11-12 slices, $4.49) - $0.39/slice</option>
+                                <option value="oscar-mayer-chicken-rotisserie">🐔 Oscar Mayer Rotisserie Chicken (16 oz / 32 slices, $7.99) - $0.25/slice</option>
                             </optgroup>
                         </select>
                     </div>
@@ -1648,10 +1651,25 @@
                     meatPrice = 3.99;
                     meatDescription = '9 oz packages (18 slices)';
                     break;
+                case 'kroger-chicken-thin':
+                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPrice = 3.50;
+                    meatDescription = '9 oz packages (18 slices)';
+                    break;
                 case 'kroger-turkey-family':
                     meatPerPackage = 31; // 16 oz (1 lb) = 30-32 slices average (0.5 oz per slice)
                     meatPrice = 4.39;
                     meatDescription = '1 lb packages (30-32 slices)';
+                    break;
+                case 'oscar-mayer-chicken-blackened':
+                    meatPerPackage = 11.5; // 8 oz = 11-12 slices average (0.7 oz per slice)
+                    meatPrice = 4.49;
+                    meatDescription = '8 oz packages (11-12 slices)';
+                    break;
+                case 'oscar-mayer-chicken-rotisserie':
+                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
+                    meatPrice = 7.99;
+                    meatDescription = '16 oz packages (32 slices)';
                     break;
                 default:
                     meatPerPackage = 40;
@@ -1962,8 +1980,17 @@
                 case 'kroger-turkey-thin':
                     meatShoppingDescription = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced (9 oz / 18 slices)';
                     break;
+                case 'kroger-chicken-thin':
+                    meatShoppingDescription = 'Kroger® Chicken Breast Deli Thin Sliced (9 oz / 18 slices)';
+                    break;
                 case 'kroger-turkey-family':
                     meatShoppingDescription = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size (1 lb / 30-32 slices)';
+                    break;
+                case 'oscar-mayer-chicken-blackened':
+                    meatShoppingDescription = 'Oscar Mayer Deli Fresh Blackened Chicken Breast Thin Sliced Lunchmeat (8 oz / 11-12 slices)';
+                    break;
+                case 'oscar-mayer-chicken-rotisserie':
+                    meatShoppingDescription = 'Oscar Mayer Deli Fresh Rotisserie Seasoned Chicken Breast Thin Sliced Lunchmeat (16 oz / 32 slices)';
                     break;
                 default:
                     meatShoppingDescription = 'Meat packages';
@@ -2045,9 +2072,21 @@
                     meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
                     meatPrice = 3.99;
                     break;
+                case 'kroger-chicken-thin':
+                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPrice = 3.50;
+                    break;
                 case 'kroger-turkey-family':
                     meatPerPackage = 31; // 16 oz (1 lb) = 30-32 slices average (0.5 oz per slice)
                     meatPrice = 4.39;
+                    break;
+                case 'oscar-mayer-chicken-blackened':
+                    meatPerPackage = 11.5; // 8 oz = 11-12 slices average (0.7 oz per slice)
+                    meatPrice = 4.49;
+                    break;
+                case 'oscar-mayer-chicken-rotisserie':
+                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
+                    meatPrice = 7.99;
                     break;
                 default:
                     meatPerPackage = 40;
