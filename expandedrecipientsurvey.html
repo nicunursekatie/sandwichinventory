@@ -695,20 +695,17 @@
             <h2 class="section-header">Food Preferences</h2>
 
             <div class="form-group">
-                <label>Which sandwiches can you serve?</label>
-                <p class="helper-text">Check all that apply</p>
+                <label>Which sandwiches can you NOT serve?</label>
+                <p class="helper-text">Check all that apply (leave blank if you can serve all types)</p>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <label><input type="checkbox" name="sandwichTypes" value="Turkey" class="sandwich-checkbox"> Turkey</label>
+                        <label><input type="checkbox" name="cannotServeSandwich" value="Turkey" class="sandwich-checkbox"> Turkey</label>
                     </div>
                     <div class="checkbox-item">
-                        <label><input type="checkbox" name="sandwichTypes" value="Ham" class="sandwich-checkbox"> Ham</label>
+                        <label><input type="checkbox" name="cannotServeSandwich" value="Ham" class="sandwich-checkbox"> Ham</label>
                     </div>
                     <div class="checkbox-item">
-                        <label><input type="checkbox" name="sandwichTypes" value="Peanut Butter & Jelly" class="sandwich-checkbox"> Peanut Butter & Jelly</label>
-                    </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="cannotServe" value="Cannot serve any" class="sandwich-checkbox"> Cannot serve any of these</label>
+                        <label><input type="checkbox" name="cannotServeSandwich" value="Peanut Butter & Jelly" class="sandwich-checkbox"> Peanut Butter & Jelly</label>
                     </div>
                 </div>
             </div>
@@ -1074,7 +1071,7 @@
             row.dataset.rowId = rowId;
 
             row.innerHTML = `
-                <select name="${type}Day[]" required>
+                <select name="${type}Day[]">
                     <option value="">Select day</option>
                     <option value="Monday" ${day === 'Monday' ? 'selected' : ''}>Monday</option>
                     <option value="Tuesday" ${day === 'Tuesday' ? 'selected' : ''}>Tuesday</option>
@@ -1084,9 +1081,9 @@
                     <option value="Saturday" ${day === 'Saturday' ? 'selected' : ''}>Saturday</option>
                     <option value="Sunday" ${day === 'Sunday' ? 'selected' : ''}>Sunday</option>
                 </select>
-                <input type="time" name="${type}Start[]" value="${startTime}" required>
+                <input type="time" name="${type}Start[]" value="${startTime}">
                 <span>to</span>
-                <input type="time" name="${type}End[]" value="${endTime}" required>
+                <input type="time" name="${type}End[]" value="${endTime}">
                 <button type="button" class="remove-day-btn" onclick="removeRow(this, '${type}')">×</button>
             `;
 
