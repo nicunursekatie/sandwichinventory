@@ -562,15 +562,21 @@
                 </div>
             </div>
 
-            <!-- Backup Contact & Preferred Method Row -->
-            <div class="form-row" style="margin-top: 30px;">
+            <!-- Backup Contact Row -->
+            <div class="form-group" style="margin-top: 30px;">
+                <label for="backupContactName">Backup Contact Name</label>
+                <input type="text" id="backupContactName" name="backupContactName" placeholder="Optional but recommended">
+            </div>
+
+            <!-- Backup Contact Email & Phone Row -->
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="backupContactName">Backup Contact Name</label>
-                    <input type="text" id="backupContactName" name="backupContactName" placeholder="Optional but recommended">
+                    <label for="backupContactEmail">Backup Contact Email</label>
+                    <input type="email" id="backupContactEmail" name="backupContactEmail" placeholder="Optional">
                 </div>
                 <div class="form-group">
-                    <label for="backupContactInfo">Backup Contact Email/Phone</label>
-                    <input type="text" id="backupContactInfo" name="backupContactInfo" placeholder="Email or phone number">
+                    <label for="backupContactPhone">Backup Contact Phone</label>
+                    <input type="tel" id="backupContactPhone" name="backupContactPhone" placeholder="Optional">
                 </div>
             </div>
 
@@ -770,9 +776,9 @@
             </div>
 
             <div class="form-group hidden" id="seasonalDetailsGroup">
-                <label for="seasonalDetails">Can you tell us more about these seasonal changes?</label>
-                <p class="helper-text">This helps us plan and prepare to meet your needs throughout the year.</p>
-                <textarea id="seasonalDetails" name="seasonalDetails" placeholder="E.g., Need doubles during summer months, increased demand during holiday season, etc." rows="2"></textarea>
+                <label for="seasonalDetails">Please describe when your needs increase or decrease</label>
+                <p class="helper-text">E.g., greater needs during winter months or during local school breaks</p>
+                <textarea id="seasonalDetails" name="seasonalDetails" placeholder="E.g., Need doubles during summer months, increased demand during holiday season, higher numbers during extreme cold weather, etc." rows="3"></textarea>
             </div>
 
             <!-- Organization Referrals -->
