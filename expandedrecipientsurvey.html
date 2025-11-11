@@ -693,15 +693,28 @@
 
             <!-- Dietary & Preferences -->
             <h2 class="section-header">Food Preferences</h2>
-            
+
             <div class="form-group">
-                <label for="sandwichRestrictions">Are there any types of sandwiches you cannot serve?</label>
-                <p class="helper-text">For example: dietary restrictions, allergies, religious/cultural considerations, etc.</p>
-                <textarea id="sandwichRestrictions" name="sandwichRestrictions" placeholder="E.g., No pork for religious reasons, no nuts due to allergies (Leave blank if none)" rows="2"></textarea>
+                <label>Which sandwiches can you serve?</label>
+                <p class="helper-text">Check all that apply</p>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichTypes" value="Turkey" class="sandwich-checkbox"> Turkey</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichTypes" value="Ham" class="sandwich-checkbox"> Ham</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="sandwichTypes" value="Peanut Butter & Jelly" class="sandwich-checkbox"> Peanut Butter & Jelly</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="cannotServe" value="Cannot serve any" class="sandwich-checkbox"> Cannot serve any of these</label>
+                    </div>
+                </div>
             </div>
 
             <div class="form-group hidden" id="restrictionReasonGroup">
-                <label for="restrictionReason">Can you tell us why? (Optional)</label>
+                <label for="restrictionReason">Why can't you serve these sandwiches?</label>
                 <p class="helper-text">This helps us understand and plan better for future partnerships.</p>
                 <textarea id="restrictionReason" name="restrictionReason" placeholder="E.g., Religious dietary laws, allergy concerns in our facility, cultural preferences of our community, etc." rows="2"></textarea>
             </div>
@@ -1088,18 +1101,22 @@
             list.appendChild(row);
         });
 
-        // Show/hide "why" field when restrictions are mentioned
-        const sandwichRestrictions = document.getElementById('sandwichRestrictions');
+
+        // Show/hide restriction reason field when sandwich restrictions are checked
+        const sandwichCheckboxes = document.querySelectorAll('.sandwich-checkbox');
         const restrictionReasonGroup = document.getElementById('restrictionReasonGroup');
         const restrictionReason = document.getElementById('restrictionReason');
 
-        sandwichRestrictions.addEventListener('input', function() {
-            if (this.value.trim() !== '') {
-                restrictionReasonGroup.classList.remove('hidden');
-            } else {
-                restrictionReasonGroup.classList.add('hidden');
-                restrictionReason.value = '';
-            }
+        sandwichCheckboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', function() {
+                const anyChecked = Array.from(sandwichCheckboxes).some(cb => cb.checked);
+                if (anyChecked) {
+                    restrictionReasonGroup.classList.remove('hidden');
+                } else {
+                    restrictionReasonGroup.classList.add('hidden');
+                    restrictionReason.value = '';
+                }
+            });
         });
 
         // Show delivery feedback field when rating is less than 5
