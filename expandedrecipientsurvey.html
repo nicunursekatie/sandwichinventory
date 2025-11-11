@@ -760,6 +760,14 @@
                 </div>
             </div>
 
+            <div class="form-group hidden" id="fruitSnacksInterestGroup">
+                <label>Would you like to receive fruit and snacks from TSP?</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="fruitSnacksInterest" value="Yes"> Yes</label>
+                    <label><input type="radio" name="fruitSnacksInterest" value="No"> No</label>
+                </div>
+            </div>
+
             <!-- Delivery Process Rating -->
             <div class="form-group">
                 <label>How would you rate the ease and efficiency of our delivery process?</label>
@@ -839,9 +847,11 @@
         </form>
 
         <div class="success-message hidden" id="successMessage">
-            <h2>✓ Thank you!</h2>
-            <p style="margin-bottom: 10px;">Your responses have been submitted successfully.</p>
-            <p style="font-size: 14px; color: #666;">We'll review your information and may reach out if we have any questions. If you need to make changes or have additional information to share, please email us directly.</p>
+            <h2>🎉 Thank you SO much!</h2>
+            <p style="margin-bottom: 15px; font-size: 18px; font-weight: 600; color: #236383;">Your response has been submitted successfully!</p>
+            <p style="margin-bottom: 12px; line-height: 1.6;">We're so grateful for the time you took to share this information with us. Your insights help us serve you better and demonstrate the incredible impact of this partnership to our supporters and funders.</p>
+            <p style="margin-bottom: 12px; line-height: 1.6; color: #236383; font-weight: 500;">The work you do in your community is invaluable, and we're honored to support your efforts!</p>
+            <p style="font-size: 14px; color: #666; line-height: 1.6;">We'll review your responses and reach out if we have any questions. Need to make changes or share additional information? Just email us at <a href="mailto:info@sandwichproject.org" style="color: #236383; font-weight: 600;">info@sandwichproject.org</a></p>
         </div>
 
         <div class="footer">
@@ -1147,6 +1157,24 @@
                 } else {
                     seasonalDetailsGroup.classList.add('hidden');
                     seasonalDetails.value = '';
+                }
+            });
+        });
+
+        // Show fruit/snacks interest question when "No" or "Not Sure" is selected
+        const fruitSnacksInputs = document.querySelectorAll('input[name="receivesFruitSnacks"]');
+        const fruitSnacksInterestGroup = document.getElementById('fruitSnacksInterestGroup');
+
+        fruitSnacksInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value === 'No' || this.value === 'Not Sure') {
+                    fruitSnacksInterestGroup.classList.remove('hidden');
+                } else {
+                    fruitSnacksInterestGroup.classList.add('hidden');
+                    // Clear the selection when hiding
+                    document.querySelectorAll('input[name="fruitSnacksInterest"]').forEach(radio => {
+                        radio.checked = false;
+                    });
                 }
             });
         });
