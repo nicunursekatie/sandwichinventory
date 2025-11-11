@@ -1001,6 +1001,10 @@
             });
         }
         
+        // Day/time row management variables (must be declared before restore)
+        let feedingRowCount = 0;
+        let donationRowCount = 0;
+
         // Initialize auto-save and restore on page load
         setupAutoSave();
         restoreFormProgress();
@@ -1061,10 +1065,7 @@
             });
         });
 
-        // Day/time row management
-        let feedingRowCount = 0;
-        let donationRowCount = 0;
-
+        // Day/time row management functions
         function createDayTimeRow(type, rowId, day = '', startTime = '', endTime = '') {
             const row = document.createElement('div');
             row.className = 'day-time-row';
@@ -1302,9 +1303,14 @@
 
             // Format feeding schedule
             if (feedingInputType === 'structured') {
-                const feedingDays = data['feedingDay[]'] || [];
-                const feedingStarts = data['feedingStart[]'] || [];
-                const feedingEnds = data['feedingEnd[]'] || [];
+                let feedingDays = data['feedingDay[]'] || [];
+                let feedingStarts = data['feedingStart[]'] || [];
+                let feedingEnds = data['feedingEnd[]'] || [];
+
+                // Ensure they're arrays
+                if (!Array.isArray(feedingDays)) feedingDays = [feedingDays];
+                if (!Array.isArray(feedingStarts)) feedingStarts = [feedingStarts];
+                if (!Array.isArray(feedingEnds)) feedingEnds = [feedingEnds];
 
                 const feedingSchedule = feedingDays.map((day, index) =>
                     `${day} ${feedingStarts[index]} to ${feedingEnds[index]}`
@@ -1318,9 +1324,14 @@
 
             // Format donation schedule
             if (donationInputType === 'structured') {
-                const donationDays = data['donationDay[]'] || [];
-                const donationStarts = data['donationStart[]'] || [];
-                const donationEnds = data['donationEnd[]'] || [];
+                let donationDays = data['donationDay[]'] || [];
+                let donationStarts = data['donationStart[]'] || [];
+                let donationEnds = data['donationEnd[]'] || [];
+
+                // Ensure they're arrays
+                if (!Array.isArray(donationDays)) donationDays = [donationDays];
+                if (!Array.isArray(donationStarts)) donationStarts = [donationStarts];
+                if (!Array.isArray(donationEnds)) donationEnds = [donationEnds];
 
                 const donationSchedule = donationDays.map((day, index) =>
                     `${day} ${donationStarts[index]} to ${donationEnds[index]}`
