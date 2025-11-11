@@ -208,6 +208,34 @@
             cursor: pointer;
         }
 
+        /* Enhanced day/time styling */
+        .checkbox-group .checkbox-item {
+            padding: 8px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .checkbox-group .checkbox-item:last-child {
+            border-bottom: none;
+        }
+
+        .time-inputs {
+            background: #f7fafc;
+            padding: 10px;
+            border-radius: 6px;
+            margin-left: 28px;
+            margin-top: 8px;
+        }
+
+        .time-inputs span {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .time-inputs input[type="time"] {
+            padding: 8px;
+            font-size: 14px;
+        }
+
         .time-input {
             margin-left: 28px;
             margin-top: 8px;
@@ -454,11 +482,24 @@
 
             <!-- Preferred Contact Method Row -->
             <div class="form-group">
-                <label>Preferred Contact Method *</label>
-                <div class="radio-group horizontal">
-                    <label><input type="radio" name="contactMethod" value="Email" required> Email</label>
-                    <label><input type="radio" name="contactMethod" value="Text"> Text</label>
-                    <label><input type="radio" name="contactMethod" value="Phone"> Phone</label>
+                <label>Which communication methods do you regularly monitor? *</label>
+                <p class="helper-text">Check all that apply</p>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="Text"> Text</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="Email"> Email</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="Phone"> Phone</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="WhatsApp"> WhatsApp</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="Facebook Messenger"> Facebook Messenger</label>
+                    </div>
                 </div>
             </div>
 
@@ -484,8 +525,9 @@
                     <input type="text" id="populationFocus" name="populationFocus" placeholder="E.g., youth, veterans, families">
                 </div>
                 <div class="form-group">
-                    <label for="serviceArea">Service area *</label>
-                    <input type="text" id="serviceArea" name="serviceArea" placeholder="E.g., Downtown Atlanta" required>
+                    <label for="serviceArea">Where does your organization primarily serve meals or distribute food? *</label>
+                    <p class="helper-text">Please list specific neighborhoods, zip codes, or the nearest major intersection.</p>
+                    <input type="text" id="serviceArea" name="serviceArea" placeholder='Example: "West End, Vine City, and 30314" or "Near North Avenue & Boulevard"' required>
                 </div>
             </div>
 
@@ -494,11 +536,11 @@
             
             <div class="form-group">
                 <label>When do you serve meals to your community? *</label>
-                <p class="helper-text">Choose how you'd like to provide this information</p>
+                <p class="helper-text">Select your regular days and times, or describe your schedule below.</p>
 
                 <div class="radio-group horizontal" style="margin-bottom: 15px;">
                     <label><input type="radio" name="feedingInputType" value="structured" checked> Select days & times</label>
-                    <label><input type="radio" name="feedingInputType" value="text"> Write my answer</label>
+                    <label><input type="radio" name="feedingInputType" value="text"> Describe my schedule</label>
                 </div>
 
                 <div id="feedingStructured">
@@ -563,17 +605,17 @@
                 </div>
 
                 <div id="feedingText" class="hidden">
-                    <textarea id="feedingScheduleText" name="feedingScheduleText" placeholder="E.g., Monday-Friday 12pm-2pm, or Tuesdays and Thursdays 11am, or Varies by week" rows="3"></textarea>
+                    <textarea id="feedingScheduleText" name="feedingScheduleText" placeholder="If your schedule varies, you can describe it here (e.g., 'First and third Saturdays, 9am–noon' or 'Monday-Friday 12pm-2pm')" rows="3"></textarea>
                 </div>
             </div>
 
             <div class="form-group">
                 <label>What day(s) and time(s) can you accept food donations? *</label>
-                <p class="helper-text">Choose how you'd like to provide this information</p>
+                <p class="helper-text">Select your regular days and times, or describe your availability below.</p>
 
                 <div class="radio-group horizontal" style="margin-bottom: 15px;">
                     <label><input type="radio" name="donationInputType" value="structured" checked> Select days & times</label>
-                    <label><input type="radio" name="donationInputType" value="text"> Write my answer</label>
+                    <label><input type="radio" name="donationInputType" value="text"> Describe my availability</label>
                 </div>
 
                 <div id="donationStructured">
@@ -638,7 +680,7 @@
                 </div>
 
                 <div id="donationText" class="hidden">
-                    <textarea id="donationScheduleText" name="donationScheduleText" placeholder="E.g., Anytime Monday-Friday 9am-5pm, or by appointment only, or Tuesdays before 10am" rows="3"></textarea>
+                    <textarea id="donationScheduleText" name="donationScheduleText" placeholder="If your availability varies, you can describe it here (e.g., 'By appointment only' or 'Anytime Monday-Friday 9am-5pm' or 'Tuesdays before 10am')" rows="3"></textarea>
                 </div>
             </div>
 
@@ -1055,7 +1097,7 @@
         function updateProgress() {
             const requiredInputs = Array.from(allInputs).filter(input => {
                 if (input.type === 'checkbox' || input.type === 'radio') {
-                    return input.required || input.name === 'feedingDays' || input.name === 'donationDays';
+                    return input.required || input.name === 'feedingDays' || input.name === 'donationDays' || input.name === 'contactMethod';
                 }
                 return input.required;
             });
@@ -1104,6 +1146,14 @@
 
             const submitBtn = document.getElementById('submitBtn');
             const errorMessage = document.getElementById('errorMessage');
+
+            // Validate contact methods
+            const contactMethodsChecked = document.querySelectorAll('input[name="contactMethod"]:checked').length > 0;
+            if (!contactMethodsChecked) {
+                errorMessage.textContent = 'Please select at least one communication method you regularly monitor.';
+                errorMessage.classList.add('show');
+                return;
+            }
 
             // Validate feeding schedule
             const feedingInputType = document.querySelector('input[name="feedingInputType"]:checked').value;
