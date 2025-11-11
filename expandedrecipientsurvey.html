@@ -1231,14 +1231,14 @@
 
             const submitBtn = document.getElementById('submitBtn');
             const errorMessage = document.getElementById('errorMessage');
+            const errors = [];
+            let firstErrorElement = null;
 
             // Validate contact methods
             const contactMethodsChecked = document.querySelectorAll('input[name="contactMethod"]:checked').length > 0;
             if (!contactMethodsChecked) {
-                errorMessage.textContent = 'Please select at least one communication method you regularly monitor.';
-                errorMessage.classList.add('show');
-                document.querySelector('input[name="contactMethod"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                return;
+                errors.push('Select at least one communication method you regularly monitor');
+                if (!firstErrorElement) firstErrorElement = document.querySelector('input[name="contactMethod"]');
             }
 
             // Validate sandwich restrictions reason
@@ -1246,11 +1246,8 @@
             if (sandwichRestrictionsChecked) {
                 const restrictionReason = document.getElementById('restrictionReason').value.trim();
                 if (!restrictionReason) {
-                    errorMessage.textContent = 'Please explain why you cannot serve certain sandwiches.';
-                    errorMessage.classList.add('show');
-                    document.getElementById('restrictionReason').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    document.getElementById('restrictionReason').focus();
-                    return;
+                    errors.push('Explain why you cannot serve certain sandwiches');
+                    if (!firstErrorElement) firstErrorElement = document.getElementById('restrictionReason');
                 }
             }
 
@@ -1259,19 +1256,14 @@
             if (feedingInputType === 'structured') {
                 const feedingRows = document.querySelectorAll('#feedingDaysList .day-time-row').length;
                 if (feedingRows === 0) {
-                    errorMessage.textContent = 'Please add at least one day/time for when you serve meals.';
-                    errorMessage.classList.add('show');
-                    document.getElementById('addFeedingDay').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
+                    errors.push('Add at least one day/time for when you serve meals');
+                    if (!firstErrorElement) firstErrorElement = document.getElementById('addFeedingDay');
                 }
             } else {
                 const feedingTextValue = document.getElementById('feedingScheduleText').value.trim();
                 if (!feedingTextValue) {
-                    errorMessage.textContent = 'Please describe when you serve meals.';
-                    errorMessage.classList.add('show');
-                    document.getElementById('feedingScheduleText').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    document.getElementById('feedingScheduleText').focus();
-                    return;
+                    errors.push('Describe when you serve meals');
+                    if (!firstErrorElement) firstErrorElement = document.getElementById('feedingScheduleText');
                 }
             }
 
@@ -1280,20 +1272,30 @@
             if (donationInputType === 'structured') {
                 const donationRows = document.querySelectorAll('#donationDaysList .day-time-row').length;
                 if (donationRows === 0) {
-                    errorMessage.textContent = 'Please add at least one day/time for when you can accept donations.';
-                    errorMessage.classList.add('show');
-                    document.getElementById('addDonationDay').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    return;
+                    errors.push('Add at least one day/time for when you can accept donations');
+                    if (!firstErrorElement) firstErrorElement = document.getElementById('addDonationDay');
                 }
             } else {
                 const donationTextValue = document.getElementById('donationScheduleText').value.trim();
                 if (!donationTextValue) {
-                    errorMessage.textContent = 'Please describe when you can accept donations.';
-                    errorMessage.classList.add('show');
-                    document.getElementById('donationScheduleText').scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    document.getElementById('donationScheduleText').focus();
-                    return;
+                    errors.push('Describe when you can accept donations');
+                    if (!firstErrorElement) firstErrorElement = document.getElementById('donationScheduleText');
                 }
+            }
+
+            // If there are errors, show them all and scroll to first one
+            if (errors.length > 0) {
+                errorMessage.innerHTML = '<strong>Please complete the following:</strong><ul style="margin: 10px 0 0 20px; text-align: left;">' +
+                    errors.map(err => `<li>${err}</li>`).join('') +
+                    '</ul>';
+                errorMessage.classList.add('show');
+                if (firstErrorElement) {
+                    firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    if (firstErrorElement.tagName === 'INPUT' || firstErrorElement.tagName === 'TEXTAREA') {
+                        setTimeout(() => firstErrorElement.focus(), 500);
+                    }
+                }
+                return;
             }
 
             submitBtn.disabled = true;
