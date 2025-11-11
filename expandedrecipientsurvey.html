@@ -219,6 +219,10 @@
         }
 
         .time-inputs {
+            display: grid;
+            grid-template-columns: 1fr auto 1fr;
+            gap: 10px;
+            align-items: center;
             background: #f7fafc;
             padding: 10px;
             border-radius: 6px;
@@ -226,9 +230,14 @@
             margin-top: 8px;
         }
 
+        .time-inputs.hidden {
+            display: none;
+        }
+
         .time-inputs span {
             color: #718096;
             font-size: 14px;
+            text-align: center;
         }
 
         .time-inputs input[type="time"] {
@@ -240,6 +249,76 @@
             margin-left: 28px;
             margin-top: 8px;
             font-size: 14px;
+        }
+
+        /* Add day/time button styling */
+        .add-day-btn {
+            background: white;
+            color: #236383;
+            border: 2px dashed #236383;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            margin-top: 15px;
+            width: auto;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .add-day-btn:hover {
+            background: #f7fafc;
+            border-color: #007E8C;
+            color: #007E8C;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Day/time row styling */
+        .day-time-row {
+            display: grid;
+            grid-template-columns: 150px 1fr auto 1fr auto;
+            gap: 10px;
+            align-items: center;
+            padding: 12px;
+            background: #f7fafc;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .day-time-row select {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .day-time-row input[type="time"] {
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .day-time-row span {
+            color: #718096;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .remove-day-btn {
+            background: transparent;
+            color: #e53e3e;
+            border: none;
+            padding: 4px 8px;
+            font-size: 18px;
+            cursor: pointer;
+            width: auto;
+            line-height: 1;
+        }
+
+        .remove-day-btn:hover {
+            color: #c53030;
+            background: transparent;
+            transform: none;
+            box-shadow: none;
         }
 
         .time-input.hidden {
@@ -361,24 +440,39 @@
             .container {
                 padding: 25px;
             }
-            
+
             h1 {
                 font-size: 24px;
             }
-            
+
             /* Stack all form rows on mobile */
             .form-row {
                 display: block !important;
                 margin-bottom: 0;
             }
-            
+
             .form-row .form-group {
                 margin-bottom: 20px !important;
             }
-            
+
             .radio-group.horizontal {
                 flex-direction: column;
                 gap: 10px;
+            }
+
+            /* Stack day/time rows on mobile */
+            .day-time-row {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto auto;
+                gap: 8px;
+            }
+
+            .day-time-row span:first-of-type {
+                display: none;
+            }
+
+            .remove-day-btn {
+                justify-self: end;
             }
         }
     </style>
@@ -544,64 +638,8 @@
                 </div>
 
                 <div id="feedingStructured">
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Monday" name="feedingDays" value="Monday"> Monday</label>
-                            <div class="time-inputs hidden" id="feedingMonday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="feedingMondayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="feedingMondayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Tuesday" name="feedingDays" value="Tuesday"> Tuesday</label>
-                            <div class="time-inputs hidden" id="feedingTuesday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="feedingTuesdayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="feedingTuesdayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Wednesday" name="feedingDays" value="Wednesday"> Wednesday</label>
-                            <div class="time-inputs hidden" id="feedingWednesday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="feedingWednesdayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="feedingWednesdayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Thursday" name="feedingDays" value="Thursday"> Thursday</label>
-                            <div class="time-inputs hidden" id="feedingThursday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="feedingThursdayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="feedingThursdayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Friday" name="feedingDays" value="Friday"> Friday</label>
-                            <div class="time-inputs hidden" id="feedingFriday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="feedingFridayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="feedingFridayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Saturday" name="feedingDays" value="Saturday"> Saturday</label>
-                            <div class="time-inputs hidden" id="feedingSaturday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="feedingSaturdayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="feedingSaturdayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Sunday" name="feedingDays" value="Sunday"> Sunday</label>
-                            <div class="time-inputs hidden" id="feedingSunday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="feedingSundayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="feedingSundayEnd" placeholder="End">
-                            </div>
-                        </div>
-                    </div>
+                    <div id="feedingDaysList"></div>
+                    <button type="button" class="add-day-btn" id="addFeedingDay">+ Add a day/time</button>
                 </div>
 
                 <div id="feedingText" class="hidden">
@@ -619,64 +657,8 @@
                 </div>
 
                 <div id="donationStructured">
-                    <div class="checkbox-group">
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Monday" name="donationDays" value="Monday"> Monday</label>
-                            <div class="time-inputs hidden" id="donationMonday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="donationMondayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="donationMondayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Tuesday" name="donationDays" value="Tuesday"> Tuesday</label>
-                            <div class="time-inputs hidden" id="donationTuesday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="donationTuesdayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="donationTuesdayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Wednesday" name="donationDays" value="Wednesday"> Wednesday</label>
-                            <div class="time-inputs hidden" id="donationWednesday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="donationWednesdayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="donationWednesdayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Thursday" name="donationDays" value="Thursday"> Thursday</label>
-                            <div class="time-inputs hidden" id="donationThursday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="donationThursdayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="donationThursdayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Friday" name="donationDays" value="Friday"> Friday</label>
-                            <div class="time-inputs hidden" id="donationFriday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="donationFridayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="donationFridayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Saturday" name="donationDays" value="Saturday"> Saturday</label>
-                            <div class="time-inputs hidden" id="donationSaturday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="donationSaturdayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="donationSaturdayEnd" placeholder="End">
-                            </div>
-                        </div>
-                        <div class="checkbox-item">
-                            <label><input type="checkbox" class="day-checkbox" data-day="Sunday" name="donationDays" value="Sunday"> Sunday</label>
-                            <div class="time-inputs hidden" id="donationSunday" style="display: grid; grid-template-columns: 1fr auto 1fr; gap: 10px; margin-left: 28px; margin-top: 8px; align-items: center;">
-                                <input type="time" name="donationSundayStart" placeholder="Start">
-                                <span>to</span>
-                                <input type="time" name="donationSundayEnd" placeholder="End">
-                            </div>
-                        </div>
-                    </div>
+                    <div id="donationDaysList"></div>
+                    <button type="button" class="add-day-btn" id="addDonationDay">+ Add a day/time</button>
                 </div>
 
                 <div id="donationText" class="hidden">
@@ -686,9 +668,9 @@
 
             <div class="form-group">
                 <label>What's the average number of people you serve? *</label>
-                <p class="helper-text">Provide whichever statistic you track (daily, weekly, or monthly average).</p>
+                <p class="helper-text">Provide whichever statistic you track (daily, weekly, or monthly average). If your numbers vary, feel free to enter a range (e.g., 20–40).</p>
                 <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                    <input type="number" id="peopleCount" name="peopleCount" min="1" placeholder="Enter number" required style="flex: 0 0 150px; margin-bottom: 0;">
+                    <input type="text" id="peopleCount" name="peopleCount" placeholder="Enter number or range" required style="flex: 0 0 150px; margin-bottom: 0;" pattern="[0-9–\-\s]+" title="Enter a number or range (e.g., 30 or 20-40)">
                     <div class="radio-group" style="margin-top: 0; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
                         <div class="radio-item" style="margin-bottom: 0;">
                             <label><input type="radio" name="countFrequency" value="Per Day" required> Per Day</label>
@@ -861,11 +843,11 @@
             const form = document.getElementById('surveyForm');
             const formData = new FormData(form);
             const data = {};
-            
+
             // Collect all form data
             for (let [key, value] of formData.entries()) {
                 if (data[key]) {
-                    // Handle multiple values (like checkboxes)
+                    // Handle multiple values (like checkboxes and arrays)
                     if (Array.isArray(data[key])) {
                         data[key].push(value);
                     } else {
@@ -875,10 +857,23 @@
                     data[key] = value;
                 }
             }
-            
+
+            // Save feeding and donation schedule structure
+            data.feedingSchedule = Array.from(document.querySelectorAll('#feedingDaysList .day-time-row')).map(row => ({
+                day: row.querySelector('select').value,
+                start: row.querySelectorAll('input[type="time"]')[0].value,
+                end: row.querySelectorAll('input[type="time"]')[1].value
+            }));
+
+            data.donationSchedule = Array.from(document.querySelectorAll('#donationDaysList .day-time-row')).map(row => ({
+                day: row.querySelector('select').value,
+                start: row.querySelectorAll('input[type="time"]')[0].value,
+                end: row.querySelectorAll('input[type="time"]')[1].value
+            }));
+
             // Save to localStorage
             localStorage.setItem(SAVE_KEY, JSON.stringify(data));
-            
+
             // Show save indicator
             saveStatus.style.display = 'block';
             setTimeout(() => {
@@ -889,13 +884,38 @@
         function restoreFormProgress() {
             const saved = localStorage.getItem(SAVE_KEY);
             if (!saved) return;
-            
+
             try {
                 const data = JSON.parse(saved);
                 const form = document.getElementById('surveyForm');
-                
+
+                // Restore feeding schedule rows
+                if (data.feedingSchedule && Array.isArray(data.feedingSchedule)) {
+                    data.feedingSchedule.forEach(schedule => {
+                        if (schedule.day) {
+                            const list = document.getElementById('feedingDaysList');
+                            const row = createDayTimeRow('feeding', feedingRowCount++, schedule.day, schedule.start, schedule.end);
+                            list.appendChild(row);
+                        }
+                    });
+                }
+
+                // Restore donation schedule rows
+                if (data.donationSchedule && Array.isArray(data.donationSchedule)) {
+                    data.donationSchedule.forEach(schedule => {
+                        if (schedule.day) {
+                            const list = document.getElementById('donationDaysList');
+                            const row = createDayTimeRow('donation', donationRowCount++, schedule.day, schedule.start, schedule.end);
+                            list.appendChild(row);
+                        }
+                    });
+                }
+
                 // Restore form fields
                 Object.keys(data).forEach(key => {
+                    // Skip schedule arrays as they're handled above
+                    if (key === 'feedingSchedule' || key === 'donationSchedule') return;
+
                     const element = form.querySelector(`[name="${key}"]`);
                     if (element) {
                         if (element.type === 'checkbox' || element.type === 'radio') {
@@ -903,7 +923,9 @@
                             const values = Array.isArray(data[key]) ? data[key] : [data[key]];
                             values.forEach(value => {
                                 const checkbox = form.querySelector(`[name="${key}"][value="${value}"]`);
-                                if (checkbox) checkbox.checked = true;
+                                if (checkbox) {
+                                    checkbox.checked = true;
+                                }
                             });
                         } else {
                             // Handle text inputs, textareas, selects
@@ -911,18 +933,18 @@
                         }
                     }
                 });
-                
+
                 // Show restoration message
                 const restoreMessage = document.createElement('div');
                 restoreMessage.style.cssText = 'background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 10px 15px; border-radius: 8px; margin-bottom: 20px; font-size: 14px;';
                 restoreMessage.innerHTML = '🔄 Your previous progress has been restored. You can continue where you left off!';
                 form.parentNode.insertBefore(restoreMessage, form);
-                
+
                 // Remove message after 5 seconds
                 setTimeout(() => {
                     restoreMessage.remove();
                 }, 5000);
-                
+
             } catch (error) {
                 console.error('Error restoring form progress:', error);
             }
@@ -1014,33 +1036,51 @@
             });
         });
 
-        // Show/hide time pickers when day checkboxes are checked
-        document.querySelectorAll('#feedingStructured .day-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const day = this.getAttribute('data-day');
-                const timeInputs = document.getElementById('feeding' + day);
-                if (this.checked) {
-                    timeInputs.classList.remove('hidden');
-                } else {
-                    timeInputs.classList.add('hidden');
-                    // Clear time values when unchecked
-                    timeInputs.querySelectorAll('input[type="time"]').forEach(input => input.value = '');
-                }
-            });
+        // Day/time row management
+        let feedingRowCount = 0;
+        let donationRowCount = 0;
+
+        function createDayTimeRow(type, rowId, day = '', startTime = '', endTime = '') {
+            const row = document.createElement('div');
+            row.className = 'day-time-row';
+            row.dataset.rowId = rowId;
+
+            row.innerHTML = `
+                <select name="${type}Day[]" required>
+                    <option value="">Select day</option>
+                    <option value="Monday" ${day === 'Monday' ? 'selected' : ''}>Monday</option>
+                    <option value="Tuesday" ${day === 'Tuesday' ? 'selected' : ''}>Tuesday</option>
+                    <option value="Wednesday" ${day === 'Wednesday' ? 'selected' : ''}>Wednesday</option>
+                    <option value="Thursday" ${day === 'Thursday' ? 'selected' : ''}>Thursday</option>
+                    <option value="Friday" ${day === 'Friday' ? 'selected' : ''}>Friday</option>
+                    <option value="Saturday" ${day === 'Saturday' ? 'selected' : ''}>Saturday</option>
+                    <option value="Sunday" ${day === 'Sunday' ? 'selected' : ''}>Sunday</option>
+                </select>
+                <input type="time" name="${type}Start[]" value="${startTime}" required>
+                <span>to</span>
+                <input type="time" name="${type}End[]" value="${endTime}" required>
+                <button type="button" class="remove-day-btn" onclick="removeRow(this, '${type}')">×</button>
+            `;
+
+            return row;
+        }
+
+        function removeRow(button, type) {
+            button.closest('.day-time-row').remove();
+        }
+
+        // Add feeding day/time row
+        document.getElementById('addFeedingDay').addEventListener('click', function() {
+            const list = document.getElementById('feedingDaysList');
+            const row = createDayTimeRow('feeding', feedingRowCount++);
+            list.appendChild(row);
         });
 
-        document.querySelectorAll('#donationStructured .day-checkbox').forEach(checkbox => {
-            checkbox.addEventListener('change', function() {
-                const day = this.getAttribute('data-day');
-                const timeInputs = document.getElementById('donation' + day);
-                if (this.checked) {
-                    timeInputs.classList.remove('hidden');
-                } else {
-                    timeInputs.classList.add('hidden');
-                    // Clear time values when unchecked
-                    timeInputs.querySelectorAll('input[type="time"]').forEach(input => input.value = '');
-                }
-            });
+        // Add donation day/time row
+        document.getElementById('addDonationDay').addEventListener('click', function() {
+            const list = document.getElementById('donationDaysList');
+            const row = createDayTimeRow('donation', donationRowCount++);
+            list.appendChild(row);
         });
 
         // Show/hide "why" field when restrictions are mentioned
@@ -1097,7 +1137,7 @@
         function updateProgress() {
             const requiredInputs = Array.from(allInputs).filter(input => {
                 if (input.type === 'checkbox' || input.type === 'radio') {
-                    return input.required || input.name === 'feedingDays' || input.name === 'donationDays' || input.name === 'contactMethod';
+                    return input.required || input.name === 'contactMethod';
                 }
                 return input.required;
             });
@@ -1158,9 +1198,9 @@
             // Validate feeding schedule
             const feedingInputType = document.querySelector('input[name="feedingInputType"]:checked').value;
             if (feedingInputType === 'structured') {
-                const feedingDaysChecked = document.querySelectorAll('input[name="feedingDays"]:checked').length > 0;
-                if (!feedingDaysChecked) {
-                    errorMessage.textContent = 'Please select at least one day for when you serve meals.';
+                const feedingRows = document.querySelectorAll('#feedingDaysList .day-time-row').length;
+                if (feedingRows === 0) {
+                    errorMessage.textContent = 'Please add at least one day/time for when you serve meals.';
                     errorMessage.classList.add('show');
                     return;
                 }
@@ -1176,9 +1216,9 @@
             // Validate donation schedule
             const donationInputType = document.querySelector('input[name="donationInputType"]:checked').value;
             if (donationInputType === 'structured') {
-                const donationDaysChecked = document.querySelectorAll('input[name="donationDays"]:checked').length > 0;
-                if (!donationDaysChecked) {
-                    errorMessage.textContent = 'Please select at least one day for when you can accept donations.';
+                const donationRows = document.querySelectorAll('#donationDaysList .day-time-row').length;
+                if (donationRows === 0) {
+                    errorMessage.textContent = 'Please add at least one day/time for when you can accept donations.';
                     errorMessage.classList.add('show');
                     return;
                 }
@@ -1211,6 +1251,38 @@
                 } else {
                     data[key] = value;
                 }
+            }
+
+            // Format feeding schedule
+            if (feedingInputType === 'structured') {
+                const feedingDays = data['feedingDay[]'] || [];
+                const feedingStarts = data['feedingStart[]'] || [];
+                const feedingEnds = data['feedingEnd[]'] || [];
+
+                const feedingSchedule = feedingDays.map((day, index) =>
+                    `${day} ${feedingStarts[index]} to ${feedingEnds[index]}`
+                ).join('; ');
+
+                data.feedingSchedule = feedingSchedule;
+                delete data['feedingDay[]'];
+                delete data['feedingStart[]'];
+                delete data['feedingEnd[]'];
+            }
+
+            // Format donation schedule
+            if (donationInputType === 'structured') {
+                const donationDays = data['donationDay[]'] || [];
+                const donationStarts = data['donationStart[]'] || [];
+                const donationEnds = data['donationEnd[]'] || [];
+
+                const donationSchedule = donationDays.map((day, index) =>
+                    `${day} ${donationStarts[index]} to ${donationEnds[index]}`
+                ).join('; ');
+
+                data.donationSchedule = donationSchedule;
+                delete data['donationDay[]'];
+                delete data['donationStart[]'];
+                delete data['donationEnd[]'];
             }
 
             // Convert arrays to comma-separated strings for easier storage
