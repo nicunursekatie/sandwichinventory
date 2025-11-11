@@ -1237,7 +1237,21 @@
             if (!contactMethodsChecked) {
                 errorMessage.textContent = 'Please select at least one communication method you regularly monitor.';
                 errorMessage.classList.add('show');
+                document.querySelector('input[name="contactMethod"]').scrollIntoView({ behavior: 'smooth', block: 'center' });
                 return;
+            }
+
+            // Validate sandwich restrictions reason
+            const sandwichRestrictionsChecked = document.querySelectorAll('input[name="cannotServeSandwich"]:checked').length > 0;
+            if (sandwichRestrictionsChecked) {
+                const restrictionReason = document.getElementById('restrictionReason').value.trim();
+                if (!restrictionReason) {
+                    errorMessage.textContent = 'Please explain why you cannot serve certain sandwiches.';
+                    errorMessage.classList.add('show');
+                    document.getElementById('restrictionReason').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    document.getElementById('restrictionReason').focus();
+                    return;
+                }
             }
 
             // Validate feeding schedule
@@ -1247,6 +1261,7 @@
                 if (feedingRows === 0) {
                     errorMessage.textContent = 'Please add at least one day/time for when you serve meals.';
                     errorMessage.classList.add('show');
+                    document.getElementById('addFeedingDay').scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
             } else {
@@ -1254,6 +1269,8 @@
                 if (!feedingTextValue) {
                     errorMessage.textContent = 'Please describe when you serve meals.';
                     errorMessage.classList.add('show');
+                    document.getElementById('feedingScheduleText').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    document.getElementById('feedingScheduleText').focus();
                     return;
                 }
             }
@@ -1265,6 +1282,7 @@
                 if (donationRows === 0) {
                     errorMessage.textContent = 'Please add at least one day/time for when you can accept donations.';
                     errorMessage.classList.add('show');
+                    document.getElementById('addDonationDay').scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
             } else {
@@ -1272,6 +1290,8 @@
                 if (!donationTextValue) {
                     errorMessage.textContent = 'Please describe when you can accept donations.';
                     errorMessage.classList.add('show');
+                    document.getElementById('donationScheduleText').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    document.getElementById('donationScheduleText').focus();
                     return;
                 }
             }
