@@ -1302,7 +1302,7 @@
             submitBtn.textContent = 'Submitting...';
             errorMessage.classList.remove('show');
 
-            // Collect all form data
+            // Collect all form data including hidden fields
             const formData = new FormData(form);
             const data = {};
 
@@ -1319,6 +1319,15 @@
                     data[key] = value;
                 }
             }
+
+            // Explicitly collect textarea values to ensure they're not missed
+            form.querySelectorAll('textarea').forEach(textarea => {
+                const name = textarea.name;
+                const value = textarea.value;
+                if (name && !data.hasOwnProperty(name)) {
+                    data[name] = value;
+                }
+            });
 
             // Format feeding schedule
             if (feedingInputType === 'structured') {
@@ -1383,6 +1392,13 @@
 
             // Add timestamp
             data.timestamp = new Date().toISOString();
+
+            // Debug logging
+            console.log('===== FORM SUBMISSION DEBUG =====');
+            console.log('Total fields being submitted:', Object.keys(data).length);
+            console.log('All fields:', Object.keys(data).sort());
+            console.log('Full data object:', data);
+            console.log('================================');
 
             try {
                 // Submit to Google Apps Script
