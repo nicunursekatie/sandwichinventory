@@ -676,16 +676,16 @@
                 <label>What's the average number of people you serve? *</label>
                 <p class="helper-text">Provide whichever statistic you track (daily, weekly, or monthly average). If your numbers vary, feel free to enter a range (e.g., 20–40).</p>
                 <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
-                    <input type="text" id="peopleCount" name="peopleCount" placeholder="e.g., 30 or 20-40" required style="flex: 0 0 150px; margin-bottom: 0;" pattern="[0-9–\-\s]+" title="Enter a number or range (e.g., 30 or 20-40)">
+                    <input type="text" id="peopleCount" name="avgPeopleServed" placeholder="e.g., 30 or 20-40" required style="flex: 0 0 150px; margin-bottom: 0;" pattern="[0-9–\-\s]+" title="Enter a number or range (e.g., 30 or 20-40)">
                     <div class="radio-group" style="margin-top: 0; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
                         <div class="radio-item" style="margin-bottom: 0;">
-                            <label><input type="radio" name="countFrequency" value="Per Day" required> Per Day</label>
+                            <label><input type="radio" name="frequency" value="Per Day" required> Per Day</label>
                         </div>
                         <div class="radio-item" style="margin-bottom: 0;">
-                            <label><input type="radio" name="countFrequency" value="Per Week"> Per Week</label>
+                            <label><input type="radio" name="frequency" value="Per Week"> Per Week</label>
                         </div>
                         <div class="radio-item" style="margin-bottom: 0;">
-                            <label><input type="radio" name="countFrequency" value="Per Month"> Per Month</label>
+                            <label><input type="radio" name="frequency" value="Per Month"> Per Month</label>
                         </div>
                     </div>
                 </div>
@@ -727,16 +727,16 @@
                     <label>How long have you been receiving sandwiches from TSP?</label>
                     <div class="radio-group">
                         <div class="radio-item">
-                            <label><input type="radio" name="partnershipLength" value="Less than 1 year"> Less than 1 year</label>
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="Less than 1 year"> Less than 1 year</label>
                         </div>
                         <div class="radio-item">
-                            <label><input type="radio" name="partnershipLength" value="1-2 years"> 1-2 years</label>
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="1-2 years"> 1-2 years</label>
                         </div>
                         <div class="radio-item">
-                            <label><input type="radio" name="partnershipLength" value="2-5 years"> 2-5 years</label>
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="2-5 years"> 2-5 years</label>
                         </div>
                         <div class="radio-item">
-                            <label><input type="radio" name="partnershipLength" value="5+ years"> 5+ years</label>
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="5+ years"> 5+ years</label>
                         </div>
                     </div>
                 </div>
@@ -1339,6 +1339,10 @@
                 delete data['feedingDay[]'];
                 delete data['feedingStart[]'];
                 delete data['feedingEnd[]'];
+            } else {
+                // Text mode: use feedingScheduleText as feedingSchedule
+                data.feedingSchedule = data.feedingScheduleText || '';
+                delete data.feedingScheduleText;
             }
 
             // Format donation schedule
@@ -1360,7 +1364,15 @@
                 delete data['donationDay[]'];
                 delete data['donationStart[]'];
                 delete data['donationEnd[]'];
+            } else {
+                // Text mode: use donationScheduleText as donationSchedule
+                data.donationSchedule = data.donationScheduleText || '';
+                delete data.donationScheduleText;
             }
+
+            // Clean up input type selectors (not needed in submission)
+            delete data.feedingInputType;
+            delete data.donationInputType;
 
             // Convert arrays to comma-separated strings for easier storage
             Object.keys(data).forEach(key => {
