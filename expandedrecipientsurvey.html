@@ -1302,30 +1302,44 @@
             submitBtn.textContent = 'Submitting...';
             errorMessage.classList.remove('show');
 
-            // Collect all form data including hidden fields
-            const formData = new FormData(form);
+            // Collect form data only from enabled/visible fields
             const data = {};
 
-            // Handle regular inputs and combine multiple checkbox values
-            for (let [key, value] of formData.entries()) {
-                if (data[key]) {
-                    // If key already exists, convert to array or append to array
-                    if (Array.isArray(data[key])) {
-                        data[key].push(value);
+            // Collect all inputs, selects, and textareas
+            form.querySelectorAll('input, select, textarea').forEach(field => {
+                const name = field.name;
+                const value = field.value;
+
+                // Skip fields without names or that are in hidden containers
+                if (!name) return;
+
+                // Skip if parent has .hidden class (for conditional fields)
+                const parentGroup = field.closest('.form-group');
+                if (parentGroup && parentGroup.classList.contains('hidden')) return;
+
+                // Skip if inside hidden div (for text vs structured mode)
+                const hiddenParent = field.closest('.hidden');
+                if (hiddenParent) return;
+
+                // Handle checkboxes and radio buttons
+                if (field.type === 'checkbox' || field.type === 'radio') {
+                    if (!field.checked) return;
+
+                    // Add to array if multiple values (like checkboxes)
+                    if (data[name]) {
+                        if (Array.isArray(data[name])) {
+                            data[name].push(value);
+                        } else {
+                            data[name] = [data[name], value];
+                        }
                     } else {
-                        data[key] = [data[key], value];
+                        data[name] = value;
                     }
                 } else {
-                    data[key] = value;
-                }
-            }
-
-            // Explicitly collect textarea values to ensure they're not missed
-            form.querySelectorAll('textarea').forEach(textarea => {
-                const name = textarea.name;
-                const value = textarea.value;
-                if (name && !data.hasOwnProperty(name)) {
-                    data[name] = value;
+                    // For text, textarea, select, etc - only add if has value or if we don't have it yet
+                    if (!data.hasOwnProperty(name)) {
+                        data[name] = value;
+                    }
                 }
             });
 
