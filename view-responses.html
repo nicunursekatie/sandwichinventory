@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Survey Responses Viewer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #236383;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .controls {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(35, 99, 131, 0.3);
+        }
+
+        .response-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-left: 4px solid #FBAD3F;
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-title {
+            color: #236383;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #FBAD3F;
+        }
+
+        .field {
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+
+        .field-label {
+            font-weight: 600;
+            color: #2d3748;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .field-value {
+            color: #4a5568;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .field-value.empty {
+            color: #cbd5e0;
+            font-style: italic;
+        }
+
+        .timestamp {
+            background: #236383;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #666;
+        }
+
+        .error {
+            background: #fed7d7;
+            color: #c53030;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+        }
+
+        #exportCSV {
+            background: #48bb78;
+        }
+
+        #exportCSV:hover {
+            background: #38a169;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📋 Survey Responses</h1>
+
+        <div class="controls">
+            <button onclick="loadResponses()">🔄 Refresh</button>
+            <button id="exportCSV" onclick="exportToCSV()">📊 Export to CSV</button>
+        </div>
+
+        <div id="responseContainer">
+            <div class="loading">Loading responses...</div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJ9sUwY_gw2bYWXCffV0RKuQkXqRq-hTU",
+            authDomain: "recipient-survey.firebaseapp.com",
+            databaseURL: "https://recipient-survey-default-rtdb.firebaseio.com",
+            projectId: "recipient-survey",
+            storageBucket: "recipient-survey.firebasestorage.app",
+            messagingSenderId: "1023665626622",
+            appId: "1:1023665626622:web:6c9be3dcaddeec30d674af",
+            measurementId: "G-CQY41G3NW6"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Field order for display
+        const fieldOrder = [
+            { section: 'Contact Information', fields: [
+                { key: 'orgName', label: 'Organization Name' },
+                { key: 'contactName', label: 'Primary Contact Name' },
+                { key: 'contactEmail', label: 'Email' },
+                { key: 'contactPhone', label: 'Phone Number' },
+                { key: 'streetAddress', label: 'Street Address' },
+                { key: 'addressLine2', label: 'Address Line 2' },
+                { key: 'city', label: 'City' },
+                { key: 'state', label: 'State' },
+                { key: 'zipCode', label: 'Zip Code' },
+                { key: 'backupContactName', label: 'Backup Contact Name' },
+                { key: 'backupContactEmail', label: 'Backup Contact Email' },
+                { key: 'backupContactPhone', label: 'Backup Contact Phone' },
+                { key: 'contactMethod', label: 'Preferred Contact Methods' }
+            ]},
+            { section: 'Organization Profile', fields: [
+                { key: 'website', label: 'Website' },
+                { key: 'socialMedia', label: 'Social Media Handle' },
+                { key: 'populationFocus', label: 'Population Focus' },
+                { key: 'serviceArea', label: 'Service Area' }
+            ]},
+            { section: 'Operations', fields: [
+                { key: 'feedingSchedule', label: 'Meal Schedule' },
+                { key: 'donationSchedule', label: 'Donation Acceptance Times' },
+                { key: 'avgPeopleServed', label: 'Average # People Served' },
+                { key: 'frequency', label: 'Frequency' }
+            ]},
+            { section: 'Food Preferences', fields: [
+                { key: 'cannotServeSandwich', label: 'Cannot Serve Sandwiches' },
+                { key: 'restrictionReason', label: 'Restriction Reason' }
+            ]},
+            { section: 'Partnership & Impact', fields: [
+                { key: 'yearsReceivingSandwiches', label: 'Partnership Length' },
+                { key: 'receivesFruitSnacks', label: 'Receives Fruit & Snacks' },
+                { key: 'fruitSnacksInterest', label: 'Interest in Fruit & Snacks' },
+                { key: 'deliveryRating', label: 'Delivery Rating' },
+                { key: 'deliveryFeedback', label: 'Delivery Feedback' },
+                { key: 'seasonalNeeds', label: 'Seasonal Needs Change' },
+                { key: 'seasonalDetails', label: 'Seasonal Details' },
+                { key: 'orgReferrals', label: 'Recommended Partner Organizations' },
+                { key: 'grantInterest', label: 'Grant Interest' }
+            ]},
+            { section: 'Impact Stories', fields: [
+                { key: 'impactStory', label: 'Impact Story' },
+                { key: 'impactPhotos', label: 'Photo Links' },
+                { key: 'additionalInfo', label: 'Additional Information' }
+            ]}
+        ];
+
+        let allResponses = [];
+
+        function loadResponses() {
+            const container = document.getElementById('responseContainer');
+            container.innerHTML = '<div class="loading">Loading responses...</div>';
+
+            database.ref('survey-responses').once('value')
+                .then(snapshot => {
+                    allResponses = [];
+                    const data = snapshot.val();
+
+                    if (!data) {
+                        container.innerHTML = '<div class="loading">No responses yet.</div>';
+                        return;
+                    }
+
+                    // Convert to array
+                    Object.keys(data).forEach(key => {
+                        allResponses.push({
+                            id: key,
+                            ...data[key]
+                        });
+                    });
+
+                    // Sort by timestamp (newest first)
+                    allResponses.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+                    displayResponses();
+                })
+                .catch(error => {
+                    container.innerHTML = `<div class="error">Error loading responses: ${error.message}</div>`;
+                });
+        }
+
+        function displayResponses() {
+            const container = document.getElementById('responseContainer');
+
+            if (allResponses.length === 0) {
+                container.innerHTML = '<div class="loading">No responses yet.</div>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            allResponses.forEach((response, index) => {
+                const card = document.createElement('div');
+                card.className = 'response-card';
+
+                let html = `
+                    <div class="timestamp">
+                        Response #${allResponses.length - index} •
+                        ${new Date(response.timestamp).toLocaleString()}
+                    </div>
+                `;
+
+                fieldOrder.forEach(section => {
+                    html += `<div class="section">`;
+                    html += `<div class="section-title">${section.section}</div>`;
+
+                    section.fields.forEach(field => {
+                        const value = response[field.key];
+                        const isEmpty = !value || value === '';
+
+                        html += `
+                            <div class="field">
+                                <div class="field-label">${field.label}</div>
+                                <div class="field-value ${isEmpty ? 'empty' : ''}">
+                                    ${isEmpty ? '(not provided)' : value}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    html += `</div>`;
+                });
+
+                card.innerHTML = html;
+                container.appendChild(card);
+            });
+        }
+
+        function exportToCSV() {
+            if (allResponses.length === 0) {
+                alert('No responses to export!');
+                return;
+            }
+
+            // Create CSV headers
+            const headers = ['Timestamp', 'Response ID'];
+            fieldOrder.forEach(section => {
+                section.fields.forEach(field => {
+                    headers.push(field.label);
+                });
+            });
+
+            // Create CSV rows
+            const rows = [headers];
+            allResponses.forEach(response => {
+                const row = [
+                    new Date(response.timestamp).toLocaleString(),
+                    response.id
+                ];
+
+                fieldOrder.forEach(section => {
+                    section.fields.forEach(field => {
+                        const value = response[field.key] || '';
+                        // Escape quotes and wrap in quotes if contains comma
+                        const escapedValue = value.toString().replace(/"/g, '""');
+                        row.push(value.includes(',') ? `"${escapedValue}"` : escapedValue);
+                    });
+                });
+
+                rows.push(row);
+            });
+
+            // Convert to CSV string
+            const csvContent = rows.map(row => row.join(',')).join('\n');
+
+            // Download
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `survey-responses-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Load on page load
+        loadResponses();
+    </script>
+</body>
+</html>
