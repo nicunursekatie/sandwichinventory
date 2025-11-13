@@ -86,7 +86,11 @@ function parseAddress(streetAddress, city, state, zip) {
 
 function doPost(e) {
   try {
+    console.log('Received POST request');
     const data = JSON.parse(e.postData.contents);
+    console.log('Parsed data successfully, fields received:', Object.keys(data).length);
+    console.log('Field names:', Object.keys(data).sort().join(', '));
+
     const ss = SpreadsheetApp.openById(SHEET_ID);
     let sheet = ss.getSheetByName(SHEET_NAME);
     
@@ -106,14 +110,14 @@ function doPost(e) {
       data.zipCode
     );
 
-    // Process array fields
+    // Process array fields - handle both arrays and already-joined strings
     const contactMethods = Array.isArray(data.contactMethod)
       ? data.contactMethod.join(', ')
-      : data.contactMethod || '';
+      : (data.contactMethod || '');
 
     const cannotServe = Array.isArray(data.cannotServeSandwich)
       ? data.cannotServeSandwich.join(', ')
-      : data.cannotServeSandwich || '';
+      : (data.cannotServeSandwich || '');
 
     // Build row data with parsed address
     const rowData = [
@@ -170,11 +174,16 @@ function doPost(e) {
       zip: parsedAddress.zip
     });
 
+    console.log('Row data constructed with', rowData.length, 'fields');
+
     if (rowData.length !== 37) {
+      console.error(`Data mismatch: Expected 37 fields, got ${rowData.length}`);
       throw new Error(`Data mismatch: Expected 37 fields, got ${rowData.length}`);
     }
 
+    console.log('Attempting to append row to sheet...');
     sheet.appendRow(rowData);
+    console.log('Row appended successfully!');
 
     return ContentService.createTextOutput(
       JSON.stringify({ success: true, message: 'Form submitted successfully' })
