@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Impact Stories</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            color: #236383;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .controls {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-export {
+            background: #48bb78;
+        }
+
+        .btn-grant {
+            background: #FBAD3F;
+        }
+
+        .filters {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .filter-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-group label {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        select {
+            padding: 8px 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f7fafc;
+            border-radius: 8px;
+        }
+
+        .stat-card {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 600;
+            color: #236383;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .story-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .story-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #FBAD3F;
+            position: relative;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .story-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .story-card.favorited {
+            border-left-color: #48bb78;
+            background: #f0fdf4;
+        }
+
+        .story-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 15px;
+        }
+
+        .org-name {
+            font-weight: 600;
+            color: #236383;
+            font-size: 16px;
+        }
+
+        .favorite-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .favorite-btn:hover {
+            transform: scale(1.2);
+        }
+
+        .story-text {
+            color: #2d3748;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            font-size: 14px;
+        }
+
+        .story-meta {
+            display: flex;
+            gap: 15px;
+            font-size: 12px;
+            color: #666;
+            padding-top: 15px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .story-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: #007E8C;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .actions {
+            margin-top: 15px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            font-size: 12px;
+            background: white;
+            border: 2px solid #236383;
+            color: #236383;
+        }
+
+        .action-btn:hover {
+            background: #236383;
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            color: #236383;
+            margin-bottom: 20px;
+        }
+
+        .modal-content textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: flex-end;
+        }
+
+        @media (max-width: 768px) {
+            .story-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💬 Impact Stories</h1>
+        <p class="subtitle">Collect, curate, and share your impact stories</p>
+
+        <div class="controls">
+            <button onclick="loadStories()">🔄 Refresh</button>
+            <button class="btn-export" onclick="exportFavorites()">⭐ Export Favorites</button>
+            <button class="btn-grant" onclick="generateGrantText()">📝 Generate Grant Text</button>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Show:</label>
+                <select id="filterFavorites" onchange="filterStories()">
+                    <option value="all">All Stories</option>
+                    <option value="favorites">Favorites Only</option>
+                    <option value="unfavorited">Not Favorited</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label>Partnership:</label>
+                <select id="filterPartnership" onchange="filterStories()">
+                    <option value="all">All</option>
+                    <option value="5 years">5 years</option>
+                    <option value="3-4 years">3-4 years</option>
+                    <option value="1-2 years">1-2 years</option>
+                    <option value="new">Less than 1 year</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-value" id="totalStories">0</div>
+                <div class="stat-label">Total Stories</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="favoritesCount">0</div>
+                <div class="stat-label">Favorites</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgRating">-</div>
+                <div class="stat-label">Avg Rating</div>
+            </div>
+        </div>
+
+        <div id="storiesContainer" class="story-grid">
+            <div class="empty-state">Loading stories...</div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <h2>📊 Formatted for Export</h2>
+            <textarea id="exportText" readonly></textarea>
+            <div class="modal-actions">
+                <button onclick="copyToClipboard()">📋 Copy</button>
+                <button onclick="closeModal()" class="action-btn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+    <script>
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJ9sUwY_gw2bYWXCffV0RKuQkXqRq-hTU",
+            authDomain: "recipient-survey.firebaseapp.com",
+            databaseURL: "https://recipient-survey-default-rtdb.firebaseio.com",
+            projectId: "recipient-survey",
+            storageBucket: "recipient-survey.firebasestorage.app",
+            messagingSenderId: "1023665626622",
+            appId: "1:1023665626622:web:6c9be3dcaddeec30d674af"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let allStories = [];
+        let favorites = JSON.parse(localStorage.getItem('favoriteStories') || '[]');
+
+        function loadStories() {
+            database.ref('survey-responses').once('value')
+                .then(snapshot => {
+                    const data = snapshot.val();
+                    allStories = [];
+
+                    if (!data) {
+                        displayStories([]);
+                        return;
+                    }
+
+                    Object.keys(data).forEach(key => {
+                        const response = data[key];
+                        if (response.impactStory && response.impactStory.trim()) {
+                            allStories.push({
+                                id: key,
+                                ...response,
+                                isFavorite: favorites.includes(key)
+                            });
+                        }
+                    });
+
+                    displayStories(allStories);
+                    updateStats();
+                })
+                .catch(error => {
+                    console.error('Error loading stories:', error);
+                });
+        }
+
+        function displayStories(stories) {
+            const container = document.getElementById('storiesContainer');
+
+            if (stories.length === 0) {
+                container.innerHTML = '<div class="empty-state">No impact stories found.</div>';
+                return;
+            }
+
+            container.innerHTML = stories.map(story => `
+                <div class="story-card ${story.isFavorite ? 'favorited' : ''}" data-id="${story.id}">
+                    <div class="story-header">
+                        <div class="org-name">${story.orgName}</div>
+                        <button class="favorite-btn" onclick="toggleFavorite('${story.id}')">
+                            ${story.isFavorite ? '⭐' : '☆'}
+                        </button>
+                    </div>
+
+                    <div class="story-text">${story.impactStory}</div>
+
+                    <div class="tags">
+                        ${story.yearsReceivingSandwiches ? `<span class="tag">${story.yearsReceivingSandwiches}</span>` : ''}
+                        ${story.deliveryRating ? `<span class="tag">${story.deliveryRating}/5 rating</span>` : ''}
+                        ${story.seasonalNeeds === 'Yes' ? '<span class="tag">Seasonal needs</span>' : ''}
+                    </div>
+
+                    <div class="story-meta">
+                        <span>📧 ${story.contactEmail}</span>
+                        <span>📅 ${new Date(story.timestamp).toLocaleDateString()}</span>
+                    </div>
+
+                    <div class="actions">
+                        <button class="action-btn" onclick="viewFull('${story.id}')">View Full Response</button>
+                        <button class="action-btn" onclick="copyStory('${story.id}')">Copy Story</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function toggleFavorite(id) {
+            const index = favorites.indexOf(id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(id);
+            }
+
+            localStorage.setItem('favoriteStories', JSON.stringify(favorites));
+
+            // Update story in array
+            const story = allStories.find(s => s.id === id);
+            if (story) story.isFavorite = !story.isFavorite;
+
+            filterStories();
+        }
+
+        function filterStories() {
+            const favFilter = document.getElementById('filterFavorites').value;
+            const partnershipFilter = document.getElementById('filterPartnership').value;
+
+            let filtered = allStories;
+
+            if (favFilter === 'favorites') {
+                filtered = filtered.filter(s => s.isFavorite);
+            } else if (favFilter === 'unfavorited') {
+                filtered = filtered.filter(s => !s.isFavorite);
+            }
+
+            if (partnershipFilter !== 'all') {
+                if (partnershipFilter === '5 years') {
+                    filtered = filtered.filter(s => s.yearsReceivingSandwiches === '5 years');
+                } else if (partnershipFilter === '3-4 years') {
+                    filtered = filtered.filter(s => s.yearsReceivingSandwiches === '3 years' || s.yearsReceivingSandwiches === '4 years');
+                } else if (partnershipFilter === '1-2 years') {
+                    filtered = filtered.filter(s => s.yearsReceivingSandwiches === '1 year' || s.yearsReceivingSandwiches === '2 years');
+                } else if (partnershipFilter === 'new') {
+                    filtered = filtered.filter(s => s.yearsReceivingSandwiches === 'Less than 1 year');
+                }
+            }
+
+            displayStories(filtered);
+        }
+
+        function updateStats() {
+            document.getElementById('totalStories').textContent = allStories.length;
+            document.getElementById('favoritesCount').textContent = allStories.filter(s => s.isFavorite).length;
+
+            const ratings = allStories.filter(s => s.deliveryRating).map(s => parseInt(s.deliveryRating));
+            const avgRating = ratings.length > 0
+                ? (ratings.reduce((a, b) => a + b, 0) / ratings.length).toFixed(1)
+                : '-';
+            document.getElementById('avgRating').textContent = avgRating;
+        }
+
+        function exportFavorites() {
+            const favoriteStories = allStories.filter(s => s.isFavorite);
+
+            if (favoriteStories.length === 0) {
+                alert('No favorite stories to export!');
+                return;
+            }
+
+            const text = favoriteStories.map((story, index) => {
+                return `${index + 1}. ${story.orgName}\n\n"${story.impactStory}"\n\nPartnership: ${story.yearsReceivingSandwiches || 'Unknown'}\nRating: ${story.deliveryRating || 'N/A'}/5\n\n${'='.repeat(60)}\n`;
+            }).join('\n');
+
+            showModal(text);
+        }
+
+        function generateGrantText() {
+            const favoriteStories = allStories.filter(s => s.isFavorite);
+
+            if (favoriteStories.length === 0) {
+                alert('Please favorite some stories first!');
+                return;
+            }
+
+            const text = `IMPACT STORIES\n\nThe Sandwich Project serves ${allStories.length} partner organizations across the Atlanta metro area. Here are testimonials from our recipients:\n\n` +
+                favoriteStories.map((story, index) => {
+                    return `${story.orgName}: "${story.impactStory}"`;
+                }).join('\n\n') +
+                `\n\nThese stories represent just a fraction of the ${allStories.length} organizations we serve, demonstrating the critical role that consistent, reliable food access plays in supporting our community's most vulnerable populations.`;
+
+            showModal(text);
+        }
+
+        function copyStory(id) {
+            const story = allStories.find(s => s.id === id);
+            if (story) {
+                navigator.clipboard.writeText(story.impactStory);
+                alert('Story copied to clipboard!');
+            }
+        }
+
+        function viewFull(id) {
+            window.open(`view-responses.html#${id}`, '_blank');
+        }
+
+        function showModal(text) {
+            document.getElementById('exportText').value = text;
+            document.getElementById('exportModal').classList.add('show');
+        }
+
+        function closeModal() {
+            document.getElementById('exportModal').classList.remove('show');
+        }
+
+        function copyToClipboard() {
+            const textarea = document.getElementById('exportText');
+            textarea.select();
+            document.execCommand('copy');
+            alert('Copied to clipboard!');
+        }
+
+        // Load stories on page load
+        loadStories();
+    </script>
+</body>
+</html>

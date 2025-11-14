@@ -1,0 +1,16 @@
+{
+  "name": "sandwich-project-functions",
+  "description": "Firebase Cloud Functions for Sandwich Project",
+  "scripts": {
+    "serve": "firebase emulators:start --only functions",
+    "deploy": "firebase deploy --only functions"
+  },
+  "engines": {
+    "node": "18"
+  },
+  "main": "index.js",
+  "dependencies": {
+    "firebase-admin": "^11.11.0",
+    "firebase-functions": "^4.5.0"
+  }
+}
