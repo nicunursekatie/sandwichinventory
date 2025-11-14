@@ -326,9 +326,10 @@
                 fieldOrder.forEach(section => {
                     section.fields.forEach(field => {
                         const value = response[field.key] || '';
-                        // Escape quotes and wrap in quotes if contains comma
+                        // Escape quotes and wrap in quotes if contains comma, newline, or quote
                         const escapedValue = value.toString().replace(/"/g, '""');
-                        row.push(value.includes(',') ? `"${escapedValue}"` : escapedValue);
+                        const needsQuotes = value.includes(',') || value.includes('\n') || value.includes('\r') || value.includes('"');
+                        row.push(needsQuotes ? `"${escapedValue}"` : escapedValue);
                     });
                 });
 
