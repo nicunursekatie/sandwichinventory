@@ -158,20 +158,30 @@
         }
 
         .favorite-btn {
-            background: transparent;
-            border: none;
-            font-size: 24px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 28px;
             cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
+            padding: 4px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
+            transition: all 0.2s;
+            flex-shrink: 0;
         }
 
         .favorite-btn:hover {
-            transform: scale(1.2);
+            transform: scale(1.1);
+            border-color: #FBAD3F;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .story-card.favorited .favorite-btn {
+            background: #FBAD3F;
+            border-color: #FBAD3F;
         }
 
         .story-text {
