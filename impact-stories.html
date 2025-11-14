@@ -169,12 +169,11 @@
         }
 
         .favorite-btn {
-            background: white;
-            border: 2px solid #e2e8f0;
+            background: #f7fafc;
+            border: 2px solid #FBAD3F;
             border-radius: 6px;
-            font-size: 22px;
             cursor: pointer;
-            padding: 8px;
+            padding: 0;
             width: 44px;
             height: 44px;
             display: flex;
@@ -183,11 +182,12 @@
             transition: all 0.2s;
             flex-shrink: 0;
             line-height: 1;
+            font-family: Arial, sans-serif;
+            color: transparent;
         }
 
         .favorite-btn:hover {
             transform: scale(1.1);
-            border-color: #FBAD3F;
             background: #fff8e7;
             box-shadow: 0 2px 8px rgba(251, 173, 63, 0.2);
         }
@@ -197,9 +197,15 @@
             border-color: #FBAD3F;
         }
 
-        .favorite-btn::after {
+        .favorite-btn::before {
             content: attr(data-star);
-            font-size: 24px;
+            font-size: 26px;
+            color: #FBAD3F;
+            display: block;
+        }
+
+        .story-card.favorited .favorite-btn::before {
+            color: white;
         }
 
         .story-text {
