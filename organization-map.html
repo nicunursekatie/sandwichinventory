@@ -212,19 +212,19 @@
         <div class="legend">
             <div class="legend-title">Partnership Length</div>
             <div class="legend-item">
-                <div class="legend-color" style="background: #48bb78;"></div>
+                <div class="legend-color" style="background: #236383;"></div>
                 <span>5 years</span>
             </div>
             <div class="legend-item">
-                <div class="legend-color" style="background: #4299e1;"></div>
+                <div class="legend-color" style="background: #007E8C;"></div>
                 <span>3-4 years</span>
             </div>
             <div class="legend-item">
-                <div class="legend-color" style="background: #ed8936;"></div>
+                <div class="legend-color" style="background: #FBAD3F;"></div>
                 <span>1-2 years</span>
             </div>
             <div class="legend-item">
-                <div class="legend-color" style="background: #e53e3e;"></div>
+                <div class="legend-color" style="background: #A31C41;"></div>
                 <span>Less than 1 year</span>
             </div>
         </div>
@@ -268,13 +268,13 @@
             }).addTo(map);
         }
 
-        // Get marker color based on partnership length
+        // Get marker color based on partnership length (using TSP brand colors)
         function getMarkerColor(years) {
-            if (!years) return '#gray';
-            if (years.includes('5')) return '#48bb78';
-            if (years.includes('3') || years.includes('4')) return '#4299e1';
-            if (years.includes('1') || years.includes('2')) return '#ed8936';
-            return '#e53e3e';
+            if (!years) return '#47B3CB';
+            if (years.includes('5')) return '#236383';      // Dark blue - longest partnership
+            if (years.includes('3') || years.includes('4')) return '#007E8C';  // Teal - established
+            if (years.includes('1') || years.includes('2')) return '#FBAD3F';  // Orange - growing
+            return '#A31C41';  // Burgundy - new partnership
         }
 
         // Geocode address using Nominatim (free, no API key needed)
