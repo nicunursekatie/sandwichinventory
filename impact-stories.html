@@ -45,7 +45,7 @@
         }
 
         button {
-            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            background: #236383;
             color: white;
             padding: 12px 24px;
             border: none;
@@ -53,19 +53,30 @@
             font-size: 14px;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: all 0.2s;
         }
 
         button:hover {
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(35, 99, 131, 0.3);
         }
 
         .btn-export {
-            background: #48bb78;
+            background: #47B3CB;
+        }
+
+        .btn-export:hover {
+            background: #007E8C;
+            box-shadow: 0 4px 12px rgba(0, 126, 140, 0.3);
         }
 
         .btn-grant {
             background: #FBAD3F;
+        }
+
+        .btn-grant:hover {
+            background: #E89929;
+            box-shadow: 0 4px 12px rgba(251, 173, 63, 0.3);
         }
 
         .filters {
@@ -161,27 +172,34 @@
             background: white;
             border: 2px solid #e2e8f0;
             border-radius: 6px;
-            font-size: 28px;
+            font-size: 22px;
             cursor: pointer;
-            padding: 4px;
-            width: 40px;
-            height: 40px;
+            padding: 8px;
+            width: 44px;
+            height: 44px;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
             flex-shrink: 0;
+            line-height: 1;
         }
 
         .favorite-btn:hover {
             transform: scale(1.1);
             border-color: #FBAD3F;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            background: #fff8e7;
+            box-shadow: 0 2px 8px rgba(251, 173, 63, 0.2);
         }
 
         .story-card.favorited .favorite-btn {
             background: #FBAD3F;
             border-color: #FBAD3F;
+        }
+
+        .favorite-btn::after {
+            content: attr(data-star);
+            font-size: 24px;
         }
 
         .story-text {
@@ -214,12 +232,20 @@
         }
 
         .tag {
-            background: #007E8C;
+            background: #47B3CB;
             color: white;
             padding: 4px 12px;
             border-radius: 12px;
             font-size: 11px;
             font-weight: 600;
+        }
+
+        .tag:nth-child(2) {
+            background: #FBAD3F;
+        }
+
+        .tag:nth-child(3) {
+            background: #007E8C;
         }
 
         .actions {
@@ -432,8 +458,7 @@
                 <div class="story-card ${story.isFavorite ? 'favorited' : ''}" data-id="${story.id}">
                     <div class="story-header">
                         <div class="org-name">${story.orgName}</div>
-                        <button class="favorite-btn" onclick="toggleFavorite('${story.id}')">
-                            ${story.isFavorite ? '⭐' : '☆'}
+                        <button class="favorite-btn" onclick="toggleFavorite('${story.id}')" data-star="${story.isFavorite ? '⭐' : '☆'}" title="${story.isFavorite ? 'Remove from favorites' : 'Add to favorites'}">
                         </button>
                     </div>
 
