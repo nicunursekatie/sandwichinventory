@@ -754,11 +754,11 @@ We look forward to continuing our work together to make a positive impact in our
 With gratitude,
 The Sandwich Project Team`;
 
-            // Create and click a mailto link
-            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-            const a = document.createElement('a');
-            a.href = mailtoLink;
-            a.click();
+            // Use Gmail compose URL to open Gmail in a new window
+            const gmailUrl = `https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(email)}&su=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+
+            // Open in a popup window
+            window.open(gmailUrl, 'gmailCompose', 'width=800,height=600,resizable=yes,scrollbars=yes');
         }
 
         function exportToCSV() {
