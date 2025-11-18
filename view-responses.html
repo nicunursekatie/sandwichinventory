@@ -741,9 +741,9 @@
 
             const greeting = contactName ? `Dear ${contactName}` : `Dear ${orgName} Team`;
 
-            const subject = encodeURIComponent(`Thank You for Your Partnership with The Sandwich Project`);
+            const subject = `Thank You for Your Partnership with The Sandwich Project`;
 
-            const body = encodeURIComponent(`${greeting},
+            const body = `${greeting},
 
 Thank you for taking the time to complete our survey and for your continued partnership with The Sandwich Project.
 
@@ -752,10 +752,13 @@ Your dedication to serving the community is truly inspiring, and we're honored t
 We look forward to continuing our work together to make a positive impact in our community.
 
 With gratitude,
-The Sandwich Project Team`);
+The Sandwich Project Team`;
 
-            // Open default email client with pre-filled content
-            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+            // Create and click a mailto link
+            const mailtoLink = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+            const a = document.createElement('a');
+            a.href = mailtoLink;
+            a.click();
         }
 
         function exportToCSV() {
