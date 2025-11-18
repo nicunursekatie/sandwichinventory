@@ -57,58 +57,235 @@
             box-shadow: 0 10px 20px rgba(35, 99, 131, 0.3);
         }
 
-        .response-card {
-            background: #f7fafc;
-            border-radius: 8px;
-            padding: 25px;
+        .org-card {
+            background: white;
+            border-radius: 12px;
+            padding: 0;
             margin-bottom: 20px;
+            border: 2px solid #e2e8f0;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transition: box-shadow 0.2s;
+        }
+
+        .org-card:hover {
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 20px 25px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-header:hover {
+            background: linear-gradient(135deg, #1e5470 0%, #006875 100%);
+        }
+
+        .org-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .response-count {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .email-button {
+            background: #FBAD3F;
+            color: #1a202c;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .email-button:hover {
+            background: #f59e0b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(251, 173, 63, 0.4);
+        }
+
+        .expand-icon {
+            font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .card-body {
+            padding: 25px;
+            background: #f7fafc;
+            display: none;
+        }
+
+        .card-body.expanded {
+            display: block;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .info-section {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
             border-left: 4px solid #FBAD3F;
         }
 
-        .section {
-            margin-bottom: 25px;
-        }
-
-        .section-title {
+        .info-section-title {
             color: #236383;
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             margin-bottom: 12px;
-            padding-bottom: 6px;
-            border-bottom: 2px solid #FBAD3F;
+            display: flex;
+            align-items: center;
+            gap: 6px;
         }
 
-        .field {
-            margin-bottom: 12px;
-            padding: 8px 0;
+        .info-item {
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.6;
         }
 
-        .field-label {
+        .info-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .info-label {
             font-weight: 600;
             color: #2d3748;
-            font-size: 13px;
-            margin-bottom: 4px;
+            display: inline-block;
+            min-width: 100px;
         }
 
-        .field-value {
+        .info-value {
             color: #4a5568;
-            font-size: 14px;
-            line-height: 1.5;
         }
 
-        .field-value.empty {
+        .info-value.empty {
             color: #cbd5e0;
             font-style: italic;
         }
 
-        .timestamp {
-            background: #236383;
-            color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 12px;
+        .schedule-grid {
+            display: grid;
+            gap: 12px;
+        }
+
+        .schedule-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #FBAD3F;
+        }
+
+        .schedule-label {
+            font-weight: 600;
+            color: #236383;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .schedule-value {
+            color: #4a5568;
+            font-size: 14px;
+        }
+
+        .contact-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-icon {
+            min-width: 20px;
+        }
+
+        .impact-story {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #FBAD3F;
+            margin-top: 20px;
+        }
+
+        .impact-story-title {
+            color: #236383;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .impact-story-text {
+            color: #2d3748;
+            font-size: 14px;
+            line-height: 1.7;
+            white-space: pre-wrap;
+        }
+
+        .timestamp-badge {
+            background: #edf2f7;
+            color: #236383;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
             display: inline-block;
+            margin-top: 8px;
+        }
+
+        .multiple-responses {
+            background: #fff5e6;
+            border-left: 4px solid #FBAD3F;
+            padding: 15px;
+            border-radius: 6px;
             margin-bottom: 15px;
+        }
+
+        .multiple-responses-title {
+            font-weight: 600;
+            color: #744210;
+            margin-bottom: 8px;
+        }
+
+        .response-list {
+            font-size: 13px;
+            color: #744210;
         }
 
         .loading {
@@ -136,7 +313,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>📋 Survey Responses</h1>
+        <h1>📋 Partner Organizations</h1>
 
         <div class="controls">
             <button onclick="loadResponses()">🔄 Refresh</button>
@@ -169,58 +346,8 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Field order for display
-        const fieldOrder = [
-            { section: 'Contact Information', fields: [
-                { key: 'orgName', label: 'Organization Name' },
-                { key: 'contactName', label: 'Primary Contact Name' },
-                { key: 'contactEmail', label: 'Email' },
-                { key: 'contactPhone', label: 'Phone Number' },
-                { key: 'streetAddress', label: 'Street Address' },
-                { key: 'addressLine2', label: 'Address Line 2' },
-                { key: 'city', label: 'City' },
-                { key: 'state', label: 'State' },
-                { key: 'zipCode', label: 'Zip Code' },
-                { key: 'backupContactName', label: 'Backup Contact Name' },
-                { key: 'backupContactEmail', label: 'Backup Contact Email' },
-                { key: 'backupContactPhone', label: 'Backup Contact Phone' },
-                { key: 'contactMethod', label: 'Preferred Contact Methods' }
-            ]},
-            { section: 'Organization Profile', fields: [
-                { key: 'website', label: 'Website' },
-                { key: 'socialMedia', label: 'Social Media Handle' },
-                { key: 'populationFocus', label: 'Population Focus' },
-                { key: 'serviceArea', label: 'Service Area' }
-            ]},
-            { section: 'Operations', fields: [
-                { key: 'feedingSchedule', label: 'Meal Schedule' },
-                { key: 'donationSchedule', label: 'Donation Acceptance Times' },
-                { key: 'avgPeopleServed', label: 'Average # People Served' },
-                { key: 'frequency', label: 'Frequency' }
-            ]},
-            { section: 'Food Preferences', fields: [
-                { key: 'cannotServeSandwich', label: 'Cannot Serve Sandwiches' },
-                { key: 'restrictionReason', label: 'Restriction Reason' }
-            ]},
-            { section: 'Partnership & Impact', fields: [
-                { key: 'yearsReceivingSandwiches', label: 'Partnership Length' },
-                { key: 'receivesFruitSnacks', label: 'Receives Fruit & Snacks' },
-                { key: 'fruitSnacksInterest', label: 'Interest in Fruit & Snacks' },
-                { key: 'deliveryRating', label: 'Delivery Rating' },
-                { key: 'deliveryFeedback', label: 'Delivery Feedback' },
-                { key: 'seasonalNeeds', label: 'Seasonal Needs Change' },
-                { key: 'seasonalDetails', label: 'Seasonal Details' },
-                { key: 'orgReferrals', label: 'Recommended Partner Organizations' },
-                { key: 'grantInterest', label: 'Grant Interest' }
-            ]},
-            { section: 'Impact Stories', fields: [
-                { key: 'impactStory', label: 'Impact Story' },
-                { key: 'impactPhotos', label: 'Photo Links' },
-                { key: 'additionalInfo', label: 'Additional Information' }
-            ]}
-        ];
-
         let allResponses = [];
+        let organizationData = {};
 
         function loadResponses() {
             const container = document.getElementById('responseContainer');
@@ -229,6 +356,7 @@
             database.ref('survey-responses').once('value')
                 .then(snapshot => {
                     allResponses = [];
+                    organizationData = {};
                     const data = snapshot.val();
 
                     if (!data) {
@@ -247,6 +375,15 @@
                     // Sort by timestamp (newest first)
                     allResponses.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
+                    // Group by organization
+                    allResponses.forEach(response => {
+                        const orgName = response.orgName || 'Unknown Organization';
+                        if (!organizationData[orgName]) {
+                            organizationData[orgName] = [];
+                        }
+                        organizationData[orgName].push(response);
+                    });
+
                     displayResponses();
                 })
                 .catch(error => {
@@ -264,74 +401,464 @@
 
             container.innerHTML = '';
 
-            allResponses.forEach((response, index) => {
+            // Sort organizations alphabetically
+            const sortedOrgs = Object.keys(organizationData).sort();
+
+            sortedOrgs.forEach(orgName => {
+                const responses = organizationData[orgName];
+                const latestResponse = responses[0]; // Most recent response
+
                 const card = document.createElement('div');
-                card.className = 'response-card';
+                card.className = 'org-card';
+
+                // Merge data from all responses (latest takes precedence)
+                const mergedData = mergeResponses(responses);
 
                 let html = `
-                    <div class="timestamp">
-                        Response #${allResponses.length - index} •
-                        ${new Date(response.timestamp).toLocaleString()}
+                    <div class="card-header" onclick="toggleCard(this)">
+                        <div>
+                            <div class="org-title">${orgName}</div>
+                            <div class="response-count">${responses.length} response${responses.length > 1 ? 's' : ''}</div>
+                        </div>
+                        <div class="header-actions">
+                            <button class="email-button" onclick="event.stopPropagation(); sendThankYouEmail('${orgName.replace(/'/g, "\\'")}', '${mergedData.contactEmail || ''}', '${(mergedData.contactName || '').replace(/'/g, "\\'")}')">
+                                ✉️ Send Thank You
+                            </button>
+                            <div class="expand-icon">▼</div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                `;
+
+                // Show multiple response notice if applicable
+                if (responses.length > 1) {
+                    html += `
+                        <div class="multiple-responses">
+                            <div class="multiple-responses-title">📝 Multiple Responses Received</div>
+                            <div class="response-list">
+                                ${responses.map((r, i) =>
+                                    `Response ${i + 1}: ${new Date(r.timestamp).toLocaleDateString()} at ${new Date(r.timestamp).toLocaleTimeString()}`
+                                ).join('<br>')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                // Info grid
+                html += '<div class="info-grid">';
+
+                // Schedule Section
+                html += `
+                    <div class="info-section">
+                        <div class="info-section-title">🗓️ Schedule</div>
+                        <div class="schedule-grid">
+                            ${mergedData.feedingSchedule ? `
+                                <div class="schedule-item">
+                                    <div class="schedule-label">Meal Distribution</div>
+                                    <div class="schedule-value">${mergedData.feedingSchedule}</div>
+                                </div>
+                            ` : ''}
+                            ${mergedData.donationSchedule ? `
+                                <div class="schedule-item">
+                                    <div class="schedule-label">Donation Acceptance</div>
+                                    <div class="schedule-value">${mergedData.donationSchedule}</div>
+                                </div>
+                            ` : ''}
+                            ${!mergedData.feedingSchedule && !mergedData.donationSchedule ?
+                                '<div class="info-value empty">No schedule provided</div>' : ''}
+                        </div>
                     </div>
                 `;
 
-                fieldOrder.forEach(section => {
-                    html += `<div class="section">`;
-                    html += `<div class="section-title">${section.section}</div>`;
-
-                    section.fields.forEach(field => {
-                        const value = response[field.key];
-                        const isEmpty = !value || value === '';
-
-                        html += `
-                            <div class="field">
-                                <div class="field-label">${field.label}</div>
-                                <div class="field-value ${isEmpty ? 'empty' : ''}">
-                                    ${isEmpty ? '(not provided)' : value}
+                // Contact Info Section
+                html += `
+                    <div class="info-section">
+                        <div class="info-section-title">📞 Contact Information</div>
+                        <div class="contact-list">
+                            ${mergedData.contactName ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">👤</span>
+                                    <span>${mergedData.contactName}</span>
                                 </div>
-                            </div>
-                        `;
-                    });
+                            ` : ''}
+                            ${mergedData.contactEmail ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">✉️</span>
+                                    <span>${mergedData.contactEmail}</span>
+                                </div>
+                            ` : ''}
+                            ${mergedData.contactPhone ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">📱</span>
+                                    <span>${mergedData.contactPhone}</span>
+                                </div>
+                            ` : ''}
+                            ${mergedData.backupContactName ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">👤</span>
+                                    <span>${mergedData.backupContactName} (Backup)</span>
+                                </div>
+                            ` : ''}
+                            ${mergedData.backupContactEmail ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">✉️</span>
+                                    <span>${mergedData.backupContactEmail} (Backup)</span>
+                                </div>
+                            ` : ''}
+                            ${mergedData.backupContactPhone ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">📱</span>
+                                    <span>${mergedData.backupContactPhone} (Backup)</span>
+                                </div>
+                            ` : ''}
+                            ${mergedData.contactMethod ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">💬</span>
+                                    <span><strong>Preferred:</strong> ${mergedData.contactMethod}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
 
-                    html += `</div>`;
-                });
+                // Location Section
+                const hasAddress = mergedData.streetAddress || mergedData.city || mergedData.state || mergedData.zipCode;
+                html += `
+                    <div class="info-section">
+                        <div class="info-section-title">📍 Location</div>
+                        ${hasAddress ? `
+                            <div class="info-item">
+                                ${mergedData.streetAddress || ''}<br>
+                                ${mergedData.addressLine2 ? mergedData.addressLine2 + '<br>' : ''}
+                                ${mergedData.city || ''}${mergedData.city && mergedData.state ? ', ' : ''}${mergedData.state || ''} ${mergedData.zipCode || ''}
+                            </div>
+                        ` : '<div class="info-value empty">No address provided</div>'}
+                        ${mergedData.serviceArea ? `
+                            <div class="info-item">
+                                <strong>Service Area:</strong> ${mergedData.serviceArea}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                // Online Presence Section
+                html += `
+                    <div class="info-section">
+                        <div class="info-section-title">🌐 Online Presence</div>
+                        <div class="contact-list">
+                            ${mergedData.website ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">🔗</span>
+                                    <a href="${mergedData.website}" target="_blank">${mergedData.website}</a>
+                                </div>
+                            ` : ''}
+                            ${mergedData.socialMedia ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">📱</span>
+                                    <span>${mergedData.socialMedia}</span>
+                                </div>
+                            ` : ''}
+                            ${!mergedData.website && !mergedData.socialMedia ?
+                                '<div class="info-value empty">No online presence provided</div>' : ''}
+                        </div>
+                    </div>
+                `;
+
+                // Operations Section
+                html += `
+                    <div class="info-section">
+                        <div class="info-section-title">📊 Operations</div>
+                        ${mergedData.populationFocus ? `
+                            <div class="info-item">
+                                <strong>Population Focus:</strong> ${mergedData.populationFocus}
+                            </div>
+                        ` : ''}
+                        ${mergedData.avgPeopleServed ? `
+                            <div class="info-item">
+                                <strong>Avg. People Served:</strong> ${mergedData.avgPeopleServed}
+                            </div>
+                        ` : ''}
+                        ${mergedData.frequency ? `
+                            <div class="info-item">
+                                <strong>Frequency:</strong> ${mergedData.frequency}
+                            </div>
+                        ` : ''}
+                        ${!mergedData.populationFocus && !mergedData.avgPeopleServed && !mergedData.frequency ?
+                            '<div class="info-value empty">No operations info provided</div>' : ''}
+                    </div>
+                `;
+
+                // Partnership Details Section
+                html += `
+                    <div class="info-section">
+                        <div class="info-section-title">🤝 Partnership</div>
+                        ${mergedData.yearsReceivingSandwiches ? `
+                            <div class="info-item">
+                                <strong>Partnership Length:</strong> ${mergedData.yearsReceivingSandwiches}
+                            </div>
+                        ` : ''}
+                        ${mergedData.receivesFruitSnacks ? `
+                            <div class="info-item">
+                                <strong>Receives Fruit & Snacks:</strong> ${mergedData.receivesFruitSnacks}
+                            </div>
+                        ` : ''}
+                        ${mergedData.fruitSnacksInterest ? `
+                            <div class="info-item">
+                                <strong>Interest in Fruit & Snacks:</strong> ${mergedData.fruitSnacksInterest}
+                            </div>
+                        ` : ''}
+                        ${mergedData.deliveryRating ? `
+                            <div class="info-item">
+                                <strong>Delivery Rating:</strong> ${mergedData.deliveryRating}
+                            </div>
+                        ` : ''}
+                        ${mergedData.deliveryFeedback ? `
+                            <div class="info-item">
+                                <strong>Delivery Feedback:</strong> ${mergedData.deliveryFeedback}
+                            </div>
+                        ` : ''}
+                        ${mergedData.grantInterest ? `
+                            <div class="info-item">
+                                <strong>Grant Interest:</strong> ${mergedData.grantInterest}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+
+                html += '</div>'; // Close info-grid
+
+                // Additional Information Sections
+                if (mergedData.seasonalNeeds || mergedData.seasonalDetails) {
+                    html += `
+                        <div class="info-section" style="margin-top: 20px;">
+                            <div class="info-section-title">🌡️ Seasonal Information</div>
+                            ${mergedData.seasonalNeeds ? `
+                                <div class="info-item">
+                                    <strong>Seasonal Needs Change:</strong> ${mergedData.seasonalNeeds}
+                                </div>
+                            ` : ''}
+                            ${mergedData.seasonalDetails ? `
+                                <div class="info-item">
+                                    <strong>Details:</strong> ${mergedData.seasonalDetails}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
+                if (mergedData.cannotServeSandwich || mergedData.restrictionReason) {
+                    html += `
+                        <div class="info-section" style="margin-top: 20px;">
+                            <div class="info-section-title">⚠️ Restrictions</div>
+                            ${mergedData.cannotServeSandwich ? `
+                                <div class="info-item">
+                                    <strong>Cannot Serve Sandwiches:</strong> ${mergedData.cannotServeSandwich}
+                                </div>
+                            ` : ''}
+                            ${mergedData.restrictionReason ? `
+                                <div class="info-item">
+                                    <strong>Reason:</strong> ${mergedData.restrictionReason}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
+                if (mergedData.orgReferrals) {
+                    html += `
+                        <div class="info-section" style="margin-top: 20px;">
+                            <div class="info-section-title">🔗 Referrals</div>
+                            <div class="info-item">${mergedData.orgReferrals}</div>
+                        </div>
+                    `;
+                }
+
+                if (mergedData.impactStory) {
+                    html += `
+                        <div class="impact-story">
+                            <div class="impact-story-title">💫 Impact Story</div>
+                            <div class="impact-story-text">${mergedData.impactStory}</div>
+                            ${mergedData.impactPhotos ? `
+                                <div style="margin-top: 12px;">
+                                    <strong>📷 Photos:</strong> ${mergedData.impactPhotos}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                }
+
+                if (mergedData.additionalInfo) {
+                    html += `
+                        <div class="info-section" style="margin-top: 20px;">
+                            <div class="info-section-title">ℹ️ Additional Information</div>
+                            <div class="info-item">${mergedData.additionalInfo}</div>
+                        </div>
+                    `;
+                }
+
+                html += `
+                        <div class="timestamp-badge">
+                            Last updated: ${new Date(latestResponse.timestamp).toLocaleDateString()} at ${new Date(latestResponse.timestamp).toLocaleTimeString()}
+                        </div>
+                    </div>
+                `;
 
                 card.innerHTML = html;
                 container.appendChild(card);
             });
         }
 
+        function mergeResponses(responses) {
+            // Start with the most recent response and merge older ones
+            const merged = { ...responses[0] };
+
+            // For fields that are empty in the latest response, check older responses
+            for (let i = 1; i < responses.length; i++) {
+                const older = responses[i];
+                Object.keys(older).forEach(key => {
+                    if ((!merged[key] || merged[key] === '') && older[key] && older[key] !== '') {
+                        merged[key] = older[key];
+                    }
+                });
+            }
+
+            return merged;
+        }
+
+        function toggleCard(header) {
+            const body = header.nextElementSibling;
+            const icon = header.querySelector('.expand-icon');
+
+            body.classList.toggle('expanded');
+            icon.classList.toggle('expanded');
+        }
+
+        function sendThankYouEmail(orgName, email, contactName) {
+            if (!email) {
+                alert(`No email address available for ${orgName}. Please add their contact email first.`);
+                return;
+            }
+
+            const greeting = contactName ? `Dear ${contactName}` : `Dear ${orgName} Team`;
+
+            const subject = encodeURIComponent(`Thank You for Your Partnership with The Sandwich Project`);
+
+            const body = encodeURIComponent(`${greeting},
+
+Thank you for taking the time to complete our survey and for your continued partnership with The Sandwich Project.
+
+Your dedication to serving the community is truly inspiring, and we're honored to support your mission. The information you've provided helps us better understand your needs and improve how we serve you.
+
+We look forward to continuing our work together to make a positive impact in our community.
+
+With gratitude,
+The Sandwich Project Team`);
+
+            // Open default email client with pre-filled content
+            window.location.href = `mailto:${email}?subject=${subject}&body=${body}`;
+        }
+
         function exportToCSV() {
-            if (allResponses.length === 0) {
-                alert('No responses to export!');
+            if (Object.keys(organizationData).length === 0) {
+                alert('No data to export!');
                 return;
             }
 
             // Create CSV headers
-            const headers = ['Timestamp', 'Response ID'];
-            fieldOrder.forEach(section => {
-                section.fields.forEach(field => {
-                    headers.push(field.label);
-                });
-            });
+            const headers = [
+                'Organization Name',
+                'Number of Responses',
+                'Last Updated',
+                'Contact Name',
+                'Contact Email',
+                'Contact Phone',
+                'Backup Contact Name',
+                'Backup Contact Email',
+                'Backup Contact Phone',
+                'Preferred Contact Method',
+                'Street Address',
+                'Address Line 2',
+                'City',
+                'State',
+                'Zip Code',
+                'Website',
+                'Social Media',
+                'Service Area',
+                'Population Focus',
+                'Meal Distribution Schedule',
+                'Donation Acceptance Schedule',
+                'Avg. People Served',
+                'Frequency',
+                'Partnership Length',
+                'Receives Fruit & Snacks',
+                'Interest in Fruit & Snacks',
+                'Delivery Rating',
+                'Delivery Feedback',
+                'Seasonal Needs Change',
+                'Seasonal Details',
+                'Cannot Serve Sandwiches',
+                'Restriction Reason',
+                'Grant Interest',
+                'Referrals',
+                'Impact Story',
+                'Impact Photos',
+                'Additional Info'
+            ];
 
             // Create CSV rows
             const rows = [headers];
-            allResponses.forEach(response => {
-                const row = [
-                    new Date(response.timestamp).toLocaleString(),
-                    response.id
-                ];
 
-                fieldOrder.forEach(section => {
-                    section.fields.forEach(field => {
-                        const value = response[field.key] || '';
-                        // Escape quotes and wrap in quotes if contains comma, newline, or quote
-                        const escapedValue = value.toString().replace(/"/g, '""');
-                        const needsQuotes = value.includes(',') || value.includes('\n') || value.includes('\r') || value.includes('"');
-                        row.push(needsQuotes ? `"${escapedValue}"` : escapedValue);
-                    });
-                });
+            Object.keys(organizationData).sort().forEach(orgName => {
+                const responses = organizationData[orgName];
+                const mergedData = mergeResponses(responses);
+                const latestResponse = responses[0];
+
+                const escapeCSV = (value) => {
+                    if (!value) return '';
+                    const str = value.toString().replace(/"/g, '""');
+                    const needsQuotes = str.includes(',') || str.includes('\n') || str.includes('\r') || str.includes('"');
+                    return needsQuotes ? `"${str}"` : str;
+                };
+
+                const row = [
+                    escapeCSV(orgName),
+                    responses.length,
+                    escapeCSV(new Date(latestResponse.timestamp).toLocaleString()),
+                    escapeCSV(mergedData.contactName),
+                    escapeCSV(mergedData.contactEmail),
+                    escapeCSV(mergedData.contactPhone),
+                    escapeCSV(mergedData.backupContactName),
+                    escapeCSV(mergedData.backupContactEmail),
+                    escapeCSV(mergedData.backupContactPhone),
+                    escapeCSV(mergedData.contactMethod),
+                    escapeCSV(mergedData.streetAddress),
+                    escapeCSV(mergedData.addressLine2),
+                    escapeCSV(mergedData.city),
+                    escapeCSV(mergedData.state),
+                    escapeCSV(mergedData.zipCode),
+                    escapeCSV(mergedData.website),
+                    escapeCSV(mergedData.socialMedia),
+                    escapeCSV(mergedData.serviceArea),
+                    escapeCSV(mergedData.populationFocus),
+                    escapeCSV(mergedData.feedingSchedule),
+                    escapeCSV(mergedData.donationSchedule),
+                    escapeCSV(mergedData.avgPeopleServed),
+                    escapeCSV(mergedData.frequency),
+                    escapeCSV(mergedData.yearsReceivingSandwiches),
+                    escapeCSV(mergedData.receivesFruitSnacks),
+                    escapeCSV(mergedData.fruitSnacksInterest),
+                    escapeCSV(mergedData.deliveryRating),
+                    escapeCSV(mergedData.deliveryFeedback),
+                    escapeCSV(mergedData.seasonalNeeds),
+                    escapeCSV(mergedData.seasonalDetails),
+                    escapeCSV(mergedData.cannotServeSandwich),
+                    escapeCSV(mergedData.restrictionReason),
+                    escapeCSV(mergedData.grantInterest),
+                    escapeCSV(mergedData.orgReferrals),
+                    escapeCSV(mergedData.impactStory),
+                    escapeCSV(mergedData.impactPhotos),
+                    escapeCSV(mergedData.additionalInfo)
+                ];
 
                 rows.push(row);
             });
@@ -344,7 +871,7 @@
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `survey-responses-${new Date().toISOString().split('T')[0]}.csv`;
+            a.download = `partner-organizations-${new Date().toISOString().split('T')[0]}.csv`;
             a.click();
             window.URL.revokeObjectURL(url);
         }
