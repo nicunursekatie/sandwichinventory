@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sandwich Project - Volunteer Flyer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @media print {
+            @page {
+                size: letter;
+                margin: 0.5in;
+            }
+            body {
+                background: white;
+            }
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .flyer {
+            background: white;
+            max-width: 8.5in;
+            width: 100%;
+            padding: 60px 50px;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            position: relative;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo-container {
+            margin-bottom: 25px;
+        }
+
+        .logo-container img {
+            max-width: 250px;
+            height: auto;
+        }
+
+        .headline {
+            color: #236383;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .subheadline {
+            color: #007E8C;
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 30px;
+        }
+
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 40px;
+            align-items: start;
+        }
+
+        .main-content {
+            font-size: 1.1em;
+            line-height: 1.8;
+            color: #2c3e50;
+        }
+
+        .main-content p {
+            margin-bottom: 20px;
+        }
+
+        .main-content strong {
+            color: #236383;
+            font-weight: 600;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #FBAD3F 0%, #E89929 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(251, 173, 63, 0.3);
+        }
+
+        .highlight-box h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: 700;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.95;
+        }
+
+        .sidebar {
+            text-align: center;
+        }
+
+        .qr-section {
+            background: #f7fafc;
+            padding: 25px;
+            border-radius: 10px;
+            border: 3px solid #236383;
+            margin-bottom: 25px;
+        }
+
+        .qr-image {
+            width: 180px;
+            height: 180px;
+            display: block;
+            margin: 0 auto 15px;
+            border-radius: 8px;
+        }
+
+        .qr-section p {
+            color: #236383;
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 10px;
+        }
+
+        .website-link {
+            color: #007E8C;
+            font-size: 1.2em;
+            font-weight: 700;
+            text-decoration: none;
+            display: block;
+            margin-top: 10px;
+        }
+
+        .website-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 25px;
+            border-top: 2px solid #e2e8f0;
+            color: #666;
+            font-size: 0.95em;
+        }
+
+        .footer strong {
+            color: #236383;
+        }
+
+        .items-list {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            border-left: 4px solid #47B3CB;
+        }
+
+        .items-list h4 {
+            color: #236383;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .items-list ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .items-list li {
+            padding: 5px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+
+        .items-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #47B3CB;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .flyer {
+                padding: 40px 30px;
+            }
+
+            .content {
+                grid-template-columns: 1fr;
+                gap: 30px;
+            }
+
+            .headline {
+                font-size: 1.8em;
+            }
+
+            .subheadline {
+                font-size: 1.2em;
+            }
+
+            .main-content {
+                font-size: 1em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="flyer">
+        <div class="header">
+            <div class="logo-container">
+                <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo">
+            </div>
+            <h1 class="headline">Looking for a Service Activity?</h1>
+            <p class="subheadline">Make a Difference with The Sandwich Project</p>
+        </div>
+
+        <div class="content">
+            <div class="main-content">
+                <p>
+                    Looking for a service activity for your <strong>family, team, scout troop, or book club</strong>? 
+                    Consider making sandwiches and collecting healthy snacks and fruit for <strong>The Sandwich Project (TSP)</strong>.
+                </p>
+
+                <p>
+                    TSP is a <strong>501(c)(3) non-profit organization</strong> whose volunteers assemble and donate fresh, 
+                    homemade sandwiches each week for immediate consumption to meet the food scarcity needs in Metro Atlanta. 
+                    They also collect fresh fruit (apples, green bananas, oranges) and protein bars.
+                </p>
+
+                <div class="items-list">
+                    <h4>What We Need:</h4>
+                    <ul>
+                        <li>Fresh, homemade sandwiches</li>
+                        <li>Fresh fruit (apples, green bananas, oranges)</li>
+                        <li>Healthy protein bars</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h3>Making an Impact</h3>
+                    <div class="stats">
+                        <div class="stat">
+                            <span class="stat-number">1.4M+</span>
+                            <span class="stat-label">Sandwiches Distributed</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">70+</span>
+                            <span class="stat-label">Charities Served</span>
+                        </div>
+                    </div>
+                </div>
+
+                <p>
+                    Since the organization began, they have distributed <strong>more than 1.4 million sandwiches</strong> 
+                    and serve <strong>70+ charities</strong> across Metro Atlanta.
+                </p>
+            </div>
+
+            <div class="sidebar">
+                <div class="qr-section">
+                    <p>Scan the QR code</p>
+                    <img src="make-sandwiches-qrCode.png" alt="QR Code" class="qr-image">
+                    <p>or visit</p>
+                    <a href="https://thesandwichproject.org" class="website-link" target="_blank">
+                        thesandwichproject.org
+                    </a>
+                    <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                        to learn more!
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p><strong>The Sandwich Project</strong> | 501(c)(3) Non-Profit Organization</p>
+            <p>Serving Metro Atlanta since our founding</p>
+        </div>
+    </div>
+</body>
+</html>
