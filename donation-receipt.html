@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Donation Receipt Generator - The Sandwich Project</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #236383 0%, #007e8c 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #fbad3f;
+        }
+
+        .logo {
+            max-width: 200px;
+            margin-bottom: 15px;
+        }
+
+        h1 {
+            color: #236383;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .subtitle {
+            color: #007e8c;
+            font-size: 16px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #236383;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #47b3cb;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #007e8c;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #fbad3f 0%, #a31c41 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(163, 28, 65, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .info-text {
+            background: #f0f8ff;
+            border-left: 4px solid #47b3cb;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-radius: 4px;
+            color: #236383;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <img src="sandwich logo.png" alt="The Sandwich Project" class="logo">
+            <h1>Donation Receipt Generator</h1>
+            <p class="subtitle">Official Acknowledgment Letter for Corporate Matching</p>
+        </div>
+
+        <div class="info-text">
+            <strong>For Benevity & Corporate Matching:</strong> This generator creates official donation acknowledgment letters with all required elements including EIN, donation details, and the required "no goods or services" statement.
+        </div>
+
+        <form id="receiptForm">
+            <div class="row">
+                <div class="form-group">
+                    <label for="donorName">Donor Name *</label>
+                    <input type="text" id="donorName" required>
+                </div>
+                <div class="form-group">
+                    <label for="donationDate">Donation Date *</label>
+                    <input type="date" id="donationDate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="donationDescription">Donation Description *</label>
+                <input type="text" id="donationDescription"
+                       value="Prepared sandwiches made from groceries" required>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="donationValue">Donation Value ($) *</label>
+                    <input type="number" id="donationValue" step="0.01" min="0"
+                           value="122.00" required>
+                </div>
+                <div class="form-group">
+                    <label for="letterDate">Letter Date *</label>
+                    <input type="date" id="letterDate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="organizationEIN">Organization EIN *</label>
+                <input type="text" id="organizationEIN"
+                       placeholder="XX-XXXXXXX" required>
+            </div>
+
+            <div class="form-group">
+                <label for="organizationAddress">Organization Address *</label>
+                <textarea id="organizationAddress" rows="2" required></textarea>
+            </div>
+
+            <div class="row">
+                <div class="form-group">
+                    <label for="signerName">Signer Name *</label>
+                    <input type="text" id="signerName" required>
+                </div>
+                <div class="form-group">
+                    <label for="signerTitle">Signer Title *</label>
+                    <input type="text" id="signerTitle"
+                           placeholder="e.g., Executive Director" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn">Generate PDF Receipt</button>
+        </form>
+    </div>
+
+    <script>
+        // Set today's date as default for letter date
+        document.getElementById('letterDate').valueAsDate = new Date();
+
+        document.getElementById('receiptForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Get form values
+            const donorName = document.getElementById('donorName').value;
+            const donationDate = new Date(document.getElementById('donationDate').value).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const letterDate = new Date(document.getElementById('letterDate').value).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+            const donationDescription = document.getElementById('donationDescription').value;
+            const donationValue = parseFloat(document.getElementById('donationValue').value).toFixed(2);
+            const ein = document.getElementById('organizationEIN').value;
+            const address = document.getElementById('organizationAddress').value;
+            const signerName = document.getElementById('signerName').value;
+            const signerTitle = document.getElementById('signerTitle').value;
+
+            // Add logo
+            const logoImg = new Image();
+            logoImg.src = 'sandwich logo.png';
+
+            logoImg.onload = function() {
+                // Add logo (centered)
+                const logoWidth = 50;
+                const logoHeight = (logoImg.height / logoImg.width) * logoWidth;
+                doc.addImage(logoImg, 'PNG', (210 - logoWidth) / 2, 15, logoWidth, logoHeight);
+
+                let yPos = 15 + logoHeight + 10;
+
+                // Header - Organization name (centered, blue)
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(35, 99, 131); // #236383
+                doc.text('The Sandwich Project', 105, yPos, { align: 'center' });
+                yPos += 7;
+
+                // EIN (centered)
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text(`EIN: ${ein}`, 105, yPos, { align: 'center' });
+                yPos += 5;
+
+                // Address (centered, handle multi-line)
+                const addressLines = doc.splitTextToSize(address, 160);
+                addressLines.forEach(line => {
+                    doc.text(line, 105, yPos, { align: 'center' });
+                    yPos += 5;
+                });
+
+                yPos += 5;
+
+                // Horizontal line (orange)
+                doc.setDrawColor(251, 173, 63); // #fbad3f
+                doc.setLineWidth(0.5);
+                doc.line(20, yPos, 190, yPos);
+                yPos += 10;
+
+                // Letter date
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(11);
+                doc.text(`Date: ${letterDate}`, 20, yPos);
+                yPos += 10;
+
+                // Salutation
+                doc.text(`Dear ${donorName},`, 20, yPos);
+                yPos += 10;
+
+                // Body paragraph
+                doc.setFontSize(11);
+                const bodyText = `This letter acknowledges your in-kind donation to The Sandwich Project on ${donationDate} consisting of ${donationDescription} valued at $${donationValue}.`;
+                const bodyLines = doc.splitTextToSize(bodyText, 170);
+                bodyLines.forEach(line => {
+                    doc.text(line, 20, yPos);
+                    yPos += 6;
+                });
+
+                yPos += 4;
+
+                // No goods or services statement (bold, teal)
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(0, 126, 140); // #007e8c
+                const noGoodsText = 'No goods or services were provided in exchange for this contribution.';
+                const noGoodsLines = doc.splitTextToSize(noGoodsText, 170);
+                noGoodsLines.forEach(line => {
+                    doc.text(line, 20, yPos);
+                    yPos += 6;
+                });
+
+                yPos += 4;
+
+                // Thank you paragraph
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(0, 0, 0);
+                const thankYouText = 'Thank you for your support in fighting food insecurity in our community. Your generosity makes a meaningful difference in the lives of those we serve.';
+                const thankYouLines = doc.splitTextToSize(thankYouText, 170);
+                thankYouLines.forEach(line => {
+                    doc.text(line, 20, yPos);
+                    yPos += 6;
+                });
+
+                yPos += 10;
+
+                // Closing
+                doc.text('Sincerely,', 20, yPos);
+                yPos += 15;
+
+                // Signature line
+                doc.setDrawColor(0, 0, 0);
+                doc.setLineWidth(0.3);
+                doc.line(20, yPos, 80, yPos);
+                yPos += 5;
+
+                // Signer name and title
+                doc.setFont(undefined, 'normal');
+                doc.text(signerName, 20, yPos);
+                yPos += 5;
+                doc.text(signerTitle, 20, yPos);
+
+                // Footer note (small, centered, light blue)
+                doc.setFontSize(8);
+                doc.setTextColor(71, 179, 203); // #47b3cb
+                doc.text('Please retain this letter for your tax records and corporate matching submission.', 105, 280, { align: 'center' });
+
+                // Save the PDF
+                const fileName = `Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${new Date(document.getElementById('donationDate').value).toISOString().split('T')[0]}.pdf`;
+                doc.save(fileName);
+            };
+
+            logoImg.onerror = function() {
+                alert('Error loading logo. The PDF will be generated without it.');
+                // Generate without logo if image fails to load
+                generatePDFWithoutLogo();
+            };
+
+            function generatePDFWithoutLogo() {
+                let yPos = 25;
+
+                // Header - Organization name (centered, blue)
+                doc.setFontSize(16);
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(35, 99, 131);
+                doc.text('The Sandwich Project', 105, yPos, { align: 'center' });
+                yPos += 7;
+
+                // EIN
+                doc.setFontSize(10);
+                doc.setFont(undefined, 'normal');
+                doc.text(`EIN: ${ein}`, 105, yPos, { align: 'center' });
+                yPos += 5;
+
+                // Address
+                const addressLines = doc.splitTextToSize(address, 160);
+                addressLines.forEach(line => {
+                    doc.text(line, 105, yPos, { align: 'center' });
+                    yPos += 5;
+                });
+
+                yPos += 5;
+
+                // Continue with rest of document...
+                doc.setDrawColor(251, 173, 63);
+                doc.setLineWidth(0.5);
+                doc.line(20, yPos, 190, yPos);
+                yPos += 10;
+
+                doc.setTextColor(0, 0, 0);
+                doc.setFontSize(11);
+                doc.text(`Date: ${letterDate}`, 20, yPos);
+                yPos += 10;
+
+                doc.text(`Dear ${donorName},`, 20, yPos);
+                yPos += 10;
+
+                const bodyText = `This letter acknowledges your in-kind donation to The Sandwich Project on ${donationDate} consisting of ${donationDescription} valued at $${donationValue}.`;
+                const bodyLines = doc.splitTextToSize(bodyText, 170);
+                bodyLines.forEach(line => {
+                    doc.text(line, 20, yPos);
+                    yPos += 6;
+                });
+
+                yPos += 4;
+
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(0, 126, 140);
+                const noGoodsText = 'No goods or services were provided in exchange for this contribution.';
+                const noGoodsLines = doc.splitTextToSize(noGoodsText, 170);
+                noGoodsLines.forEach(line => {
+                    doc.text(line, 20, yPos);
+                    yPos += 6;
+                });
+
+                yPos += 4;
+
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(0, 0, 0);
+                const thankYouText = 'Thank you for your support in fighting food insecurity in our community. Your generosity makes a meaningful difference in the lives of those we serve.';
+                const thankYouLines = doc.splitTextToSize(thankYouText, 170);
+                thankYouLines.forEach(line => {
+                    doc.text(line, 20, yPos);
+                    yPos += 6;
+                });
+
+                yPos += 10;
+
+                doc.text('Sincerely,', 20, yPos);
+                yPos += 15;
+
+                doc.setDrawColor(0, 0, 0);
+                doc.setLineWidth(0.3);
+                doc.line(20, yPos, 80, yPos);
+                yPos += 5;
+
+                doc.setFont(undefined, 'normal');
+                doc.text(signerName, 20, yPos);
+                yPos += 5;
+                doc.text(signerTitle, 20, yPos);
+
+                doc.setFontSize(8);
+                doc.setTextColor(71, 179, 203);
+                doc.text('Please retain this letter for your tax records and corporate matching submission.', 105, 280, { align: 'center' });
+
+                const fileName = `Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${new Date(document.getElementById('donationDate').value).toISOString().split('T')[0]}.pdf`;
+                doc.save(fileName);
+            }
+        });
+    </script>
+</body>
+</html>
