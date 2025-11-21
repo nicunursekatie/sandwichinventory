@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TSP Donation Receipt Generator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #007e8c 0%, #236383 50%, #47b3cb 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(35, 99, 131, 0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: #236383;
+            color: white;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: -50px;
+            width: 100px;
+            height: 100%;
+            background: #fbad3f;
+            transform: skewX(-15deg);
+            opacity: 0.2;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .form-container {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 25px;
+            padding: 20px;
+            background: #f8fbfc;
+            border-radius: 8px;
+            border-top: 3px solid #47b3cb;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #236383;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+            color: #007e8c;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        input:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #47b3cb;
+            background: #f0fafb;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            flex: 1;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #fbad3f;
+            color: #236383;
+            font-weight: 700;
+        }
+
+        .btn-primary:hover {
+            background: #ffa726;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(251, 173, 63, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #007e8c;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+            color: #236383;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, rgba(71, 179, 203, 0.1) 0%, rgba(0, 126, 140, 0.1) 100%);
+            border-left: 4px solid #fbad3f;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .info-box strong {
+            color: #236383;
+        }
+
+        /* ADHD-friendly formatting */
+        .highlight {
+            background: rgba(251, 173, 63, 0.2);
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #a31c41;
+        }
+
+        /* Required field indicator */
+        label:has(+ input:required)::after,
+        label:has(+ textarea:required)::after {
+            content: ' *';
+            color: #a31c41;
+            font-weight: bold;
+        }
+
+        /* Loading state */
+        button:active {
+            transform: scale(0.98);
+        }
+
+        /* Success animation */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-10px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .section {
+            animation: slideDown 0.3s ease-out;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+            
+            .button-container {
+                flex-direction: column;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .form-container {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🍞 The Sandwich Project</h1>
+            <p>Donation Acknowledgment Generator</p>
+        </div>
+        
+        <div class="form-container">
+            <div class="info-box">
+                <strong>Quick Start:</strong> Fill in the fields below and click "Generate PDF" to create an official donation acknowledgment letter for corporate matching programs like Benevity.
+            </div>
+
+            <!-- Organization Details -->
+            <div class="section">
+                <h2 class="section-title">Organization Details</h2>
+                <div class="form-group">
+                    <label for="orgName">Organization Name</label>
+                    <input type="text" id="orgName" value="The Sandwich Project" required>
+                </div>
+                <div class="form-group">
+                    <label for="ein">EIN (Tax ID Number)</label>
+                    <input type="text" id="ein" placeholder="XX-XXXXXXX" required>
+                </div>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="orgAddress">Address</label>
+                        <input type="text" id="orgAddress" placeholder="123 Main St" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="orgCityStateZip">City, State ZIP</label>
+                        <input type="text" id="orgCityStateZip" placeholder="Atlanta, GA 30301" required>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Donor Information -->
+            <div class="section">
+                <h2 class="section-title">Donor Information</h2>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="donorName">Donor Name</label>
+                        <input type="text" id="donorName" placeholder="John Smith" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="donorEmail">Donor Email (optional)</label>
+                        <input type="email" id="donorEmail" placeholder="john@example.com">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="donorAddress">Donor Address (optional)</label>
+                    <input type="text" id="donorAddress" placeholder="456 Oak Ave, City, ST 12345">
+                </div>
+            </div>
+
+            <!-- Donation Details -->
+            <div class="section">
+                <h2 class="section-title">Donation Details</h2>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="donationDate">Donation Date</label>
+                        <input type="date" id="donationDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="donationValue">Value of Groceries ($)</label>
+                        <input type="number" id="donationValue" placeholder="122.00" step="0.01" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="donationDescription">Description (optional)</label>
+                    <textarea id="donationDescription" placeholder="Additional details about the donation...">In-kind donation of prepared sandwiches</textarea>
+                </div>
+            </div>
+
+            <!-- Signatory Information -->
+            <div class="section">
+                <h2 class="section-title">Your Information</h2>
+                <div class="row">
+                    <div class="form-group">
+                        <label for="signerName">Your Name</label>
+                        <input type="text" id="signerName" placeholder="Katie" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="signerTitle">Your Title</label>
+                        <input type="text" id="signerTitle" placeholder="Technical Lead / Volunteer Coordinator" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button type="button" class="btn-primary" onclick="generatePDF()">
+                    📄 Generate PDF
+                </button>
+                <button type="button" class="btn-secondary" onclick="clearForm()">
+                    Clear Form
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set today's date as default
+        document.getElementById('donationDate').valueAsDate = new Date();
+
+        function generatePDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Get form values
+            const orgName = document.getElementById('orgName').value;
+            const ein = document.getElementById('ein').value;
+            const orgAddress = document.getElementById('orgAddress').value;
+            const orgCityStateZip = document.getElementById('orgCityStateZip').value;
+            const donorName = document.getElementById('donorName').value;
+            const donorEmail = document.getElementById('donorEmail').value;
+            const donorAddress = document.getElementById('donorAddress').value;
+            const donationDate = document.getElementById('donationDate').value;
+            const donationValue = parseFloat(document.getElementById('donationValue').value).toFixed(2);
+            const donationDescription = document.getElementById('donationDescription').value || 'In-kind donation of prepared sandwiches';
+            const signerName = document.getElementById('signerName').value;
+            const signerTitle = document.getElementById('signerTitle').value;
+            
+            // Validation
+            if (!orgName || !ein || !donorName || !donationDate || !donationValue || !signerName || !signerTitle) {
+                alert('Please fill in all required fields');
+                return;
+            }
+            
+            // Format date
+            const date = new Date(donationDate);
+            const formattedDate = date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const letterDate = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            
+            // Set up PDF styling
+            const leftMargin = 25;
+            const rightMargin = 185;
+            const pageWidth = 210;
+            let yPosition = 30;
+            
+            // Header - Organization Name (larger, bold)
+            doc.setFontSize(18);
+            doc.setFont(undefined, 'bold');
+            doc.text(orgName, leftMargin, yPosition);
+            yPosition += 8;
+            
+            // Organization details
+            doc.setFontSize(11);
+            doc.setFont(undefined, 'normal');
+            doc.text(`EIN: ${ein}`, leftMargin, yPosition);
+            yPosition += 6;
+            doc.text(orgAddress, leftMargin, yPosition);
+            yPosition += 6;
+            doc.text(orgCityStateZip, leftMargin, yPosition);
+            yPosition += 20;
+            
+            // Letter date
+            doc.text(letterDate, leftMargin, yPosition);
+            yPosition += 15;
+            
+            // Recipient
+            doc.setFont(undefined, 'bold');
+            doc.text('Dear ' + donorName + ',', leftMargin, yPosition);
+            yPosition += 12;
+            
+            // Body text
+            doc.setFont(undefined, 'normal');
+            const bodyText1 = `This letter acknowledges your in-kind donation to ${orgName} on ${formattedDate}`;
+            const bodyText2 = `consisting of ${donationDescription.toLowerCase()} made from groceries valued at $${donationValue}.`;
+            
+            doc.text(bodyText1, leftMargin, yPosition);
+            yPosition += 6;
+            doc.text(bodyText2, leftMargin, yPosition);
+            yPosition += 12;
+            
+            // No goods or services statement (important for tax purposes)
+            doc.setFont(undefined, 'bold');
+            doc.text('No goods or services were provided in exchange for this contribution.', leftMargin, yPosition);
+            yPosition += 12;
+            
+            // Thank you message
+            doc.setFont(undefined, 'normal');
+            doc.text('Thank you for your support in fighting food insecurity in our community.', leftMargin, yPosition);
+            yPosition += 20;
+            
+            // Closing
+            doc.text('Sincerely,', leftMargin, yPosition);
+            yPosition += 20;
+            
+            // Signature line
+            doc.setFont(undefined, 'italic');
+            doc.text('[Signature]', leftMargin, yPosition);
+            yPosition += 8;
+            
+            // Signer details
+            doc.setFont(undefined, 'normal');
+            doc.text(signerName, leftMargin, yPosition);
+            yPosition += 6;
+            doc.text(signerTitle, leftMargin, yPosition);
+            yPosition += 6;
+            doc.text(orgName, leftMargin, yPosition);
+            
+            // Add donor information if provided
+            if (donorAddress) {
+                yPosition += 15;
+                doc.setFontSize(9);
+                doc.setFont(undefined, 'italic');
+                doc.text('Donor Address: ' + donorAddress, leftMargin, yPosition);
+            }
+            
+            if (donorEmail) {
+                yPosition += 5;
+                doc.setFontSize(9);
+                doc.text('Donor Email: ' + donorEmail, leftMargin, yPosition);
+            }
+            
+            // Footer - Document ID for tracking
+            doc.setFontSize(8);
+            doc.setFont(undefined, 'normal');
+            const docId = `DOC-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+            doc.text(`Document ID: ${docId}`, leftMargin, 280);
+            
+            // Save the PDF with a descriptive filename
+            const fileName = `TSP_Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${donationDate}.pdf`;
+            doc.save(fileName);
+        }
+        
+        function clearForm() {
+            if (confirm('Are you sure you want to clear all fields?')) {
+                document.querySelectorAll('input:not(#orgName)').forEach(input => {
+                    if (input.type !== 'date') {
+                        input.value = '';
+                    }
+                });
+                document.querySelectorAll('textarea').forEach(textarea => {
+                    textarea.value = '';
+                });
+                // Reset donation description to default
+                document.getElementById('donationDescription').value = 'In-kind donation of prepared sandwiches';
+                // Keep today's date
+                document.getElementById('donationDate').valueAsDate = new Date();
+            }
+        }
+        
+        // Save form data to localStorage on input
+        document.querySelectorAll('input, textarea').forEach(element => {
+            // Load saved value
+            const savedValue = localStorage.getItem('tsp_' + element.id);
+            if (savedValue && element.id !== 'donorName' && element.id !== 'donationDate' && element.id !== 'donationValue') {
+                element.value = savedValue;
+            }
+            
+            // Save on change
+            element.addEventListener('input', () => {
+                if (element.id !== 'donorName' && element.id !== 'donationDate' && element.id !== 'donationValue') {
+                    localStorage.setItem('tsp_' + element.id, element.value);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
