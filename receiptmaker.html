@@ -247,30 +247,8 @@
         
         <div class="form-container">
             <div class="info-box">
-                <strong>Quick Start:</strong> Fill in the fields below and click "Generate PDF" to create an official donation acknowledgment letter for corporate matching programs like Benevity.
-            </div>
-
-            <!-- Organization Details -->
-            <div class="section">
-                <h2 class="section-title">Organization Details</h2>
-                <div class="form-group">
-                    <label for="orgName">Organization Name</label>
-                    <input type="text" id="orgName" value="The Sandwich Project" required>
-                </div>
-                <div class="form-group">
-                    <label for="ein">EIN (Tax ID Number)</label>
-                    <input type="text" id="ein" placeholder="XX-XXXXXXX" required>
-                </div>
-                <div class="row">
-                    <div class="form-group">
-                        <label for="orgAddress">Address</label>
-                        <input type="text" id="orgAddress" placeholder="123 Main St" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="orgCityStateZip">City, State ZIP</label>
-                        <input type="text" id="orgCityStateZip" placeholder="Atlanta, GA 30301" required>
-                    </div>
-                </div>
+                <strong>Quick Start:</strong> Just enter the donor's info and click "Generate PDF" for Benevity or other corporate matching programs.
+                <br><span class="highlight">EIN: 87-0939484</span> is already included in every letter.
             </div>
 
             <!-- Donor Information -->
@@ -313,16 +291,16 @@
 
             <!-- Signatory Information -->
             <div class="section">
-                <h2 class="section-title">Your Information</h2>
-                <div class="row">
-                    <div class="form-group">
-                        <label for="signerName">Your Name</label>
-                        <input type="text" id="signerName" placeholder="Katie" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="signerTitle">Your Title</label>
-                        <input type="text" id="signerTitle" placeholder="Technical Lead / Volunteer Coordinator" required>
-                    </div>
+                <h2 class="section-title">Your Signature</h2>
+                <div class="form-group">
+                    <label for="signerName">Your Name</label>
+                    <input type="text" id="signerName" placeholder="Katie" required>
+                    <small style="color: #007e8c; font-size: 12px;">This will be saved for next time</small>
+                </div>
+                <div class="form-group">
+                    <label for="signerTitle">Your Title</label>
+                    <input type="text" id="signerTitle" placeholder="Technical Lead / Volunteer Coordinator" required>
+                    <small style="color: #007e8c; font-size: 12px;">This will be saved for next time</small>
                 </div>
             </div>
 
@@ -345,11 +323,13 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
+            // Hardcoded TSP values
+            const orgName = 'The Sandwich Project';
+            const ein = '87-0939484';
+            const orgAddress = '5074 Wickford Way';
+            const orgCityStateZip = 'Dunwoody, GA 30338';
+            
             // Get form values
-            const orgName = document.getElementById('orgName').value;
-            const ein = document.getElementById('ein').value;
-            const orgAddress = document.getElementById('orgAddress').value;
-            const orgCityStateZip = document.getElementById('orgCityStateZip').value;
             const donorName = document.getElementById('donorName').value;
             const donorEmail = document.getElementById('donorEmail').value;
             const donorAddress = document.getElementById('donorAddress').value;
@@ -360,7 +340,7 @@
             const signerTitle = document.getElementById('signerTitle').value;
             
             // Validation
-            if (!orgName || !ein || !donorName || !donationDate || !donationValue || !signerName || !signerTitle) {
+            if (!donorName || !donationDate || !donationValue || !signerName || !signerTitle) {
                 alert('Please fill in all required fields');
                 return;
             }
@@ -464,36 +444,36 @@
         }
         
         function clearForm() {
-            if (confirm('Are you sure you want to clear all fields?')) {
-                document.querySelectorAll('input:not(#orgName)').forEach(input => {
-                    if (input.type !== 'date') {
-                        input.value = '';
-                    }
-                });
-                document.querySelectorAll('textarea').forEach(textarea => {
-                    textarea.value = '';
-                });
-                // Reset donation description to default
+            if (confirm('Clear donor fields? (Your name and title will be kept)')) {
+                // Clear only donor-specific fields
+                document.getElementById('donorName').value = '';
+                document.getElementById('donorEmail').value = '';
+                document.getElementById('donorAddress').value = '';
+                document.getElementById('donationValue').value = '';
                 document.getElementById('donationDescription').value = 'In-kind donation of prepared sandwiches';
                 // Keep today's date
                 document.getElementById('donationDate').valueAsDate = new Date();
+                // Keep signer info (your name and title)
             }
         }
         
-        // Save form data to localStorage on input
-        document.querySelectorAll('input, textarea').forEach(element => {
-            // Load saved value
-            const savedValue = localStorage.getItem('tsp_' + element.id);
-            if (savedValue && element.id !== 'donorName' && element.id !== 'donationDate' && element.id !== 'donationValue') {
-                element.value = savedValue;
-            }
-            
-            // Save on change
-            element.addEventListener('input', () => {
-                if (element.id !== 'donorName' && element.id !== 'donationDate' && element.id !== 'donationValue') {
-                    localStorage.setItem('tsp_' + element.id, element.value);
+        // Save form data to localStorage on input (only for your info, not donor info)
+        const persistFields = ['signerName', 'signerTitle'];
+        
+        persistFields.forEach(fieldId => {
+            const element = document.getElementById(fieldId);
+            if (element) {
+                // Load saved value
+                const savedValue = localStorage.getItem('tsp_' + fieldId);
+                if (savedValue) {
+                    element.value = savedValue;
                 }
-            });
+                
+                // Save on change
+                element.addEventListener('input', () => {
+                    localStorage.setItem('tsp_' + fieldId, element.value);
+                });
+            }
         });
     </script>
 </body>
