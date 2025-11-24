@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sandwich Project - Giving Tuesday 2024</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f5f5f5;
+            line-height: 1.6;
+        }
+        
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        
+        .header {
+            background-color: #236383;
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 600;
+        }
+        
+        .content {
+            padding: 40px 30px;
+            color: #333333;
+        }
+        
+        .greeting {
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .hero-stat {
+            background-color: #e8f4f8;
+            border-left: 5px solid #fbad3f;
+            padding: 25px 30px;
+            margin: 30px 0;
+            text-align: center;
+            border-radius: 8px;
+        }
+        
+        .hero-stat-number {
+            color: #236383;
+            font-size: 42px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+        
+        .hero-stat-text {
+            color: #007e8c;
+            font-size: 18px;
+            font-weight: 600;
+        }
+        
+        .intro-highlight {
+            background-color: #e8f4f8;
+            border-radius: 8px;
+            padding: 20px 25px;
+            margin-bottom: 25px;
+            font-size: 16px;
+        }
+        
+        .intro {
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+        
+        .highlight-section {
+            margin: 30px 0;
+        }
+        
+        .highlight-section h2 {
+            color: #236383;
+            font-size: 20px;
+            margin-top: 0;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .stat-box {
+            background-color: #f9f9f9;
+            border-left: 5px solid #007e8c;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+        
+        .stat-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .stat-icon {
+            font-size: 32px;
+            margin-right: 15px;
+            min-width: 40px;
+        }
+        
+        .stat-number {
+            color: #fbad3f;
+            font-weight: 700;
+            font-size: 18px;
+            line-height: 1.3;
+        }
+        
+        .stat-description {
+            color: #555555;
+            margin-top: 10px;
+            line-height: 1.5;
+            padding-left: 55px;
+        }
+        
+        .progress-section {
+            background-color: #e8f4f8;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .progress-label {
+            color: #236383;
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .progress-bar-container {
+            background-color: #ffffff;
+            border: 2px solid #47b3cb;
+            border-radius: 20px;
+            height: 30px;
+            margin: 15px auto;
+            max-width: 500px;
+            overflow: hidden;
+        }
+        
+        .progress-bar-fill {
+            background-color: #007e8c;
+            height: 100%;
+            width: 90%;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .progress-numbers {
+            color: #555555;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        
+        .progress-numbers strong {
+            color: #fbad3f;
+        }
+        
+        .cta-section {
+            background-color: #007e8c;
+            padding: 40px 30px;
+            margin: 40px 0 0 0;
+            text-align: center;
+        }
+        
+        .cta-text {
+            font-size: 20px;
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .matching-text {
+            font-size: 18px;
+            color: #ffffff;
+            margin-bottom: 25px;
+            font-weight: 700;
+            background-color: #a31c41;
+            padding: 12px 20px;
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background-color: #fbad3f;
+            color: #236383;
+            padding: 18px 50px;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 20px;
+            margin: 10px 0;
+        }
+        
+        .cta-button:hover {
+            background-color: #ffffff;
+            color: #236383;
+        }
+        
+        .contact-info {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ffffff;
+        }
+        
+        .contact-info a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        
+        .closing {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+        
+        .signature {
+            margin-top: 20px;
+            font-style: italic;
+            color: #555555;
+        }
+        
+        .footer {
+            background-color: #236383;
+            color: #ffffff;
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .footer a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        
+        @media only screen and (max-width: 600px) {
+            .content {
+                padding: 30px 20px;
+            }
+            
+            .header img {
+                max-width: 280px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .hero-stat {
+                padding: 20px;
+            }
+            
+            .hero-stat-number {
+                font-size: 32px;
+            }
+            
+            .hero-stat-text {
+                font-size: 16px;
+            }
+            
+            .intro-highlight {
+                padding: 15px 20px;
+            }
+            
+            .stat-description {
+                padding-left: 0;
+            }
+            
+            .stat-icon {
+                font-size: 28px;
+                margin-right: 10px;
+            }
+            
+            .stat-number {
+                font-size: 16px;
+            }
+            
+            .progress-label {
+                font-size: 16px;
+            }
+            
+            .cta-section {
+                padding: 30px 20px;
+            }
+            
+            .cta-text {
+                font-size: 18px;
+            }
+            
+            .matching-text {
+                font-size: 16px;
+            }
+            
+            .cta-button {
+                padding: 15px 35px;
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <img src="https://nicunursekatie.github.io/sandwichprojectcollectionsites/LOGOS/CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project" style="max-width: 400px; width: 100%; height: auto; margin-bottom: 10px;">
+            <div style="color: #ffffff; font-size: 18px; font-weight: 500; margin-top: 10px;">2025 Impact Report</div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <div class="greeting">Hi {{ contact.FIRSTNAME }},</div>
+            
+            <div class="intro">
+                As we enter the season of giving, I want to share something that reflects the heart of this community. Attached is our 2025 one-page annual report, a snapshot of the impact you helped create this year.
+            </div>
+            
+            <div class="intro">
+                Over the past five years, The Sandwich Project has grown from a small, grassroots volunteer effort into a vital part of community food support across Metro Atlanta. This year, to ensure long-term sustainability and strengthen our ability to respond to rising need, we hired our first Executive Director. This milestone reflects your trust, your partnership, and the steady growth of a volunteer-powered movement that continues to make an incredible difference.
+            </div>
+            
+            <!-- Highlights Section -->
+            <div class="highlight-section">
+                <h2>Here are a few highlights from this year:</h2>
+                
+                <div class="stat-box">
+                    <div class="stat-header">
+                        <div class="stat-icon"><img src="https://images.squarespace-cdn.com/content/644c1a7612e58c4d658841f5/f2755a3c-e494-49c0-b07a-81784bb592f3/sandwich+logo.png?content-type=image%2Fpng" alt="Sandwich icon" style="width: 40px; height: 40px; display: block;"></div>
+                        <div class="stat-number">450,000 sandwiches made so far in 2025</div>
+                    </div>
+                    <div class="stat-description">We are on track to reach nearly 500,000 by year-end. Volunteers of all ages made these sandwiches one at a time, and they were delivered weekly to more than 70 partner organizations across Metro Atlanta.</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-header">
+                        <div class="stat-icon"><img src="https://images.squarespace-cdn.com/content/644c1a7612e58c4d658841f5/93796d32-d59e-4c41-a12c-6c9d9d406eba/vanicon.png?content-type=image%2Fpng" alt="Delivery van icon" style="width: 40px; height: 40px; display: block;"></div>
+                        <div class="stat-number">More than 2.2 million sandwiches delivered since 2020</div>
+                    </div>
+                    <div class="stat-description">What began with just 317 sandwiches in April 2020 is now a consistent, reliable distribution network reaching neighbors across high-need zip codes every week.</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-header">
+                        <div class="stat-icon">🤝</div>
+                        <div class="stat-number">Responding to rising need with timely, efficient action</div>
+                    </div>
+                    <div class="stat-description">Throughout 2025, disruptions to food assistance and rising grocery costs increased demand from families and organizations we serve. Our team and volunteers responded quickly and efficiently to meet urgent needs. For example, during periods of extreme cold, we coordinated special call-outs for blankets and warm layers, ensuring neighbors stayed safe while still receiving food support.</div>
+                </div>
+                
+                <div class="stat-box">
+                    <div class="stat-header">
+                        <div class="stat-icon"><img src="https://images.squarespace-cdn.com/content/v1/644c1a7612e58c4d658841f5/429e3b42-329e-4c93-9f0e-e41a29b193a6/TSPUGA_transparent.png?format=2500w" alt="UGA chapter icon" style="width: 40px; height: 40px; display: block;"></div>
+                        <div class="stat-number">Expanding to the University of Georgia</div>
+                    </div>
+                    <div class="stat-description">A group of former TSP high school interns launched a student-led chapter at UGA, mobilizing college students to address food insecurity both in Athens-Clarke County and among their peers. Their leadership is growing our mission beyond Atlanta.</div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-section">
+                <div class="progress-label">On Track to Reach 500,000 Sandwiches by Year-End</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar-fill">90%</div>
+                </div>
+                <div class="progress-numbers"><strong>450,000</strong> sandwiches delivered • <strong>50,000</strong> to go</div>
+            </div>
+            
+            <div class="intro">
+                These are only a few examples of what your support makes possible.
+            </div>
+            
+            <!-- Call to Action -->
+            <div class="cta-section">
+                <div class="cta-text">
+                    As Giving Tuesday approaches, we invite you to make a gift that will help us meet the growing need.
+                </div>
+                <div class="matching-text">
+                    A generous donor is matching all contributions made in November, so your donation will go twice as far.
+                </div>
+                <a href="https://www.thesandwichproject.org/donate" class="cta-button">Donate Now</a>
+                <div class="contact-info">
+                    Questions? Contact us at <a href="mailto:info@thesandwichproject.org">info@thesandwichproject.org</a>
+                </div>
+            </div>
+            
+            <!-- Closing -->
+            <div class="closing">
+                Thank you for being part of this community. Thank you for caring about your neighbors. And thank you for believing in the simple idea that every sandwich counts.
+            </div>
+            
+            <div class="signature">
+                With gratitude,<br>
+                Christine<br>
+                The Sandwich Project
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p>The Sandwich Project | Metro Atlanta<br>
+            <a href="https://www.thesandwichproject.org">www.thesandwichproject.org</a></p>
+        </div>
+    </div>
+</body>
+</html>
