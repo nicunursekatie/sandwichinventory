@@ -1240,6 +1240,11 @@
 
       if (eventsToComplete.length === 0) return;
 
+      if (!window.dataSdk) {
+        console.warn('Data SDK not available, skipping auto-complete');
+        return;
+      }
+
       console.log(`Auto-completing ${eventsToComplete.length} past event(s)`);
 
       for (const event of eventsToComplete) {
@@ -2209,6 +2214,13 @@
     async function saveEvent(e) {
       e.preventDefault();
 
+      // Check if dataSdk is available
+      if (!window.dataSdk) {
+        showToast('Data SDK is not available. Please refresh the page and try again.', 'error');
+        console.error('Data SDK not available when attempting to save event');
+        return;
+      }
+
       const saveButton = document.getElementById('save-button');
       const saveButtonText = document.getElementById('save-button-text');
       saveButton.disabled = true;
@@ -2309,6 +2321,13 @@
 
     async function deleteEvent() {
       if (!currentEvent) return;
+
+      // Check if dataSdk is available
+      if (!window.dataSdk) {
+        showToast('Data SDK is not available. Please refresh the page and try again.', 'error');
+        console.error('Data SDK not available when attempting to delete event');
+        return;
+      }
 
       const deleteButton = document.getElementById('delete-button');
       deleteButton.disabled = true;
@@ -2657,6 +2676,13 @@
 
       if (allEvents.length + pendingImportData.length > 999) {
         showToast('Cannot import: would exceed 999 event limit', 'error');
+        return;
+      }
+
+      // Check if dataSdk is available
+      if (!window.dataSdk) {
+        showToast('Data SDK is not available. Please refresh the page and try again.', 'error');
+        console.error('Data SDK not available when attempting import');
         return;
       }
 
