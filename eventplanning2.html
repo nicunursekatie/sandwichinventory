@@ -2517,8 +2517,10 @@
           }
 
           // Log first row to help debug column names
+          console.log('=== EXCEL COLUMN DETECTION ===');
           console.log('First row columns:', Object.keys(jsonData[0]));
           console.log('Sample data:', jsonData[0]);
+          console.log('All column names (case-sensitive):', Object.keys(jsonData[0]).map(k => `"${k}"`).join(', '));
 
           // Parse and prepare data
           pendingImportData = parseExcelData(jsonData);
@@ -2594,57 +2596,95 @@
             return;
           }
 
+          // Helper function to find column value (case-insensitive, handles variations)
+          const getColumnValue = (possibleNames) => {
+            for (const name of possibleNames) {
+              // Try exact match first
+              if (row[name] !== undefined && row[name] !== null && row[name] !== '') {
+                return row[name];
+              }
+              // Try case-insensitive match
+              const rowKeys = Object.keys(row);
+              const matchedKey = rowKeys.find(key => key.toLowerCase().trim() === name.toLowerCase().trim());
+              if (matchedKey && row[matchedKey] !== undefined && row[matchedKey] !== null && row[matchedKey] !== '') {
+                return row[matchedKey];
+              }
+            }
+            return null;
+          };
+
           // Parse numbers safely
-          const sandwichPlanned = row['Sandwich Count (Planned)'] ? parseInt(String(row['Sandwich Count (Planned)']).replace(/[^0-9]/g, '')) || 0 : 0;
-          const sandwichActual = row['Sandwich Count (Actual)'] ? parseInt(String(row['Sandwich Count (Actual)']).replace(/[^0-9]/g, '')) || 0 : 0;
+          const sandwichPlanned = getColumnValue(['Sandwich Count (Planned)', 'Sandwich Count Planned', 'Planned Count', 'Planned']) || 0;
+          const sandwichActual = getColumnValue(['Sandwich Count (Actual)', 'Sandwich Count Actual', 'Actual Count', 'Actual']) || 0;
+          const sandwichPlannedNum = sandwichPlanned ? parseInt(String(sandwichPlanned).replace(/[^0-9]/g, '')) || 0 : 0;
+          const sandwichActualNum = sandwichActual ? parseInt(String(sandwichActual).replace(/[^0-9]/g, '')) || 0 : 0;
 
           // Parse booleans - handle various formats
           const parseBoolean = (val) => {
-            if (val === true || val === 'TRUE' || val === 'Yes' || val === 'YES' || val === 'true' || val === 'yes' || val === '1' || val === 1) {
+            if (!val) return false;
+            const str = String(val).toLowerCase().trim();
+            if (str === 'true' || str === 'yes' || str === '1' || str === 'y' || val === true || val === 1) {
               return true;
             }
             return false;
           };
 
-          const driverPresent = parseBoolean(row['Driver Present']);
-          const speakerPresent = parseBoolean(row['Speaker Present']);
-          const volunteerPresent = parseBoolean(row['Volunteer Present']);
-          const photoFollowup = parseBoolean(row['Photo Follow-up Done']);
-          const finalCountRecorded = parseBoolean(row['Final Sandwich Count Recorded']);
+          const driverNeeded = parseBoolean(getColumnValue(['Driver Needed', 'Needs Driver', 'Driver Required']));
+          const driverCount = parseInt(String(getColumnValue(['Driver Count', 'Number of Drivers', 'Drivers']) || '1').replace(/[^0-9]/g, '')) || 1;
+          const refrigeratedVanNeeded = parseBoolean(getColumnValue(['Refrigerated Van Needed', 'Refrigerated Van', 'Van Needed', 'Cooler Van']));
+          const driverPresent = parseBoolean(getColumnValue(['Driver Present', 'Driver Attended', 'Driver Showed Up']));
+          
+          const speakerNeeded = parseBoolean(getColumnValue(['Speaker Needed', 'Needs Speaker', 'Speaker Required']));
+          const speakerCount = parseInt(String(getColumnValue(['Speaker Count', 'Number of Speakers', 'Speakers']) || '1').replace(/[^0-9]/g, '')) || 1;
+          const speakerPresent = parseBoolean(getColumnValue(['Speaker Present', 'Speaker Attended', 'Speaker Showed Up']));
+          
+          const volunteerNeeded = parseBoolean(getColumnValue(['Volunteer Needed', 'Volunteers Needed', 'Needs Volunteers', 'Volunteers Required']));
+          const volunteerCount = parseInt(String(getColumnValue(['Volunteer Count', 'Number of Volunteers', 'Volunteers']) || '1').replace(/[^0-9]/g, '')) || 1;
+          const volunteerPresent = parseBoolean(getColumnValue(['Volunteer Present', 'Volunteers Present', 'Volunteer Attended']));
+          
+          const photoFollowup = parseBoolean(getColumnValue(['Photo Follow-up Done', 'Photo Followup Done', 'Photo Follow Up', 'Photos Done']));
+          const finalCountRecorded = parseBoolean(getColumnValue(['Final Sandwich Count Recorded', 'Final Count Recorded', 'Count Recorded']));
 
           // Validate status
           const validStatuses = ['New', 'In Process', 'Scheduled', 'Completed', 'Canceled'];
-          let status = row['Status'] || 'New';
+          let status = String(getColumnValue(['Status', 'Event Status', 'State']) || 'New').trim();
           if (!validStatuses.includes(status)) {
             status = 'New';
           }
 
           const event = {
             event_id: generateId(),
-            group_name: String(row['Group Name'] || '').trim(),
-            department_name: String(row['Department Name'] || '').trim(),
-            group_contact_name: String(row['Group Contact Name'] || '').trim(),
-            group_contact_email: String(row['Group Contact Email'] || '').trim(),
-            group_contact_phone: String(row['Group Contact Phone'] || '').trim(),
+            group_name: String(getColumnValue(['Group Name', 'Group', 'Organization']) || '').trim(),
+            department_name: String(getColumnValue(['Department Name', 'Department']) || '').trim(),
+            group_contact_name: String(getColumnValue(['Group Contact Name', 'Contact Name', 'Contact']) || '').trim(),
+            group_contact_email: String(getColumnValue(['Group Contact Email', 'Contact Email', 'Email']) || '').trim(),
+            group_contact_phone: String(getColumnValue(['Group Contact Phone', 'Contact Phone', 'Phone']) || '').trim(),
             event_date: eventDate,
-            event_start_time: String(row['Event Start Time'] || '').trim(),
-            event_end_time: String(row['Event End Time'] || '').trim(),
-            pickup_time: String(row['Pickup Time'] || '').trim(),
-            event_address: String(row['Event Address'] || '').trim(),
-            event_city: String(row['Event City'] || '').trim(),
-            event_state: String(row['Event State'] || '').trim().toUpperCase().substring(0, 2),
-            event_zip: String(row['Event Zip'] || '').trim(),
-            sandwich_type: String(row['Sandwich Type'] || '').trim(),
-            sandwich_count_planned: sandwichPlanned,
-            sandwich_count_actual: sandwichActual,
-            destination_name: String(row['Destination Name'] || '').trim(),
-            destination_address: String(row['Destination Address'] || '').trim(),
-            tsp_contact: String(row['TSP Contact'] || '').trim(),
-            driver_name_assigned: String(row['Driver Name'] || '').trim(),
+            event_start_time: String(getColumnValue(['Event Start Time', 'Start Time', 'Event Time']) || '').trim(),
+            event_end_time: String(getColumnValue(['Event End Time', 'End Time']) || '').trim(),
+            pickup_time: String(getColumnValue(['Pickup Time', 'Pickup']) || '').trim(),
+            event_address: String(getColumnValue(['Event Address', 'Address', 'Event Location']) || '').trim(),
+            event_city: String(getColumnValue(['Event City', 'City']) || '').trim(),
+            event_state: String(getColumnValue(['Event State', 'State']) || '').trim().toUpperCase().substring(0, 2),
+            event_zip: String(getColumnValue(['Event Zip', 'Zip', 'Zip Code']) || '').trim(),
+            sandwich_type: String(getColumnValue(['Sandwich Type', 'Type']) || '').trim(),
+            sandwich_count_planned: sandwichPlannedNum,
+            sandwich_count_actual: sandwichActualNum,
+            destination_name: String(getColumnValue(['Destination Name', 'Destination', 'Delivery Destination']) || '').trim(),
+            destination_address: String(getColumnValue(['Destination Address', 'Delivery Address']) || '').trim(),
+            tsp_contact: String(getColumnValue(['TSP Contact', 'Contact Person', 'Coordinator']) || '').trim(),
+            driver_needed: driverNeeded,
+            driver_count: driverCount,
+            refrigerated_van_needed: refrigeratedVanNeeded,
+            driver_name_assigned: String(getColumnValue(['Driver Name', 'Driver', 'Assigned Driver']) || '').trim(),
             driver_present: driverPresent,
-            speaker_name_assigned: String(row['Speaker Name'] || '').trim(),
+            speaker_needed: speakerNeeded,
+            speaker_count: speakerCount,
+            speaker_name_assigned: String(getColumnValue(['Speaker Name', 'Speaker', 'Assigned Speaker']) || '').trim(),
             speaker_present: speakerPresent,
-            volunteer_name_assigned: String(row['Volunteer Name'] || '').trim(),
+            volunteer_needed: volunteerNeeded,
+            volunteer_count: volunteerCount,
+            volunteer_name_assigned: String(getColumnValue(['Volunteer Name', 'Volunteers', 'Assigned Volunteers']) || '').trim(),
             volunteer_present: volunteerPresent,
             status: status,
             created_at: new Date().toISOString(),
@@ -2655,10 +2695,10 @@
             last_activity_at: new Date().toISOString(),
             photo_followup_done: photoFollowup,
             final_sandwich_count_recorded: finalCountRecorded,
-            collection_log_link: String(row['Collection Log Link'] || '').trim(),
-            notes: String(row['Notes'] || '').trim(),
-            group_id: String(row['Group Name'] || '').toLowerCase().replace(/\s+/g, '-'),
-            event_area: String(row['Event City'] || row['Event Zip'] || '').trim()
+            collection_log_link: String(getColumnValue(['Collection Log Link', 'Log Link', 'Collection Log']) || '').trim(),
+            notes: String(getColumnValue(['Notes', 'Note', 'Comments', 'Remarks']) || '').trim(),
+            group_id: String(getColumnValue(['Group Name', 'Group', 'Organization']) || '').toLowerCase().replace(/\s+/g, '-'),
+            event_area: String(getColumnValue(['Event City', 'City']) || getColumnValue(['Event Zip', 'Zip']) || '').trim()
           };
 
           events.push(event);
