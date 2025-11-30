@@ -2679,16 +2679,27 @@
         return;
       }
 
-      // Check if dataSdk is available
-      if (!window.dataSdk) {
-        showToast('Data SDK is not available. Please refresh the page and try again.', 'error');
-        console.error('Data SDK not available when attempting import');
-        return;
-      }
-
       const importButton = document.getElementById('confirm-import-button');
       const importButtonText = document.getElementById('import-button-text');
       importButton.disabled = true;
+      importButtonText.innerHTML = '<span class="loading-spinner"></span> Waiting for SDK...';
+
+      // Wait for dataSdk to become available (with timeout)
+      let waitCount = 0;
+      const maxWait = 50; // 5 seconds total (50 * 100ms)
+      while (!window.dataSdk && waitCount < maxWait) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+        waitCount++;
+      }
+
+      // Check if dataSdk is available after waiting
+      if (!window.dataSdk) {
+        importButton.disabled = false;
+        importButtonText.textContent = 'Import Events';
+        showToast('Data SDK is not available. Please refresh the page and try again.', 'error');
+        console.error('Data SDK not available after waiting', waitCount * 100, 'ms');
+        return;
+      }
 
       console.log(`=== STARTING DATA SDK IMPORT ===`);
       console.log(`Attempting to import ${pendingImportData.length} events`);
