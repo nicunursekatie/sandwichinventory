@@ -12,7 +12,7 @@
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log"
-      ],
+      ]
     }
   ],
   "dataconnect": {
