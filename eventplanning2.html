@@ -2624,20 +2624,38 @@
           };
 
           // Parse numbers safely
-          const sandwichPlanned = getColumnValue(['Sandwich Count (Planned)', 'Sandwich Count Planned', 'Planned Count', 'Planned', 'Sandwiches Planned', 'Planned Sandwiches']);
-          const sandwichActual = getColumnValue(['Sandwich Count (Actual)', 'Sandwich Count Actual', 'Actual Count', 'Actual', 'Sandwiches Actual', 'Actual Sandwiches']);
+          const sandwichPlanned = getColumnValue(['Sandwich Count (Planned)', 'Sandwich Count Planned', 'Planned Count', 'Planned', 'Sandwiches Planned', 'Planned Sandwiches', 'Sandwich Count', 'Count (Planned)', 'Count Planned']);
+          const sandwichActual = getColumnValue(['Sandwich Count (Actual)', 'Sandwich Count Actual', 'Actual Count', 'Actual', 'Sandwiches Actual', 'Actual Sandwiches', 'Count (Actual)', 'Count Actual']);
+          
+          // Debug logging for first row
+          if (index === 0) {
+            console.log('🔍 DEBUG: Looking for sandwich count columns...');
+            console.log('  Available columns:', Object.keys(row));
+            console.log('  Sandwich Planned value:', sandwichPlanned, 'Type:', typeof sandwichPlanned);
+            console.log('  Sandwich Actual value:', sandwichActual, 'Type:', typeof sandwichActual);
+          }
           
           // Parse to number, but keep null if not found (so we know it's missing vs 0)
           let sandwichPlannedNum = null;
           if (sandwichPlanned !== null) {
             const parsed = parseInt(String(sandwichPlanned).replace(/[^0-9]/g, ''));
             sandwichPlannedNum = isNaN(parsed) ? null : parsed;
+            if (index === 0) {
+              console.log('  Parsed Planned:', sandwichPlannedNum, 'from:', sandwichPlanned);
+            }
+          } else if (index === 0) {
+            console.log('  ⚠️ Sandwich Planned column not found!');
           }
           
           let sandwichActualNum = null;
           if (sandwichActual !== null) {
             const parsed = parseInt(String(sandwichActual).replace(/[^0-9]/g, ''));
             sandwichActualNum = isNaN(parsed) ? null : parsed;
+            if (index === 0) {
+              console.log('  Parsed Actual:', sandwichActualNum, 'from:', sandwichActual);
+            }
+          } else if (index === 0) {
+            console.log('  ⚠️ Sandwich Actual column not found!');
           }
 
           // Parse booleans - handle various formats
