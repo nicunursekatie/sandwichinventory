@@ -320,12 +320,6 @@
                 <div class="result-detail" id="perPersonRate"></div>
             </div>
             
-            <div class="result-item">
-                <div class="result-label">Production Rate</div>
-                <div class="result-value" id="hourlyRate">--</div>
-                <div class="result-detail">sandwiches per hour</div>
-            </div>
-            
             <div class="efficiency-note">
                 <strong>Efficiency Level:</strong> <span id="efficiencyLevel"></span>
                 <br><span id="efficiencyTip"></span>
@@ -370,7 +364,6 @@
         const hoursSlider = document.getElementById('hoursSlider');
         const budgetInput = document.getElementById('budget');
         const sandwichCount = document.getElementById('sandwichCount');
-        const hourlyRate = document.getElementById('hourlyRate');
         const perPersonRate = document.getElementById('perPersonRate');
         const efficiencyLevel = document.getElementById('efficiencyLevel');
         const efficiencyTip = document.getElementById('efficiencyTip');
@@ -469,10 +462,8 @@
             const totalProductivityPerHour = calculateProductivity(adults, students);
             const rawTotalSandwiches = totalProductivityPerHour * hours;
             const totalSandwiches = roundToSensibleNumber(rawTotalSandwiches);
-            const sandwichesPerHour = roundToSensibleNumber(totalProductivityPerHour);
             
             sandwichCount.textContent = totalSandwiches.toLocaleString();
-            hourlyRate.textContent = sandwichesPerHour.toLocaleString();
             
             // Update per-person rate display
             if (totalVolunteers > 0) {
