@@ -7,6 +7,10 @@
   <script src="/_sdk/data_sdk.js"></script>
   <script src="/_sdk/element_sdk.js"></script>
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
   <style>
     body {
       box-sizing: border-box;
@@ -1191,6 +1195,36 @@
   <div class="toast" id="toast"><span id="toast-message"></span>
   </div>
   <script>
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyAB6O8WSqMSNJJv4wDG_8HTNpnegR1hBYo",
+      authDomain: "tsp-event-planner.firebaseapp.com",
+      projectId: "tsp-event-planner",
+      storageBucket: "tsp-event-planner.firebasestorage.app",
+      messagingSenderId: "336619975760",
+      appId: "1:336619975760:web:e5333b61193f83be980d55",
+      measurementId: "G-Y03DLYT5P6"
+    };
+
+    // Initialize Firebase
+    let firestore;
+    let analytics;
+    if (typeof firebase !== 'undefined') {
+      try {
+        firebase.initializeApp(firebaseConfig);
+        firestore = firebase.firestore();
+        // Analytics is optional - only initialize if available
+        if (firebase.analytics) {
+          analytics = firebase.analytics();
+        }
+        console.log('✓ Firebase initialized');
+      } catch (error) {
+        console.error('Firebase initialization error:', error);
+      }
+    } else {
+      console.warn('Firebase SDK not loaded');
+    }
+
     // Global state
     let allEvents = [];
     let currentEvent = null;
