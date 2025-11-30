@@ -1,5 +1,11 @@
 {
   "projects": {
     "default": "tsp-event-planner"
+  },
+  "targets": {},
+  "etags": {
+    "tsp-event-planner": {
+      "extensionInstances": {}
+    }
   }
 }
