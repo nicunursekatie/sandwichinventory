@@ -1083,9 +1083,9 @@
        <div class="form-grid">
         <div class="form-field"><label for="sandwich-type">Type</label> <input type="text" id="sandwich-type" placeholder="e.g., Turkey, Ham, Veggie">
         </div>
-        <div class="form-field"><label for="sandwich-count-planned">Planned Count</label> <input type="number" id="sandwich-count-planned" min="0">
+        <div class="form-field"><label for="sandwich-count-planned">Planned Count</label> <input type="text" id="sandwich-count-planned" placeholder="e.g., 50 or 50-100">
         </div>
-        <div class="form-field"><label for="sandwich-count-actual">Actual Count</label> <input type="number" id="sandwich-count-actual" min="0">
+        <div class="form-field"><label for="sandwich-count-actual">Actual Count</label> <input type="text" id="sandwich-count-actual" placeholder="e.g., 50 or 50-100">
         </div>
        </div>
       </div><!-- Destination -->
@@ -2021,9 +2021,24 @@
         `;
       }).join('') || '<div style="color: #64748b; padding: 20px;">No destinations recorded yet</div>';
 
-      // Sandwiches
-      const totalPlanned = allEvents.reduce((sum, e) => sum + (e.sandwich_count_planned || 0), 0);
-      const totalActual = allEvents.reduce((sum, e) => sum + (e.sandwich_count_actual || 0), 0);
+      // Sandwiches - handle ranges by using average or first number
+      const parseCountForTotal = (count) => {
+        if (!count) return 0;
+        const str = String(count).trim();
+        // If range like "50-100", use average
+        const rangeMatch = str.match(/^(\d+)-(\d+)$/);
+        if (rangeMatch) {
+          const min = parseInt(rangeMatch[1]);
+          const max = parseInt(rangeMatch[2]);
+          return Math.round((min + max) / 2);
+        }
+        // If single number
+        const num = parseInt(str);
+        return isNaN(num) ? 0 : num;
+      };
+      
+      const totalPlanned = allEvents.reduce((sum, e) => sum + parseCountForTotal(e.sandwich_count_planned), 0);
+      const totalActual = allEvents.reduce((sum, e) => sum + parseCountForTotal(e.sandwich_count_actual), 0);
 
       const maxSandwich = Math.max(totalPlanned, totalActual, 1);
       const plannedWidth = (totalPlanned / maxSandwich) * 100;
@@ -2326,8 +2341,8 @@
         event_state: document.getElementById('event-state').value,
         event_zip: document.getElementById('event-zip').value,
         sandwich_type: document.getElementById('sandwich-type').value,
-        sandwich_count_planned: parseInt(document.getElementById('sandwich-count-planned').value) || 0,
-        sandwich_count_actual: parseInt(document.getElementById('sandwich-count-actual').value) || 0,
+        sandwich_count_planned: document.getElementById('sandwich-count-planned').value.trim() || '',
+        sandwich_count_actual: document.getElementById('sandwich-count-actual').value.trim() || '',
         destination_name: document.getElementById('destination-name').value,
         destination_address: document.getElementById('destination-address').value,
         tsp_contact: document.getElementById('tsp-contact').value,
@@ -2649,27 +2664,43 @@
             console.log('  Sandwich Actual value:', sandwichActual, 'Type:', typeof sandwichActual);
           }
           
-          // Parse to number, but keep null if not found (so we know it's missing vs 0)
-          let sandwichPlannedNum = null;
-          if (sandwichPlanned !== null) {
-            const parsed = parseInt(String(sandwichPlanned).replace(/[^0-9]/g, ''));
-            sandwichPlannedNum = isNaN(parsed) ? null : parsed;
-            if (index === 0) {
-              console.log('  Parsed Planned:', sandwichPlannedNum, 'from:', sandwichPlanned);
+          // Parse to number or range (e.g., "50", "50-100", "50 to 100")
+          const parseSandwichCount = (value) => {
+            if (!value || value === null || value === undefined) return null;
+            const str = String(value).trim();
+            if (!str) return null;
+            
+            // Check for range patterns: "50-100", "50 to 100", "50 - 100", etc.
+            const rangeMatch = str.match(/^(\d+)\s*(?:-|to)\s*(\d+)$/i);
+            if (rangeMatch) {
+              const min = parseInt(rangeMatch[1]);
+              const max = parseInt(rangeMatch[2]);
+              if (!isNaN(min) && !isNaN(max) && min <= max) {
+                return `${min}-${max}`;
+              }
             }
-          } else if (index === 0) {
-            console.log('  ⚠️ Sandwich Planned column not found!');
-          }
+            
+            // Try to parse as single number
+            const numMatch = str.match(/^\d+$/);
+            if (numMatch) {
+              return numMatch[0];
+            }
+            
+            // If it contains numbers, try to extract first number as fallback
+            const numExtract = str.match(/\d+/);
+            if (numExtract) {
+              return numExtract[0];
+            }
+            
+            return null;
+          };
           
-          let sandwichActualNum = null;
-          if (sandwichActual !== null) {
-            const parsed = parseInt(String(sandwichActual).replace(/[^0-9]/g, ''));
-            sandwichActualNum = isNaN(parsed) ? null : parsed;
-            if (index === 0) {
-              console.log('  Parsed Actual:', sandwichActualNum, 'from:', sandwichActual);
-            }
-          } else if (index === 0) {
-            console.log('  ⚠️ Sandwich Actual column not found!');
+          let sandwichPlannedNum = parseSandwichCount(sandwichPlanned);
+          let sandwichActualNum = parseSandwichCount(sandwichActual);
+          
+          if (index === 0) {
+            console.log('  Parsed Planned:', sandwichPlannedNum, 'from:', sandwichPlanned);
+            console.log('  Parsed Actual:', sandwichActualNum, 'from:', sandwichActual);
           }
 
           // Parse booleans - handle various formats
@@ -2730,8 +2761,8 @@
             event_state: String(getColumnValue(['Event State', 'State']) || '').trim().toUpperCase().substring(0, 2),
             event_zip: String(getColumnValue(['Event Zip', 'Zip', 'Zip Code']) || '').trim(),
             sandwich_type: String(getColumnValue(['Deli or PBJ?', 'Sandwich Type', 'Type']) || '').trim(),
-            sandwich_count_planned: sandwichPlannedNum !== null ? sandwichPlannedNum : 0,
-            sandwich_count_actual: sandwichActualNum !== null ? sandwichActualNum : 0,
+            sandwich_count_planned: sandwichPlannedNum || '',
+            sandwich_count_actual: sandwichActualNum || '',
             destination_name: String(getColumnValue(['Planned Recipient/Host Home', 'Destination Name', 'Destination', 'Delivery Destination']) || '').trim(),
             destination_address: String(getColumnValue(['Destination Address', 'Delivery Address']) || '').trim(),
             tsp_contact: String(getColumnValue(['TSP Contact', 'Contact Person', 'Coordinator']) || '').trim(),
