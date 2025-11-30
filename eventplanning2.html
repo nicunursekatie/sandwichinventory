@@ -2756,22 +2756,62 @@
           ` : ''}
         </div>
 
-        ${allEvents.length + events.length > 999 ? `
-          <div style="margin-top: 16px; padding: 12px; background: #fee2e2; border-left: 4px solid #a31c41; border-radius: 6px;">
-            <p style="margin: 0; color: #991b1b; font-weight: 600;">⚠️ Warning: Import would exceed 999 event limit</p>
-            <p style="margin: 8px 0 0 0; color: #991b1b; font-size: 13px;">
-              You currently have ${allEvents.length} events. Importing ${events.length} more would exceed the maximum of 999 events.
-              Please delete some existing events first.
-            </p>
-          </div>
-        ` : ''}
+        ${(() => {
+          // Count new vs existing events
+          let newCount = 0;
+          let updateCount = 0;
+          events.forEach(event => {
+            const existing = allEvents.find(e => 
+              e.group_name === event.group_name && 
+              e.event_date === event.event_date
+            );
+            if (existing) {
+              updateCount++;
+            } else {
+              newCount++;
+            }
+          });
+          
+          if (allEvents.length + newCount > 999) {
+            return `
+              <div style="margin-top: 16px; padding: 12px; background: #fee2e2; border-left: 4px solid #a31c41; border-radius: 6px;">
+                <p style="margin: 0; color: #991b1b; font-weight: 600;">⚠️ Warning: Import would exceed 999 event limit</p>
+                <p style="margin: 8px 0 0 0; color: #991b1b; font-size: 13px;">
+                  You currently have ${allEvents.length} events. This import will update ${updateCount} existing events and add ${newCount} new events, which would exceed the maximum of 999 events (${allEvents.length + newCount} total).
+                  ${updateCount > 0 ? `<br><br>Note: ${updateCount} events will be updated (not counted as new).` : ''}
+                </p>
+              </div>
+            `;
+          } else if (updateCount > 0) {
+            return `
+              <div style="margin-top: 16px; padding: 12px; background: #e0f2fe; border-left: 4px solid #0369a1; border-radius: 6px;">
+                <p style="margin: 0; color: #0c4a6e; font-weight: 600;">ℹ️ Import Preview</p>
+                <p style="margin: 8px 0 0 0; color: #0c4a6e; font-size: 13px;">
+                  ${updateCount} existing events will be updated, ${newCount} new events will be created.
+                </p>
+              </div>
+            `;
+          }
+          return '';
+        })()}
       `;
 
       document.getElementById('import-preview').innerHTML = previewHtml;
       
-      // Disable import button if would exceed limit
+      // Disable import button if would exceed limit (only count new events)
       const importButton = document.getElementById('confirm-import-button');
-      if (allEvents.length + events.length > 999) {
+      let newEventCount = 0;
+      events.forEach(event => {
+        const existing = allEvents.find(e => 
+          e.group_name === event.group_name && 
+          e.event_date === event.event_date
+        );
+        if (!existing) {
+          newEventCount++;
+        }
+      });
+      
+      if (allEvents.length + newEventCount > 999) {
         importButton.disabled = true;
       } else {
         importButton.disabled = false;
@@ -2788,8 +2828,21 @@
     async function confirmImport() {
       if (pendingImportData.length === 0) return;
 
-      if (allEvents.length + pendingImportData.length > 999) {
-        showToast('Cannot import: would exceed 999 event limit', 'error');
+      // Count how many events in the import are new vs existing
+      let newEventCount = 0;
+      for (const event of pendingImportData) {
+        const existingEvent = allEvents.find(e => 
+          e.group_name === event.group_name && 
+          e.event_date === event.event_date
+        );
+        if (!existingEvent) {
+          newEventCount++;
+        }
+      }
+
+      // Only check limit for NEW events (updates don't count toward limit)
+      if (allEvents.length + newEventCount > 999) {
+        showToast(`Cannot import: would exceed 999 event limit. ${pendingImportData.length - newEventCount} events will be updated, but ${newEventCount} new events would exceed the limit.`, 'error');
         return;
       }
 
