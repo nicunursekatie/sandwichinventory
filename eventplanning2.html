@@ -2624,10 +2624,21 @@
           };
 
           // Parse numbers safely
-          const sandwichPlanned = getColumnValue(['Sandwich Count (Planned)', 'Sandwich Count Planned', 'Planned Count', 'Planned']) || 0;
-          const sandwichActual = getColumnValue(['Sandwich Count (Actual)', 'Sandwich Count Actual', 'Actual Count', 'Actual']) || 0;
-          const sandwichPlannedNum = sandwichPlanned ? parseInt(String(sandwichPlanned).replace(/[^0-9]/g, '')) || 0 : 0;
-          const sandwichActualNum = sandwichActual ? parseInt(String(sandwichActual).replace(/[^0-9]/g, '')) || 0 : 0;
+          const sandwichPlanned = getColumnValue(['Sandwich Count (Planned)', 'Sandwich Count Planned', 'Planned Count', 'Planned', 'Sandwiches Planned', 'Planned Sandwiches']);
+          const sandwichActual = getColumnValue(['Sandwich Count (Actual)', 'Sandwich Count Actual', 'Actual Count', 'Actual', 'Sandwiches Actual', 'Actual Sandwiches']);
+          
+          // Parse to number, but keep null if not found (so we know it's missing vs 0)
+          let sandwichPlannedNum = null;
+          if (sandwichPlanned !== null) {
+            const parsed = parseInt(String(sandwichPlanned).replace(/[^0-9]/g, ''));
+            sandwichPlannedNum = isNaN(parsed) ? null : parsed;
+          }
+          
+          let sandwichActualNum = null;
+          if (sandwichActual !== null) {
+            const parsed = parseInt(String(sandwichActual).replace(/[^0-9]/g, ''));
+            sandwichActualNum = isNaN(parsed) ? null : parsed;
+          }
 
           // Parse booleans - handle various formats
           const parseBoolean = (val) => {
@@ -2678,8 +2689,8 @@
             event_state: String(getColumnValue(['Event State', 'State']) || '').trim().toUpperCase().substring(0, 2),
             event_zip: String(getColumnValue(['Event Zip', 'Zip', 'Zip Code']) || '').trim(),
             sandwich_type: String(getColumnValue(['Sandwich Type', 'Type']) || '').trim(),
-            sandwich_count_planned: sandwichPlannedNum,
-            sandwich_count_actual: sandwichActualNum,
+            sandwich_count_planned: sandwichPlannedNum !== null ? sandwichPlannedNum : 0,
+            sandwich_count_actual: sandwichActualNum !== null ? sandwichActualNum : 0,
             destination_name: String(getColumnValue(['Destination Name', 'Destination', 'Delivery Destination']) || '').trim(),
             destination_address: String(getColumnValue(['Destination Address', 'Delivery Address']) || '').trim(),
             tsp_contact: String(getColumnValue(['TSP Contact', 'Contact Person', 'Coordinator']) || '').trim(),
@@ -2895,12 +2906,32 @@
             const updateData = {};
             Object.keys(event).forEach(key => {
               // Skip internal fields
-              if (key === '__backendId' || key === 'event_id') return;
-              // Only update if the imported value is not empty
-              if (event[key] !== null && event[key] !== undefined && event[key] !== '') {
-                updateData[key] = event[key];
+              if (key === '__backendId' || key === 'event_id' || key === 'created_at') return;
+              
+              const value = event[key];
+              // Update if value is not null/undefined/empty string
+              // Allow 0 and false as valid values
+              if (value !== null && value !== undefined && value !== '') {
+                updateData[key] = value;
+              } else if (value === 0 || value === false) {
+                // Explicitly allow 0 and false to be updated
+                updateData[key] = value;
               }
             });
+            
+            // Special handling for sandwich counts - always update if they exist in the import (even if 0)
+            if (event.sandwich_count_planned !== undefined && event.sandwich_count_planned !== null) {
+              updateData.sandwich_count_planned = event.sandwich_count_planned;
+            }
+            if (event.sandwich_count_actual !== undefined && event.sandwich_count_actual !== null) {
+              updateData.sandwich_count_actual = event.sandwich_count_actual;
+            }
+            
+            console.log(`  📝 Updating ${Object.keys(updateData).length} fields:`, Object.keys(updateData));
+            if (updateData.sandwich_count_planned !== undefined || updateData.sandwich_count_actual !== undefined) {
+              console.log(`  📊 Sandwich counts - Planned: ${updateData.sandwich_count_planned ?? '(not updating)'}, Actual: ${updateData.sandwich_count_actual ?? '(not updating)'}`);
+              console.log(`  📊 Original event had - Planned: ${existingEvent.sandwich_count_planned ?? '?'}, Actual: ${existingEvent.sandwich_count_actual ?? '?'}`);
+            }
             
             await database.ref(`events/${existingEvent.__backendId}`).update(updateData);
             successCount++;
