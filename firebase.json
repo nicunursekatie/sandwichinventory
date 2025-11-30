@@ -41,6 +41,10 @@
     ],
     "rewrites": [
       {
+        "source": "/",
+        "destination": "/eventplanning2.html"
+      },
+      {
         "source": "**",
         "destination": "/index.html"
       }
