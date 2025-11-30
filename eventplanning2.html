@@ -1244,19 +1244,68 @@
       reports_section_title: "Reports & Trends"
     };
 
-    // Data SDK handler
-    const dataHandler = {
-      onDataChanged(data) {
-        console.log('=== DATA LOADED FROM SHEET ===');
-        console.log('Total events in sheet:', data.length);
-        if (data.length > 0) {
-          console.log('Sample event:', data[0]);
+    // Load events from Firebase Realtime Database
+    function loadEventsFromFirebase() {
+      if (!database) {
+        console.warn('Firebase database not available');
+        return;
+      }
+
+      console.log('Loading events from Firebase...');
+      database.ref('events').once('value')
+        .then(snapshot => {
+          const data = snapshot.val();
+          allEvents = [];
+          
+          if (data) {
+            // Convert Firebase object to array
+            Object.keys(data).forEach(key => {
+              allEvents.push({
+                __backendId: key,
+                ...data[key]
+              });
+            });
+          }
+          
+          console.log('=== DATA LOADED FROM FIREBASE ===');
+          console.log('Total events:', allEvents.length);
+          if (allEvents.length > 0) {
+            console.log('Sample event:', allEvents[0]);
+          }
+          
+          autoCompletePassedEvents();
+          renderCurrentView();
+        })
+        .catch(error => {
+          console.error('Error loading events from Firebase:', error);
+          showToast('Error loading events. Please refresh the page.', 'error');
+        });
+    }
+
+    // Set up real-time listener for events
+    function setupFirebaseListener() {
+      if (!database) {
+        console.warn('Firebase database not available');
+        return;
+      }
+
+      database.ref('events').on('value', (snapshot) => {
+        const data = snapshot.val();
+        allEvents = [];
+        
+        if (data) {
+          Object.keys(data).forEach(key => {
+            allEvents.push({
+              __backendId: key,
+              ...data[key]
+            });
+          });
         }
-        allEvents = data;
+        
         autoCompletePassedEvents();
         renderCurrentView();
-      }
-    };
+      });
+    }
 
     // Auto-complete events that have passed
     async function autoCompletePassedEvents() {
@@ -1275,8 +1324,8 @@
 
       if (eventsToComplete.length === 0) return;
 
-      if (!window.dataSdk) {
-        console.warn('Data SDK not available, skipping auto-complete');
+      if (!database) {
+        console.warn('Firebase database not available, skipping auto-complete');
         return;
       }
 
@@ -1292,12 +1341,13 @@
           last_activity_at: new Date().toISOString()
         };
 
-        const result = await window.dataSdk.update(updatedEvent);
-        
-        if (result.isOk) {
+        try {
+          // Remove __backendId before updating
+          const { __backendId, ...eventData } = updatedEvent;
+          await database.ref(`events/${__backendId}`).update(eventData);
           console.log(`✓ Auto-completed: ${event.group_name} - ${formatDate(event.event_date)}`);
-        } else {
-          console.error(`✗ Failed to auto-complete: ${event.group_name}`, result.error);
+        } catch (error) {
+          console.error(`✗ Failed to auto-complete: ${event.group_name}`, error);
         }
       }
     }
@@ -1339,39 +1389,14 @@
         console.warn('Element SDK not available');
       }
 
-      // Initialize Data SDK with retry logic
-      if (window.dataSdk) {
-        console.log('Initializing Data SDK...');
-        
-        let retryCount = 0;
-        const maxRetries = 3;
-        let dataResult;
-        
-        while (retryCount < maxRetries) {
-          dataResult = await window.dataSdk.init(dataHandler);
-          
-          if (dataResult.isOk) {
-            console.log('✓ Data SDK initialized successfully');
-            break;
-          }
-          
-          retryCount++;
-          console.warn(`Data SDK init attempt ${retryCount}/${maxRetries} failed:`, dataResult.error?.message || dataResult.error);
-          
-          if (retryCount < maxRetries) {
-            const waitTime = retryCount * 1000;
-            console.log(`Retrying in ${waitTime}ms...`);
-            await new Promise(resolve => setTimeout(resolve, waitTime));
-          }
-        }
-        
-        if (!dataResult.isOk) {
-          console.error('✗ Data SDK initialization failed after', maxRetries, 'attempts');
-          console.error('Final error:', dataResult.error);
-          // Don't block the app - data will load when SDK reconnects via polling
-        }
+      // Load data from Firebase Realtime Database
+      if (database) {
+        console.log('Loading events from Firebase...');
+        loadEventsFromFirebase();
+        setupFirebaseListener();
+        console.log('✓ Firebase data loading initialized');
       } else {
-        console.warn('Data SDK not available');
+        console.warn('Firebase database not available');
       }
       
       console.log('=== APP READY ===');
@@ -2249,10 +2274,10 @@
     async function saveEvent(e) {
       e.preventDefault();
 
-      // Check if dataSdk is available
-      if (!window.dataSdk) {
-        showToast('Data SDK is not available. Please refresh the page and try again.', 'error');
-        console.error('Data SDK not available when attempting to save event');
+      // Check if Firebase database is available
+      if (!database) {
+        showToast('Firebase database is not available. Please refresh the page and try again.', 'error');
+        console.error('Firebase database not available when attempting to save event');
         return;
       }
 
@@ -2330,37 +2355,41 @@
         formData.status_completed_at = null;
       }
 
-      let result;
-      if (currentEvent) {
-        result = await window.dataSdk.update({ ...formData, __backendId: currentEvent.__backendId });
-      } else {
-        if (allEvents.length >= 999) {
-          showToast('Maximum limit of 999 events reached. Please delete some events first.', 'error');
-          saveButton.disabled = false;
-          saveButtonText.textContent = 'Save Event';
-          return;
+      try {
+        if (currentEvent) {
+          // Update existing event
+          const { __backendId, ...eventData } = formData;
+          await database.ref(`events/${currentEvent.__backendId}`).update(eventData);
+          showToast('Event updated successfully', 'success');
+        } else {
+          // Create new event
+          if (allEvents.length >= 999) {
+            showToast('Maximum limit of 999 events reached. Please delete some events first.', 'error');
+            saveButton.disabled = false;
+            saveButtonText.textContent = 'Save Event';
+            return;
+          }
+          await database.ref('events').push(formData);
+          showToast('Event created successfully', 'success');
         }
-        result = await window.dataSdk.create(formData);
+        
+        closeEventModal();
+      } catch (error) {
+        console.error('Error saving event:', error);
+        showToast('Failed to save event. Please try again.', 'error');
       }
 
       saveButton.disabled = false;
       saveButtonText.textContent = 'Save Event';
-
-      if (result.isOk) {
-        showToast(currentEvent ? 'Event updated successfully' : 'Event created successfully', 'success');
-        closeEventModal();
-      } else {
-        showToast('Failed to save event. Please try again.', 'error');
-      }
     }
 
     async function deleteEvent() {
       if (!currentEvent) return;
 
-      // Check if dataSdk is available
-      if (!window.dataSdk) {
-        showToast('Data SDK is not available. Please refresh the page and try again.', 'error');
-        console.error('Data SDK not available when attempting to delete event');
+      // Check if Firebase database is available
+      if (!database) {
+        showToast('Firebase database is not available. Please refresh the page and try again.', 'error');
+        console.error('Firebase database not available when attempting to delete event');
         return;
       }
 
@@ -2368,17 +2397,17 @@
       deleteButton.disabled = true;
       deleteButton.innerHTML = '<span class="loading-spinner"></span> Deleting...';
 
-      const result = await window.dataSdk.delete(currentEvent);
+      try {
+        await database.ref(`events/${currentEvent.__backendId}`).remove();
+        showToast('Event deleted successfully', 'success');
+        closeEventModal();
+      } catch (error) {
+        console.error('Error deleting event:', error);
+        showToast('Failed to delete event. Please try again.', 'error');
+      }
 
       deleteButton.disabled = false;
       deleteButton.textContent = 'Delete Event';
-
-      if (result.isOk) {
-        showToast('Event deleted successfully', 'success');
-        closeEventModal();
-      } else {
-        showToast('Failed to delete event. Please try again.', 'error');
-      }
     }
 
     // Utility functions
@@ -2714,36 +2743,27 @@
         return;
       }
 
-      const importButton = document.getElementById('confirm-import-button');
-      const importButtonText = document.getElementById('import-button-text');
-      importButton.disabled = true;
-      importButtonText.innerHTML = '<span class="loading-spinner"></span> Waiting for SDK...';
-
-      // Wait for dataSdk to become available (with timeout)
-      let waitCount = 0;
-      const maxWait = 50; // 5 seconds total (50 * 100ms)
-      while (!window.dataSdk && waitCount < maxWait) {
-        await new Promise(resolve => setTimeout(resolve, 100));
-        waitCount++;
-      }
-
-      // Check if dataSdk is available after waiting
-      if (!window.dataSdk) {
-        importButton.disabled = false;
-        importButtonText.textContent = 'Import Events';
-        showToast('Data SDK is not available. Please refresh the page and try again.', 'error');
-        console.error('Data SDK not available after waiting', waitCount * 100, 'ms');
+      // Check if Firebase database is available
+      if (!database) {
+        showToast('Firebase database is not available. Please refresh the page and try again.', 'error');
+        console.error('Firebase database not available');
         return;
       }
 
-      console.log(`=== STARTING DATA SDK IMPORT ===`);
+      const importButton = document.getElementById('confirm-import-button');
+      const importButtonText = document.getElementById('import-button-text');
+      importButton.disabled = true;
+
+      console.log(`=== STARTING FIREBASE IMPORT ===`);
       console.log(`Attempting to import ${pendingImportData.length} events`);
-      console.log(`This will take approximately ${Math.ceil(pendingImportData.length * 0.5)} seconds due to rate limiting`);
 
       let successCount = 0;
       let errorCount = 0;
-      const sdkErrors = [];
+      const importErrors = [];
 
+      // Use Firebase batch write for better performance
+      const eventsRef = database.ref('events');
+      
       for (let i = 0; i < pendingImportData.length; i++) {
         const event = pendingImportData[i];
         
@@ -2752,29 +2772,24 @@
         
         console.log(`[${i + 1}/${pendingImportData.length}] Importing: ${event.group_name} - ${formatDate(event.event_date)}`);
         
-        // Add delay BEFORE each request to respect rate limits (1 second between requests)
-        if (i > 0) {
-          await new Promise(resolve => setTimeout(resolve, 1000));
-        }
-        
-        const result = await window.dataSdk.create(event);
-        
-        if (result.isOk) {
-          successCount++;
-          console.log(`  ✅ SUCCESS`);
-        } else {
-          errorCount++;
-          const errorMsg = `${event.group_name} (${formatDate(event.event_date)}): ${result.error?.message || 'Unknown error'}`;
-          sdkErrors.push(errorMsg);
-          console.error(`  ❌ FAILED:`, result.error?.message || result.error);
-          console.error(`  Event data:`, event);
-          console.error(`  Full error object:`, result.error);
+        try {
+          // Add event to Firebase
+          const newEventRef = eventsRef.push();
+          await newEventRef.set(event);
           
-          // If we hit a rate limit, wait longer before continuing
-          if (result.error?.message?.includes('Rate limit')) {
-            console.log(`  ⏳ Rate limit hit, waiting 1 second...`);
-            await new Promise(resolve => setTimeout(resolve, 1000));
+          successCount++;
+          console.log(`  ✅ SUCCESS (ID: ${newEventRef.key})`);
+          
+          // Small delay to avoid overwhelming Firebase
+          if (i < pendingImportData.length - 1) {
+            await new Promise(resolve => setTimeout(resolve, 100));
           }
+        } catch (error) {
+          errorCount++;
+          const errorMsg = `${event.group_name} (${formatDate(event.event_date)}): ${error.message || 'Unknown error'}`;
+          importErrors.push(errorMsg);
+          console.error(`  ❌ FAILED:`, error.message || error);
+          console.error(`  Event data:`, event);
         }
       }
 
@@ -2782,9 +2797,9 @@
       console.log(`✅ Successful: ${successCount}`);
       console.log(`❌ Failed: ${errorCount}`);
       
-      if (sdkErrors.length > 0) {
+      if (importErrors.length > 0) {
         console.log(`\n=== FAILED EVENTS ===`);
-        sdkErrors.forEach((err, idx) => {
+        importErrors.forEach((err, idx) => {
           console.log(`${idx + 1}. ${err}`);
         });
       }
