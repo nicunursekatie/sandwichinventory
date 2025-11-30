@@ -1302,13 +1302,21 @@
           });
         }
         
-        autoCompletePassedEvents();
+        // Don't auto-complete on listener updates to avoid infinite loops
+        // Auto-complete only runs on initial load
         renderCurrentView();
       });
     }
 
-    // Auto-complete events that have passed
+    // Auto-complete events that have passed (only runs once on initial load)
+    let autoCompleteHasRun = false;
     async function autoCompletePassedEvents() {
+      // Only run once to avoid infinite loops
+      if (autoCompleteHasRun) {
+        return;
+      }
+      autoCompleteHasRun = true;
+
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
@@ -1322,7 +1330,10 @@
         return eventDate < today;
       });
 
-      if (eventsToComplete.length === 0) return;
+      if (eventsToComplete.length === 0) {
+        console.log('No past events to auto-complete');
+        return;
+      }
 
       if (!database) {
         console.warn('Firebase database not available, skipping auto-complete');
@@ -1350,6 +1361,8 @@
           console.error(`✗ Failed to auto-complete: ${event.group_name}`, error);
         }
       }
+      
+      console.log('Auto-complete finished');
     }
 
     // Initialize SDKs with retry logic
