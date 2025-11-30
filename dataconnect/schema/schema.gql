@@ -1,0 +1,43 @@
+type User @table {
+  displayName: String!
+  email: String!
+  createdAt: Timestamp!
+  photoUrl: String
+  role: String
+}
+
+type Event @table {
+  creator: User!
+  groupName: String!
+  department: String!
+  contactName: String!
+  contactEmail: String!
+  eventDate: Date!
+  eventTime: String!
+  address: String!
+  status: String!
+  createdAt: Timestamp!
+  contactPhone: String
+  description: String
+}
+
+type SandwichPlan @table {
+  event: Event!
+  sandwichType: String!
+  quantity: Int!
+  notes: String
+}
+
+type StaffingNeed @table {
+  event: Event!
+  role: String!
+  requiredCount: Int!
+}
+
+type DistributionPlan @table {
+  event: Event!
+  recipientOrganization: String!
+  pickupLocation: String!
+  pickupTime: String
+  specialInstructions: String
+}

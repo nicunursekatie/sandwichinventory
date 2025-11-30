@@ -1,0 +1,32 @@
+mutation CreateNewSandwichPlan($eventId: UUID!, $notes: String, $quantity: Int!, $sandwichType: String!) @auth(level: USER) {
+  sandwichPlan_insert(data: {eventId: $eventId, notes: $notes, quantity: $quantity, sandwichType: $sandwichType})
+}
+
+query ListAllEvents @auth(level: PUBLIC, insecureReason: "This operation is safe to expose to the public") {
+  events {
+    id
+    address
+    contactEmail
+    contactName
+    contactPhone
+    createdAt
+    department
+    description
+    eventDate
+    eventTime
+    groupName
+    status
+  }
+}
+
+mutation UpdateEventStatus($id: UUID!, $status: String!) @auth(level: USER) {
+  event_update(key: {id: $id}, data: {status: $status})
+}
+
+query ListStaffingNeedsForEvent($eventId: UUID!) @auth(level: USER) {
+  staffingNeeds(where: {eventId: {eq: $eventId}}) {
+    id
+    role
+    requiredCount
+  }
+}

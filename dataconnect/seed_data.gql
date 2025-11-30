@@ -1,0 +1,80 @@
+mutation CreateSeedData @transaction @auth(level: PUBLIC, insecureReason: "This operation is for seeding data and is safe to expose to the public") {
+  user_insertMany(data: [
+    {
+      id: "550e8400-e29b-41d4-a716-446655440000",
+      displayName: "demouser1",
+      email: "demouser1@example.com",
+      createdAt: "2024-04-26T12:00:00Z"
+    },
+    {
+      id: "550e8400-e29b-41d4-a716-446655440001",
+      displayName: "demouser2",
+      email: "demouser2@example.com",
+      createdAt: "2024-04-26T12:00:00Z"
+    }
+  ])
+  event_insertMany(data: [
+    {
+      id: "650e8400-e29b-41d4-a716-446655440002",
+      creatorId: "550e8400-e29b-41d4-a716-446655440000",
+      address: "123 Main St",
+      contactEmail: "event1@example.com",
+      contactName: "Event Contact 1",
+      createdAt: "2024-04-26T12:00:00Z",
+      department: "Sales",
+      eventDate: "2024-05-01",
+      eventTime: "14:00",
+      groupName: "Sales Team",
+      status: "Planned"
+    },
+    {
+      id: "750e8400-e29b-41d4-a716-446655440003",
+      creatorId: "550e8400-e29b-41d4-a716-446655440001",
+      address: "456 Elm St",
+      contactEmail: "event2@example.com",
+      contactName: "Event Contact 2",
+      createdAt: "2024-04-26T12:00:00Z",
+      department: "Marketing",
+      eventDate: "2024-05-02",
+      eventTime: "16:00",
+      groupName: "Marketing Team",
+      status: "Planned"
+    }
+  ])
+  sandwichPlan_insertMany(data: [
+    {
+      eventId: "650e8400-e29b-41d4-a716-446655440002",
+      sandwichType: "Turkey",
+      quantity: 10
+    },
+    {
+      eventId: "750e8400-e29b-41d4-a716-446655440003",
+      sandwichType: "Ham",
+      quantity: 15
+    }
+  ])
+  staffingNeed_insertMany(data: [
+    {
+      eventId: "650e8400-e29b-41d4-a716-446655440002",
+      role: "Volunteer",
+      requiredCount: 2
+    },
+    {
+      eventId: "750e8400-e29b-41d4-a716-446655440003",
+      role: "Coordinator",
+      requiredCount: 1
+    }
+  ])
+  distributionPlan_insertMany(data: [
+    {
+      eventId: "650e8400-e29b-41d4-a716-446655440002",
+      pickupLocation: "789 Oak St",
+      recipientOrganization: "Food Bank"
+    },
+    {
+      eventId: "750e8400-e29b-41d4-a716-446655440003",
+      pickupLocation: "101 Pine St",
+      recipientOrganization: "Soup Kitchen"
+    }
+  ])
+}

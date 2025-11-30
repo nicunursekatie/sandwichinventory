@@ -9,7 +9,7 @@
   <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
   <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
   <style>
     body {
@@ -1199,6 +1199,7 @@
     const firebaseConfig = {
       apiKey: "AIzaSyAB6O8WSqMSNJJv4wDG_8HTNpnegR1hBYo",
       authDomain: "tsp-event-planner.firebaseapp.com",
+      databaseURL: "https://tsp-event-planner-default-rtdb.firebaseio.com", // Add your Realtime Database URL here
       projectId: "tsp-event-planner",
       storageBucket: "tsp-event-planner.firebasestorage.app",
       messagingSenderId: "336619975760",
@@ -1207,17 +1208,17 @@
     };
 
     // Initialize Firebase
-    let firestore;
+    let database;
     let analytics;
     if (typeof firebase !== 'undefined') {
       try {
         firebase.initializeApp(firebaseConfig);
-        firestore = firebase.firestore();
+        database = firebase.database();
         // Analytics is optional - only initialize if available
         if (firebase.analytics) {
           analytics = firebase.analytics();
         }
-        console.log('✓ Firebase initialized');
+        console.log('✓ Firebase initialized with Realtime Database');
       } catch (error) {
         console.error('Firebase initialization error:', error);
       }
