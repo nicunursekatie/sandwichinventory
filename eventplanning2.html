@@ -2823,12 +2823,42 @@
         console.log(`[${i + 1}/${pendingImportData.length}] Importing: ${event.group_name} - ${formatDate(event.event_date)}`);
         
         try {
-          // Add event to Firebase
-          const newEventRef = eventsRef.push();
-          await newEventRef.set(event);
+          // Check if event already exists (match by group_name and event_date)
+          const existingEvent = allEvents.find(e => 
+            e.group_name === event.group_name && 
+            e.event_date === event.event_date
+          );
           
-          successCount++;
-          console.log(`  ✅ SUCCESS (ID: ${newEventRef.key})`);
+          if (existingEvent) {
+            // Update existing event - merge data, filling in blanks
+            console.log(`  🔄 Found existing event, updating...`);
+            const mergedEvent = { ...existingEvent, ...event };
+            // Preserve the Firebase ID and timestamps
+            mergedEvent.__backendId = existingEvent.__backendId;
+            mergedEvent.created_at = existingEvent.created_at;
+            mergedEvent.last_activity_at = new Date().toISOString();
+            
+            // Only update fields that have values in the import (don't overwrite with empty strings)
+            const updateData = {};
+            Object.keys(event).forEach(key => {
+              // Skip internal fields
+              if (key === '__backendId' || key === 'event_id') return;
+              // Only update if the imported value is not empty
+              if (event[key] !== null && event[key] !== undefined && event[key] !== '') {
+                updateData[key] = event[key];
+              }
+            });
+            
+            await database.ref(`events/${existingEvent.__backendId}`).update(updateData);
+            successCount++;
+            console.log(`  ✅ UPDATED existing event (ID: ${existingEvent.__backendId})`);
+          } else {
+            // Create new event
+            const newEventRef = eventsRef.push();
+            await newEventRef.set(event);
+            successCount++;
+            console.log(`  ✅ CREATED new event (ID: ${newEventRef.key})`);
+          }
           
           // Small delay to avoid overwhelming Firebase
           if (i < pendingImportData.length - 1) {
