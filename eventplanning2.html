@@ -1337,7 +1337,11 @@
         return;
       }
 
-      console.log(`Auto-completing ${eventsToComplete.length} past event(s)`);
+      console.log(`Auto-completing ${eventsToComplete.length} past event(s)...`);
+
+      let completedCount = 0;
+      let failedCount = 0;
+      const failedEvents = [];
 
       for (const event of eventsToComplete) {
         await new Promise(resolve => setTimeout(resolve, 100));
@@ -1353,13 +1357,23 @@
           // Remove __backendId before updating
           const { __backendId, ...eventData } = updatedEvent;
           await database.ref(`events/${__backendId}`).update(eventData);
-          console.log(`✓ Auto-completed: ${event.group_name} - ${formatDate(event.event_date)}`);
+          completedCount++;
+          
+          // Only log every 50th event to reduce console spam
+          if (completedCount % 50 === 0) {
+            console.log(`  Progress: ${completedCount}/${eventsToComplete.length} completed...`);
+          }
         } catch (error) {
+          failedCount++;
+          failedEvents.push(`${event.group_name} - ${formatDate(event.event_date)}`);
           console.error(`✗ Failed to auto-complete: ${event.group_name}`, error);
         }
       }
       
-      console.log('Auto-complete finished');
+      console.log(`✓ Auto-complete finished: ${completedCount} completed, ${failedCount} failed`);
+      if (failedEvents.length > 0) {
+        console.log('Failed events:', failedEvents);
+      }
     }
 
     // Initialize SDKs with retry logic
