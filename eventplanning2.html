@@ -1,0 +1,2733 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event Planning Dashboard</title>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <style>
+    body {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: #f5f7fa;
+      color: #2d3748;
+      min-height: 100%;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    .dashboard-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Header */
+    .dashboard-header {
+      background: #236383;
+      color: white;
+      padding: 20px 32px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      flex-shrink: 0;
+    }
+
+    .dashboard-header h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    /* Tabs */
+    .tabs-container {
+      background: white;
+      border-bottom: 2px solid #e2e8f0;
+      padding: 0 32px;
+      display: flex;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+
+    .tab-button {
+      background: none;
+      border: none;
+      padding: 16px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #64748b;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .tab-button:hover {
+      color: #236383;
+      background: #f8fafc;
+    }
+
+    .tab-button.active {
+      color: #236383;
+      border-bottom-color: #fbad3f;
+    }
+
+    .tab-badge {
+      display: inline-block;
+      background: #a31c41;
+      color: white;
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+      margin-left: 8px;
+      min-width: 20px;
+      text-align: center;
+    }
+
+    /* Main content area */
+    .main-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 32px;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Action button */
+    .action-button {
+      background: #fbad3f;
+      color: #1a202c;
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 2px 4px rgba(251, 173, 63, 0.3);
+    }
+
+    .action-button:hover {
+      background: #f59e0b;
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(251, 173, 63, 0.4);
+    }
+
+    .action-button:disabled {
+      background: #cbd5e0;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    /* Cards */
+    .attention-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+      margin-bottom: 32px;
+    }
+
+    .attention-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      border-left: 4px solid #236383;
+    }
+
+    .attention-card.warning {
+      border-left-color: #fbad3f;
+    }
+
+    .attention-card.urgent {
+      border-left-color: #a31c41;
+    }
+
+    .attention-card h3 {
+      margin: 0 0 16px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a202c;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-count {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #236383;
+      color: white;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 4px 10px;
+      border-radius: 12px;
+      min-width: 28px;
+    }
+
+    .attention-card.warning .card-count {
+      background: #fbad3f;
+      color: #1a202c;
+    }
+
+    .attention-card.urgent .card-count {
+      background: #a31c41;
+    }
+
+    .event-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .event-item {
+      background: #f8fafc;
+      padding: 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 1px solid #e2e8f0;
+    }
+
+    .event-item:hover {
+      background: #f1f5f9;
+      border-color: #236383;
+      transform: translateX(4px);
+    }
+
+    .event-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .event-item-title {
+      font-weight: 600;
+      color: #1a202c;
+      font-size: 15px;
+    }
+
+    .event-item-subtitle {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+      margin-top: 2px;
+    }
+
+    .event-item-meta {
+      font-size: 13px;
+      color: #64748b;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .status-new {
+      background: #dbeafe;
+      color: #1e40af;
+    }
+
+    .status-in-process {
+      background: #fef3c7;
+      color: #92400e;
+    }
+
+    .status-scheduled {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .status-completed {
+      background: #e0e7ff;
+      color: #3730a3;
+    }
+
+    .status-canceled {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .missing-icons {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .missing-icon {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 12px;
+      color: #a31c41;
+      background: #fee;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 48px 24px;
+      color: #64748b;
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+    }
+
+    /* Modal/Detail Panel */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 800px;
+      max-height: 90%;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+
+    .modal-header {
+      background: #236383;
+      color: white;
+      padding: 24px 32px;
+      border-radius: 16px 16px 0 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      font-size: 24px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: white;
+      font-size: 24px;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    .modal-body {
+      padding: 32px;
+    }
+
+    .form-section {
+      margin-bottom: 32px;
+    }
+
+    .form-section h3 {
+      margin: 0 0 16px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #236383;
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 8px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+    }
+
+    .form-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-field label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .form-field input,
+    .form-field select,
+    .form-field textarea {
+      padding: 10px 12px;
+      border: 1px solid #cbd5e0;
+      border-radius: 6px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .form-field input:focus,
+    .form-field select:focus,
+    .form-field textarea:focus {
+      outline: none;
+      border-color: #236383;
+      box-shadow: 0 0 0 3px rgba(35, 99, 131, 0.1);
+    }
+
+    .form-field textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .checkbox-field {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+
+    .checkbox-field input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+    }
+
+    .checkbox-field label {
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    .button-secondary {
+      background: #e2e8f0;
+      color: #1a202c;
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .button-secondary:hover {
+      background: #cbd5e0;
+    }
+
+    .button-danger {
+      background: #a31c41;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .button-danger:hover {
+      background: #881736;
+    }
+
+    /* Pipeline view */
+    .pipeline-controls {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .filter-group label {
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+    }
+
+    .pipeline-table {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: #f8fafc;
+      border-bottom: 2px solid #e2e8f0;
+    }
+
+    th {
+      text-align: left;
+      padding: 16px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    td {
+      padding: 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+    }
+
+    tbody tr {
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+
+    .completeness-indicators {
+      display: flex;
+      gap: 6px;
+    }
+
+    .indicator-icon {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .indicator-icon.complete {
+      background: #d1fae5;
+      color: #065f46;
+    }
+
+    .indicator-icon.incomplete {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    /* Reports */
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 24px;
+    }
+
+    .report-card {
+      background: white;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .report-card h3 {
+      margin: 0 0 20px 0;
+      font-size: 18px;
+      font-weight: 600;
+      color: #1a202c;
+    }
+
+    .stat-large {
+      font-size: 48px;
+      font-weight: 700;
+      color: #236383;
+      margin: 16px 0;
+    }
+
+    .stat-label {
+      font-size: 14px;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      font-weight: 600;
+    }
+
+    .chart-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .chart-label {
+      min-width: 120px;
+      font-size: 14px;
+      color: #475569;
+      font-weight: 500;
+    }
+
+    .chart-bar-fill {
+      flex: 1;
+      height: 32px;
+      background: #236383;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      padding: 0 12px;
+      color: white;
+      font-weight: 600;
+      font-size: 13px;
+      transition: all 0.3s;
+    }
+
+    .loading-spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255,255,255,0.3);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.6s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #1a202c;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      gap: 12px;
+      max-width: 400px;
+    }
+
+    .toast.show {
+      display: flex;
+      animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    .toast.success {
+      background: #047857;
+    }
+
+    .toast.error {
+      background: #a31c41;
+    }
+
+    /* Next 7 Days Calendar */
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 16px;
+    }
+
+    .calendar-day {
+      background: #f8fafc;
+      border-radius: 8px;
+      padding: 16px;
+      border: 2px solid #e2e8f0;
+      transition: all 0.2s;
+    }
+
+    .calendar-day.has-events {
+      border-color: #236383;
+      background: #f0f9ff;
+    }
+
+    .calendar-day.today {
+      border-color: #fbad3f;
+      background: #fffbeb;
+    }
+
+    .calendar-day-header {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .calendar-day-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .calendar-day-date {
+      font-size: 20px;
+      font-weight: 700;
+      color: #1a202c;
+    }
+
+    .calendar-day-events {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .calendar-event-item {
+      background: white;
+      padding: 8px;
+      border-radius: 6px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-left: 3px solid #236383;
+    }
+
+    .calendar-event-item:hover {
+      transform: translateX(2px);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .calendar-event-item.status-new {
+      border-left-color: #3b82f6;
+    }
+
+    .calendar-event-item.status-in-process {
+      border-left-color: #f59e0b;
+    }
+
+    .calendar-event-item.status-scheduled {
+      border-left-color: #10b981;
+    }
+
+    .calendar-event-name {
+      font-weight: 600;
+      color: #1a202c;
+      margin-bottom: 4px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .calendar-event-time {
+      font-size: 11px;
+      color: #64748b;
+    }
+
+    .calendar-event-count {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 2px;
+    }
+
+    .calendar-no-events {
+      text-align: center;
+      color: #94a3b8;
+      font-size: 13px;
+      padding: 12px 0;
+    }
+  </style>
+  <style>@view-transition { navigation: auto; }</style>
+  <script src="https://cdn.tailwindcss.com" type="text/javascript"></script>
+ </head>
+ <body>
+  <div class="dashboard-container"><!-- Header -->
+   <header class="dashboard-header">
+    <h1 id="dashboard-title">Event Planning Dashboard</h1>
+   </header><!-- Tabs -->
+   <nav class="tabs-container"><button class="tab-button active" data-tab="attention"> <span id="attention-tab-label">Attention Needed</span> <span class="tab-badge" id="attention-badge">0</span> </button> <button class="tab-button" data-tab="pipeline"> <span id="pipeline-tab-label">Pipeline &amp; Calendar</span> </button> <button class="tab-button" data-tab="drivers"> <span id="drivers-tab-label">Driver Needs</span> <span class="tab-badge" id="drivers-badge">0</span> </button> <button class="tab-button" data-tab="completed"> <span id="completed-tab-label">Completed Events</span> <span class="tab-badge" id="completed-badge">0</span> </button> <button class="tab-button" data-tab="reports"> <span id="reports-tab-label">Reports &amp; Trends</span> </button>
+   </nav><!-- Main Content -->
+   <main class="main-content"><!-- Attention Needed Tab -->
+    <div class="tab-content active" id="attention-tab">
+     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="margin: 0; font-size: 24px; color: #1a202c;">Daily Check</h2>
+      <div style="display: flex; gap: 12px;"><button class="button-secondary" onclick="document.getElementById('excel-import').click()">📊 Import Excel</button> <button class="action-button" onclick="openNewEventModal()">+ New Event</button>
+      </div>
+     </div><input type="file" id="excel-import" accept=".xlsx,.xls" style="display: none;" onchange="handleExcelImport(event)"> <!-- Next 7 Days Quick View -->
+     <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+      <h3 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; color: #1a202c; display: flex; align-items: center; gap: 12px;"><span>📅 Next 7 Days</span> <span class="card-count" style="background: #236383;" id="next-7-days-count">0</span></h3>
+      <div id="next-7-days-calendar"></div>
+     </div>
+     <div class="attention-grid"><!-- New Requests -->
+      <div class="attention-card">
+       <h3><span>🆕 New Requests</span> <span class="card-count" id="new-requests-count">0</span></h3>
+       <div class="event-list" id="new-requests-list"></div>
+      </div><!-- Stalled Events -->
+      <div class="attention-card warning">
+       <h3><span>⏸️ Stalled (7+ days)</span> <span class="card-count" id="stalled-count">0</span></h3>
+       <div class="event-list" id="stalled-list"></div>
+      </div><!-- Upcoming Missing Info -->
+      <div class="attention-card urgent">
+       <h3><span>⚠️ Upcoming Missing Info</span> <span class="card-count" id="upcoming-missing-count">0</span></h3>
+       <div class="event-list" id="upcoming-missing-list"></div>
+      </div>
+     </div>
+    </div><!-- Pipeline Tab -->
+    <div class="tab-content" id="pipeline-tab">
+     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="margin: 0; font-size: 24px; color: #1a202c;">Event Pipeline</h2><button class="action-button" onclick="openNewEventModal()">+ New Event</button>
+     </div>
+     <div class="pipeline-controls">
+      <div class="filter-row">
+       <div class="filter-group"><label for="filter-status">Status</label> <select id="filter-status" onchange="applyPipelineFilters()"> <option value="">All Statuses</option> <option value="New">New</option> <option value="In Process">In Process</option> <option value="Scheduled">Scheduled</option> <option value="Completed">Completed</option> <option value="Canceled">Canceled</option> </select>
+       </div>
+       <div class="filter-group"><label for="filter-tsp">TSP Contact</label> <select id="filter-tsp" onchange="applyPipelineFilters()"> <option value="">All Contacts</option> </select>
+       </div>
+       <div class="filter-group"><label for="filter-date-start">From Date</label> <input type="date" id="filter-date-start" onchange="applyPipelineFilters()">
+       </div>
+       <div class="filter-group"><label for="filter-date-end">To Date</label> <input type="date" id="filter-date-end" onchange="applyPipelineFilters()">
+       </div>
+      </div>
+     </div>
+     <div class="pipeline-table">
+      <div class="table-wrapper">
+       <table>
+        <thead>
+         <tr>
+          <th>Date</th>
+          <th>Group / Department</th>
+          <th>Status</th>
+          <th>TSP Contact</th>
+          <th>Sandwiches</th>
+          <th>Completeness</th>
+         </tr>
+        </thead>
+        <tbody id="pipeline-table-body"></tbody>
+       </table>
+      </div>
+     </div>
+    </div><!-- Driver Needs Tab -->
+    <div class="tab-content" id="drivers-tab">
+     <h2 style="margin: 0 0 24px 0; font-size: 24px; color: #1a202c;">Events Needing Drivers</h2>
+     <div class="pipeline-table">
+      <div class="table-wrapper">
+       <table>
+        <thead>
+         <tr>
+          <th style="cursor: pointer;" onclick="sortDriverNeeds('date')">Date ↕</th>
+          <th>Time</th>
+          <th>Group / Department</th>
+          <th style="cursor: pointer;" onclick="sortDriverNeeds('area')">Area/Zip ↕</th>
+          <th>Address</th>
+          <th>Sandwiches</th>
+          <th>Destination</th>
+          <th>Action</th>
+         </tr>
+        </thead>
+        <tbody id="drivers-table-body"></tbody>
+       </table>
+      </div>
+     </div>
+    </div><!-- Completed Events Tab -->
+    <div class="tab-content" id="completed-tab">
+     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="margin: 0; font-size: 24px; color: #1a202c;">Completed Events History</h2>
+     </div>
+     <div class="pipeline-controls">
+      <div class="filter-row">
+       <div class="filter-group"><label for="completed-filter-tsp">TSP Contact</label> <select id="completed-filter-tsp" onchange="applyCompletedFilters()"> <option value="">All Contacts</option> </select>
+       </div>
+       <div class="filter-group"><label for="completed-filter-date-start">From Date</label> <input type="date" id="completed-filter-date-start" onchange="applyCompletedFilters()">
+       </div>
+       <div class="filter-group"><label for="completed-filter-date-end">To Date</label> <input type="date" id="completed-filter-date-end" onchange="applyCompletedFilters()">
+       </div>
+       <div class="filter-group"><label for="completed-filter-group">Group Name</label> <input type="text" id="completed-filter-group" placeholder="Search groups..." oninput="applyCompletedFilters()">
+       </div>
+      </div>
+     </div>
+     <div class="pipeline-table">
+      <div class="table-wrapper">
+       <table>
+        <thead>
+         <tr>
+          <th>Date</th>
+          <th>Group / Department</th>
+          <th>TSP Contact</th>
+          <th>Sandwiches (Planned)</th>
+          <th>Sandwiches (Actual)</th>
+          <th>Destination</th>
+          <th>Follow-up</th>
+         </tr>
+        </thead>
+        <tbody id="completed-table-body"></tbody>
+       </table>
+      </div>
+     </div>
+    </div><!-- Reports Tab -->
+    <div class="tab-content" id="reports-tab">
+     <h2 style="margin: 0 0 24px 0; font-size: 24px; color: #1a202c;">Reports &amp; Trends</h2>
+     <div class="reports-grid"><!-- Total Events -->
+      <div class="report-card">
+       <h3>Total Events</h3>
+       <div class="stat-large" id="total-events-stat">
+        0
+       </div>
+       <div class="stat-label">
+        All Time
+       </div>
+      </div><!-- Conversion Funnel -->
+      <div class="report-card">
+       <h3>Conversion Funnel</h3>
+       <div class="chart-bar">
+        <div class="chart-label">
+         Requests
+        </div>
+        <div class="chart-bar-fill" id="funnel-requests" style="background: #236383;">
+         0
+        </div>
+       </div>
+       <div class="chart-bar">
+        <div class="chart-label">
+         Scheduled
+        </div>
+        <div class="chart-bar-fill" id="funnel-scheduled" style="background: #007e8c;">
+         0
+        </div>
+       </div>
+       <div class="chart-bar">
+        <div class="chart-label">
+         Completed
+        </div>
+        <div class="chart-bar-fill" id="funnel-completed" style="background: #47b3cb;">
+         0
+        </div>
+       </div>
+      </div><!-- Events by TSP Contact -->
+      <div class="report-card">
+       <h3>Events by TSP Contact</h3>
+       <div id="tsp-chart"></div>
+      </div><!-- Top Destinations -->
+      <div class="report-card">
+       <h3>Top Destinations</h3>
+       <div id="destinations-chart"></div>
+      </div><!-- Sandwich Totals -->
+      <div class="report-card">
+       <h3>Total Sandwiches</h3>
+       <div class="chart-bar">
+        <div class="chart-label">
+         Planned
+        </div>
+        <div class="chart-bar-fill" id="sandwiches-planned" style="background: #fbad3f; color: #1a202c;">
+         0
+        </div>
+       </div>
+       <div class="chart-bar">
+        <div class="chart-label">
+         Actual
+        </div>
+        <div class="chart-bar-fill" id="sandwiches-actual" style="background: #a31c41;">
+         0
+        </div>
+       </div>
+      </div><!-- Repeat Groups -->
+      <div class="report-card">
+       <h3>Group Engagement</h3>
+       <div class="chart-bar">
+        <div class="chart-label">
+         New Groups
+        </div>
+        <div class="chart-bar-fill" id="groups-new" style="background: #236383;">
+         0
+        </div>
+       </div>
+       <div class="chart-bar">
+        <div class="chart-label">
+         Repeat Groups
+        </div>
+        <div class="chart-bar-fill" id="groups-repeat" style="background: #007e8c;">
+         0
+        </div>
+       </div>
+      </div>
+     </div>
+    </div>
+   </main>
+  </div><!-- Event Detail Modal -->
+  <div class="modal-overlay" id="event-modal">
+   <div class="modal-content">
+    <div class="modal-header">
+     <h2 id="modal-title">Event Details</h2><button class="modal-close" onclick="closeEventModal()">×</button>
+    </div>
+    <div class="modal-body">
+     <form id="event-form" onsubmit="saveEvent(event)"><!-- Core Info -->
+      <div class="form-section">
+       <h3>Event Information</h3>
+       <div class="form-grid">
+        <div class="form-field"><label for="event-status">Status *</label> <select id="event-status" required onchange="updateAllAssignmentStates()"> <option value="New">New</option> <option value="In Process">In Process</option> <option value="Scheduled">Scheduled</option> <option value="Completed">Completed</option> <option value="Canceled">Canceled</option> </select>
+        </div>
+        <div class="form-field"><label for="event-date">Event Date *</label> <input type="date" id="event-date" required>
+        </div>
+        <div class="form-field"><label for="event-start-time">Start Time</label> <input type="time" id="event-start-time">
+        </div>
+        <div class="form-field"><label for="event-end-time">End Time</label> <input type="time" id="event-end-time">
+        </div>
+        <div class="form-field"><label for="pickup-time">Pickup Time</label> <input type="time" id="pickup-time">
+        </div>
+       </div>
+      </div><!-- Group Info -->
+      <div class="form-section">
+       <h3>Group Contact</h3>
+       <div class="form-grid">
+        <div class="form-field"><label for="group-name">Group Name *</label> <input type="text" id="group-name" required>
+        </div>
+        <div class="form-field"><label for="department-name">Department Name</label> <input type="text" id="department-name" placeholder="e.g., HR, Marketing, Sales">
+        </div>
+        <div class="form-field"><label for="group-contact-name">Contact Name</label> <input type="text" id="group-contact-name">
+        </div>
+        <div class="form-field"><label for="group-contact-email">Email</label> <input type="email" id="group-contact-email">
+        </div>
+        <div class="form-field"><label for="group-contact-phone">Phone</label> <input type="tel" id="group-contact-phone">
+        </div>
+       </div>
+      </div><!-- Location -->
+      <div class="form-section">
+       <h3>Event Location</h3>
+       <div class="form-grid">
+        <div class="form-field" style="grid-column: 1 / -1;"><label for="event-address">Address</label> <input type="text" id="event-address">
+        </div>
+        <div class="form-field"><label for="event-city">City</label> <input type="text" id="event-city">
+        </div>
+        <div class="form-field"><label for="event-state">State</label> <input type="text" id="event-state" maxlength="2">
+        </div>
+        <div class="form-field"><label for="event-zip">Zip</label> <input type="text" id="event-zip">
+        </div>
+       </div>
+      </div><!-- Sandwiches -->
+      <div class="form-section">
+       <h3>Sandwiches</h3>
+       <div class="form-grid">
+        <div class="form-field"><label for="sandwich-type">Type</label> <input type="text" id="sandwich-type" placeholder="e.g., Turkey, Ham, Veggie">
+        </div>
+        <div class="form-field"><label for="sandwich-count-planned">Planned Count</label> <input type="number" id="sandwich-count-planned" min="0">
+        </div>
+        <div class="form-field"><label for="sandwich-count-actual">Actual Count</label> <input type="number" id="sandwich-count-actual" min="0">
+        </div>
+       </div>
+      </div><!-- Destination -->
+      <div class="form-section">
+       <h3>Destination</h3>
+       <div class="form-grid">
+        <div class="form-field"><label for="destination-name">Organization Name</label> <input type="text" id="destination-name" placeholder="e.g., City Shelter, Community Center">
+        </div>
+        <div class="form-field" style="grid-column: 1 / -1;"><label for="destination-address">Address (optional)</label> <input type="text" id="destination-address" placeholder="Full address if needed">
+        </div>
+       </div>
+      </div><!-- Assignments -->
+      <div class="form-section">
+       <h3>Team Assignments</h3>
+       <div class="form-grid">
+        <div class="form-field"><label for="tsp-contact">TSP Contact</label> <input type="text" id="tsp-contact">
+        </div>
+       </div><!-- Driver Section -->
+       <div style="margin-top: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><strong style="font-size: 15px;">🚗 Driver</strong> <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"> <input type="checkbox" id="driver-needed" onchange="toggleDriverSection()"> <span>Driver Needed</span> </label>
+        </div>
+        <div id="driver-details" style="display: none;">
+         <div class="form-grid">
+          <div class="form-field"><label for="driver-count">Number of Drivers</label> <input type="number" id="driver-count" min="1" value="1" onchange="updateDriverAssignmentState()">
+          </div>
+          <div class="form-field"><label style="display: flex; align-items: center; gap: 6px; cursor: pointer; margin-top: 24px;"> <input type="checkbox" id="refrigerated-van-needed"> <span style="font-weight: 600; color: #a31c41;">❄️ Refrigerated Van Required</span> </label>
+          </div>
+         </div>
+         <div class="form-field" style="margin-top: 12px;" id="driver-assignment-field"><label for="driver-name">Assigned Driver(s)</label> <input type="text" id="driver-name" placeholder="Available once event is scheduled">
+         </div>
+         <div class="checkbox-field" style="margin-top: 8px; display: none;" id="driver-attendance-field"><input type="checkbox" id="driver-present"> <label for="driver-present">Driver(s) Attended Event</label>
+         </div>
+        </div>
+       </div><!-- Speaker Section -->
+       <div style="margin-top: 16px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><strong style="font-size: 15px;">🎤 Speaker</strong> <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"> <input type="checkbox" id="speaker-needed" onchange="toggleSpeakerSection()"> <span>Speaker Needed</span> </label>
+        </div>
+        <div id="speaker-details" style="display: none;">
+         <div class="form-grid">
+          <div class="form-field"><label for="speaker-count">Number of Speakers</label> <input type="number" id="speaker-count" min="1" value="1" onchange="updateSpeakerAssignmentState()">
+          </div>
+         </div>
+         <div class="form-field" style="margin-top: 12px;" id="speaker-assignment-field"><label for="speaker-name">Assigned Speaker(s)</label> <input type="text" id="speaker-name" placeholder="Available once event is scheduled">
+         </div>
+         <div class="checkbox-field" style="margin-top: 8px; display: none;" id="speaker-attendance-field"><input type="checkbox" id="speaker-present"> <label for="speaker-present">Speaker(s) Attended Event</label>
+         </div>
+        </div>
+       </div><!-- Volunteer Section -->
+       <div style="margin-top: 16px; padding: 16px; background: #f8fafc; border-radius: 8px;">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><strong style="font-size: 15px;">🙋 Volunteers</strong> <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"> <input type="checkbox" id="volunteer-needed" onchange="toggleVolunteerSection()"> <span>Volunteers Needed</span> </label>
+        </div>
+        <div id="volunteer-details" style="display: none;">
+         <div class="form-grid">
+          <div class="form-field"><label for="volunteer-count">Number of Volunteers</label> <input type="number" id="volunteer-count" min="1" value="1" onchange="updateVolunteerAssignmentState()">
+          </div>
+         </div>
+         <div class="form-field" style="margin-top: 12px;" id="volunteer-assignment-field"><label for="volunteer-name">Assigned Volunteer(s)</label> <input type="text" id="volunteer-name" placeholder="Available once event is scheduled">
+         </div>
+         <div class="checkbox-field" style="margin-top: 8px; display: none;" id="volunteer-attendance-field"><input type="checkbox" id="volunteer-present"> <label for="volunteer-present">Volunteer(s) Attended Event</label>
+         </div>
+        </div>
+       </div>
+      </div><!-- Follow-up -->
+      <div class="form-section">
+       <h3>Follow-up</h3>
+       <div class="form-grid">
+        <div class="form-field"><label for="collection-log-link">Collection Log Link</label> <input type="url" id="collection-log-link" placeholder="https://">
+        </div>
+        <div class="form-field">
+         <div class="checkbox-field"><input type="checkbox" id="photo-followup"> <label for="photo-followup">Photo Follow-up Done</label>
+         </div>
+         <div class="checkbox-field"><input type="checkbox" id="final-count-recorded"> <label for="final-count-recorded">Final Count Recorded</label>
+         </div>
+        </div>
+       </div>
+      </div><!-- Notes -->
+      <div class="form-section">
+       <h3>Notes</h3>
+       <div class="form-field"><textarea id="event-notes" placeholder="Add any notes about this event..."></textarea>
+       </div>
+      </div><!-- Group History -->
+      <div class="form-section" id="group-history-section" style="display: none;">
+       <h3>Group History</h3>
+       <div id="group-history-content"></div>
+      </div><!-- Actions -->
+      <div class="button-group"><button type="submit" class="action-button" id="save-button"> <span id="save-button-text">Save Event</span> </button> <button type="button" class="button-secondary" onclick="closeEventModal()">Cancel</button> <button type="button" class="button-danger" id="delete-button" onclick="deleteEvent()" style="margin-left: auto; display: none;">Delete Event</button>
+      </div>
+     </form>
+    </div>
+   </div>
+  </div><!-- Import Confirmation Modal -->
+  <div class="modal-overlay" id="import-modal">
+   <div class="modal-content" style="max-width: 600px;">
+    <div class="modal-header">
+     <h2>Import Excel File</h2><button class="modal-close" onclick="closeImportModal()">×</button>
+    </div>
+    <div class="modal-body">
+     <div id="import-preview"></div>
+     <div class="button-group" style="margin-top: 24px;"><button class="action-button" id="confirm-import-button" onclick="confirmImport()"> <span id="import-button-text">Import Events</span> </button> <button type="button" class="button-secondary" onclick="closeImportModal()">Cancel</button>
+     </div>
+    </div>
+   </div>
+  </div><!-- Toast Notification -->
+  <div class="toast" id="toast"><span id="toast-message"></span>
+  </div>
+  <script>
+    // Global state
+    let allEvents = [];
+    let currentEvent = null;
+    let currentTab = 'attention';
+    let driverSortField = 'date';
+    let driverSortAsc = true;
+    let pendingImportData = [];
+
+    // Default config
+    const defaultConfig = {
+      dashboard_title: "Event Planning Dashboard",
+      attention_section_title: "Attention Needed",
+      pipeline_section_title: "Pipeline & Calendar",
+      driver_section_title: "Driver Needs",
+      completed_section_title: "Completed Events",
+      reports_section_title: "Reports & Trends"
+    };
+
+    // Data SDK handler
+    const dataHandler = {
+      onDataChanged(data) {
+        console.log('=== DATA LOADED FROM SHEET ===');
+        console.log('Total events in sheet:', data.length);
+        if (data.length > 0) {
+          console.log('Sample event:', data[0]);
+        }
+        allEvents = data;
+        autoCompletePassedEvents();
+        renderCurrentView();
+      }
+    };
+
+    // Auto-complete events that have passed
+    async function autoCompletePassedEvents() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const eventsToComplete = allEvents.filter(e => {
+        if (e.status === 'Completed' || e.status === 'Canceled') return false;
+        if (!e.event_date) return false;
+        
+        const eventDate = new Date(e.event_date);
+        eventDate.setHours(0, 0, 0, 0);
+        
+        return eventDate < today;
+      });
+
+      if (eventsToComplete.length === 0) return;
+
+      console.log(`Auto-completing ${eventsToComplete.length} past event(s)`);
+
+      for (const event of eventsToComplete) {
+        await new Promise(resolve => setTimeout(resolve, 100));
+
+        const updatedEvent = {
+          ...event,
+          status: 'Completed',
+          status_completed_at: new Date().toISOString(),
+          last_activity_at: new Date().toISOString()
+        };
+
+        const result = await window.dataSdk.update(updatedEvent);
+        
+        if (result.isOk) {
+          console.log(`✓ Auto-completed: ${event.group_name} - ${formatDate(event.event_date)}`);
+        } else {
+          console.error(`✗ Failed to auto-complete: ${event.group_name}`, result.error);
+        }
+      }
+    }
+
+    // Initialize SDKs with retry logic
+    async function initApp() {
+      console.log('=== INITIALIZING APP ===');
+      
+      // Initialize Element SDK FIRST and SYNCHRONOUSLY
+      if (window.elementSdk) {
+        console.log('Initializing Element SDK...');
+        window.elementSdk.init({
+          defaultConfig,
+          onConfigChange: async (config) => {
+            document.getElementById('dashboard-title').textContent = config.dashboard_title || defaultConfig.dashboard_title;
+            document.getElementById('attention-tab-label').textContent = config.attention_section_title || defaultConfig.attention_section_title;
+            document.getElementById('pipeline-tab-label').textContent = config.pipeline_section_title || defaultConfig.pipeline_section_title;
+            document.getElementById('drivers-tab-label').textContent = config.driver_section_title || defaultConfig.driver_section_title;
+            document.getElementById('completed-tab-label').textContent = config.completed_section_title || defaultConfig.completed_section_title;
+            document.getElementById('reports-tab-label').textContent = config.reports_section_title || defaultConfig.reports_section_title;
+          },
+          mapToCapabilities: (config) => ({
+            recolorables: [],
+            borderables: [],
+            fontEditable: undefined,
+            fontSizeable: undefined
+          }),
+          mapToEditPanelValues: (config) => new Map([
+            ["dashboard_title", config.dashboard_title || defaultConfig.dashboard_title],
+            ["attention_section_title", config.attention_section_title || defaultConfig.attention_section_title],
+            ["pipeline_section_title", config.pipeline_section_title || defaultConfig.pipeline_section_title],
+            ["driver_section_title", config.driver_section_title || defaultConfig.driver_section_title],
+            ["completed_section_title", config.completed_section_title || defaultConfig.completed_section_title],
+            ["reports_section_title", config.reports_section_title || defaultConfig.reports_section_title]
+          ])
+        });
+        console.log('✓ Element SDK initialized');
+      } else {
+        console.warn('Element SDK not available');
+      }
+
+      // Initialize Data SDK with retry logic
+      if (window.dataSdk) {
+        console.log('Initializing Data SDK...');
+        
+        let retryCount = 0;
+        const maxRetries = 3;
+        let dataResult;
+        
+        while (retryCount < maxRetries) {
+          dataResult = await window.dataSdk.init(dataHandler);
+          
+          if (dataResult.isOk) {
+            console.log('✓ Data SDK initialized successfully');
+            break;
+          }
+          
+          retryCount++;
+          console.warn(`Data SDK init attempt ${retryCount}/${maxRetries} failed:`, dataResult.error?.message || dataResult.error);
+          
+          if (retryCount < maxRetries) {
+            const waitTime = retryCount * 1000;
+            console.log(`Retrying in ${waitTime}ms...`);
+            await new Promise(resolve => setTimeout(resolve, waitTime));
+          }
+        }
+        
+        if (!dataResult.isOk) {
+          console.error('✗ Data SDK initialization failed after', maxRetries, 'attempts');
+          console.error('Final error:', dataResult.error);
+          // Don't block the app - data will load when SDK reconnects via polling
+        }
+      } else {
+        console.warn('Data SDK not available');
+      }
+      
+      console.log('=== APP READY ===');
+    }
+
+    // Initialize immediately
+    initApp();
+
+    // Tab switching
+    document.querySelectorAll('.tab-button').forEach(button => {
+      button.addEventListener('click', () => {
+        const tab = button.dataset.tab;
+        switchTab(tab);
+      });
+    });
+
+    function switchTab(tab) {
+      currentTab = tab;
+      
+      document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
+      document.getElementById(`${tab}-tab`).classList.add('active');
+      
+      renderCurrentView();
+    }
+
+    function renderCurrentView() {
+      switch(currentTab) {
+        case 'attention':
+          renderAttentionNeeded();
+          break;
+        case 'pipeline':
+          renderPipeline();
+          break;
+        case 'drivers':
+          renderDriverNeeds();
+          break;
+        case 'completed':
+          renderCompletedEvents();
+          break;
+        case 'reports':
+          renderReports();
+          break;
+      }
+    }
+
+    // Attention Needed View
+    function renderAttentionNeeded() {
+      const now = new Date();
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const fourteenDaysFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+
+      // Render next 7 days calendar
+      renderNext7Days();
+
+      // New requests not assigned
+      const newRequests = allEvents.filter(e => 
+        e.status === 'New' && (!e.tsp_contact || e.tsp_contact.trim() === '')
+      );
+
+      // Stalled events
+      const stalledEvents = allEvents.filter(e => {
+        if (e.status !== 'In Process') return false;
+        const lastActivity = e.last_activity_at ? new Date(e.last_activity_at) : new Date(e.created_at);
+        return lastActivity < sevenDaysAgo;
+      });
+
+      // Upcoming missing info
+      const upcomingMissing = allEvents.filter(e => {
+        if (e.status !== 'Scheduled') return false;
+        const eventDate = new Date(e.event_date);
+        if (eventDate > fourteenDaysFromNow || eventDate < now) return false;
+        
+        const missingDriver = e.driver_needed && !e.driver_name_assigned;
+        const missingSpeaker = e.speaker_needed && !e.speaker_name_assigned;
+        const missingVolunteer = e.volunteer_needed && !e.volunteer_name_assigned;
+        
+        return missingDriver || missingSpeaker || missingVolunteer || !e.event_address || !e.sandwich_type || !e.destination_name;
+      });
+
+      // Update badges
+      const totalAttention = newRequests.length + stalledEvents.length + upcomingMissing.length;
+      document.getElementById('attention-badge').textContent = totalAttention;
+      document.getElementById('new-requests-count').textContent = newRequests.length;
+      document.getElementById('stalled-count').textContent = stalledEvents.length;
+      document.getElementById('upcoming-missing-count').textContent = upcomingMissing.length;
+
+      // Render lists
+      renderEventList('new-requests-list', newRequests, renderNewRequestItem);
+      renderEventList('stalled-list', stalledEvents, renderStalledItem);
+      renderEventList('upcoming-missing-list', upcomingMissing, renderUpcomingMissingItem);
+    }
+
+    function renderNext7Days() {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      
+      const sevenDaysFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+
+      // Get events in next 7 days (excluding canceled)
+      const upcomingEvents = allEvents.filter(e => {
+        if (e.status === 'Canceled') return false;
+        if (!e.event_date) return false;
+        
+        const eventDate = new Date(e.event_date);
+        eventDate.setHours(0, 0, 0, 0);
+        
+        return eventDate >= today && eventDate < sevenDaysFromNow;
+      });
+
+      // Update count badge
+      document.getElementById('next-7-days-count').textContent = upcomingEvents.length;
+
+      // Group events by date
+      const eventsByDate = {};
+      upcomingEvents.forEach(event => {
+        const dateKey = event.event_date;
+        if (!eventsByDate[dateKey]) {
+          eventsByDate[dateKey] = [];
+        }
+        eventsByDate[dateKey].push(event);
+      });
+
+      // Sort events within each day by start time
+      Object.keys(eventsByDate).forEach(dateKey => {
+        eventsByDate[dateKey].sort((a, b) => {
+          const timeA = a.event_start_time || '00:00';
+          const timeB = b.event_start_time || '00:00';
+          return timeA.localeCompare(timeB);
+        });
+      });
+
+      // Generate 7 days
+      const days = [];
+      for (let i = 0; i < 7; i++) {
+        const date = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
+        const dateKey = date.toISOString().split('T')[0];
+        const dayEvents = eventsByDate[dateKey] || [];
+        
+        days.push({
+          date: date,
+          dateKey: dateKey,
+          events: dayEvents,
+          isToday: i === 0
+        });
+      }
+
+      // Render calendar
+      const container = document.getElementById('next-7-days-calendar');
+      
+      if (upcomingEvents.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><div>No events scheduled in the next 7 days</div></div>';
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="calendar-grid">
+          ${days.map(day => renderCalendarDay(day)).join('')}
+        </div>
+      `;
+    }
+
+    function renderCalendarDay(day) {
+      const dayName = day.date.toLocaleDateString('en-US', { weekday: 'short' });
+      const dayNumber = day.date.getDate();
+      const hasEvents = day.events.length > 0;
+      
+      const dayClasses = ['calendar-day'];
+      if (hasEvents) dayClasses.push('has-events');
+      if (day.isToday) dayClasses.push('today');
+
+      return `
+        <div class="${dayClasses.join(' ')}">
+          <div class="calendar-day-header">
+            <div class="calendar-day-name">${dayName}</div>
+            <div class="calendar-day-date">${dayNumber}</div>
+          </div>
+          <div class="calendar-day-events">
+            ${hasEvents 
+              ? day.events.map(event => renderCalendarEvent(event)).join('')
+              : '<div class="calendar-no-events">—</div>'
+            }
+          </div>
+        </div>
+      `;
+    }
+
+    function renderCalendarEvent(event) {
+      const statusClass = event.status.toLowerCase().replace(' ', '-');
+      const timeDisplay = event.event_start_time 
+        ? event.event_start_time.substring(0, 5) 
+        : '';
+      
+      const groupName = event.group_name || 'Unnamed Event';
+      const sandwichCount = event.sandwich_count_planned || '?';
+      const needsRefrigeratedVan = event.refrigerated_van_needed;
+
+      return `
+        <div class="calendar-event-item status-${statusClass}" onclick="openEventDetail('${event.__backendId}')">
+          <div class="calendar-event-name" title="${escapeHtml(groupName)}">${escapeHtml(groupName)}</div>
+          ${timeDisplay ? `<div class="calendar-event-time">⏰ ${timeDisplay}</div>` : ''}
+          <div class="calendar-event-count">🥪 ${sandwichCount}</div>
+          ${needsRefrigeratedVan ? '<div style="font-size: 11px; color: #a31c41; font-weight: 600; margin-top: 2px;">❄️ Fridge Van</div>' : ''}
+        </div>
+      `;
+    }
+
+    function renderEventList(containerId, events, renderFunc) {
+      const container = document.getElementById(containerId);
+      
+      if (events.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">✓</div><div>All clear!</div></div>';
+        return;
+      }
+
+      container.innerHTML = events.map(renderFunc).join('');
+    }
+
+    function renderNewRequestItem(event) {
+      const deptDisplay = event.department_name ? `<div class="event-item-subtitle">${escapeHtml(event.department_name)}</div>` : '';
+      return `
+        <div class="event-item" onclick="openEventDetail('${event.__backendId}')">
+          <div class="event-item-header">
+            <div>
+              <div class="event-item-title">${escapeHtml(event.group_name)}</div>
+              ${deptDisplay}
+            </div>
+            <span class="status-badge status-new">New</span>
+          </div>
+          <div class="event-item-meta">
+            <span>📅 ${formatDate(event.event_date)}</span>
+            <span>🥪 ${event.sandwich_count_planned || '?'} sandwiches</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderStalledItem(event) {
+      const lastActivity = event.last_activity_at ? new Date(event.last_activity_at) : new Date(event.created_at);
+      const daysAgo = Math.floor((new Date() - lastActivity) / (1000 * 60 * 60 * 24));
+      const deptDisplay = event.department_name ? `<div class="event-item-subtitle">${escapeHtml(event.department_name)}</div>` : '';
+      
+      return `
+        <div class="event-item" onclick="openEventDetail('${event.__backendId}')">
+          <div class="event-item-header">
+            <div>
+              <div class="event-item-title">${escapeHtml(event.group_name)}</div>
+              ${deptDisplay}
+            </div>
+            <span class="status-badge status-in-process">In Process</span>
+          </div>
+          <div class="event-item-meta">
+            <span>📅 ${formatDate(event.event_date)}</span>
+            <span style="color: #a31c41; font-weight: 600;">⏰ ${daysAgo} days ago</span>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderUpcomingMissingItem(event) {
+      const missing = [];
+      if (event.driver_needed && !event.driver_name_assigned) {
+        const count = event.driver_count > 1 ? ` (${event.driver_count})` : '';
+        missing.push(`Driver${count}`);
+      }
+      if (event.speaker_needed && !event.speaker_name_assigned) {
+        const count = event.speaker_count > 1 ? ` (${event.speaker_count})` : '';
+        missing.push(`Speaker${count}`);
+      }
+      if (event.volunteer_needed && !event.volunteer_name_assigned) {
+        const count = event.volunteer_count > 1 ? ` (${event.volunteer_count})` : '';
+        missing.push(`Volunteer${count}`);
+      }
+      if (!event.event_address) missing.push('Address');
+      if (!event.sandwich_type) missing.push('Sandwich Type');
+      if (!event.destination_name) missing.push('Destination');
+
+      const deptDisplay = event.department_name ? `<div class="event-item-subtitle">${escapeHtml(event.department_name)}</div>` : '';
+
+      return `
+        <div class="event-item" onclick="openEventDetail('${event.__backendId}')">
+          <div class="event-item-header">
+            <div>
+              <div class="event-item-title">${escapeHtml(event.group_name)}</div>
+              ${deptDisplay}
+            </div>
+            <span class="status-badge status-scheduled">Scheduled</span>
+          </div>
+          <div class="event-item-meta">
+            <span>📅 ${formatDate(event.event_date)}</span>
+            ${event.refrigerated_van_needed ? '<span style="color: #a31c41; font-weight: 600;">❄️ Fridge Van</span>' : ''}
+          </div>
+          <div class="missing-icons">
+            ${missing.map(m => `<span class="missing-icon">⚠️ ${m}</span>`).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    // Pipeline View
+    function renderPipeline() {
+      populateTSPFilter();
+      applyPipelineFilters();
+    }
+
+    function populateTSPFilter() {
+      const tspContacts = [...new Set(allEvents.map(e => e.tsp_contact).filter(Boolean))].sort();
+      const select = document.getElementById('filter-tsp');
+      const currentValue = select.value;
+      
+      select.innerHTML = '<option value="">All Contacts</option>' + 
+        tspContacts.map(tsp => `<option value="${escapeHtml(tsp)}">${escapeHtml(tsp)}</option>`).join('');
+      
+      select.value = currentValue;
+    }
+
+    function applyPipelineFilters() {
+      const statusFilter = document.getElementById('filter-status').value;
+      const tspFilter = document.getElementById('filter-tsp').value;
+      const dateStart = document.getElementById('filter-date-start').value;
+      const dateEnd = document.getElementById('filter-date-end').value;
+
+      let filtered = allEvents.filter(e => {
+        // Exclude canceled events from pipeline view
+        if (e.status === 'Canceled') return false;
+        
+        if (statusFilter && e.status !== statusFilter) return false;
+        if (tspFilter && e.tsp_contact !== tspFilter) return false;
+        if (dateStart && e.event_date < dateStart) return false;
+        if (dateEnd && e.event_date > dateEnd) return false;
+        return true;
+      });
+
+      filtered.sort((a, b) => {
+        const dateA = new Date(a.event_date);
+        const dateB = new Date(b.event_date);
+        return dateA - dateB;
+      });
+
+      const tbody = document.getElementById('pipeline-table-body');
+      
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 48px; color: #64748b;">No events match your filters</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(event => {
+        const hasDriver = event.driver_needed ? !!event.driver_name_assigned : true;
+        const hasSpeaker = event.speaker_needed ? !!event.speaker_name_assigned : true;
+        const hasVolunteer = event.volunteer_needed ? !!event.volunteer_name_assigned : true;
+        const hasDestination = !!event.destination_name;
+        const hasAddress = !!event.event_address;
+        const hasSandwich = !!event.sandwich_type;
+
+        const groupDisplay = event.department_name 
+          ? `<strong>${escapeHtml(event.group_name)}</strong><br><span style="font-size: 12px; color: #64748b;">${escapeHtml(event.department_name)}</span>`
+          : `<strong>${escapeHtml(event.group_name)}</strong>`;
+
+        return `
+          <tr onclick="openEventDetail('${event.__backendId}')">
+            <td>
+              ${formatDate(event.event_date)}<br>
+              <span style="font-size: 12px; color: #64748b;">
+                ${event.event_start_time ? event.event_start_time : '—'} - ${event.event_end_time ? event.event_end_time : '—'}
+                ${event.pickup_time ? `<br>Pickup: ${event.pickup_time}` : ''}
+              </span>
+              ${event.refrigerated_van_needed ? '<br><span style="font-size: 11px; color: #a31c41; font-weight: 600;">❄️ Fridge Van</span>' : ''}
+            </td>
+            <td>${groupDisplay}</td>
+            <td><span class="status-badge status-${event.status.toLowerCase().replace(' ', '-')}">${event.status}</span></td>
+            <td>${escapeHtml(event.tsp_contact || '—')}</td>
+            <td>${event.sandwich_count_planned || '?'}</td>
+            <td>
+              <div class="completeness-indicators">
+                ${event.driver_needed ? `<span class="indicator-icon ${hasDriver ? 'complete' : 'incomplete'}" title="Driver">🚗</span>` : ''}
+                ${event.speaker_needed ? `<span class="indicator-icon ${hasSpeaker ? 'complete' : 'incomplete'}" title="Speaker">🎤</span>` : ''}
+                ${event.volunteer_needed ? `<span class="indicator-icon ${hasVolunteer ? 'complete' : 'incomplete'}" title="Volunteer">🙋</span>` : ''}
+                <span class="indicator-icon ${hasDestination ? 'complete' : 'incomplete'}" title="Destination">📍</span>
+                <span class="indicator-icon ${hasAddress ? 'complete' : 'incomplete'}" title="Address">🏢</span>
+                <span class="indicator-icon ${hasSandwich ? 'complete' : 'incomplete'}" title="Sandwich Info">🥪</span>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Driver Needs View
+    function renderDriverNeeds() {
+      let needsDriver = allEvents.filter(e => 
+        e.status === 'Scheduled' && e.driver_needed && (!e.driver_name_assigned || e.driver_name_assigned.trim() === '')
+      );
+
+      // Update badge
+      document.getElementById('drivers-badge').textContent = needsDriver.length;
+
+      // Sort
+      needsDriver.sort((a, b) => {
+        if (driverSortField === 'date') {
+          const dateA = new Date(a.event_date);
+          const dateB = new Date(b.event_date);
+          return driverSortAsc ? dateA - dateB : dateB - dateA;
+        } else if (driverSortField === 'area') {
+          const areaA = a.event_zip || a.event_city || '';
+          const areaB = b.event_zip || b.event_city || '';
+          return driverSortAsc ? areaA.localeCompare(areaB) : areaB.localeCompare(areaA);
+        }
+        return 0;
+      });
+
+      const tbody = document.getElementById('drivers-table-body');
+      
+      if (needsDriver.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 48px; color: #64748b;">All scheduled events have drivers assigned! 🎉</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = needsDriver.map(event => {
+        const groupDisplay = event.department_name 
+          ? `<strong>${escapeHtml(event.group_name)}</strong><br><span style="font-size: 12px; color: #64748b;">${escapeHtml(event.department_name)}</span>`
+          : `<strong>${escapeHtml(event.group_name)}</strong>`;
+
+        const driverCount = event.driver_count || 1;
+        const needsRefrigeratedVan = event.refrigerated_van_needed;
+
+        return `
+          <tr>
+            <td>
+              ${formatDate(event.event_date)}
+              ${needsRefrigeratedVan ? '<br><span style="font-size: 11px; color: #a31c41; font-weight: 600;">❄️ Fridge Van</span>' : ''}
+            </td>
+            <td>
+              ${event.event_start_time ? event.event_start_time : '—'} - ${event.event_end_time ? event.event_end_time : '—'}
+              ${event.pickup_time ? `<br><span style="font-size: 11px; color: #64748b;">Pickup: ${event.pickup_time}</span>` : ''}
+            </td>
+            <td>
+              ${groupDisplay}
+              ${driverCount > 1 ? `<br><span style="font-size: 11px; color: #236383; font-weight: 600;">🚗 Need ${driverCount} drivers</span>` : ''}
+            </td>
+            <td>${escapeHtml(event.event_city || '')} ${escapeHtml(event.event_zip || '')}</td>
+            <td>${escapeHtml(event.event_address || '—')}</td>
+            <td>${event.sandwich_count_planned || '?'}</td>
+            <td>${escapeHtml(event.destination_name || 'TBD')}</td>
+            <td><button class="button-secondary" style="padding: 8px 16px; font-size: 13px;" onclick="openEventDetail('${event.__backendId}'); event.stopPropagation();">Assign</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function sortDriverNeeds(field) {
+      if (driverSortField === field) {
+        driverSortAsc = !driverSortAsc;
+      } else {
+        driverSortField = field;
+        driverSortAsc = true;
+      }
+      renderDriverNeeds();
+    }
+
+    // Completed Events View
+    function renderCompletedEvents() {
+      const completedEvents = allEvents.filter(e => e.status === 'Completed');
+      
+      // Update badge
+      document.getElementById('completed-badge').textContent = completedEvents.length;
+
+      // Populate TSP filter
+      const tspContacts = [...new Set(completedEvents.map(e => e.tsp_contact).filter(Boolean))].sort();
+      const select = document.getElementById('completed-filter-tsp');
+      const currentValue = select.value;
+      
+      select.innerHTML = '<option value="">All Contacts</option>' + 
+        tspContacts.map(tsp => `<option value="${escapeHtml(tsp)}">${escapeHtml(tsp)}</option>`).join('');
+      
+      select.value = currentValue;
+
+      applyCompletedFilters();
+    }
+
+    function applyCompletedFilters() {
+      const tspFilter = document.getElementById('completed-filter-tsp').value;
+      const dateStart = document.getElementById('completed-filter-date-start').value;
+      const dateEnd = document.getElementById('completed-filter-date-end').value;
+      const groupFilter = document.getElementById('completed-filter-group').value.toLowerCase();
+
+      let filtered = allEvents.filter(e => {
+        if (e.status !== 'Completed') return false;
+        if (tspFilter && e.tsp_contact !== tspFilter) return false;
+        if (dateStart && e.event_date < dateStart) return false;
+        if (dateEnd && e.event_date > dateEnd) return false;
+        if (groupFilter && !e.group_name.toLowerCase().includes(groupFilter)) return false;
+        return true;
+      });
+
+      // Sort by date descending (most recent first)
+      filtered.sort((a, b) => {
+        const dateA = new Date(a.event_date);
+        const dateB = new Date(b.event_date);
+        return dateB - dateA;
+      });
+
+      const tbody = document.getElementById('completed-table-body');
+      
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 48px; color: #64748b;">No completed events match your filters</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(event => {
+        const hasPhoto = event.photo_followup_done;
+        const hasFinalCount = event.final_sandwich_count_recorded;
+        const followupStatus = hasPhoto && hasFinalCount ? '✅ Complete' : 
+                              hasPhoto ? '📸 Photo only' : 
+                              hasFinalCount ? '🔢 Count only' : 
+                              '⚠️ Missing';
+
+        const groupDisplay = event.department_name 
+          ? `<strong>${escapeHtml(event.group_name)}</strong><br><span style="font-size: 12px; color: #64748b;">${escapeHtml(event.department_name)}</span>`
+          : `<strong>${escapeHtml(event.group_name)}</strong>`;
+
+        return `
+          <tr onclick="openEventDetail('${event.__backendId}')">
+            <td>${formatDate(event.event_date)}</td>
+            <td>${groupDisplay}</td>
+            <td>${escapeHtml(event.tsp_contact || '—')}</td>
+            <td>${event.sandwich_count_planned || '—'}</td>
+            <td>${event.sandwich_count_actual || '—'}</td>
+            <td>${escapeHtml(event.destination_name || '—')}</td>
+            <td>${followupStatus}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    // Reports View
+    function renderReports() {
+      const totalEvents = allEvents.length;
+      document.getElementById('total-events-stat').textContent = totalEvents;
+
+      // Conversion funnel
+      const totalRequests = allEvents.length;
+      const scheduled = allEvents.filter(e => e.status === 'Scheduled' || e.status === 'Completed').length;
+      const completed = allEvents.filter(e => e.status === 'Completed').length;
+
+      const maxWidth = 100;
+      const scheduledWidth = totalRequests > 0 ? (scheduled / totalRequests) * maxWidth : 0;
+      const completedWidth = totalRequests > 0 ? (completed / totalRequests) * maxWidth : 0;
+
+      document.getElementById('funnel-requests').textContent = totalRequests;
+      document.getElementById('funnel-requests').style.width = '100%';
+      
+      document.getElementById('funnel-scheduled').textContent = `${scheduled} (${totalRequests > 0 ? Math.round(scheduledWidth) : 0}%)`;
+      document.getElementById('funnel-scheduled').style.width = `${scheduledWidth}%`;
+      
+      document.getElementById('funnel-completed').textContent = `${completed} (${totalRequests > 0 ? Math.round(completedWidth) : 0}%)`;
+      document.getElementById('funnel-completed').style.width = `${completedWidth}%`;
+
+      // Events by TSP
+      const tspCounts = {};
+      allEvents.forEach(e => {
+        const tsp = e.tsp_contact || 'Unassigned';
+        tspCounts[tsp] = (tspCounts[tsp] || 0) + 1;
+      });
+
+      const tspEntries = Object.entries(tspCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      const maxTsp = Math.max(...tspEntries.map(e => e[1]), 1);
+
+      document.getElementById('tsp-chart').innerHTML = tspEntries.map(([tsp, count]) => {
+        const width = (count / maxTsp) * 100;
+        return `
+          <div class="chart-bar">
+            <div class="chart-label">${escapeHtml(tsp)}</div>
+            <div class="chart-bar-fill" style="width: ${width}%; background: #236383;">${count}</div>
+          </div>
+        `;
+      }).join('') || '<div style="color: #64748b; padding: 20px;">No data yet</div>';
+
+      // Destinations
+      const destCounts = {};
+      allEvents.forEach(e => {
+        if (e.destination_name) {
+          destCounts[e.destination_name] = (destCounts[e.destination_name] || 0) + 1;
+        }
+      });
+
+      const destEntries = Object.entries(destCounts).sort((a, b) => b[1] - a[1]).slice(0, 5);
+      const maxDest = Math.max(...destEntries.map(e => e[1]), 1);
+
+      document.getElementById('destinations-chart').innerHTML = destEntries.map(([dest, count]) => {
+        const width = (count / maxDest) * 100;
+        return `
+          <div class="chart-bar">
+            <div class="chart-label">${escapeHtml(dest)}</div>
+            <div class="chart-bar-fill" style="width: ${width}%; background: #007e8c;">${count}</div>
+          </div>
+        `;
+      }).join('') || '<div style="color: #64748b; padding: 20px;">No destinations recorded yet</div>';
+
+      // Sandwiches
+      const totalPlanned = allEvents.reduce((sum, e) => sum + (e.sandwich_count_planned || 0), 0);
+      const totalActual = allEvents.reduce((sum, e) => sum + (e.sandwich_count_actual || 0), 0);
+
+      const maxSandwich = Math.max(totalPlanned, totalActual, 1);
+      const plannedWidth = (totalPlanned / maxSandwich) * 100;
+      const actualWidth = (totalActual / maxSandwich) * 100;
+
+      document.getElementById('sandwiches-planned').textContent = totalPlanned;
+      document.getElementById('sandwiches-planned').style.width = `${plannedWidth}%`;
+      
+      document.getElementById('sandwiches-actual').textContent = totalActual;
+      document.getElementById('sandwiches-actual').style.width = `${actualWidth}%`;
+
+      // Repeat groups
+      const groupCounts = {};
+      allEvents.forEach(e => {
+        const groupId = e.group_id || e.group_name;
+        groupCounts[groupId] = (groupCounts[groupId] || 0) + 1;
+      });
+
+      const newGroups = Object.values(groupCounts).filter(count => count === 1).length;
+      const repeatGroups = Object.values(groupCounts).filter(count => count > 1).length;
+      const totalGroups = newGroups + repeatGroups;
+
+      const newWidth = totalGroups > 0 ? (newGroups / totalGroups) * 100 : 50;
+      const repeatWidth = totalGroups > 0 ? (repeatGroups / totalGroups) * 100 : 50;
+
+      document.getElementById('groups-new').textContent = newGroups;
+      document.getElementById('groups-new').style.width = `${newWidth}%`;
+      
+      document.getElementById('groups-repeat').textContent = repeatGroups;
+      document.getElementById('groups-repeat').style.width = `${repeatWidth}%`;
+    }
+
+    // Toggle functions for role sections
+    function toggleDriverSection() {
+      const needed = document.getElementById('driver-needed').checked;
+      document.getElementById('driver-details').style.display = needed ? 'block' : 'none';
+      updateDriverAssignmentState();
+    }
+
+    function toggleSpeakerSection() {
+      const needed = document.getElementById('speaker-needed').checked;
+      document.getElementById('speaker-details').style.display = needed ? 'block' : 'none';
+      updateSpeakerAssignmentState();
+    }
+
+    function toggleVolunteerSection() {
+      const needed = document.getElementById('volunteer-needed').checked;
+      document.getElementById('volunteer-details').style.display = needed ? 'block' : 'none';
+      updateVolunteerAssignmentState();
+    }
+
+    // Update all assignment states when status changes
+    function updateAllAssignmentStates() {
+      updateDriverAssignmentState();
+      updateSpeakerAssignmentState();
+      updateVolunteerAssignmentState();
+    }
+
+    // Update assignment field states based on event status and need
+    function updateDriverAssignmentState() {
+      const status = document.getElementById('event-status').value;
+      const needed = document.getElementById('driver-needed').checked;
+      const driverNameInput = document.getElementById('driver-name');
+      const driverAttendanceField = document.getElementById('driver-attendance-field');
+      
+      const canAssign = needed && (status === 'Scheduled' || status === 'Completed');
+      const isCompleted = status === 'Completed';
+      
+      driverNameInput.disabled = !canAssign;
+      
+      // Show attendance checkbox only when event is completed
+      if (needed && isCompleted) {
+        driverAttendanceField.style.display = 'flex';
+      } else {
+        driverAttendanceField.style.display = 'none';
+      }
+      
+      if (canAssign) {
+        const count = document.getElementById('driver-count').value || 1;
+        driverNameInput.placeholder = count > 1 ? 'Enter names, separate with commas' : 'Enter driver name';
+      } else if (!needed) {
+        driverNameInput.placeholder = 'Driver not needed for this event';
+      } else {
+        driverNameInput.placeholder = 'Available once event is scheduled';
+      }
+    }
+
+    function updateSpeakerAssignmentState() {
+      const status = document.getElementById('event-status').value;
+      const needed = document.getElementById('speaker-needed').checked;
+      const speakerNameInput = document.getElementById('speaker-name');
+      const speakerAttendanceField = document.getElementById('speaker-attendance-field');
+      
+      const canAssign = needed && (status === 'Scheduled' || status === 'Completed');
+      const isCompleted = status === 'Completed';
+      
+      speakerNameInput.disabled = !canAssign;
+      
+      // Show attendance checkbox only when event is completed
+      if (needed && isCompleted) {
+        speakerAttendanceField.style.display = 'flex';
+      } else {
+        speakerAttendanceField.style.display = 'none';
+      }
+      
+      if (canAssign) {
+        const count = document.getElementById('speaker-count').value || 1;
+        speakerNameInput.placeholder = count > 1 ? 'Enter names, separate with commas' : 'Enter speaker name';
+      } else if (!needed) {
+        speakerNameInput.placeholder = 'Speaker not needed for this event';
+      } else {
+        speakerNameInput.placeholder = 'Available once event is scheduled';
+      }
+    }
+
+    function updateVolunteerAssignmentState() {
+      const status = document.getElementById('event-status').value;
+      const needed = document.getElementById('volunteer-needed').checked;
+      const volunteerNameInput = document.getElementById('volunteer-name');
+      const volunteerAttendanceField = document.getElementById('volunteer-attendance-field');
+      
+      const canAssign = needed && (status === 'Scheduled' || status === 'Completed');
+      const isCompleted = status === 'Completed';
+      
+      volunteerNameInput.disabled = !canAssign;
+      
+      // Show attendance checkbox only when event is completed
+      if (needed && isCompleted) {
+        volunteerAttendanceField.style.display = 'flex';
+      } else {
+        volunteerAttendanceField.style.display = 'none';
+      }
+      
+      if (canAssign) {
+        const count = document.getElementById('volunteer-count').value || 1;
+        volunteerNameInput.placeholder = count > 1 ? 'Enter names, separate with commas' : 'Enter volunteer names';
+      } else if (!needed) {
+        volunteerNameInput.placeholder = 'Volunteers not needed for this event';
+      } else {
+        volunteerNameInput.placeholder = 'Available once event is scheduled';
+      }
+    }
+
+    // Event Modal
+    function openNewEventModal() {
+      currentEvent = null;
+      document.getElementById('modal-title').textContent = 'New Event';
+      document.getElementById('event-form').reset();
+      document.getElementById('delete-button').style.display = 'none';
+      document.getElementById('group-history-section').style.display = 'none';
+      
+      // Reset role sections
+      document.getElementById('driver-needed').checked = false;
+      document.getElementById('speaker-needed').checked = false;
+      document.getElementById('volunteer-needed').checked = false;
+      toggleDriverSection();
+      toggleSpeakerSection();
+      toggleVolunteerSection();
+      updateAllAssignmentStates();
+      
+      document.getElementById('event-modal').classList.add('active');
+    }
+
+    function openEventDetail(backendId) {
+      currentEvent = allEvents.find(e => e.__backendId === backendId);
+      if (!currentEvent) return;
+
+      const titleDisplay = currentEvent.department_name 
+        ? `${currentEvent.group_name} (${currentEvent.department_name}) - ${formatDate(currentEvent.event_date)}`
+        : `${currentEvent.group_name} - ${formatDate(currentEvent.event_date)}`;
+
+      document.getElementById('modal-title').textContent = titleDisplay;
+      
+      // Populate form
+      document.getElementById('event-status').value = currentEvent.status || 'New';
+      document.getElementById('event-date').value = currentEvent.event_date || '';
+      document.getElementById('event-start-time').value = currentEvent.event_start_time || '';
+      document.getElementById('event-end-time').value = currentEvent.event_end_time || '';
+      document.getElementById('pickup-time').value = currentEvent.pickup_time || '';
+      document.getElementById('group-name').value = currentEvent.group_name || '';
+      document.getElementById('department-name').value = currentEvent.department_name || '';
+      document.getElementById('group-contact-name').value = currentEvent.group_contact_name || '';
+      document.getElementById('group-contact-email').value = currentEvent.group_contact_email || '';
+      document.getElementById('group-contact-phone').value = currentEvent.group_contact_phone || '';
+      document.getElementById('event-address').value = currentEvent.event_address || '';
+      document.getElementById('event-city').value = currentEvent.event_city || '';
+      document.getElementById('event-state').value = currentEvent.event_state || '';
+      document.getElementById('event-zip').value = currentEvent.event_zip || '';
+      document.getElementById('sandwich-type').value = currentEvent.sandwich_type || '';
+      document.getElementById('sandwich-count-planned').value = currentEvent.sandwich_count_planned || '';
+      document.getElementById('sandwich-count-actual').value = currentEvent.sandwich_count_actual || '';
+      document.getElementById('destination-name').value = currentEvent.destination_name || '';
+      document.getElementById('destination-address').value = currentEvent.destination_address || '';
+      document.getElementById('tsp-contact').value = currentEvent.tsp_contact || '';
+      
+      // Driver section
+      document.getElementById('driver-needed').checked = currentEvent.driver_needed || false;
+      document.getElementById('driver-count').value = currentEvent.driver_count || 1;
+      document.getElementById('refrigerated-van-needed').checked = currentEvent.refrigerated_van_needed || false;
+      document.getElementById('driver-name').value = currentEvent.driver_name_assigned || '';
+      document.getElementById('driver-present').checked = currentEvent.driver_present || false;
+      toggleDriverSection();
+      
+      // Speaker section
+      document.getElementById('speaker-needed').checked = currentEvent.speaker_needed || false;
+      document.getElementById('speaker-count').value = currentEvent.speaker_count || 1;
+      document.getElementById('speaker-name').value = currentEvent.speaker_name_assigned || '';
+      document.getElementById('speaker-present').checked = currentEvent.speaker_present || false;
+      toggleSpeakerSection();
+      
+      // Volunteer section
+      document.getElementById('volunteer-needed').checked = currentEvent.volunteer_needed || false;
+      document.getElementById('volunteer-count').value = currentEvent.volunteer_count || 1;
+      document.getElementById('volunteer-name').value = currentEvent.volunteer_name_assigned || '';
+      document.getElementById('volunteer-present').checked = currentEvent.volunteer_present || false;
+      toggleVolunteerSection();
+      
+      document.getElementById('collection-log-link').value = currentEvent.collection_log_link || '';
+      document.getElementById('photo-followup').checked = currentEvent.photo_followup_done || false;
+      document.getElementById('final-count-recorded').checked = currentEvent.final_sandwich_count_recorded || false;
+      document.getElementById('event-notes').value = currentEvent.notes || '';
+
+      document.getElementById('delete-button').style.display = 'block';
+
+      // Show group history
+      showGroupHistory(currentEvent.group_id || currentEvent.group_name);
+
+      // Update assignment states based on current status
+      updateAllAssignmentStates();
+
+      document.getElementById('event-modal').classList.add('active');
+    }
+
+    function showGroupHistory(groupId) {
+      const groupEvents = allEvents.filter(e => 
+        (e.group_id === groupId || e.group_name === groupId) && 
+        e.__backendId !== (currentEvent ? currentEvent.__backendId : null)
+      );
+
+      if (groupEvents.length === 0) {
+        document.getElementById('group-history-section').style.display = 'none';
+        return;
+      }
+
+      groupEvents.sort((a, b) => new Date(b.event_date) - new Date(a.event_date));
+
+      const historyHtml = `
+        <div style="background: #f8fafc; padding: 16px; border-radius: 8px;">
+          <p style="margin: 0 0 12px 0; font-weight: 600; color: #475569;">
+            ${groupEvents.length} previous event${groupEvents.length !== 1 ? 's' : ''} with this group
+          </p>
+          ${groupEvents.slice(0, 5).map(e => `
+            <div style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 14px;">
+              <span style="font-weight: 600;">${formatDate(e.event_date)}</span> - 
+              <span class="status-badge status-${e.status.toLowerCase().replace(' ', '-')}" style="font-size: 11px;">${e.status}</span> - 
+              ${e.sandwich_count_actual || e.sandwich_count_planned || '?'} sandwiches
+              ${e.department_name ? `<br><span style="color: #64748b; font-size: 12px;">Dept: ${escapeHtml(e.department_name)}</span>` : ''}
+            </div>
+          `).join('')}
+        </div>
+      `;
+
+      document.getElementById('group-history-content').innerHTML = historyHtml;
+      document.getElementById('group-history-section').style.display = 'block';
+    }
+
+    function closeEventModal() {
+      document.getElementById('event-modal').classList.remove('active');
+      currentEvent = null;
+    }
+
+    async function saveEvent(e) {
+      e.preventDefault();
+
+      const saveButton = document.getElementById('save-button');
+      const saveButtonText = document.getElementById('save-button-text');
+      saveButton.disabled = true;
+      saveButtonText.innerHTML = '<span class="loading-spinner"></span> Saving...';
+
+      const formData = {
+        event_id: currentEvent ? currentEvent.event_id : generateId(),
+        group_name: document.getElementById('group-name').value,
+        department_name: document.getElementById('department-name').value,
+        group_contact_name: document.getElementById('group-contact-name').value,
+        group_contact_email: document.getElementById('group-contact-email').value,
+        group_contact_phone: document.getElementById('group-contact-phone').value,
+        event_date: document.getElementById('event-date').value,
+        event_start_time: document.getElementById('event-start-time').value,
+        event_end_time: document.getElementById('event-end-time').value,
+        pickup_time: document.getElementById('pickup-time').value,
+        event_address: document.getElementById('event-address').value,
+        event_city: document.getElementById('event-city').value,
+        event_state: document.getElementById('event-state').value,
+        event_zip: document.getElementById('event-zip').value,
+        sandwich_type: document.getElementById('sandwich-type').value,
+        sandwich_count_planned: parseInt(document.getElementById('sandwich-count-planned').value) || 0,
+        sandwich_count_actual: parseInt(document.getElementById('sandwich-count-actual').value) || 0,
+        destination_name: document.getElementById('destination-name').value,
+        destination_address: document.getElementById('destination-address').value,
+        tsp_contact: document.getElementById('tsp-contact').value,
+        driver_needed: document.getElementById('driver-needed').checked,
+        driver_count: parseInt(document.getElementById('driver-count').value) || 1,
+        refrigerated_van_needed: document.getElementById('refrigerated-van-needed').checked,
+        driver_name_assigned: document.getElementById('driver-name').value,
+        driver_present: document.getElementById('driver-present').checked,
+        speaker_needed: document.getElementById('speaker-needed').checked,
+        speaker_count: parseInt(document.getElementById('speaker-count').value) || 1,
+        speaker_name_assigned: document.getElementById('speaker-name').value,
+        speaker_present: document.getElementById('speaker-present').checked,
+        volunteer_needed: document.getElementById('volunteer-needed').checked,
+        volunteer_count: parseInt(document.getElementById('volunteer-count').value) || 1,
+        volunteer_name_assigned: document.getElementById('volunteer-name').value,
+        volunteer_present: document.getElementById('volunteer-present').checked,
+        status: document.getElementById('event-status').value,
+        photo_followup_done: document.getElementById('photo-followup').checked,
+        final_sandwich_count_recorded: document.getElementById('final-count-recorded').checked,
+        collection_log_link: document.getElementById('collection-log-link').value,
+        notes: document.getElementById('event-notes').value,
+        group_id: document.getElementById('group-name').value.toLowerCase().replace(/\s+/g, '-'),
+        event_area: document.getElementById('event-city').value || document.getElementById('event-zip').value,
+        last_activity_at: new Date().toISOString()
+      };
+
+      // Set status timestamps
+      const newStatus = formData.status;
+      if (currentEvent) {
+        formData.created_at = currentEvent.created_at;
+        formData.status_new_at = currentEvent.status_new_at;
+        formData.status_in_process_at = currentEvent.status_in_process_at;
+        formData.status_scheduled_at = currentEvent.status_scheduled_at;
+        formData.status_completed_at = currentEvent.status_completed_at;
+
+        if (newStatus !== currentEvent.status) {
+          const now = new Date().toISOString();
+          if (newStatus === 'New') formData.status_new_at = now;
+          else if (newStatus === 'In Process') formData.status_in_process_at = now;
+          else if (newStatus === 'Scheduled') formData.status_scheduled_at = now;
+          else if (newStatus === 'Completed') formData.status_completed_at = now;
+        }
+      } else {
+        const now = new Date().toISOString();
+        formData.created_at = now;
+        formData.status_new_at = now;
+        formData.status_in_process_at = null;
+        formData.status_scheduled_at = null;
+        formData.status_completed_at = null;
+      }
+
+      let result;
+      if (currentEvent) {
+        result = await window.dataSdk.update({ ...formData, __backendId: currentEvent.__backendId });
+      } else {
+        if (allEvents.length >= 999) {
+          showToast('Maximum limit of 999 events reached. Please delete some events first.', 'error');
+          saveButton.disabled = false;
+          saveButtonText.textContent = 'Save Event';
+          return;
+        }
+        result = await window.dataSdk.create(formData);
+      }
+
+      saveButton.disabled = false;
+      saveButtonText.textContent = 'Save Event';
+
+      if (result.isOk) {
+        showToast(currentEvent ? 'Event updated successfully' : 'Event created successfully', 'success');
+        closeEventModal();
+      } else {
+        showToast('Failed to save event. Please try again.', 'error');
+      }
+    }
+
+    async function deleteEvent() {
+      if (!currentEvent) return;
+
+      const deleteButton = document.getElementById('delete-button');
+      deleteButton.disabled = true;
+      deleteButton.innerHTML = '<span class="loading-spinner"></span> Deleting...';
+
+      const result = await window.dataSdk.delete(currentEvent);
+
+      deleteButton.disabled = false;
+      deleteButton.textContent = 'Delete Event';
+
+      if (result.isOk) {
+        showToast('Event deleted successfully', 'success');
+        closeEventModal();
+      } else {
+        showToast('Failed to delete event. Please try again.', 'error');
+      }
+    }
+
+    // Utility functions
+    function generateId() {
+      return 'evt_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '—';
+      const date = new Date(dateStr);
+      return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function escapeHtml(text) {
+      if (!text) return '';
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toast-message');
+      
+      toastMessage.textContent = message;
+      toast.className = `toast ${type} show`;
+      
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3000);
+    }
+
+    // Excel Import Functions
+    function handleExcelImport(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      // Check if SheetJS library is loaded
+      if (typeof XLSX === 'undefined') {
+        showToast('Excel library not loaded. Please refresh the page and try again.', 'error');
+        console.error('SheetJS (XLSX) library is not loaded');
+        event.target.value = '';
+        return;
+      }
+
+      // Validate file type
+      const validTypes = [
+        'application/vnd.ms-excel',
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        'application/vnd.ms-excel.sheet.macroEnabled.12'
+      ];
+      
+      const fileExtension = file.name.split('.').pop().toLowerCase();
+      if (!['xls', 'xlsx', 'xlsm'].includes(fileExtension)) {
+        showToast('Please upload a valid Excel file (.xls or .xlsx)', 'error');
+        event.target.value = '';
+        return;
+      }
+
+      console.log('Reading Excel file:', file.name, 'Size:', file.size, 'bytes');
+
+      const reader = new FileReader();
+      
+      reader.onerror = function(error) {
+        showToast('Failed to read file. Please try again.', 'error');
+        console.error('FileReader error:', error);
+        event.target.value = '';
+      };
+      
+      reader.onload = function(e) {
+        try {
+          console.log('File loaded, parsing Excel data...');
+          
+          const data = new Uint8Array(e.target.result);
+          const workbook = XLSX.read(data, { type: 'array', cellDates: true });
+          
+          console.log('Workbook loaded. Sheets:', workbook.SheetNames);
+          
+          if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
+            showToast('No sheets found in Excel file', 'error');
+            return;
+          }
+          
+          // Get first sheet
+          const firstSheetName = workbook.SheetNames[0];
+          const worksheet = workbook.Sheets[firstSheetName];
+          
+          console.log('Reading sheet:', firstSheetName);
+          
+          if (!worksheet) {
+            showToast('Could not read worksheet data', 'error');
+            return;
+          }
+          
+          // Convert to JSON with better options
+          const jsonData = XLSX.utils.sheet_to_json(worksheet, { 
+            raw: false,
+            defval: '',
+            blankrows: false
+          });
+          
+          console.log('Parsed rows:', jsonData.length);
+          
+          if (jsonData.length === 0) {
+            showToast('No data rows found in Excel file. Make sure your file has headers and data.', 'error');
+            return;
+          }
+
+          // Log first row to help debug column names
+          console.log('First row columns:', Object.keys(jsonData[0]));
+          console.log('Sample data:', jsonData[0]);
+
+          // Parse and prepare data
+          pendingImportData = parseExcelData(jsonData);
+          
+          if (pendingImportData.length === 0) {
+            showToast('No valid events found. Check that your Excel has "Group Name" and "Event Date" columns.', 'error');
+            return;
+          }
+
+          console.log('Successfully parsed', pendingImportData.length, 'events');
+
+          // Show preview
+          showImportPreview(pendingImportData);
+          
+        } catch (error) {
+          showToast('Error reading Excel file: ' + error.message, 'error');
+          console.error('Import error details:', error);
+          console.error('Error stack:', error.stack);
+        }
+      };
+      
+      reader.readAsArrayBuffer(file);
+      event.target.value = ''; // Reset input
+    }
+
+    function parseExcelData(jsonData) {
+      const events = [];
+      const errors = [];
+      
+      jsonData.forEach((row, index) => {
+        // Skip completely empty rows
+        const hasAnyData = Object.values(row).some(val => val !== null && val !== undefined && val !== '');
+        if (!hasAnyData) return;
+
+        // Skip rows without minimum required data
+        if (!row['Group Name'] || !row['Event Date']) {
+          errors.push(`Row ${index + 2}: Missing Group Name or Event Date`);
+          return;
+        }
+
+        try {
+          // Parse date - handle various Excel date formats
+          let eventDate = '';
+          if (row['Event Date']) {
+            const dateValue = row['Event Date'];
+            if (typeof dateValue === 'number') {
+              // Excel serial date
+              const excelDate = XLSX.SSF.parse_date_code(dateValue);
+              eventDate = `${excelDate.y}-${String(excelDate.m).padStart(2, '0')}-${String(excelDate.d).padStart(2, '0')}`;
+            } else if (typeof dateValue === 'string') {
+              // Try to parse string date (MM/DD/YYYY, YYYY-MM-DD, etc.)
+              const parsed = new Date(dateValue);
+              if (!isNaN(parsed)) {
+                eventDate = parsed.toISOString().split('T')[0];
+              } else {
+                // Try manual parsing for common formats
+                const parts = dateValue.split(/[-\/]/);
+                if (parts.length === 3) {
+                  // Assume MM/DD/YYYY or YYYY-MM-DD
+                  if (parts[0].length === 4) {
+                    eventDate = `${parts[0]}-${String(parts[1]).padStart(2, '0')}-${String(parts[2]).padStart(2, '0')}`;
+                  } else {
+                    const year = parts[2].length === 2 ? '20' + parts[2] : parts[2];
+                    eventDate = `${year}-${String(parts[0]).padStart(2, '0')}-${String(parts[1]).padStart(2, '0')}`;
+                  }
+                }
+              }
+            }
+          }
+
+          if (!eventDate) {
+            errors.push(`Row ${index + 2}: Invalid date format`);
+            return;
+          }
+
+          // Parse numbers safely
+          const sandwichPlanned = row['Sandwich Count (Planned)'] ? parseInt(String(row['Sandwich Count (Planned)']).replace(/[^0-9]/g, '')) || 0 : 0;
+          const sandwichActual = row['Sandwich Count (Actual)'] ? parseInt(String(row['Sandwich Count (Actual)']).replace(/[^0-9]/g, '')) || 0 : 0;
+
+          // Parse booleans - handle various formats
+          const parseBoolean = (val) => {
+            if (val === true || val === 'TRUE' || val === 'Yes' || val === 'YES' || val === 'true' || val === 'yes' || val === '1' || val === 1) {
+              return true;
+            }
+            return false;
+          };
+
+          const driverPresent = parseBoolean(row['Driver Present']);
+          const speakerPresent = parseBoolean(row['Speaker Present']);
+          const volunteerPresent = parseBoolean(row['Volunteer Present']);
+          const photoFollowup = parseBoolean(row['Photo Follow-up Done']);
+          const finalCountRecorded = parseBoolean(row['Final Sandwich Count Recorded']);
+
+          // Validate status
+          const validStatuses = ['New', 'In Process', 'Scheduled', 'Completed', 'Canceled'];
+          let status = row['Status'] || 'New';
+          if (!validStatuses.includes(status)) {
+            status = 'New';
+          }
+
+          const event = {
+            event_id: generateId(),
+            group_name: String(row['Group Name'] || '').trim(),
+            department_name: String(row['Department Name'] || '').trim(),
+            group_contact_name: String(row['Group Contact Name'] || '').trim(),
+            group_contact_email: String(row['Group Contact Email'] || '').trim(),
+            group_contact_phone: String(row['Group Contact Phone'] || '').trim(),
+            event_date: eventDate,
+            event_start_time: String(row['Event Start Time'] || '').trim(),
+            event_end_time: String(row['Event End Time'] || '').trim(),
+            pickup_time: String(row['Pickup Time'] || '').trim(),
+            event_address: String(row['Event Address'] || '').trim(),
+            event_city: String(row['Event City'] || '').trim(),
+            event_state: String(row['Event State'] || '').trim().toUpperCase().substring(0, 2),
+            event_zip: String(row['Event Zip'] || '').trim(),
+            sandwich_type: String(row['Sandwich Type'] || '').trim(),
+            sandwich_count_planned: sandwichPlanned,
+            sandwich_count_actual: sandwichActual,
+            destination_name: String(row['Destination Name'] || '').trim(),
+            destination_address: String(row['Destination Address'] || '').trim(),
+            tsp_contact: String(row['TSP Contact'] || '').trim(),
+            driver_name_assigned: String(row['Driver Name'] || '').trim(),
+            driver_present: driverPresent,
+            speaker_name_assigned: String(row['Speaker Name'] || '').trim(),
+            speaker_present: speakerPresent,
+            volunteer_name_assigned: String(row['Volunteer Name'] || '').trim(),
+            volunteer_present: volunteerPresent,
+            status: status,
+            created_at: new Date().toISOString(),
+            status_new_at: new Date().toISOString(),
+            status_in_process_at: null,
+            status_scheduled_at: null,
+            status_completed_at: null,
+            last_activity_at: new Date().toISOString(),
+            photo_followup_done: photoFollowup,
+            final_sandwich_count_recorded: finalCountRecorded,
+            collection_log_link: String(row['Collection Log Link'] || '').trim(),
+            notes: String(row['Notes'] || '').trim(),
+            group_id: String(row['Group Name'] || '').toLowerCase().replace(/\s+/g, '-'),
+            event_area: String(row['Event City'] || row['Event Zip'] || '').trim()
+          };
+
+          events.push(event);
+        } catch (error) {
+          errors.push(`Row ${index + 2}: ${error.message}`);
+          console.error(`Error parsing row ${index + 2}:`, error, row);
+        }
+      });
+
+      // Log errors for debugging
+      if (errors.length > 0) {
+        console.log('Import errors:', errors);
+      }
+
+      console.log(`=== EXCEL PARSE COMPLETE ===`);
+      console.log(`Total rows in Excel: ${jsonData.length}`);
+      console.log(`Successfully parsed: ${events.length}`);
+      console.log(`Parse errors: ${errors.length}`);
+
+      return events;
+    }
+
+    function showImportPreview(events) {
+      const previewHtml = `
+        <div style="margin-bottom: 20px;">
+          <p style="font-size: 16px; font-weight: 600; color: #1a202c; margin-bottom: 8px;">
+            Ready to import ${events.length} event${events.length !== 1 ? 's' : ''}
+          </p>
+          <p style="font-size: 14px; color: #64748b; margin-bottom: 16px;">
+            These events will be added to your dashboard. You can review and edit them after import.
+          </p>
+        </div>
+        
+        <div style="max-height: 300px; overflow-y: auto; background: #f8fafc; border-radius: 8px; padding: 16px;">
+          ${events.slice(0, 10).map(e => `
+            <div style="padding: 8px 0; border-bottom: 1px solid #e2e8f0; font-size: 14px;">
+              <strong>${escapeHtml(e.group_name)}</strong>${e.department_name ? ` (${escapeHtml(e.department_name)})` : ''} - ${formatDate(e.event_date)} 
+              ${e.sandwich_count_planned ? `(${e.sandwich_count_planned} sandwiches)` : ''}
+            </div>
+          `).join('')}
+          ${events.length > 10 ? `
+            <div style="padding: 12px 0; color: #64748b; font-size: 13px; text-align: center;">
+              ... and ${events.length - 10} more events
+            </div>
+          ` : ''}
+        </div>
+
+        ${allEvents.length + events.length > 999 ? `
+          <div style="margin-top: 16px; padding: 12px; background: #fee2e2; border-left: 4px solid #a31c41; border-radius: 6px;">
+            <p style="margin: 0; color: #991b1b; font-weight: 600;">⚠️ Warning: Import would exceed 999 event limit</p>
+            <p style="margin: 8px 0 0 0; color: #991b1b; font-size: 13px;">
+              You currently have ${allEvents.length} events. Importing ${events.length} more would exceed the maximum of 999 events.
+              Please delete some existing events first.
+            </p>
+          </div>
+        ` : ''}
+      `;
+
+      document.getElementById('import-preview').innerHTML = previewHtml;
+      
+      // Disable import button if would exceed limit
+      const importButton = document.getElementById('confirm-import-button');
+      if (allEvents.length + events.length > 999) {
+        importButton.disabled = true;
+      } else {
+        importButton.disabled = false;
+      }
+      
+      document.getElementById('import-modal').classList.add('active');
+    }
+
+    function closeImportModal() {
+      document.getElementById('import-modal').classList.remove('active');
+      pendingImportData = [];
+    }
+
+    async function confirmImport() {
+      if (pendingImportData.length === 0) return;
+
+      if (allEvents.length + pendingImportData.length > 999) {
+        showToast('Cannot import: would exceed 999 event limit', 'error');
+        return;
+      }
+
+      const importButton = document.getElementById('confirm-import-button');
+      const importButtonText = document.getElementById('import-button-text');
+      importButton.disabled = true;
+
+      console.log(`=== STARTING DATA SDK IMPORT ===`);
+      console.log(`Attempting to import ${pendingImportData.length} events`);
+      console.log(`This will take approximately ${Math.ceil(pendingImportData.length * 0.5)} seconds due to rate limiting`);
+
+      let successCount = 0;
+      let errorCount = 0;
+      const sdkErrors = [];
+
+      for (let i = 0; i < pendingImportData.length; i++) {
+        const event = pendingImportData[i];
+        
+        // Update progress
+        importButtonText.innerHTML = `<span class="loading-spinner"></span> Importing ${i + 1}/${pendingImportData.length}...`;
+        
+        console.log(`[${i + 1}/${pendingImportData.length}] Importing: ${event.group_name} - ${formatDate(event.event_date)}`);
+        
+        // Add delay BEFORE each request to respect rate limits (1 second between requests)
+        if (i > 0) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+        
+        const result = await window.dataSdk.create(event);
+        
+        if (result.isOk) {
+          successCount++;
+          console.log(`  ✅ SUCCESS`);
+        } else {
+          errorCount++;
+          const errorMsg = `${event.group_name} (${formatDate(event.event_date)}): ${result.error?.message || 'Unknown error'}`;
+          sdkErrors.push(errorMsg);
+          console.error(`  ❌ FAILED:`, result.error?.message || result.error);
+          console.error(`  Event data:`, event);
+          console.error(`  Full error object:`, result.error);
+          
+          // If we hit a rate limit, wait longer before continuing
+          if (result.error?.message?.includes('Rate limit')) {
+            console.log(`  ⏳ Rate limit hit, waiting 1 second...`);
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
+      }
+
+      console.log(`=== IMPORT COMPLETE ===`);
+      console.log(`✅ Successful: ${successCount}`);
+      console.log(`❌ Failed: ${errorCount}`);
+      
+      if (sdkErrors.length > 0) {
+        console.log(`\n=== FAILED EVENTS ===`);
+        sdkErrors.forEach((err, idx) => {
+          console.log(`${idx + 1}. ${err}`);
+        });
+      }
+
+      importButton.disabled = false;
+      importButtonText.textContent = 'Import Events';
+
+      closeImportModal();
+
+      if (errorCount === 0) {
+        showToast(`Successfully imported ${successCount} event${successCount !== 1 ? 's' : ''}!`, 'success');
+      } else {
+        showToast(`Imported ${successCount} events, ${errorCount} failed - check console (F12)`, 'error');
+      }
+    }
+  </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a6c9564c76d457e',t:'MTc2NDUyOTE4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
