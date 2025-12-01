@@ -826,7 +826,7 @@
     <div class="tab-content active" id="attention-tab">
      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
       <h2 style="margin: 0; font-size: 24px; color: #1a202c;">Daily Check</h2>
-      <div style="display: flex; gap: 12px;"><button class="button-secondary" onclick="document.getElementById('excel-import').click()">📊 Import Excel</button> <button class="action-button" onclick="openNewEventModal()">+ New Event</button>
+      <div style="display: flex; gap: 12px;"><button class="button-secondary" onclick="document.getElementById('excel-import').click()">📊 Import Excel</button> <button class="button-secondary" onclick="openRoleManagementModal()">👥 Manage Roles</button> <button class="action-button" onclick="openNewEventModal()">+ New Event</button>
       </div>
      </div><input type="file" id="excel-import" accept=".xlsx,.xls" style="display: none;" onchange="handleExcelImport(event)"> <!-- Next 7 Days Quick View -->
      <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
@@ -1114,7 +1114,9 @@
           <div class="form-field"><label style="display: flex; align-items: center; gap: 6px; cursor: pointer; margin-top: 24px;"> <input type="checkbox" id="refrigerated-van-needed"> <span style="font-weight: 600; color: #a31c41;">❄️ Refrigerated Van Required</span> </label>
           </div>
          </div>
-         <div class="form-field" style="margin-top: 12px;" id="driver-assignment-field"><label for="driver-name">Assigned Driver(s)</label> <input type="text" id="driver-name" placeholder="Available once event is scheduled">
+         <div class="form-field" style="margin-top: 12px;" id="driver-assignment-field"><label for="driver-name">Assigned Driver(s)</label> <select id="driver-name" multiple style="min-height: 80px;" size="4">
+         </select>
+         <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Hold Ctrl/Cmd to select multiple</div>
          </div>
          <div class="checkbox-field" style="margin-top: 8px; display: none;" id="driver-attendance-field"><input type="checkbox" id="driver-present"> <label for="driver-present">Driver(s) Attended Event</label>
          </div>
@@ -1128,7 +1130,9 @@
           <div class="form-field"><label for="speaker-count">Number of Speakers</label> <input type="number" id="speaker-count" min="1" value="1" onchange="updateSpeakerAssignmentState()">
           </div>
          </div>
-         <div class="form-field" style="margin-top: 12px;" id="speaker-assignment-field"><label for="speaker-name">Assigned Speaker(s)</label> <input type="text" id="speaker-name" placeholder="Available once event is scheduled">
+         <div class="form-field" style="margin-top: 12px;" id="speaker-assignment-field"><label for="speaker-name">Assigned Speaker(s)</label> <select id="speaker-name" multiple style="min-height: 80px;" size="4">
+         </select>
+         <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Hold Ctrl/Cmd to select multiple</div>
          </div>
          <div class="checkbox-field" style="margin-top: 8px; display: none;" id="speaker-attendance-field"><input type="checkbox" id="speaker-present"> <label for="speaker-present">Speaker(s) Attended Event</label>
          </div>
@@ -1142,7 +1146,9 @@
           <div class="form-field"><label for="volunteer-count">Number of Volunteers</label> <input type="number" id="volunteer-count" min="1" value="1" onchange="updateVolunteerAssignmentState()">
           </div>
          </div>
-         <div class="form-field" style="margin-top: 12px;" id="volunteer-assignment-field"><label for="volunteer-name">Assigned Volunteer(s)</label> <input type="text" id="volunteer-name" placeholder="Available once event is scheduled">
+         <div class="form-field" style="margin-top: 12px;" id="volunteer-assignment-field"><label for="volunteer-name">Assigned Volunteer(s)</label> <select id="volunteer-name" multiple style="min-height: 80px;" size="4">
+         </select>
+         <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Hold Ctrl/Cmd to select multiple</div>
          </div>
          <div class="checkbox-field" style="margin-top: 8px; display: none;" id="volunteer-attendance-field"><input type="checkbox" id="volunteer-present"> <label for="volunteer-present">Volunteer(s) Attended Event</label>
          </div>
@@ -1174,6 +1180,42 @@
       <div class="button-group"><button type="submit" class="action-button" id="save-button"> <span id="save-button-text">Save Event</span> </button> <button type="button" class="button-secondary" onclick="closeEventModal()">Cancel</button> <button type="button" class="button-danger" id="delete-button" onclick="deleteEvent()" style="margin-left: auto; display: none;">Delete Event</button>
       </div>
      </form>
+    </div>
+   </div>
+  </div><!-- Role Management Modal -->
+  <div class="modal-overlay" id="role-management-modal">
+   <div class="modal-content" style="max-width: 800px;">
+    <div class="modal-header">
+     <h2>Manage Role Lists</h2><button class="modal-close" onclick="closeRoleManagementModal()">×</button>
+    </div>
+    <div class="modal-body">
+     <div style="margin-bottom: 24px;">
+      <p style="color: #64748b; margin-bottom: 16px;">Manage lists of people for each role. You can paste names (one per line) or import from a file.</p>
+      <div style="display: flex; gap: 12px; margin-bottom: 16px;">
+       <button class="button-secondary" onclick="exportRoleLists()">📥 Export Lists</button>
+       <button class="button-secondary" onclick="document.getElementById('role-import-file').click()">📊 Import from File</button>
+       <input type="file" id="role-import-file" accept=".txt,.csv" style="display: none;" onchange="importRoleListsFromFile(event)">
+      </div>
+     </div>
+     <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px;">
+      <div>
+       <h3 style="margin: 0 0 12px 0; font-size: 18px;">🚗 Drivers</h3>
+       <textarea id="drivers-list" placeholder="Enter driver names, one per line..." style="width: 100%; min-height: 200px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-family: inherit; font-size: 14px;"></textarea>
+       <button class="button-secondary" style="margin-top: 8px; width: 100%;" onclick="saveRoleList('drivers')">Save Drivers</button>
+      </div>
+      <div>
+       <h3 style="margin: 0 0 12px 0; font-size: 18px;">🎤 Speakers</h3>
+       <textarea id="speakers-list" placeholder="Enter speaker names, one per line..." style="width: 100%; min-height: 200px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-family: inherit; font-size: 14px;"></textarea>
+       <button class="button-secondary" style="margin-top: 8px; width: 100%;" onclick="saveRoleList('speakers')">Save Speakers</button>
+      </div>
+      <div>
+       <h3 style="margin: 0 0 12px 0; font-size: 18px;">🙋 Volunteers</h3>
+       <textarea id="volunteers-list" placeholder="Enter volunteer names, one per line..." style="width: 100%; min-height: 200px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-family: inherit; font-size: 14px;"></textarea>
+       <button class="button-secondary" style="margin-top: 8px; width: 100%;" onclick="saveRoleList('volunteers')">Save Volunteers</button>
+      </div>
+     </div>
+     <div class="button-group" style="margin-top: 24px;"><button class="action-button" onclick="closeRoleManagementModal()">Done</button>
+     </div>
     </div>
    </div>
   </div><!-- Import Confirmation Modal -->
@@ -1230,6 +1272,13 @@
     let driverSortField = 'date';
     let driverSortAsc = true;
     let pendingImportData = [];
+    
+    // Role lists
+    let roleLists = {
+      drivers: [],
+      speakers: [],
+      volunteers: []
+    };
 
     // Default config
     const defaultConfig = {
@@ -2144,14 +2193,7 @@
         speakerAttendanceField.style.display = 'none';
       }
       
-      if (canAssign) {
-        const count = document.getElementById('speaker-count').value || 1;
-        speakerNameInput.placeholder = count > 1 ? 'Enter names, separate with commas' : 'Enter speaker name';
-      } else if (!needed) {
-        speakerNameInput.placeholder = 'Speaker not needed for this event';
-      } else {
-        speakerNameInput.placeholder = 'Available when event is In Process or Scheduled';
-      }
+      // Note: placeholder removed for select elements
     }
 
     function updateVolunteerAssignmentState() {
@@ -2172,14 +2214,7 @@
         volunteerAttendanceField.style.display = 'none';
       }
       
-      if (canAssign) {
-        const count = document.getElementById('volunteer-count').value || 1;
-        volunteerNameInput.placeholder = count > 1 ? 'Enter names, separate with commas' : 'Enter volunteer names';
-      } else if (!needed) {
-        volunteerNameInput.placeholder = 'Volunteers not needed for this event';
-      } else {
-        volunteerNameInput.placeholder = 'Available when event is In Process or Scheduled';
-      }
+      // Note: placeholder removed for select elements
     }
 
     // Event Modal
@@ -2189,6 +2224,9 @@
       document.getElementById('event-form').reset();
       document.getElementById('delete-button').style.display = 'none';
       document.getElementById('group-history-section').style.display = 'none';
+      
+      // Populate role dropdowns
+      populateRoleDropdowns();
       
       // Reset role sections
       document.getElementById('driver-needed').checked = false;
@@ -2238,21 +2276,39 @@
       document.getElementById('driver-needed').checked = currentEvent.driver_needed || false;
       document.getElementById('driver-count').value = currentEvent.driver_count || 1;
       document.getElementById('refrigerated-van-needed').checked = currentEvent.refrigerated_van_needed || false;
-      document.getElementById('driver-name').value = currentEvent.driver_name_assigned || '';
+      // Set selected drivers (handle both string and array)
+      const driverNames = currentEvent.driver_name_assigned || '';
+      const driverArray = Array.isArray(driverNames) ? driverNames : (driverNames ? driverNames.split(',').map(s => s.trim()) : []);
+      const driverSelect = document.getElementById('driver-name');
+      Array.from(driverSelect.options).forEach(option => {
+        option.selected = driverArray.includes(option.value);
+      });
       document.getElementById('driver-present').checked = currentEvent.driver_present || false;
       toggleDriverSection();
       
       // Speaker section
       document.getElementById('speaker-needed').checked = currentEvent.speaker_needed || false;
       document.getElementById('speaker-count').value = currentEvent.speaker_count || 1;
-      document.getElementById('speaker-name').value = currentEvent.speaker_name_assigned || '';
+      // Set selected speakers
+      const speakerNames = currentEvent.speaker_name_assigned || '';
+      const speakerArray = Array.isArray(speakerNames) ? speakerNames : (speakerNames ? speakerNames.split(',').map(s => s.trim()) : []);
+      const speakerSelect = document.getElementById('speaker-name');
+      Array.from(speakerSelect.options).forEach(option => {
+        option.selected = speakerArray.includes(option.value);
+      });
       document.getElementById('speaker-present').checked = currentEvent.speaker_present || false;
       toggleSpeakerSection();
       
       // Volunteer section
       document.getElementById('volunteer-needed').checked = currentEvent.volunteer_needed || false;
       document.getElementById('volunteer-count').value = currentEvent.volunteer_count || 1;
-      document.getElementById('volunteer-name').value = currentEvent.volunteer_name_assigned || '';
+      // Set selected volunteers
+      const volunteerNames = currentEvent.volunteer_name_assigned || '';
+      const volunteerArray = Array.isArray(volunteerNames) ? volunteerNames : (volunteerNames ? volunteerNames.split(',').map(s => s.trim()) : []);
+      const volunteerSelect = document.getElementById('volunteer-name');
+      Array.from(volunteerSelect.options).forEach(option => {
+        option.selected = volunteerArray.includes(option.value);
+      });
       document.getElementById('volunteer-present').checked = currentEvent.volunteer_present || false;
       toggleVolunteerSection();
       
@@ -2349,15 +2405,15 @@
         driver_needed: document.getElementById('driver-needed').checked,
         driver_count: parseInt(document.getElementById('driver-count').value) || 1,
         refrigerated_van_needed: document.getElementById('refrigerated-van-needed').checked,
-        driver_name_assigned: document.getElementById('driver-name').value,
+        driver_name_assigned: Array.from(document.getElementById('driver-name').selectedOptions).map(opt => opt.value).filter(v => v).join(', '),
         driver_present: document.getElementById('driver-present').checked,
         speaker_needed: document.getElementById('speaker-needed').checked,
         speaker_count: parseInt(document.getElementById('speaker-count').value) || 1,
-        speaker_name_assigned: document.getElementById('speaker-name').value,
+        speaker_name_assigned: Array.from(document.getElementById('speaker-name').selectedOptions).map(opt => opt.value).filter(v => v).join(', '),
         speaker_present: document.getElementById('speaker-present').checked,
         volunteer_needed: document.getElementById('volunteer-needed').checked,
         volunteer_count: parseInt(document.getElementById('volunteer-count').value) || 1,
-        volunteer_name_assigned: document.getElementById('volunteer-name').value,
+        volunteer_name_assigned: Array.from(document.getElementById('volunteer-name').selectedOptions).map(opt => opt.value).filter(v => v).join(', '),
         volunteer_present: document.getElementById('volunteer-present').checked,
         status: document.getElementById('event-status').value,
         photo_followup_done: document.getElementById('photo-followup').checked,
@@ -3074,6 +3130,175 @@
       } else {
         showToast(`Imported ${successCount} events, ${errorCount} failed - check console (F12)`, 'error');
       }
+    }
+
+    // Role Management Functions
+    function openRoleManagementModal() {
+      loadRoleLists();
+      document.getElementById('role-management-modal').classList.add('active');
+    }
+
+    function closeRoleManagementModal() {
+      document.getElementById('role-management-modal').classList.remove('active');
+    }
+
+    function loadRoleLists() {
+      if (!database) {
+        // Fallback to localStorage
+        const stored = localStorage.getItem('roleLists');
+        if (stored) {
+          try {
+            roleLists = JSON.parse(stored);
+          } catch (e) {
+            console.error('Error parsing stored role lists:', e);
+          }
+        }
+        populateRoleManagementFields();
+        return;
+      }
+
+      database.ref('roleLists').once('value')
+        .then(snapshot => {
+          const data = snapshot.val();
+          if (data) {
+            roleLists = {
+              drivers: data.drivers || [],
+              speakers: data.speakers || [],
+              volunteers: data.volunteers || []
+            };
+          }
+          populateRoleManagementFields();
+          populateRoleDropdowns();
+        })
+        .catch(error => {
+          console.error('Error loading role lists:', error);
+          // Fallback to localStorage
+          const stored = localStorage.getItem('roleLists');
+          if (stored) {
+            try {
+              roleLists = JSON.parse(stored);
+            } catch (e) {
+              console.error('Error parsing stored role lists:', e);
+            }
+          }
+          populateRoleManagementFields();
+          populateRoleDropdowns();
+        });
+    }
+
+    function populateRoleManagementFields() {
+      document.getElementById('drivers-list').value = roleLists.drivers.join('\n');
+      document.getElementById('speakers-list').value = roleLists.speakers.join('\n');
+      document.getElementById('volunteers-list').value = roleLists.volunteers.join('\n');
+    }
+
+    function populateRoleDropdowns() {
+      // Populate driver dropdown
+      const driverSelect = document.getElementById('driver-name');
+      if (driverSelect) {
+        driverSelect.innerHTML = '<option value="">-- Select Driver(s) --</option>' +
+          roleLists.drivers.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+      }
+
+      // Populate speaker dropdown
+      const speakerSelect = document.getElementById('speaker-name');
+      if (speakerSelect) {
+        speakerSelect.innerHTML = '<option value="">-- Select Speaker(s) --</option>' +
+          roleLists.speakers.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+      }
+
+      // Populate volunteer dropdown
+      const volunteerSelect = document.getElementById('volunteer-name');
+      if (volunteerSelect) {
+        volunteerSelect.innerHTML = '<option value="">-- Select Volunteer(s) --</option>' +
+          roleLists.volunteers.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+      }
+    }
+
+    function saveRoleList(roleType) {
+      const textareaId = `${roleType}-list`;
+      const textarea = document.getElementById(textareaId);
+      const names = textarea.value.split('\n')
+        .map(line => line.trim())
+        .filter(line => line.length > 0);
+      
+      roleLists[roleType] = names;
+      
+      // Save to Firebase
+      if (database) {
+        database.ref('roleLists').set(roleLists)
+          .then(() => {
+            showToast(`${roleType.charAt(0).toUpperCase() + roleType.slice(1)} list saved successfully!`, 'success');
+            populateRoleDropdowns();
+          })
+          .catch(error => {
+            console.error('Error saving role lists to Firebase:', error);
+            // Fallback to localStorage
+            localStorage.setItem('roleLists', JSON.stringify(roleLists));
+            showToast(`${roleType.charAt(0).toUpperCase() + roleType.slice(1)} list saved locally!`, 'success');
+            populateRoleDropdowns();
+          });
+      } else {
+        // Fallback to localStorage
+        localStorage.setItem('roleLists', JSON.stringify(roleLists));
+        showToast(`${roleType.charAt(0).toUpperCase() + roleType.slice(1)} list saved locally!`, 'success');
+        populateRoleDropdowns();
+      }
+    }
+
+    function exportRoleLists() {
+      const data = {
+        drivers: roleLists.drivers.join('\n'),
+        speakers: roleLists.speakers.join('\n'),
+        volunteers: roleLists.volunteers.join('\n')
+      };
+      
+      const content = `DRIVERS\n${data.drivers}\n\nSPEAKERS\n${data.speakers}\n\nVOLUNTEERS\n${data.volunteers}`;
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'role-lists.txt';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importRoleListsFromFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target.result;
+        const lines = content.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+        
+        let currentSection = null;
+        const imported = { drivers: [], speakers: [], volunteers: [] };
+        
+        lines.forEach(line => {
+          if (line.toUpperCase() === 'DRIVERS') {
+            currentSection = 'drivers';
+          } else if (line.toUpperCase() === 'SPEAKERS') {
+            currentSection = 'speakers';
+          } else if (line.toUpperCase() === 'VOLUNTEERS') {
+            currentSection = 'volunteers';
+          } else if (currentSection) {
+            imported[currentSection].push(line);
+          }
+        });
+        
+        // If no section headers, assume all lines are for all roles
+        if (!imported.drivers.length && !imported.speakers.length && !imported.volunteers.length) {
+          imported.drivers = [...lines];
+          imported.speakers = [...lines];
+          imported.volunteers = [...lines];
+        }
+        
+        roleLists = imported;
+        populateRoleManagementFields();
+        showToast('Role lists imported! Click "Save" buttons to save each list.', 'success');
+      };
+      reader.readAsText(file);
     }
   </script>
  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9a6c9564c76d457e',t:'MTc2NDUyOTE4My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
