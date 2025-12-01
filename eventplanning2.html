@@ -17,7 +17,7 @@
       console.log('Google Maps API loaded');
     };
   </script>
-  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB6O8WSqMSNJJv4wDG_8HTNpnegR1hBYo&callback=initMap" onerror="console.warn('Google Maps API failed to load')"></script>
+  <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAB6O8WSqMSNJJv4wDG_8HTNpnegR1hBYo&callback=initMap&loading=async" onerror="console.warn('Google Maps API failed to load')"></script>
   <style>
     body {
       box-sizing: border-box;
@@ -1612,7 +1612,7 @@
     async function initApp() {
       console.log('=== INITIALIZING APP ===');
       
-      // Initialize Element SDK FIRST and SYNCHRONOUSLY
+      // Initialize Element SDK FIRST and SYNCHRONOUSLY (if available)
       if (window.elementSdk) {
         console.log('Initializing Element SDK...');
         window.elementSdk.init({
@@ -1644,9 +1644,8 @@
           ])
         });
         console.log('✓ Element SDK initialized');
-      } else {
-        console.warn('Element SDK not available');
       }
+      // Element SDK is optional - no warning needed if not available
 
       // Load data from Firebase Realtime Database
       if (database) {
