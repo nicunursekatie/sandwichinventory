@@ -1060,10 +1060,18 @@
        </label>
       </div>
      </div>
-     <div id="map-container" style="width: 100%; height: 600px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); background: #f5f7fa; display: flex; align-items: center; justify-content: center;">
-      <div style="text-align: center; color: #64748b;">
-       <div style="font-size: 48px; margin-bottom: 16px;">🗺️</div>
-       <div>Loading map...</div>
+     <div style="display: flex; gap: 24px; align-items: flex-start;">
+      <div id="map-container" style="flex: 1; height: 600px; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); background: #f5f7fa; display: flex; align-items: center; justify-content: center; min-width: 0;">
+       <div style="text-align: center; color: #64748b;">
+        <div style="font-size: 48px; margin-bottom: 16px;">🗺️</div>
+        <div>Loading map...</div>
+       </div>
+      </div>
+      <div id="map-events-list" style="width: 400px; height: 600px; overflow-y: auto; padding-right: 8px;">
+       <div style="text-align: center; color: #64748b; padding: 24px;">
+        <div style="font-size: 24px; margin-bottom: 8px;">📋</div>
+        <div>Loading events...</div>
+       </div>
       </div>
      </div>
      <div id="map-legend" style="margin-top: 16px; padding: 16px; background: white; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
@@ -2727,6 +2735,7 @@
     // Map View
     function renderMapView() {
       const container = document.getElementById('map-container');
+      const listContainer = document.getElementById('map-events-list');
       if (!container) return;
 
       // Filter events
@@ -2747,6 +2756,9 @@
         }
         return false;
       });
+
+      // Render the event list
+      renderMapEventList(eventsToShow);
 
       // Check if Google Maps API is available and working
       if (!window.google || !window.google.maps) {
@@ -2780,6 +2792,9 @@
 
       if (eventsToShow.length === 0) {
         container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 48px;"><div style="font-size: 48px; margin-bottom: 16px;">📍</div><div>No events to display on the map</div></div>';
+        if (listContainer) {
+          listContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 48px;"><div style="font-size: 48px; margin-bottom: 16px;">📍</div><div>No events to display</div></div>';
+        }
         return;
       }
 
@@ -2876,9 +2891,56 @@
       });
     }
 
+    // Render the event list next to the map
+    function renderMapEventList(eventsToShow) {
+      const listContainer = document.getElementById('map-events-list');
+      if (!listContainer) return;
+
+      if (eventsToShow.length === 0) {
+        listContainer.innerHTML = '<div style="text-align: center; color: #64748b; padding: 48px;"><div style="font-size: 48px; margin-bottom: 16px;">📍</div><div>No events to display</div></div>';
+        return;
+      }
+
+      // Sort by date
+      const sortedEvents = [...eventsToShow].sort((a, b) => {
+        const dateA = new Date(a.event_date);
+        const dateB = new Date(b.event_date);
+        return dateA - dateB;
+      });
+
+      let html = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+      
+      sortedEvents.forEach(event => {
+        const address = `${event.event_address || ''} ${event.event_city || ''} ${event.event_zip || ''}`.trim();
+        const needsList = [];
+        if (event.driver_needed && !event.self_transport && !event.driver_name_assigned) needsList.push('🚗 Driver');
+        if (event.speaker_needed && !event.speaker_name_assigned) needsList.push('🎤 Speaker');
+        if (event.volunteer_needed && !event.volunteer_name_assigned) needsList.push('👤 Volunteer');
+        
+        const statusColor = event.status === 'Scheduled' ? '#236383' : event.status === 'In Process' ? '#fbad3f' : '#059669';
+        // Red if needs staffing
+        const finalColor = (needsList.length > 0 && event.status === 'Scheduled') ? '#a31c41' : statusColor;
+        const needsIndicator = needsList.length > 0 ? `<div style="color: #a31c41; font-weight: 600; font-size: 12px; margin-top: 4px;">Needs: ${needsList.join(', ')}</div>` : '';
+        
+        html += `
+          <div onclick="openEventDetail('${event.__backendId}')" style="padding: 16px; background: white; border-left: 4px solid ${finalColor}; border-radius: 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'; this.style.transform='translateX(-2px)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'; this.style.transform='translateX(0)'">
+            <div style="font-weight: 600; font-size: 16px; color: #1a202c; margin-bottom: 8px;">${escapeHtml(event.group_name)}</div>
+            <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">📅 ${formatDate(event.event_date)}</div>
+            ${event.event_start_time ? `<div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">⏰ ${formatTime12Hour(event.event_start_time)}${event.event_end_time ? ` - ${formatTime12Hour(event.event_end_time)}` : ''}</div>` : ''}
+            <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">📍 ${escapeHtml(address)}</div>
+            ${needsIndicator}
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      listContainer.innerHTML = html;
+    }
+
     // Fallback list view when Maps API is not available
     function renderMapAsList() {
       const container = document.getElementById('map-container');
+      const listContainer = document.getElementById('map-events-list');
       if (!container) return;
 
       const showScheduled = document.getElementById('map-filter-scheduled')?.checked !== false;
@@ -2899,63 +2961,31 @@
         return false;
       });
 
-      // Show helpful message at the top
-      let html = `
-        <div style="margin-bottom: 16px; padding: 16px; background: #fef3c7; border-left: 4px solid #fbad3f; border-radius: 8px;">
-          <div style="font-weight: 600; margin-bottom: 8px; color: #1a202c;">📍 Map View Unavailable</div>
-          <div style="font-size: 14px; color: #64748b; margin-bottom: 12px;">
-            Google Maps API is not enabled. Showing events in list format instead.
+      // Show helpful message in map container
+      let mapHtml = `
+        <div style="padding: 24px; text-align: center;">
+          <div style="margin-bottom: 16px; padding: 16px; background: #fef3c7; border-left: 4px solid #fbad3f; border-radius: 8px;">
+            <div style="font-weight: 600; margin-bottom: 8px; color: #1a202c;">📍 Map View Unavailable</div>
+            <div style="font-size: 14px; color: #64748b; margin-bottom: 12px;">
+              Google Maps API is not enabled.
+            </div>
+            <details style="font-size: 13px; color: #64748b;">
+              <summary style="cursor: pointer; color: #236383; font-weight: 600;">How to enable map view</summary>
+              <ol style="margin-top: 8px; padding-left: 20px; line-height: 1.8; text-align: left;">
+                <li>Go to <a href="https://console.cloud.google.com/apis/library" target="_blank" style="color: #236383;">Google Cloud Console → APIs & Services → Library</a></li>
+                <li>Search for "Maps JavaScript API"</li>
+                <li>Click on it and press "Enable"</li>
+                <li>Wait a few minutes, then refresh this page</li>
+              </ol>
+            </details>
           </div>
-          <details style="font-size: 13px; color: #64748b;">
-            <summary style="cursor: pointer; color: #236383; font-weight: 600;">How to enable map view</summary>
-            <ol style="margin-top: 8px; padding-left: 20px; line-height: 1.8;">
-              <li>Go to <a href="https://console.cloud.google.com/apis/library" target="_blank" style="color: #236383;">Google Cloud Console → APIs & Services → Library</a></li>
-              <li>Search for "Maps JavaScript API"</li>
-              <li>Click on it and press "Enable"</li>
-              <li>Wait a few minutes, then refresh this page</li>
-            </ol>
-          </details>
         </div>
       `;
 
-      if (eventsToShow.length === 0) {
-        html += '<div style="text-align: center; color: #64748b; padding: 48px;"><div style="font-size: 48px; margin-bottom: 16px;">📍</div><div>No events to display</div></div>';
-        container.innerHTML = html;
-        return;
-      }
+      container.innerHTML = mapHtml;
 
-      // Sort by date
-      eventsToShow.sort((a, b) => {
-        const dateA = new Date(a.event_date);
-        const dateB = new Date(b.event_date);
-        return dateA - dateB;
-      });
-
-      html += '<div style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto; padding: 8px;">';
-      
-      eventsToShow.forEach(event => {
-        const address = `${event.event_address || ''} ${event.event_city || ''} ${event.event_zip || ''}`.trim();
-        const needsList = [];
-        if (event.driver_needed && !event.self_transport && !event.driver_name_assigned) needsList.push('🚗 Driver');
-        if (event.speaker_needed && !event.speaker_name_assigned) needsList.push('🎤 Speaker');
-        if (event.volunteer_needed && !event.volunteer_name_assigned) needsList.push('👤 Volunteer');
-        
-        const statusColor = event.status === 'Scheduled' ? '#236383' : event.status === 'In Process' ? '#fbad3f' : '#059669';
-        const needsIndicator = needsList.length > 0 ? `<div style="color: #a31c41; font-weight: 600; font-size: 12px; margin-top: 4px;">Needs: ${needsList.join(', ')}</div>` : '';
-        
-        html += `
-          <div onclick="openEventDetail('${event.__backendId}')" style="padding: 16px; background: white; border-left: 4px solid ${statusColor}; border-radius: 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'">
-            <div style="font-weight: 600; font-size: 16px; color: #1a202c; margin-bottom: 8px;">${escapeHtml(event.group_name)}</div>
-            <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">📅 ${formatDate(event.event_date)}</div>
-            ${event.event_start_time ? `<div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">⏰ ${formatTime12Hour(event.event_start_time)}${event.event_end_time ? ` - ${formatTime12Hour(event.event_end_time)}` : ''}</div>` : ''}
-            <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">📍 ${escapeHtml(address)}</div>
-            ${needsIndicator}
-          </div>
-        `;
-      });
-      
-      html += '</div>';
-      container.innerHTML = html;
+      // Render the event list in the side panel
+      renderMapEventList(eventsToShow);
     }
 
     // Calendar View
