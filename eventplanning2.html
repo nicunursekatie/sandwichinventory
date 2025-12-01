@@ -93,6 +93,32 @@
       text-align: center;
     }
 
+    .staffing-subtab-button {
+      background: none;
+      border: none;
+      padding: 12px 24px;
+      font-size: 15px;
+      font-weight: 500;
+      color: #64748b;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+
+    .staffing-subtab-button:hover {
+      color: #236383;
+      background: #f8fafc;
+    }
+
+    .staffing-subtab-button.active {
+      color: #236383;
+      border-bottom-color: #fbad3f;
+    }
+
+    .staffing-subtab-content {
+      display: block;
+    }
+
     /* Main content area */
     .main-content {
       flex: 1;
@@ -820,7 +846,7 @@
    <header class="dashboard-header">
     <h1 id="dashboard-title">Event Planning Dashboard</h1>
    </header><!-- Tabs -->
-   <nav class="tabs-container"><button class="tab-button active" data-tab="attention"> <span id="attention-tab-label">Attention Needed</span> <span class="tab-badge" id="attention-badge">0</span> </button> <button class="tab-button" data-tab="pipeline"> <span id="pipeline-tab-label">Pipeline &amp; Calendar</span> </button> <button class="tab-button" data-tab="drivers"> <span id="drivers-tab-label">Driver Needs</span> <span class="tab-badge" id="drivers-badge">0</span> </button> <button class="tab-button" data-tab="completed"> <span id="completed-tab-label">Completed Events</span> <span class="tab-badge" id="completed-badge">0</span> </button> <button class="tab-button" data-tab="reports"> <span id="reports-tab-label">Reports &amp; Trends</span> </button>
+   <nav class="tabs-container"><button class="tab-button active" data-tab="attention"> <span id="attention-tab-label">Attention Needed</span> <span class="tab-badge" id="attention-badge">0</span> </button> <button class="tab-button" data-tab="pipeline"> <span id="pipeline-tab-label">Pipeline &amp; Calendar</span> </button> <button class="tab-button" data-tab="staffing"> <span id="staffing-tab-label">Staffing</span> <span class="tab-badge" id="staffing-badge">0</span> </button> <button class="tab-button" data-tab="completed"> <span id="completed-tab-label">Completed Events</span> <span class="tab-badge" id="completed-badge">0</span> </button> <button class="tab-button" data-tab="reports"> <span id="reports-tab-label">Reports &amp; Trends</span> </button>
    </nav><!-- Main Content -->
    <main class="main-content"><!-- Attention Needed Tab -->
     <div class="tab-content active" id="attention-tab">
@@ -830,7 +856,14 @@
       </div>
      </div><input type="file" id="excel-import" accept=".xlsx,.xls" style="display: none;" onchange="handleExcelImport(event)"> <!-- Next 7 Days Quick View -->
      <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 32px; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-      <h3 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 600; color: #1a202c; display: flex; align-items: center; gap: 12px;"><span>📅 Next 7 Days</span> <span class="card-count" style="background: #236383;" id="next-7-days-count">0</span></h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+       <h3 style="margin: 0; font-size: 20px; font-weight: 600; color: #1a202c; display: flex; align-items: center; gap: 12px;"><span>📅 Next 7 Days</span> <span class="card-count" style="background: #236383;" id="next-7-days-count">0</span></h3>
+       <div style="display: flex; align-items: center; gap: 8px;">
+        <button onclick="changeWeek(-1)" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; cursor: pointer; font-size: 16px; color: #236383; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f8fafc'">←</button>
+        <button onclick="changeWeek(0)" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 16px; cursor: pointer; font-size: 14px; color: #236383; font-weight: 500; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f8fafc'">Today</button>
+        <button onclick="changeWeek(1)" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 12px; cursor: pointer; font-size: 16px; color: #236383; transition: all 0.2s;" onmouseover="this.style.background='#e2e8f0'" onmouseout="this.style.background='#f8fafc'">→</button>
+       </div>
+      </div>
       <div id="next-7-days-calendar"></div>
      </div>
      <div class="attention-grid"><!-- New Requests -->
@@ -895,26 +928,77 @@
        </table>
       </div>
      </div>
-    </div><!-- Driver Needs Tab -->
-    <div class="tab-content" id="drivers-tab">
-     <h2 style="margin: 0 0 24px 0; font-size: 24px; color: #1a202c;">Events Needing Drivers</h2>
-     <div class="pipeline-table">
-      <div class="table-wrapper">
-       <table>
-        <thead>
-         <tr>
-          <th style="cursor: pointer;" onclick="sortDriverNeeds('date')">Date ↕</th>
-          <th>Time</th>
-          <th>Group / Department</th>
-          <th style="cursor: pointer;" onclick="sortDriverNeeds('area')">Area/Zip ↕</th>
-          <th>Address</th>
-          <th>Sandwiches</th>
-          <th>Destination</th>
-          <th>Action</th>
-         </tr>
-        </thead>
-        <tbody id="drivers-table-body"></tbody>
-       </table>
+    </div><!-- Staffing Tab -->
+    <div class="tab-content" id="staffing-tab">
+     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="margin: 0; font-size: 24px; color: #1a202c;">Staffing Needs</h2>
+     </div>
+     <div style="display: flex; gap: 8px; margin-bottom: 24px; border-bottom: 2px solid #e2e8f0; padding-bottom: 0;">
+      <button class="staffing-subtab-button" id="staffing-subtab-drivers" onclick="switchStaffingSubTab('drivers')" style="background: none; border: none; padding: 12px 24px; font-size: 15px; font-weight: 500; color: #64748b; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s;">🚗 Drivers <span class="tab-badge" id="drivers-badge">0</span></button>
+      <button class="staffing-subtab-button" id="staffing-subtab-speakers" onclick="switchStaffingSubTab('speakers')" style="background: none; border: none; padding: 12px 24px; font-size: 15px; font-weight: 500; color: #64748b; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s;">🎤 Speakers <span class="tab-badge" id="speakers-badge">0</span></button>
+      <button class="staffing-subtab-button" id="staffing-subtab-volunteers" onclick="switchStaffingSubTab('volunteers')" style="background: none; border: none; padding: 12px 24px; font-size: 15px; font-weight: 500; color: #64748b; cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s;">👤 Volunteers <span class="tab-badge" id="volunteers-badge">0</span></button>
+     </div>
+     <div id="staffing-content-drivers" class="staffing-subtab-content">
+      <div class="pipeline-table">
+       <div class="table-wrapper">
+        <table>
+         <thead>
+          <tr>
+           <th style="cursor: pointer;" onclick="sortStaffingNeeds('date')">Date ↕</th>
+           <th>Time</th>
+           <th>Group / Department</th>
+           <th style="cursor: pointer;" onclick="sortStaffingNeeds('area')">Area/Zip ↕</th>
+           <th>Address</th>
+           <th>Sandwiches</th>
+           <th>Destination</th>
+           <th>Action</th>
+          </tr>
+         </thead>
+         <tbody id="drivers-table-body"></tbody>
+        </table>
+       </div>
+      </div>
+     </div>
+     <div id="staffing-content-speakers" class="staffing-subtab-content" style="display: none;">
+      <div class="pipeline-table">
+       <div class="table-wrapper">
+        <table>
+         <thead>
+          <tr>
+           <th style="cursor: pointer;" onclick="sortStaffingNeeds('date')">Date ↕</th>
+           <th>Time</th>
+           <th>Group / Department</th>
+           <th style="cursor: pointer;" onclick="sortStaffingNeeds('area')">Area/Zip ↕</th>
+           <th>Address</th>
+           <th>Sandwiches</th>
+           <th>Destination</th>
+           <th>Action</th>
+          </tr>
+         </thead>
+         <tbody id="speakers-table-body"></tbody>
+        </table>
+       </div>
+      </div>
+     </div>
+     <div id="staffing-content-volunteers" class="staffing-subtab-content" style="display: none;">
+      <div class="pipeline-table">
+       <div class="table-wrapper">
+        <table>
+         <thead>
+          <tr>
+           <th style="cursor: pointer;" onclick="sortStaffingNeeds('date')">Date ↕</th>
+           <th>Time</th>
+           <th>Group / Department</th>
+           <th style="cursor: pointer;" onclick="sortStaffingNeeds('area')">Area/Zip ↕</th>
+           <th>Address</th>
+           <th>Sandwiches</th>
+           <th>Destination</th>
+           <th>Action</th>
+          </tr>
+         </thead>
+         <tbody id="volunteers-table-body"></tbody>
+        </table>
+       </div>
       </div>
      </div>
     </div><!-- Completed Events Tab -->
@@ -1310,6 +1394,8 @@
     let allEvents = [];
     let currentEvent = null;
     let currentTab = 'attention';
+    let weekOffset = 0; // 0 = current week, 1 = next week, -1 = previous week, etc.
+    let staffingSubTab = 'drivers'; // 'drivers', 'speakers', or 'volunteers'
     let driverSortField = 'date';
     let driverSortAsc = true;
     let pendingImportData = [];
@@ -1479,7 +1565,10 @@
             document.getElementById('dashboard-title').textContent = config.dashboard_title || defaultConfig.dashboard_title;
             document.getElementById('attention-tab-label').textContent = config.attention_section_title || defaultConfig.attention_section_title;
             document.getElementById('pipeline-tab-label').textContent = config.pipeline_section_title || defaultConfig.pipeline_section_title;
-            document.getElementById('drivers-tab-label').textContent = config.driver_section_title || defaultConfig.driver_section_title;
+            // Staffing tab label is now fixed, but keep for compatibility
+            if (document.getElementById('staffing-tab-label')) {
+              document.getElementById('staffing-tab-label').textContent = 'Staffing';
+            }
             document.getElementById('completed-tab-label').textContent = config.completed_section_title || defaultConfig.completed_section_title;
             document.getElementById('reports-tab-label').textContent = config.reports_section_title || defaultConfig.reports_section_title;
           },
@@ -1536,6 +1625,15 @@
       document.querySelector(`[data-tab="${tab}"]`).classList.add('active');
       document.getElementById(`${tab}-tab`).classList.add('active');
       
+      // Initialize staffing sub-tabs when switching to staffing tab
+      if (tab === 'staffing') {
+        staffingSubTab = 'drivers';
+        document.querySelectorAll('.staffing-subtab-button').forEach(btn => btn.classList.remove('active'));
+        document.querySelectorAll('.staffing-subtab-content').forEach(content => content.style.display = 'none');
+        document.getElementById('staffing-subtab-drivers').classList.add('active');
+        document.getElementById('staffing-content-drivers').style.display = 'block';
+      }
+      
       renderCurrentView();
     }
 
@@ -1547,8 +1645,8 @@
         case 'pipeline':
           renderPipeline();
           break;
-        case 'drivers':
-          renderDriverNeeds();
+        case 'staffing':
+          renderStaffingNeeds();
           break;
         case 'completed':
           renderCompletedEvents();
@@ -1606,13 +1704,24 @@
       renderEventList('upcoming-missing-list', upcomingMissing, renderUpcomingMissingItem);
     }
 
+    function changeWeek(offset) {
+      if (offset === 0) {
+        weekOffset = 0; // Reset to current week
+      } else {
+        weekOffset += offset;
+      }
+      renderNext7Days();
+    }
+
     function renderNext7Days() {
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       
-      const sevenDaysFromNow = new Date(today.getTime() + 7 * 24 * 60 * 60 * 1000);
+      // Calculate the start date based on week offset
+      const weekStart = new Date(today.getTime() + weekOffset * 7 * 24 * 60 * 60 * 1000);
+      const weekEnd = new Date(weekStart.getTime() + 7 * 24 * 60 * 60 * 1000);
 
-      // Get events in next 7 days (excluding canceled)
+      // Get events in the selected week (excluding canceled)
       const upcomingEvents = allEvents.filter(e => {
         if (e.status === 'Canceled') return false;
         if (!e.event_date) return false;
@@ -1620,7 +1729,7 @@
         const eventDate = new Date(e.event_date);
         eventDate.setHours(0, 0, 0, 0);
         
-        return eventDate >= today && eventDate < sevenDaysFromNow;
+        return eventDate >= weekStart && eventDate < weekEnd;
       });
 
       // Update count badge
@@ -1648,15 +1757,20 @@
       // Generate 7 days
       const days = [];
       for (let i = 0; i < 7; i++) {
-        const date = new Date(today.getTime() + i * 24 * 60 * 60 * 1000);
+        const date = new Date(weekStart.getTime() + i * 24 * 60 * 60 * 1000);
         const dateKey = date.toISOString().split('T')[0];
         const dayEvents = eventsByDate[dateKey] || [];
+        
+        // Check if this date is today
+        const todayCheck = new Date();
+        todayCheck.setHours(0, 0, 0, 0);
+        const isToday = dateKey === todayCheck.toISOString().split('T')[0];
         
         days.push({
           date: date,
           dateKey: dateKey,
           events: dayEvents,
-          isToday: i === 0
+          isToday: isToday
         });
       }
 
@@ -1664,7 +1778,8 @@
       const container = document.getElementById('next-7-days-calendar');
       
       if (upcomingEvents.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">📅</div><div>No events scheduled in the next 7 days</div></div>';
+        const weekLabel = weekOffset === 0 ? 'the next 7 days' : weekOffset === 1 ? 'next week' : weekOffset === -1 ? 'last week' : `week ${weekOffset > 0 ? '+' : ''}${weekOffset}`;
+        container.innerHTML = `<div class="empty-state"><div class="empty-state-icon">📅</div><div>No events scheduled in ${weekLabel}</div></div>`;
         return;
       }
 
@@ -1730,13 +1845,13 @@
       // Check for unmet needs
       const unmetNeeds = [];
       if (event.driver_needed && !event.self_transport && (!event.driver_name_assigned || event.driver_name_assigned.trim() === '')) {
-        unmetNeeds.push('D');
+        unmetNeeds.push('🚗');
       }
       if (event.speaker_needed && (!event.speaker_name_assigned || event.speaker_name_assigned.trim() === '')) {
-        unmetNeeds.push('S');
+        unmetNeeds.push('🎤');
       }
       if (event.volunteer_needed && (!event.volunteer_name_assigned || event.volunteer_name_assigned.trim() === '')) {
-        unmetNeeds.push('V');
+        unmetNeeds.push('👤');
       }
 
       // Build assigned people display
@@ -2063,13 +2178,52 @@
     }
 
     // Driver Needs View
+    function switchStaffingSubTab(subTab) {
+      staffingSubTab = subTab;
+      
+      // Update sub-tab buttons
+      document.querySelectorAll('.staffing-subtab-button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById(`staffing-subtab-${subTab}`).classList.add('active');
+      
+      // Update sub-tab content
+      document.querySelectorAll('.staffing-subtab-content').forEach(content => content.style.display = 'none');
+      document.getElementById(`staffing-content-${subTab}`).style.display = 'block';
+      
+      renderStaffingNeeds();
+    }
+
+    function renderStaffingNeeds() {
+      // Update main staffing badge with total needs
+      const needsDriver = allEvents.filter(e => 
+        e.status === 'Scheduled' && e.driver_needed && !e.self_transport && (!e.driver_name_assigned || e.driver_name_assigned.trim() === '')
+      );
+      const needsSpeaker = allEvents.filter(e => 
+        e.status === 'Scheduled' && e.speaker_needed && (!e.speaker_name_assigned || e.speaker_name_assigned.trim() === '')
+      );
+      const needsVolunteer = allEvents.filter(e => 
+        e.status === 'Scheduled' && e.volunteer_needed && (!e.volunteer_name_assigned || e.volunteer_name_assigned.trim() === '')
+      );
+      
+      const totalNeeds = needsDriver.length + needsSpeaker.length + needsVolunteer.length;
+      document.getElementById('staffing-badge').textContent = totalNeeds;
+      document.getElementById('drivers-badge').textContent = needsDriver.length;
+      document.getElementById('speakers-badge').textContent = needsSpeaker.length;
+      document.getElementById('volunteers-badge').textContent = needsVolunteer.length;
+
+      // Render the active sub-tab
+      if (staffingSubTab === 'drivers') {
+        renderDriverNeeds();
+      } else if (staffingSubTab === 'speakers') {
+        renderSpeakerNeeds();
+      } else if (staffingSubTab === 'volunteers') {
+        renderVolunteerNeeds();
+      }
+    }
+
     function renderDriverNeeds() {
       let needsDriver = allEvents.filter(e => 
         e.status === 'Scheduled' && e.driver_needed && !e.self_transport && (!e.driver_name_assigned || e.driver_name_assigned.trim() === '')
       );
-
-      // Update badge
-      document.getElementById('drivers-badge').textContent = needsDriver.length;
 
       // Sort
       needsDriver.sort((a, b) => {
@@ -2107,8 +2261,8 @@
               ${needsRefrigeratedVan ? '<br><span style="font-size: 11px; color: #a31c41; font-weight: 600;">❄️ Fridge Van</span>' : ''}
             </td>
             <td>
-              ${event.event_start_time ? event.event_start_time : '—'} - ${event.event_end_time ? event.event_end_time : '—'}
-              ${event.pickup_time ? `<br><span style="font-size: 11px; color: #64748b;">Pickup: ${event.pickup_time}</span>` : ''}
+              ${event.event_start_time ? formatTime12Hour(event.event_start_time) : '—'} - ${event.event_end_time ? formatTime12Hour(event.event_end_time) : '—'}
+              ${event.pickup_time ? `<br><span style="font-size: 11px; color: #64748b;">Pickup: ${formatTime12Hour(event.pickup_time)}</span>` : ''}
             </td>
             <td>
               ${groupDisplay}
