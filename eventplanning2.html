@@ -2570,7 +2570,25 @@
       });
 
       if (!window.google || !window.google.maps) {
-        container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 48px;"><div style="font-size: 48px; margin-bottom: 16px;">🗺️</div><div>Google Maps API is loading...</div><div style="font-size: 12px; margin-top: 8px;">If this persists, check your API key</div></div>';
+        container.innerHTML = `
+          <div style="text-align: center; color: #64748b; padding: 48px;">
+            <div style="font-size: 48px; margin-bottom: 16px;">🗺️</div>
+            <div style="font-weight: 600; margin-bottom: 8px; color: #1a202c;">Google Maps API Not Enabled</div>
+            <div style="font-size: 14px; margin-bottom: 16px; max-width: 500px; margin-left: auto; margin-right: auto;">
+              To enable the map view, you need to activate the Maps JavaScript API in Google Cloud Console:
+            </div>
+            <ol style="text-align: left; max-width: 500px; margin: 0 auto; font-size: 14px; line-height: 1.8;">
+              <li>Go to <a href="https://console.cloud.google.com/apis/library" target="_blank" style="color: #236383;">Google Cloud Console → APIs & Services → Library</a></li>
+              <li>Search for "Maps JavaScript API"</li>
+              <li>Click on it and press "Enable"</li>
+              <li>Wait a few minutes, then refresh this page</li>
+            </ol>
+            <div style="margin-top: 24px; padding: 16px; background: #f8fafc; border-radius: 8px; max-width: 500px; margin-left: auto; margin-right: auto;">
+              <div style="font-weight: 600; margin-bottom: 8px; color: #1a202c;">Alternative: View Events in List Format</div>
+              <button onclick="renderMapAsList()" style="padding: 8px 16px; background: #236383; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">Show Events as List</button>
+            </div>
+          </div>
+        `;
         return;
       }
 
@@ -2675,6 +2693,68 @@
       });
     }
 
+    // Fallback list view when Maps API is not available
+    function renderMapAsList() {
+      const container = document.getElementById('map-container');
+      if (!container) return;
+
+      const showScheduled = document.getElementById('map-filter-scheduled')?.checked !== false;
+      const showUpcoming = document.getElementById('map-filter-upcoming')?.checked !== false;
+      
+      let eventsToShow = allEvents.filter(e => {
+        if (e.status === 'Canceled') return false;
+        if (!e.event_address && !e.event_city) return false;
+        
+        if (showScheduled && e.status === 'Scheduled') return true;
+        if (showUpcoming) {
+          if (!e.event_date) return false;
+          const eventDate = new Date(e.event_date);
+          const thirtyDaysFromNow = new Date();
+          thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
+          return eventDate <= thirtyDaysFromNow && eventDate >= new Date();
+        }
+        return false;
+      });
+
+      if (eventsToShow.length === 0) {
+        container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 48px;"><div style="font-size: 48px; margin-bottom: 16px;">📍</div><div>No events to display</div></div>';
+        return;
+      }
+
+      // Sort by date
+      eventsToShow.sort((a, b) => {
+        const dateA = new Date(a.event_date);
+        const dateB = new Date(b.event_date);
+        return dateA - dateB;
+      });
+
+      let html = '<div style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto; padding: 8px;">';
+      
+      eventsToShow.forEach(event => {
+        const address = `${event.event_address || ''} ${event.event_city || ''} ${event.event_zip || ''}`.trim();
+        const needsList = [];
+        if (event.driver_needed && !event.self_transport && !event.driver_name_assigned) needsList.push('🚗 Driver');
+        if (event.speaker_needed && !event.speaker_name_assigned) needsList.push('🎤 Speaker');
+        if (event.volunteer_needed && !event.volunteer_name_assigned) needsList.push('👤 Volunteer');
+        
+        const statusColor = event.status === 'Scheduled' ? '#236383' : event.status === 'In Process' ? '#fbad3f' : '#059669';
+        const needsIndicator = needsList.length > 0 ? `<div style="color: #a31c41; font-weight: 600; font-size: 12px; margin-top: 4px;">Needs: ${needsList.join(', ')}</div>` : '';
+        
+        html += `
+          <div onclick="openEventDetail('${event.__backendId}')" style="padding: 16px; background: white; border-left: 4px solid ${statusColor}; border-radius: 8px; cursor: pointer; transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.1);" onmouseover="this.style.boxShadow='0 4px 8px rgba(0,0,0,0.15)'" onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.1)'">
+            <div style="font-weight: 600; font-size: 16px; color: #1a202c; margin-bottom: 8px;">${escapeHtml(event.group_name)}</div>
+            <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">📅 ${formatDate(event.event_date)}</div>
+            ${event.event_start_time ? `<div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">⏰ ${formatTime12Hour(event.event_start_time)}${event.event_end_time ? ` - ${formatTime12Hour(event.event_end_time)}` : ''}</div>` : ''}
+            <div style="font-size: 13px; color: #64748b; margin-bottom: 4px;">📍 ${escapeHtml(address)}</div>
+            ${needsIndicator}
+          </div>
+        `;
+      });
+      
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
     // Calendar View
     function changeCalendarMonth(offset) {
       if (offset === 0) {
@@ -2726,12 +2806,12 @@
       // Day headers
       const dayHeaders = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       dayHeaders.forEach(day => {
-        html += `<div style="background: #f8fafc; padding: 12px; text-align: center; font-weight: 600; font-size: 12px; color: #64748b; text-transform: uppercase;">${day}</div>`;
+        html += `<div style="background: #f8fafc; padding: 16px; text-align: center; font-weight: 600; font-size: 16px; color: #64748b; text-transform: uppercase;">${day}</div>`;
       });
 
       // Empty cells for days before month starts
       for (let i = 0; i < firstDay; i++) {
-        html += '<div style="background: white; min-height: 120px; padding: 8px;"></div>';
+        html += '<div style="background: white; min-height: 150px; padding: 12px;"></div>';
       }
 
       // Days of the month
@@ -2740,8 +2820,8 @@
         const dayEvents = eventsByDate[dateKey] || [];
         const isToday = calendarMonthOffset === 0 && day === today.getDate() && currentMonth.getMonth() === today.getMonth();
         
-        html += `<div style="background: white; min-height: 120px; padding: 8px; ${isToday ? 'border: 2px solid #236383;' : ''}">`;
-        html += `<div style="font-weight: ${isToday ? '600' : '500'}; font-size: 14px; color: ${isToday ? '#236383' : '#1a202c'}; margin-bottom: 8px;">${day}</div>`;
+        html += `<div style="background: white; min-height: 150px; padding: 12px; ${isToday ? 'border: 3px solid #236383;' : ''}">`;
+        html += `<div style="font-weight: ${isToday ? '700' : '600'}; font-size: 18px; color: ${isToday ? '#236383' : '#1a202c'}; margin-bottom: 10px;">${day}</div>`;
         
         // Show up to 3 events, then "+X more"
         const eventsToShow = dayEvents.slice(0, 3);
@@ -2754,19 +2834,19 @@
           if (event.volunteer_needed && !event.volunteer_name_assigned) needsList.push('👤');
           
           const statusColor = event.status === 'Scheduled' ? '#236383' : event.status === 'In Process' ? '#fbad3f' : '#059669';
-          const needsIndicator = needsList.length > 0 ? `<span style="color: #a31c41; font-weight: 600;">${needsList.join('')}</span>` : '';
+          const needsIndicator = needsList.length > 0 ? `<span style="color: #a31c41; font-weight: 700; font-size: 16px;">${needsList.join('')}</span>` : '';
           
-          html += `<div onclick="openEventDetail('${event.__backendId}')" style="font-size: 11px; padding: 4px 6px; margin-bottom: 4px; background: ${statusColor}15; border-left: 3px solid ${statusColor}; border-radius: 3px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='${statusColor}25'" onmouseout="this.style.background='${statusColor}15'">`;
-          html += `<div style="font-weight: 600; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${escapeHtml(event.group_name)}</div>`;
+          html += `<div onclick="openEventDetail('${event.__backendId}')" style="font-size: 15px; padding: 8px 10px; margin-bottom: 6px; background: ${statusColor}15; border-left: 4px solid ${statusColor}; border-radius: 4px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.background='${statusColor}25'; this.style.transform='scale(1.02)'" onmouseout="this.style.background='${statusColor}15'; this.style.transform='scale(1)'">`;
+          html += `<div style="font-weight: 600; color: #1a202c; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 15px; margin-bottom: 4px;">${escapeHtml(event.group_name)}</div>`;
           if (event.event_start_time) {
-            html += `<div style="color: #64748b; font-size: 10px;">${formatTime12Hour(event.event_start_time)}</div>`;
+            html += `<div style="color: #64748b; font-size: 13px; margin-bottom: 2px;">${formatTime12Hour(event.event_start_time)}</div>`;
           }
           html += needsIndicator;
           html += '</div>';
         });
         
         if (moreCount > 0) {
-          html += `<div style="font-size: 10px; color: #64748b; font-weight: 600; margin-top: 4px;">+${moreCount} more</div>`;
+          html += `<div style="font-size: 14px; color: #64748b; font-weight: 600; margin-top: 6px;">+${moreCount} more</div>`;
         }
         
         html += '</div>';
