@@ -4,6 +4,10 @@
     "events": {
       ".read": true,
       ".write": true
+    },
+    "roleLists": {
+      ".read": true,
+      ".write": true
     }
   }
 }
