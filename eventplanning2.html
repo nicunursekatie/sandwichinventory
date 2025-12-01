@@ -1838,6 +1838,9 @@
     }
 
     function renderCurrentView() {
+      // Always update all badges regardless of current tab
+      updateAllBadges();
+
       switch(currentTab) {
         case 'attention':
           renderAttentionNeeded();
@@ -1861,6 +1864,55 @@
           renderReports();
           break;
       }
+    }
+
+    // Update all tab badges (called on every render to keep counts current)
+    function updateAllBadges() {
+      const now = new Date();
+      const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+      const fourteenDaysFromNow = new Date(now.getTime() + 14 * 24 * 60 * 60 * 1000);
+
+      // Attention badge
+      const newRequests = allEvents.filter(e =>
+        e.status === 'New' && (!e.tsp_contact || e.tsp_contact.trim() === '')
+      );
+      const stalledEvents = allEvents.filter(e => {
+        if (e.status !== 'In Process') return false;
+        const lastActivity = e.last_activity_at ? new Date(e.last_activity_at) : new Date(e.created_at);
+        return lastActivity < sevenDaysAgo;
+      });
+      const upcomingMissing = allEvents.filter(e => {
+        if (e.status !== 'Scheduled') return false;
+        const eventDate = new Date(e.event_date);
+        if (eventDate > fourteenDaysFromNow || eventDate < now) return false;
+        const missingDriver = e.driver_needed && !e.driver_name_assigned;
+        const missingSpeaker = e.speaker_needed && !e.speaker_name_assigned;
+        const missingVolunteer = e.volunteer_needed && !e.volunteer_name_assigned;
+        return missingDriver || missingSpeaker || missingVolunteer || !e.event_address || !e.sandwich_type;
+      });
+      const totalAttention = newRequests.length + stalledEvents.length + upcomingMissing.length;
+      document.getElementById('attention-badge').textContent = totalAttention;
+
+      // Staffing badges
+      const needsDriver = allEvents.filter(e =>
+        e.status === 'Scheduled' && e.driver_needed && !e.self_transport && (!e.driver_name_assigned || e.driver_name_assigned.trim() === '')
+      );
+      const needsSpeaker = allEvents.filter(e =>
+        e.status === 'Scheduled' && e.speaker_needed && (!e.speaker_name_assigned || e.speaker_name_assigned.trim() === '')
+      );
+      const needsVolunteer = allEvents.filter(e =>
+        e.status === 'Scheduled' && e.volunteer_needed && (!e.volunteer_name_assigned || e.volunteer_name_assigned.trim() === '')
+      );
+
+      const totalStaffingNeeds = needsDriver.length + needsSpeaker.length + needsVolunteer.length;
+      document.getElementById('staffing-badge').textContent = totalStaffingNeeds;
+      document.getElementById('drivers-badge').textContent = needsDriver.length;
+      document.getElementById('speakers-badge').textContent = needsSpeaker.length;
+      document.getElementById('volunteers-badge').textContent = needsVolunteer.length;
+
+      // Completed badge
+      const completedEvents = allEvents.filter(e => e.status === 'Completed');
+      document.getElementById('completed-badge').textContent = completedEvents.length;
     }
 
     // Attention Needed View
@@ -3570,6 +3622,14 @@
 
     function formatDate(dateStr) {
       if (!dateStr) return '—';
+      // Parse as local time to avoid timezone offset issues
+      // "2024-01-15" should display as Jan 15, not Jan 14
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        const date = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+        return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      }
+      // Fallback for other formats
       const date = new Date(dateStr);
       return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
