@@ -2373,10 +2373,10 @@
       const newStatus = formData.status;
       if (currentEvent) {
         formData.created_at = currentEvent.created_at;
-        formData.status_new_at = currentEvent.status_new_at;
-        formData.status_in_process_at = currentEvent.status_in_process_at;
-        formData.status_scheduled_at = currentEvent.status_scheduled_at;
-        formData.status_completed_at = currentEvent.status_completed_at;
+        formData.status_new_at = currentEvent.status_new_at || null;
+        formData.status_in_process_at = currentEvent.status_in_process_at || null;
+        formData.status_scheduled_at = currentEvent.status_scheduled_at || null;
+        formData.status_completed_at = currentEvent.status_completed_at || null;
 
         if (newStatus !== currentEvent.status) {
           const now = new Date().toISOString();
@@ -2394,11 +2394,23 @@
         formData.status_completed_at = null;
       }
 
+      // Helper function to remove undefined values (Firebase doesn't allow undefined)
+      const cleanData = (obj) => {
+        const cleaned = {};
+        Object.keys(obj).forEach(key => {
+          if (obj[key] !== undefined) {
+            cleaned[key] = obj[key] === undefined ? null : obj[key];
+          }
+        });
+        return cleaned;
+      };
+
       try {
         if (currentEvent) {
           // Update existing event
           const { __backendId, ...eventData } = formData;
-          await database.ref(`events/${currentEvent.__backendId}`).update(eventData);
+          const cleanedData = cleanData(eventData);
+          await database.ref(`events/${currentEvent.__backendId}`).update(cleanedData);
           showToast('Event updated successfully', 'success');
         } else {
           // Create new event
@@ -2408,7 +2420,8 @@
             saveButtonText.textContent = 'Save Event';
             return;
           }
-          await database.ref('events').push(formData);
+          const cleanedData = cleanData(formData);
+          await database.ref('events').push(cleanedData);
           showToast('Event created successfully', 'success');
         }
         
@@ -2998,6 +3011,13 @@
             if (event.sandwich_count_actual !== undefined && event.sandwich_count_actual !== null) {
               updateData.sandwich_count_actual = event.sandwich_count_actual;
             }
+            
+            // Remove any undefined values (Firebase doesn't allow undefined)
+            Object.keys(updateData).forEach(key => {
+              if (updateData[key] === undefined) {
+                delete updateData[key];
+              }
+            });
             
             console.log(`  📝 Updating ${Object.keys(updateData).length} fields:`, Object.keys(updateData));
             if (updateData.sandwich_count_planned !== undefined || updateData.sandwich_count_actual !== undefined) {
