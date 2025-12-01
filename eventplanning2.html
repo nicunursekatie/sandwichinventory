@@ -2104,7 +2104,7 @@
       const driverNameInput = document.getElementById('driver-name');
       const driverAttendanceField = document.getElementById('driver-attendance-field');
       
-      const canAssign = needed && (status === 'Scheduled' || status === 'Completed');
+      const canAssign = needed && (status === 'In Process' || status === 'Scheduled' || status === 'Completed');
       const isCompleted = status === 'Completed';
       
       driverNameInput.disabled = !canAssign;
@@ -2122,7 +2122,7 @@
       } else if (!needed) {
         driverNameInput.placeholder = 'Driver not needed for this event';
       } else {
-        driverNameInput.placeholder = 'Available once event is scheduled';
+        driverNameInput.placeholder = 'Available when event is In Process or Scheduled';
       }
     }
 
@@ -2132,7 +2132,7 @@
       const speakerNameInput = document.getElementById('speaker-name');
       const speakerAttendanceField = document.getElementById('speaker-attendance-field');
       
-      const canAssign = needed && (status === 'Scheduled' || status === 'Completed');
+      const canAssign = needed && (status === 'In Process' || status === 'Scheduled' || status === 'Completed');
       const isCompleted = status === 'Completed';
       
       speakerNameInput.disabled = !canAssign;
@@ -2150,7 +2150,7 @@
       } else if (!needed) {
         speakerNameInput.placeholder = 'Speaker not needed for this event';
       } else {
-        speakerNameInput.placeholder = 'Available once event is scheduled';
+        speakerNameInput.placeholder = 'Available when event is In Process or Scheduled';
       }
     }
 
@@ -2160,7 +2160,7 @@
       const volunteerNameInput = document.getElementById('volunteer-name');
       const volunteerAttendanceField = document.getElementById('volunteer-attendance-field');
       
-      const canAssign = needed && (status === 'Scheduled' || status === 'Completed');
+      const canAssign = needed && (status === 'In Process' || status === 'Scheduled' || status === 'Completed');
       const isCompleted = status === 'Completed';
       
       volunteerNameInput.disabled = !canAssign;
@@ -2178,7 +2178,7 @@
       } else if (!needed) {
         volunteerNameInput.placeholder = 'Volunteers not needed for this event';
       } else {
-        volunteerNameInput.placeholder = 'Available once event is scheduled';
+        volunteerNameInput.placeholder = 'Available when event is In Process or Scheduled';
       }
     }
 
@@ -2425,6 +2425,8 @@
           showToast('Event created successfully', 'success');
         }
         
+        // Explicitly refresh the view to ensure updates are visible
+        renderCurrentView();
         closeEventModal();
       } catch (error) {
         console.error('Error saving event:', error);
@@ -2452,6 +2454,8 @@
       try {
         await database.ref(`events/${currentEvent.__backendId}`).remove();
         showToast('Event deleted successfully', 'success');
+        // Explicitly refresh the view to ensure updates are visible
+        renderCurrentView();
         closeEventModal();
       } catch (error) {
         console.error('Error deleting event:', error);
