@@ -2581,7 +2581,7 @@
         if (!mapInstance) {
           mapInstance = new google.maps.Map(container, {
             zoom: 10,
-            center: { lat: 40.7128, lng: -74.0060 }, // Default to NYC, will adjust to events
+            center: { lat: 33.7490, lng: -84.3880 }, // Default to Atlanta
             mapTypeControl: true,
             streetViewControl: true,
             fullscreenControl: true
@@ -2605,21 +2605,34 @@
 
       const bounds = new google.maps.LatLngBounds();
       const geocoder = new google.maps.Geocoder();
-      let geocodedCount = 0;
+      let processedCount = 0;
 
-      eventsToShow.forEach((event, index) => {
+      // Count events that have addresses to geocode
+      const eventsWithAddresses = eventsToShow.filter(e => {
+        const addr = `${e.event_address || ''} ${e.event_city || ''} ${e.event_zip || ''}`.trim();
+        return addr.length > 0;
+      });
+      const totalToGeocode = eventsWithAddresses.length;
+
+      if (totalToGeocode === 0) {
+        // No events have addresses, just show Atlanta area
+        return;
+      }
+
+      eventsWithAddresses.forEach((event, index) => {
         const address = `${event.event_address || ''} ${event.event_city || ''} ${event.event_zip || ''}`.trim();
-        if (!address) return;
 
         geocoder.geocode({ address: address }, (results, status) => {
+          processedCount++;
+
           if (status === 'OK' && results[0] && window.google && window.google.maps) {
             const location = results[0].geometry.location;
-            
+
             // Determine marker color based on status and needs
             let markerColor = '#236383'; // Default: Scheduled
             if (event.status === 'In Process') markerColor = '#fbad3f';
             else if (event.status === 'Completed') markerColor = '#059669';
-            
+
             // Red if needs staffing
             const needsStaffing = (event.driver_needed && !event.self_transport && !event.driver_name_assigned) ||
                                   (event.speaker_needed && !event.speaker_name_assigned) ||
@@ -2667,16 +2680,15 @@
 
             mapMarkers.push(marker);
             bounds.extend(location);
-            geocodedCount++;
+          }
 
-            // Adjust map bounds when all markers are added
-            if (geocodedCount === eventsToShow.length) {
-              if (mapMarkers.length > 0) {
-                mapInstance.fitBounds(bounds);
-                // Don't zoom in too much if there's only one marker
-                if (mapMarkers.length === 1) {
-                  mapInstance.setZoom(13);
-                }
+          // Adjust map bounds when all geocoding attempts are complete
+          if (processedCount === totalToGeocode) {
+            if (mapMarkers.length > 0) {
+              mapInstance.fitBounds(bounds);
+              // Don't zoom in too much if there's only one marker
+              if (mapMarkers.length === 1) {
+                mapInstance.setZoom(13);
               }
             }
           }
@@ -3168,13 +3180,10 @@
       document.getElementById('self-transport').checked = currentEvent.self_transport || false;
       document.getElementById('driver-count').value = currentEvent.driver_count || 1;
       document.getElementById('refrigerated-van-needed').checked = currentEvent.refrigerated_van_needed || false;
-      // Set selected drivers (handle both string and array)
+      // Load assigned drivers
       const driverNames = currentEvent.driver_name_assigned || '';
-      const driverArray = Array.isArray(driverNames) ? driverNames : (driverNames ? driverNames.split(',').map(s => s.trim()) : []);
-      const driverSelect = document.getElementById('driver-name');
-      Array.from(driverSelect.options).forEach(option => {
-        option.selected = driverArray.includes(option.value);
-      });
+      assignedDrivers = Array.isArray(driverNames) ? driverNames : (driverNames ? driverNames.split(',').map(s => s.trim()).filter(s => s) : []);
+      updateDriverAssignedList();
       document.getElementById('driver-present').checked = currentEvent.driver_present || false;
       toggleDriverSection();
       
