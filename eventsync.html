@@ -1,79 +1,147 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>TSP API Tester</title>
+  <title>TSP Event Entry</title>
   <style>
-    body { font-family: sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; }
+    body { font-family: sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; }
+    h2 { margin-top: 30px; border-bottom: 2px solid #4285f4; padding-bottom: 5px; color: #333; }
     label { display: block; margin-top: 15px; font-weight: bold; }
-    input, textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
-    button { margin-top: 20px; padding: 12px 24px; background: #4285f4; color: white; border: none; cursor: pointer; font-size: 16px; }
+    input, textarea, select { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+    button { margin-top: 25px; padding: 12px 24px; background: #4285f4; color: white; border: none; cursor: pointer; font-size: 16px; }
     button:hover { background: #3367d6; }
     #result { margin-top: 20px; padding: 15px; border-radius: 5px; white-space: pre-wrap; font-family: monospace; }
     .success { background: #d4edda; border: 1px solid #28a745; }
     .error { background: #f8d7da; border: 1px solid #dc3545; }
     .pending { background: #fff3cd; border: 1px solid #ffc107; }
+    .field-hint { font-size: 12px; color: #666; margin-top: 2px; }
   </style>
 </head>
 <body>
-  <h1>🥪 TSP Event API Tester</h1>
-  
+  <h1>TSP Event Entry</h1>
+
+  <h2>Event Details</h2>
+
   <label>Date:</label>
   <input type="date" id="date">
-  
+
   <label>Group Name:</label>
-  <input type="text" id="groupName" value="TEST GROUP - DELETE ME">
-  
+  <input type="text" id="groupName" placeholder="Organization or group name">
+
   <label>Start Time:</label>
-  <input type="text" id="startTime" value="10:00 AM">
-  
+  <input type="text" id="startTime" placeholder="e.g. 10:00 AM">
+
   <label>End Time:</label>
-  <input type="text" id="endTime" value="12:00 PM">
-  
+  <input type="text" id="endTime" placeholder="e.g. 12:00 PM">
+
   <label>Pickup Time:</label>
-  <input type="text" id="pickupTime" value="9:30 AM">
-  
+  <input type="text" id="pickupTime" placeholder="e.g. 9:30 AM">
+
   <label>Details:</label>
-  <textarea id="details" rows="2">API test - safe to delete</textarea>
-  
+  <textarea id="details" rows="2" placeholder="Event details"></textarea>
+
   <label>Estimate:</label>
-  <input type="number" id="estimate" value="100">
-  
-  <button onclick="testApi()">🚀 Send Test Event</button>
-  
+  <input type="number" id="estimate" placeholder="Number of sandwiches">
+
+  <label>Sandwich Type:</label>
+  <select id="sandwichType">
+    <option value="">-- Select --</option>
+    <option value="Deli">Deli</option>
+    <option value="PBJ">PBJ</option>
+    <option value="Both">Both</option>
+  </select>
+
+  <h2>Contact Information</h2>
+
+  <label>Contact Name:</label>
+  <input type="text" id="contactName" placeholder="Primary contact name">
+
+  <label>Contact Email:</label>
+  <input type="email" id="contactEmail" placeholder="email@example.com">
+
+  <label>Contact Phone:</label>
+  <input type="tel" id="contactPhone" placeholder="Phone number">
+
+  <label>TSP Contact:</label>
+  <input type="text" id="tspContact" placeholder="TSP staff contact">
+
+  <h2>Logistics</h2>
+
+  <label>Address:</label>
+  <input type="text" id="address" placeholder="Event address">
+
+  <label>Van Booked?</label>
+  <select id="vanBooked">
+    <option value="">-- Select --</option>
+    <option value="Yes">Yes</option>
+    <option value="No">No</option>
+    <option value="N/A">N/A</option>
+  </select>
+
+  <label>Recipient/Host:</label>
+  <input type="text" id="recipientHost" placeholder="Planned recipient or host home">
+
+  <h2>Notes</h2>
+
+  <label>Notes:</label>
+  <textarea id="notes" rows="2" placeholder="General notes"></textarea>
+
+  <label>Additional Notes:</label>
+  <textarea id="additionalNotes" rows="2" placeholder="Additional notes"></textarea>
+
+  <label>Waiting On:</label>
+  <input type="text" id="waitingOn" placeholder="What are we waiting on?">
+
+  <button onclick="submitEvent()">Submit Event</button>
+
   <div id="result"></div>
 
   <script>
     const API_URL = 'https://script.google.com/macros/s/AKfycbzR0WlK4UoHYrPv0L7EzIfOPyhspehlIoWTj9yKsUmWLu-2QfZWSzCNOHFuPuxBZS0jdg/exec';
     const API_KEY = 'f47ac10b-58cc-4372-a567-0e02b2c3d479';
-    
-    async function testApi() {
+
+    async function submitEvent() {
       const resultDiv = document.getElementById('result');
       resultDiv.textContent = 'Sending request...';
       resultDiv.className = 'pending';
-      
+
       const payload = {
         apiKey: API_KEY,
+        // Event Details
         date: document.getElementById('date').value,
         groupName: document.getElementById('groupName').value.trim(),
         startTime: document.getElementById('startTime').value.trim(),
         endTime: document.getElementById('endTime').value.trim(),
         pickupTime: document.getElementById('pickupTime').value.trim(),
         details: document.getElementById('details').value.trim(),
-        estimate: document.getElementById('estimate').value.trim()
+        estimate: document.getElementById('estimate').value.trim(),
+        sandwichType: document.getElementById('sandwichType').value,
+        // Contact Information
+        contactName: document.getElementById('contactName').value.trim(),
+        contactEmail: document.getElementById('contactEmail').value.trim(),
+        contactPhone: document.getElementById('contactPhone').value.trim(),
+        tspContact: document.getElementById('tspContact').value.trim(),
+        // Logistics
+        address: document.getElementById('address').value.trim(),
+        vanBooked: document.getElementById('vanBooked').value,
+        recipientHost: document.getElementById('recipientHost').value.trim(),
+        // Notes
+        notes: document.getElementById('notes').value.trim(),
+        additionalNotes: document.getElementById('additionalNotes').value.trim(),
+        waitingOn: document.getElementById('waitingOn').value.trim()
       };
-      
+
       console.log('Sending:', payload);
-      
+
       try {
         const response = await fetch(API_URL, {
           method: 'POST',
           headers: { 'Content-Type': 'text/plain' },
           body: JSON.stringify(payload)
         });
-        
+
         const text = await response.text();
         console.log('Raw response:', text);
-        
+
         let data;
         try {
           data = JSON.parse(text);
@@ -82,10 +150,14 @@
           resultDiv.className = 'error';
           return;
         }
-        
+
         resultDiv.textContent = JSON.stringify(data, null, 2);
         resultDiv.className = data.success ? 'success' : 'error';
-        
+
+        if (data.success) {
+          resultDiv.textContent = 'Event added successfully!\n\nRow: ' + data.row + '\nDate: ' + data.date + '\nGroup: ' + data.groupName;
+        }
+
       } catch (error) {
         resultDiv.textContent = 'Network Error:\n\n' + error.message + '\n\nCheck console for details.';
         resultDiv.className = 'error';
