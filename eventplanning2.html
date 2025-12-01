@@ -1949,9 +1949,8 @@
         return missingDriver || missingSpeaker || missingVolunteer || !e.event_address || !e.sandwich_type;
       });
 
-      // Update badges
+      // Update section counts (badges are updated by updateAllBadges())
       const totalAttention = newRequests.length + stalledEvents.length + upcomingMissing.length;
-      document.getElementById('attention-badge').textContent = totalAttention;
       document.getElementById('new-requests-count').textContent = newRequests.length;
       document.getElementById('stalled-count').textContent = stalledEvents.length;
       document.getElementById('upcoming-missing-count').textContent = upcomingMissing.length;
@@ -2464,22 +2463,7 @@
     }
 
     function renderStaffingNeeds() {
-      // Update main staffing badge with total needs
-      const needsDriver = allEvents.filter(e => 
-        e.status === 'Scheduled' && e.driver_needed && !e.self_transport && (!e.driver_name_assigned || e.driver_name_assigned.trim() === '')
-      );
-      const needsSpeaker = allEvents.filter(e => 
-        e.status === 'Scheduled' && e.speaker_needed && (!e.speaker_name_assigned || e.speaker_name_assigned.trim() === '')
-      );
-      const needsVolunteer = allEvents.filter(e => 
-        e.status === 'Scheduled' && e.volunteer_needed && (!e.volunteer_name_assigned || e.volunteer_name_assigned.trim() === '')
-      );
-      
-      const totalNeeds = needsDriver.length + needsSpeaker.length + needsVolunteer.length;
-      document.getElementById('staffing-badge').textContent = totalNeeds;
-      document.getElementById('drivers-badge').textContent = needsDriver.length;
-      document.getElementById('speakers-badge').textContent = needsSpeaker.length;
-      document.getElementById('volunteers-badge').textContent = needsVolunteer.length;
+      // Badges are updated by updateAllBadges() - no need to update here
 
       // Render the active sub-tab
       if (staffingSubTab === 'drivers') {
@@ -2669,8 +2653,7 @@
     function renderCompletedEvents() {
       const completedEvents = allEvents.filter(e => e.status === 'Completed');
       
-      // Update badge
-      document.getElementById('completed-badge').textContent = completedEvents.length;
+      // Badge is updated by updateAllBadges() - no need to update here
 
       // Populate TSP filter
       const tspContacts = [...new Set(completedEvents.map(e => e.tsp_contact).filter(Boolean))].sort();
