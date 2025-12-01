@@ -892,8 +892,8 @@
                     <div class="calc-input-group">
                         <label>Meat amount per sandwich</label>
                         <select id="meatAmount">
-                            <option value="2">2 slices of meat</option>
-                            <option value="3" selected>3 slices of meat (standard sandwich)</option>
+                            <option value="2">2 oz of meat</option>
+                            <option value="3" selected>3 oz of meat (standard sandwich)</option>
                         </select>
                     </div>
 
@@ -1610,8 +1610,12 @@
             const meatAmount = parseInt(document.getElementById('meatAmount').value);
 
             // Ingredient constants
-            const meatPerSandwich = meatAmount; // 2 or 3 slices per sandwich (user selected)
+            const meatPerSandwichOz = meatAmount; // 2 or 3 oz per sandwich (user selected)
             const cheesePerSandwich = 2; // 2 slices per sandwich
+            
+            // Convert oz to slices for package calculations (assuming ~0.5 oz per slice for thin-sliced deli meat)
+            // This is used for cost estimation with pre-packaged products
+            const meatPerSandwich = meatPerSandwichOz * 2; // Convert oz to slices (2 oz = 4 slices, 3 oz = 6 slices)
 
             // Package sizes and prices
             let meatPerPackage, meatPrice, meatDescription;
@@ -1837,7 +1841,27 @@
             }
             const coolersNeeded = Math.ceil(sandwichCount / 100);
 
-            // Calculate excess ingredients
+            // Calculate total ounces needed for shopping
+            const totalMeatOzNeeded = sandwichCount * meatPerSandwichOz;
+            // Round up to nearest 2-3 oz increment for deli counter purchases
+            const increment = meatPerSandwichOz; // Use the same increment as per sandwich (2 or 3 oz)
+            const meatOzToBuy = Math.ceil(totalMeatOzNeeded / increment) * increment;
+            
+            // Helper function to format ounces nicely
+            function formatOunces(oz) {
+                if (oz >= 16) {
+                    const lbs = Math.floor(oz / 16);
+                    const remainingOz = oz % 16;
+                    if (remainingOz === 0) {
+                        return `${lbs} ${lbs === 1 ? 'lb' : 'lbs'}`;
+                    } else {
+                        return `${lbs} ${lbs === 1 ? 'lb' : 'lbs'} ${remainingOz} oz`;
+                    }
+                }
+                return `${oz} oz`;
+            }
+            
+            // Calculate excess ingredients (using slices for package calculations)
             const meatNeeded = sandwichCount * meatPerSandwich;
             const cheeseNeeded = sandwichCount * cheesePerSandwich;
             const breadNeeded = sandwichCount;
@@ -1934,9 +1958,9 @@
                 ${budgetStatusMessage}
                 <div class="result-grid">
                     <div class="result-item">
-                        <h4>Meat Packages</h4>
-                        <div class="number">${meatPackages}</div>
-                        <div class="description">${meatDescription}</div>
+                        <h4>Meat Needed</h4>
+                        <div class="number">${formatOunces(meatOzToBuy)}</div>
+                        <div class="description">Buy at deli counter in ${increment} oz increments</div>
                     </div>
                     <div class="result-item">
                         <h4>Cheese Packages</h4>
@@ -1957,44 +1981,48 @@
             `;
 
             // Generate dynamic shopping checklist
-            let meatShoppingDescription;
+            // Get meat type name for shopping list
+            let meatTypeName;
             switch(meatType) {
                 case 'turkey':
-                    meatShoppingDescription = 'Kirkland Turkey 2-packs (40 slices)';
+                    meatTypeName = 'Turkey';
                     break;
                 case 'ham':
-                    meatShoppingDescription = 'Kirkland Ham 2-packs (48 slices)';
+                    meatTypeName = 'Ham';
                     break;
                 case 'publix-turkey':
-                    meatShoppingDescription = 'Publix Turkey Breast, Roasted, Thin Sliced (16 oz / 32 slices)';
+                    meatTypeName = 'Publix Turkey Breast, Roasted, Thin Sliced';
                     break;
                 case 'land-o-frost-turkey':
-                    meatShoppingDescription = 'Land O\'Frost Premium Oven Roasted Turkey Breast (16 oz / 32 slices)';
+                    meatTypeName = 'Land O\'Frost Premium Oven Roasted Turkey Breast';
                     break;
                 case 'hillshire-turkey':
-                    meatShoppingDescription = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 oz / 18 slices)';
+                    meatTypeName = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast';
                     break;
                 case 'kroger-turkey-regular':
-                    meatShoppingDescription = 'Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced (8 oz / 11-12 slices)';
+                    meatTypeName = 'Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced';
                     break;
                 case 'kroger-turkey-thin':
-                    meatShoppingDescription = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced (9 oz / 18 slices)';
+                    meatTypeName = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced';
                     break;
                 case 'kroger-chicken-thin':
-                    meatShoppingDescription = 'Kroger® Chicken Breast Deli Thin Sliced (9 oz / 18 slices)';
+                    meatTypeName = 'Kroger® Chicken Breast Deli Thin Sliced';
                     break;
                 case 'kroger-turkey-family':
-                    meatShoppingDescription = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size (1 lb / 30-32 slices)';
+                    meatTypeName = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size';
                     break;
                 case 'oscar-mayer-chicken-blackened':
-                    meatShoppingDescription = 'Oscar Mayer Deli Fresh Blackened Chicken Breast Thin Sliced Lunchmeat (8 oz / 11-12 slices)';
+                    meatTypeName = 'Oscar Mayer Deli Fresh Blackened Chicken Breast Thin Sliced Lunchmeat';
                     break;
                 case 'oscar-mayer-chicken-rotisserie':
-                    meatShoppingDescription = 'Oscar Mayer Deli Fresh Rotisserie Seasoned Chicken Breast Thin Sliced Lunchmeat (16 oz / 32 slices)';
+                    meatTypeName = 'Oscar Mayer Deli Fresh Rotisserie Seasoned Chicken Breast Thin Sliced Lunchmeat';
                     break;
                 default:
-                    meatShoppingDescription = 'Meat packages';
+                    meatTypeName = 'Meat';
             }
+            
+            // Create shopping description with ounces
+            const meatShoppingDescription = `${formatOunces(meatOzToBuy)} of ${meatTypeName} (buy in ${increment} oz increments at deli counter)`;
             let cheeseShoppingDescription;
             switch(cheeseType) {
                 case 'adams-reserve':
@@ -2012,7 +2040,7 @@
             const estimatedLoaves = Math.ceil(sandwichCount / 20);
             const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4);
             document.getElementById('shoppingChecklist').innerHTML = `
-                <li><input type="checkbox"> ${meatPackages} × ${meatShoppingDescription}</li>
+                <li><input type="checkbox"> ${meatShoppingDescription}</li>
                 <li><input type="checkbox"> ${cheesePackages} × ${cheeseShoppingDescription}</li>
                 <li><input type="checkbox"> ${breadPackages} × Bread ${breadDescription}</li>
                 <li><input type="checkbox"> ${bagPackages} × Zip-lock sandwich bags (480 count)</li>
@@ -2030,18 +2058,79 @@
         
         function generatePDF() {
             // Get form data
-            const sandwichCount = document.getElementById('sandwichCount').value;
+            const sandwichCount = parseInt(document.getElementById('sandwichCount').value);
             const meatType = document.getElementById('meatType');
             const cheeseType = document.getElementById('cheeseType');
             const breadType = document.getElementById('breadType');
+            const meatAmount = parseInt(document.getElementById('meatAmount').value);
             
             const meatText = meatType.options[meatType.selectedIndex].text;
             const cheeseText = cheeseType.options[cheeseType.selectedIndex].text;
             const breadText = breadType.options[breadType.selectedIndex].text;
             
             // Calculate the results (same logic as in calculateNeeds)
-            const meatPerSandwich = 3; // 3 slices per sandwich (standard portion)
+            const meatPerSandwichOz = meatAmount; // 2 or 3 oz per sandwich
+            const meatPerSandwich = meatPerSandwichOz * 2; // Convert oz to slices for package calculations
             const cheesePerSandwich = 2;
+            
+            // Calculate total ounces needed
+            const totalMeatOzNeeded = sandwichCount * meatPerSandwichOz;
+            const increment = meatPerSandwichOz;
+            const meatOzToBuy = Math.ceil(totalMeatOzNeeded / increment) * increment;
+            
+            // Helper function to format ounces nicely
+            function formatOunces(oz) {
+                if (oz >= 16) {
+                    const lbs = Math.floor(oz / 16);
+                    const remainingOz = oz % 16;
+                    if (remainingOz === 0) {
+                        return `${lbs} ${lbs === 1 ? 'lb' : 'lbs'}`;
+                    } else {
+                        return `${lbs} ${lbs === 1 ? 'lb' : 'lbs'} ${remainingOz} oz`;
+                    }
+                }
+                return `${oz} oz`;
+            }
+            
+            // Get meat type name
+            let meatTypeName;
+            switch(meatType.value) {
+                case 'turkey':
+                    meatTypeName = 'Turkey';
+                    break;
+                case 'ham':
+                    meatTypeName = 'Ham';
+                    break;
+                case 'publix-turkey':
+                    meatTypeName = 'Publix Turkey Breast, Roasted, Thin Sliced';
+                    break;
+                case 'land-o-frost-turkey':
+                    meatTypeName = 'Land O\'Frost Premium Oven Roasted Turkey Breast';
+                    break;
+                case 'hillshire-turkey':
+                    meatTypeName = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast';
+                    break;
+                case 'kroger-turkey-regular':
+                    meatTypeName = 'Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced';
+                    break;
+                case 'kroger-turkey-thin':
+                    meatTypeName = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced';
+                    break;
+                case 'kroger-chicken-thin':
+                    meatTypeName = 'Kroger® Chicken Breast Deli Thin Sliced';
+                    break;
+                case 'kroger-turkey-family':
+                    meatTypeName = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size';
+                    break;
+                case 'oscar-mayer-chicken-blackened':
+                    meatTypeName = 'Oscar Mayer Deli Fresh Blackened Chicken Breast Thin Sliced Lunchmeat';
+                    break;
+                case 'oscar-mayer-chicken-rotisserie':
+                    meatTypeName = 'Oscar Mayer Deli Fresh Rotisserie Seasoned Chicken Breast Thin Sliced Lunchmeat';
+                    break;
+                default:
+                    meatTypeName = 'Meat';
+            }
             let meatPerPackage, meatPrice;
             switch(meatType.value) {
                 case 'turkey':
@@ -2175,7 +2264,7 @@
                         <h3>Budget Summary</h3>
                         <div class="pdf-grid">
                             <div>
-                                <p><strong>Meat packages needed:</strong> ${meatPackages}</p>
+                                <p><strong>Meat needed:</strong> ${formatOunces(meatOzToBuy)} (buy in ${increment} oz increments)</p>
                                 <p><strong>Cheese packages needed:</strong> ${cheesePackages}</p>
                                 <p><strong>Bread packages needed:</strong> ${breadPackages}</p>
                             </div>
@@ -2190,7 +2279,7 @@
                     <div class="pdf-section">
                         <h3>Shopping Checklist</h3>
                         <ul class="pdf-checklist">
-                            <li>☐ ${meatPackages} × ${meatText.replace('🦃 ', '').replace('🐷 ', '')}</li>
+                            <li>☐ ${formatOunces(meatOzToBuy)} of ${meatTypeName} (buy in ${increment} oz increments at deli counter)</li>
                             <li>☐ ${cheesePackages} × ${cheeseText.replace('🧀 ', '').split(' (')[0]} cheese slices</li>
                             <li>☐ ${breadPackages} × ${breadText.replace('🍞 ', '').split(' (')[0]}</li>
                             <li>☐ ${Math.ceil(sandwichCount / 480)} × Zip-lock sandwich bags (480 count)</li>
