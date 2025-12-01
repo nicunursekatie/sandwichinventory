@@ -1128,9 +1128,18 @@
           <div class="form-field"><label style="display: flex; align-items: center; gap: 6px; cursor: pointer; margin-top: 24px;"> <input type="checkbox" id="refrigerated-van-needed"> <span style="font-weight: 600; color: #a31c41;">❄️ Refrigerated Van Required</span> </label>
           </div>
          </div>
-         <div class="form-field" style="margin-top: 12px;" id="driver-assignment-field"><label for="driver-name">Assigned Driver(s)</label> <select id="driver-name" multiple style="min-height: 80px;" size="4">
-         </select>
-         <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Hold Ctrl/Cmd to select multiple</div>
+         <div class="form-field" style="margin-top: 12px;" id="driver-assignment-field">
+          <label for="driver-name-select">Assign Driver</label>
+          <div style="display: flex; gap: 8px; align-items: flex-start;">
+           <select id="driver-name-select" style="flex: 1; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px;">
+            <option value="">-- Select Driver --</option>
+           </select>
+           <button type="button" class="button-secondary" onclick="assignDriver()" style="padding: 8px 16px; white-space: nowrap;">Assign</button>
+          </div>
+          <div id="driver-assigned-list" style="margin-top: 12px; min-height: 40px;">
+           <!-- Assigned drivers will appear here -->
+          </div>
+          <input type="hidden" id="driver-name" value="">
          </div>
          <div class="checkbox-field" style="margin-top: 8px; display: none;" id="driver-attendance-field"><input type="checkbox" id="driver-present"> <label for="driver-present">Driver(s) Attended Event</label>
          </div>
@@ -1144,9 +1153,18 @@
           <div class="form-field"><label for="speaker-count">Number of Speakers</label> <input type="number" id="speaker-count" min="1" value="1" onchange="updateSpeakerAssignmentState()">
           </div>
          </div>
-         <div class="form-field" style="margin-top: 12px;" id="speaker-assignment-field"><label for="speaker-name">Assigned Speaker(s)</label> <select id="speaker-name" multiple style="min-height: 80px;" size="4">
-         </select>
-         <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Hold Ctrl/Cmd to select multiple</div>
+         <div class="form-field" style="margin-top: 12px;" id="speaker-assignment-field">
+          <label for="speaker-name-select">Assign Speaker</label>
+          <div style="display: flex; gap: 8px; align-items: flex-start;">
+           <select id="speaker-name-select" style="flex: 1; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px;">
+            <option value="">-- Select Speaker --</option>
+           </select>
+           <button type="button" class="button-secondary" onclick="assignSpeaker()" style="padding: 8px 16px; white-space: nowrap;">Assign</button>
+          </div>
+          <div id="speaker-assigned-list" style="margin-top: 12px; min-height: 40px;">
+           <!-- Assigned speakers will appear here -->
+          </div>
+          <input type="hidden" id="speaker-name" value="">
          </div>
          <div class="checkbox-field" style="margin-top: 8px; display: none;" id="speaker-attendance-field"><input type="checkbox" id="speaker-present"> <label for="speaker-present">Speaker(s) Attended Event</label>
          </div>
@@ -1160,9 +1178,18 @@
           <div class="form-field"><label for="volunteer-count">Number of Volunteers</label> <input type="number" id="volunteer-count" min="1" value="1" onchange="updateVolunteerAssignmentState()">
           </div>
          </div>
-         <div class="form-field" style="margin-top: 12px;" id="volunteer-assignment-field"><label for="volunteer-name">Assigned Volunteer(s)</label> <select id="volunteer-name" multiple style="min-height: 80px;" size="4">
-         </select>
-         <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Hold Ctrl/Cmd to select multiple</div>
+         <div class="form-field" style="margin-top: 12px;" id="volunteer-assignment-field">
+          <label for="volunteer-name-select">Assign Volunteer</label>
+          <div style="display: flex; gap: 8px; align-items: flex-start;">
+           <select id="volunteer-name-select" style="flex: 1; padding: 8px; border: 1px solid #e2e8f0; border-radius: 6px;">
+            <option value="">-- Select Volunteer --</option>
+           </select>
+           <button type="button" class="button-secondary" onclick="assignVolunteer()" style="padding: 8px 16px; white-space: nowrap;">Assign</button>
+          </div>
+          <div id="volunteer-assigned-list" style="margin-top: 12px; min-height: 40px;">
+           <!-- Assigned volunteers will appear here -->
+          </div>
+          <input type="hidden" id="volunteer-name" value="">
          </div>
          <div class="checkbox-field" style="margin-top: 8px; display: none;" id="volunteer-attendance-field"><input type="checkbox" id="volunteer-present"> <label for="volunteer-present">Volunteer(s) Attended Event</label>
          </div>
@@ -1673,15 +1700,56 @@
       `;
     }
 
+    // Convert military time (HH:MM) to 12-hour format (h:MM AM/PM)
+    function formatTime12Hour(timeString) {
+      if (!timeString || timeString.trim() === '') return '';
+      const time = timeString.substring(0, 5); // Get HH:MM part
+      const [hours, minutes] = time.split(':').map(Number);
+      if (isNaN(hours) || isNaN(minutes)) return timeString;
+      
+      const period = hours >= 12 ? 'PM' : 'AM';
+      const hours12 = hours === 0 ? 12 : (hours > 12 ? hours - 12 : hours);
+      return `${hours12}:${String(minutes).padStart(2, '0')} ${period}`;
+    }
+
     function renderCalendarEvent(event) {
       const statusClass = event.status.toLowerCase().replace(' ', '-');
       const timeDisplay = event.event_start_time 
-        ? event.event_start_time.substring(0, 5) 
+        ? formatTime12Hour(event.event_start_time)
         : '';
       
       const groupName = event.group_name || 'Unnamed Event';
       const sandwichCount = event.sandwich_count_planned || '?';
       const needsRefrigeratedVan = event.refrigerated_van_needed;
+
+      // Parse assigned people
+      const assignedDrivers = event.driver_name_assigned ? event.driver_name_assigned.split(',').map(s => s.trim()).filter(s => s) : [];
+      const assignedSpeakers = event.speaker_name_assigned ? event.speaker_name_assigned.split(',').map(s => s.trim()).filter(s => s) : [];
+      const assignedVolunteers = event.volunteer_name_assigned ? event.volunteer_name_assigned.split(',').map(s => s.trim()).filter(s => s) : [];
+
+      // Check for unmet needs
+      const unmetNeeds = [];
+      if (event.driver_needed && !event.self_transport && (!event.driver_name_assigned || event.driver_name_assigned.trim() === '')) {
+        unmetNeeds.push('D');
+      }
+      if (event.speaker_needed && (!event.speaker_name_assigned || event.speaker_name_assigned.trim() === '')) {
+        unmetNeeds.push('S');
+      }
+      if (event.volunteer_needed && (!event.volunteer_name_assigned || event.volunteer_name_assigned.trim() === '')) {
+        unmetNeeds.push('V');
+      }
+
+      // Build assigned people display
+      const assignedPeople = [];
+      if (assignedDrivers.length > 0) {
+        assignedPeople.push(`🚗 ${assignedDrivers.join(', ')}`);
+      }
+      if (assignedSpeakers.length > 0) {
+        assignedPeople.push(`🎤 ${assignedSpeakers.join(', ')}`);
+      }
+      if (assignedVolunteers.length > 0) {
+        assignedPeople.push(`🙋 ${assignedVolunteers.join(', ')}`);
+      }
 
       return `
         <div class="calendar-event-item status-${statusClass}" onclick="openEventDetail('${event.__backendId}')">
@@ -1689,6 +1757,8 @@
           ${timeDisplay ? `<div class="calendar-event-time">⏰ ${timeDisplay}</div>` : ''}
           <div class="calendar-event-count">🥪 ${sandwichCount}</div>
           ${needsRefrigeratedVan ? '<div style="font-size: 11px; color: #a31c41; font-weight: 600; margin-top: 2px;">❄️ Fridge Van</div>' : ''}
+          ${unmetNeeds.length > 0 ? `<div style="font-size: 12px; color: #A31C41; font-weight: 600; margin-top: 4px;">${unmetNeeds.join(' ')}</div>` : ''}
+          ${assignedPeople.length > 0 ? `<div style="font-size: 11px; color: #475569; margin-top: 4px; line-height: 1.4;">${assignedPeople.join('<br>')}</div>` : ''}
         </div>
       `;
     }
@@ -1858,8 +1928,8 @@
             <td onclick="openEventDetail('${event.__backendId}')">
               ${formatDate(event.event_date)}<br>
               <span style="font-size: 12px; color: #64748b;">
-                ${event.event_start_time ? event.event_start_time : '—'} - ${event.event_end_time ? event.event_end_time : '—'}
-                ${event.pickup_time ? `<br>Pickup: ${event.pickup_time}` : ''}
+                ${event.event_start_time ? formatTime12Hour(event.event_start_time) : '—'} - ${event.event_end_time ? formatTime12Hour(event.event_end_time) : '—'}
+                ${event.pickup_time ? `<br>Pickup: ${formatTime12Hour(event.pickup_time)}` : ''}
               </span>
               ${event.refrigerated_van_needed ? '<br><span style="font-size: 11px; color: #a31c41; font-weight: 600;">❄️ Fridge Van</span>' : ''}
               ${event.self_transport ? '<br><span style="font-size: 11px; color: #059669; font-weight: 600;">🚚 Self-Transport</span>' : ''}
@@ -2376,6 +2446,14 @@
       // Populate role dropdowns
       populateRoleDropdowns();
       
+      // Reset assigned lists
+      assignedDrivers = [];
+      assignedSpeakers = [];
+      assignedVolunteers = [];
+      updateDriverAssignedList();
+      updateSpeakerAssignedList();
+      updateVolunteerAssignedList();
+      
       // Reset role sections
       document.getElementById('driver-needed').checked = false;
       document.getElementById('self-transport').checked = false;
@@ -2439,26 +2517,20 @@
       // Speaker section
       document.getElementById('speaker-needed').checked = currentEvent.speaker_needed || false;
       document.getElementById('speaker-count').value = currentEvent.speaker_count || 1;
-      // Set selected speakers
+      // Load assigned speakers
       const speakerNames = currentEvent.speaker_name_assigned || '';
-      const speakerArray = Array.isArray(speakerNames) ? speakerNames : (speakerNames ? speakerNames.split(',').map(s => s.trim()) : []);
-      const speakerSelect = document.getElementById('speaker-name');
-      Array.from(speakerSelect.options).forEach(option => {
-        option.selected = speakerArray.includes(option.value);
-      });
+      assignedSpeakers = Array.isArray(speakerNames) ? speakerNames : (speakerNames ? speakerNames.split(',').map(s => s.trim()).filter(s => s) : []);
+      updateSpeakerAssignedList();
       document.getElementById('speaker-present').checked = currentEvent.speaker_present || false;
       toggleSpeakerSection();
       
       // Volunteer section
       document.getElementById('volunteer-needed').checked = currentEvent.volunteer_needed || false;
       document.getElementById('volunteer-count').value = currentEvent.volunteer_count || 1;
-      // Set selected volunteers
+      // Load assigned volunteers
       const volunteerNames = currentEvent.volunteer_name_assigned || '';
-      const volunteerArray = Array.isArray(volunteerNames) ? volunteerNames : (volunteerNames ? volunteerNames.split(',').map(s => s.trim()) : []);
-      const volunteerSelect = document.getElementById('volunteer-name');
-      Array.from(volunteerSelect.options).forEach(option => {
-        option.selected = volunteerArray.includes(option.value);
-      });
+      assignedVolunteers = Array.isArray(volunteerNames) ? volunteerNames : (volunteerNames ? volunteerNames.split(',').map(s => s.trim()).filter(s => s) : []);
+      updateVolunteerAssignedList();
       document.getElementById('volunteer-present').checked = currentEvent.volunteer_present || false;
       toggleVolunteerSection();
       
@@ -2560,11 +2632,11 @@
         driver_present: document.getElementById('driver-present').checked,
         speaker_needed: document.getElementById('speaker-needed').checked,
         speaker_count: parseInt(document.getElementById('speaker-count').value) || 1,
-        speaker_name_assigned: Array.from(document.getElementById('speaker-name').selectedOptions).map(opt => opt.value).filter(v => v).join(', '),
+        speaker_name_assigned: document.getElementById('speaker-name').value,
         speaker_present: document.getElementById('speaker-present').checked,
         volunteer_needed: document.getElementById('volunteer-needed').checked,
         volunteer_count: parseInt(document.getElementById('volunteer-count').value) || 1,
-        volunteer_name_assigned: Array.from(document.getElementById('volunteer-name').selectedOptions).map(opt => opt.value).filter(v => v).join(', '),
+        volunteer_name_assigned: document.getElementById('volunteer-name').value,
         volunteer_present: document.getElementById('volunteer-present').checked,
         status: document.getElementById('event-status').value,
         photo_followup_done: document.getElementById('photo-followup').checked,
@@ -3345,24 +3417,149 @@
 
     function populateRoleDropdowns() {
       // Populate driver dropdown
-      const driverSelect = document.getElementById('driver-name');
+      const driverSelect = document.getElementById('driver-name-select');
       if (driverSelect) {
-        driverSelect.innerHTML = '<option value="">-- Select Driver(s) --</option>' +
+        driverSelect.innerHTML = '<option value="">-- Select Driver --</option>' +
           roleLists.drivers.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
       }
 
       // Populate speaker dropdown
-      const speakerSelect = document.getElementById('speaker-name');
+      const speakerSelect = document.getElementById('speaker-name-select');
       if (speakerSelect) {
-        speakerSelect.innerHTML = '<option value="">-- Select Speaker(s) --</option>' +
+        speakerSelect.innerHTML = '<option value="">-- Select Speaker --</option>' +
           roleLists.speakers.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
       }
 
       // Populate volunteer dropdown
-      const volunteerSelect = document.getElementById('volunteer-name');
+      const volunteerSelect = document.getElementById('volunteer-name-select');
       if (volunteerSelect) {
-        volunteerSelect.innerHTML = '<option value="">-- Select Volunteer(s) --</option>' +
+        volunteerSelect.innerHTML = '<option value="">-- Select Volunteer --</option>' +
           roleLists.volunteers.map(name => `<option value="${escapeHtml(name)}">${escapeHtml(name)}</option>`).join('');
+      }
+    }
+
+    // Assignment functions
+    let assignedDrivers = [];
+    let assignedSpeakers = [];
+    let assignedVolunteers = [];
+
+    function assignDriver() {
+      const select = document.getElementById('driver-name-select');
+      const name = select.value.trim();
+      if (!name) {
+        showToast('Please select a driver', 'error');
+        return;
+      }
+      if (assignedDrivers.includes(name)) {
+        showToast('This driver is already assigned', 'error');
+        return;
+      }
+      assignedDrivers.push(name);
+      updateDriverAssignedList();
+      select.value = '';
+      showToast(`Assigned: ${name}`, 'success');
+    }
+
+    function assignSpeaker() {
+      const select = document.getElementById('speaker-name-select');
+      const name = select.value.trim();
+      if (!name) {
+        showToast('Please select a speaker', 'error');
+        return;
+      }
+      if (assignedSpeakers.includes(name)) {
+        showToast('This speaker is already assigned', 'error');
+        return;
+      }
+      assignedSpeakers.push(name);
+      updateSpeakerAssignedList();
+      select.value = '';
+      showToast(`Assigned: ${name}`, 'success');
+    }
+
+    function assignVolunteer() {
+      const select = document.getElementById('volunteer-name-select');
+      const name = select.value.trim();
+      if (!name) {
+        showToast('Please select a volunteer', 'error');
+        return;
+      }
+      if (assignedVolunteers.includes(name)) {
+        showToast('This volunteer is already assigned', 'error');
+        return;
+      }
+      assignedVolunteers.push(name);
+      updateVolunteerAssignedList();
+      select.value = '';
+      showToast(`Assigned: ${name}`, 'success');
+    }
+
+    function removeDriver(name) {
+      assignedDrivers = assignedDrivers.filter(n => n !== name);
+      updateDriverAssignedList();
+    }
+
+    function removeSpeaker(name) {
+      assignedSpeakers = assignedSpeakers.filter(n => n !== name);
+      updateSpeakerAssignedList();
+    }
+
+    function removeVolunteer(name) {
+      assignedVolunteers = assignedVolunteers.filter(n => n !== name);
+      updateVolunteerAssignedList();
+    }
+
+    function updateDriverAssignedList() {
+      const listDiv = document.getElementById('driver-assigned-list');
+      const hiddenInput = document.getElementById('driver-name');
+      const value = assignedDrivers.join(', ');
+      hiddenInput.value = value;
+      
+      if (assignedDrivers.length === 0) {
+        listDiv.innerHTML = '<div style="color: #94a3b8; font-size: 13px; padding: 8px;">No drivers assigned</div>';
+      } else {
+        listDiv.innerHTML = assignedDrivers.map(name => `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; margin-bottom: 4px; background: #f1f5f9; border-radius: 6px; font-size: 14px;">
+            <span>${escapeHtml(name)}</span>
+            <button type="button" onclick="removeDriver('${escapeHtml(name)}')" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">Remove</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateSpeakerAssignedList() {
+      const listDiv = document.getElementById('speaker-assigned-list');
+      const hiddenInput = document.getElementById('speaker-name');
+      const value = assignedSpeakers.join(', ');
+      hiddenInput.value = value;
+      
+      if (assignedSpeakers.length === 0) {
+        listDiv.innerHTML = '<div style="color: #94a3b8; font-size: 13px; padding: 8px;">No speakers assigned</div>';
+      } else {
+        listDiv.innerHTML = assignedSpeakers.map(name => `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; margin-bottom: 4px; background: #f1f5f9; border-radius: 6px; font-size: 14px;">
+            <span>${escapeHtml(name)}</span>
+            <button type="button" onclick="removeSpeaker('${escapeHtml(name)}')" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">Remove</button>
+          </div>
+        `).join('');
+      }
+    }
+
+    function updateVolunteerAssignedList() {
+      const listDiv = document.getElementById('volunteer-assigned-list');
+      const hiddenInput = document.getElementById('volunteer-name');
+      const value = assignedVolunteers.join(', ');
+      hiddenInput.value = value;
+      
+      if (assignedVolunteers.length === 0) {
+        listDiv.innerHTML = '<div style="color: #94a3b8; font-size: 13px; padding: 8px;">No volunteers assigned</div>';
+      } else {
+        listDiv.innerHTML = assignedVolunteers.map(name => `
+          <div style="display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; margin-bottom: 4px; background: #f1f5f9; border-radius: 6px; font-size: 14px;">
+            <span>${escapeHtml(name)}</span>
+            <button type="button" onclick="removeVolunteer('${escapeHtml(name)}')" style="background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; cursor: pointer; font-size: 12px;">Remove</button>
+          </div>
+        `).join('');
       }
     }
 
