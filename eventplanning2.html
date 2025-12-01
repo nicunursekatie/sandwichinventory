@@ -1688,7 +1688,7 @@
         const missingSpeaker = e.speaker_needed && !e.speaker_name_assigned;
         const missingVolunteer = e.volunteer_needed && !e.volunteer_name_assigned;
         
-        return missingDriver || missingSpeaker || missingVolunteer || !e.event_address || !e.sandwich_type || !e.destination_name;
+        return missingDriver || missingSpeaker || missingVolunteer || !e.event_address || !e.sandwich_type;
       });
 
       // Update badges
@@ -1829,9 +1829,22 @@
 
     function renderCalendarEvent(event) {
       const statusClass = event.status.toLowerCase().replace(' ', '-');
-      const timeDisplay = event.event_start_time 
-        ? formatTime12Hour(event.event_start_time)
-        : '';
+      
+      // Build time display: start time and (end time OR pickup time)
+      let timeDisplay = '';
+      if (event.event_start_time) {
+        const startTime = formatTime12Hour(event.event_start_time);
+        const endTime = event.event_end_time ? formatTime12Hour(event.event_end_time) : null;
+        const pickupTime = event.pickup_time ? formatTime12Hour(event.pickup_time) : null;
+        
+        if (endTime) {
+          timeDisplay = `${startTime} - ${endTime}`;
+        } else if (pickupTime) {
+          timeDisplay = `${startTime} (Pickup: ${pickupTime})`;
+        } else {
+          timeDisplay = startTime;
+        }
+      }
       
       const groupName = event.group_name || 'Unnamed Event';
       const sandwichCount = event.sandwich_count_planned || '?';
@@ -1946,7 +1959,7 @@
       }
       if (!event.event_address) missing.push('Address');
       if (!event.sandwich_type) missing.push('Sandwich Type');
-      if (!event.destination_name) missing.push('Destination');
+      // Destination removed from missing info - not required before event happens
 
       const deptDisplay = event.department_name ? `<div class="event-item-subtitle">${escapeHtml(event.department_name)}</div>` : '';
 
@@ -2278,14 +2291,120 @@
       }).join('');
     }
 
-    function sortDriverNeeds(field) {
+    function sortStaffingNeeds(field) {
       if (driverSortField === field) {
         driverSortAsc = !driverSortAsc;
       } else {
         driverSortField = field;
         driverSortAsc = true;
       }
-      renderDriverNeeds();
+      renderStaffingNeeds();
+    }
+
+    function renderSpeakerNeeds() {
+      let needsSpeaker = allEvents.filter(e => 
+        e.status === 'Scheduled' && e.speaker_needed && (!e.speaker_name_assigned || e.speaker_name_assigned.trim() === '')
+      );
+
+      // Sort
+      needsSpeaker.sort((a, b) => {
+        if (driverSortField === 'date') {
+          const dateA = new Date(a.event_date);
+          const dateB = new Date(b.event_date);
+          return driverSortAsc ? dateA - dateB : dateB - dateA;
+        } else if (driverSortField === 'area') {
+          const areaA = a.event_zip || a.event_city || '';
+          const areaB = b.event_zip || b.event_city || '';
+          return driverSortAsc ? areaA.localeCompare(areaB) : areaB.localeCompare(areaA);
+        }
+        return 0;
+      });
+
+      const tbody = document.getElementById('speakers-table-body');
+      
+      if (needsSpeaker.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 48px; color: #64748b;">All scheduled events have speakers assigned! 🎉</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = needsSpeaker.map(event => {
+        const groupDisplay = event.department_name 
+          ? `<strong>${escapeHtml(event.group_name)}</strong><br><span style="font-size: 12px; color: #64748b;">${escapeHtml(event.department_name)}</span>`
+          : `<strong>${escapeHtml(event.group_name)}</strong>`;
+
+        return `
+          <tr>
+            <td>
+              ${formatDate(event.event_date)}
+            </td>
+            <td>
+              ${event.event_start_time ? formatTime12Hour(event.event_start_time) : '—'} - ${event.event_end_time ? formatTime12Hour(event.event_end_time) : '—'}
+              ${event.pickup_time ? `<br><span style="font-size: 11px; color: #64748b;">Pickup: ${formatTime12Hour(event.pickup_time)}</span>` : ''}
+            </td>
+            <td>
+              ${groupDisplay}
+            </td>
+            <td>${escapeHtml(event.event_city || '')} ${escapeHtml(event.event_zip || '')}</td>
+            <td>${escapeHtml(event.event_address || '—')}</td>
+            <td>${event.sandwich_count_planned || '?'}</td>
+            <td>${escapeHtml(event.destination_name || 'TBD')}</td>
+            <td><button class="button-secondary" style="padding: 8px 16px; font-size: 13px;" onclick="openEventDetail('${event.__backendId}'); event.stopPropagation();">Assign</button></td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderVolunteerNeeds() {
+      let needsVolunteer = allEvents.filter(e => 
+        e.status === 'Scheduled' && e.volunteer_needed && (!e.volunteer_name_assigned || e.volunteer_name_assigned.trim() === '')
+      );
+
+      // Sort
+      needsVolunteer.sort((a, b) => {
+        if (driverSortField === 'date') {
+          const dateA = new Date(a.event_date);
+          const dateB = new Date(b.event_date);
+          return driverSortAsc ? dateA - dateB : dateB - dateA;
+        } else if (driverSortField === 'area') {
+          const areaA = a.event_zip || a.event_city || '';
+          const areaB = b.event_zip || b.event_city || '';
+          return driverSortAsc ? areaA.localeCompare(areaB) : areaB.localeCompare(areaA);
+        }
+        return 0;
+      });
+
+      const tbody = document.getElementById('volunteers-table-body');
+      
+      if (needsVolunteer.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 48px; color: #64748b;">All scheduled events have volunteers assigned! 🎉</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = needsVolunteer.map(event => {
+        const groupDisplay = event.department_name 
+          ? `<strong>${escapeHtml(event.group_name)}</strong><br><span style="font-size: 12px; color: #64748b;">${escapeHtml(event.department_name)}</span>`
+          : `<strong>${escapeHtml(event.group_name)}</strong>`;
+
+        return `
+          <tr>
+            <td>
+              ${formatDate(event.event_date)}
+            </td>
+            <td>
+              ${event.event_start_time ? formatTime12Hour(event.event_start_time) : '—'} - ${event.event_end_time ? formatTime12Hour(event.event_end_time) : '—'}
+              ${event.pickup_time ? `<br><span style="font-size: 11px; color: #64748b;">Pickup: ${formatTime12Hour(event.pickup_time)}</span>` : ''}
+            </td>
+            <td>
+              ${groupDisplay}
+            </td>
+            <td>${escapeHtml(event.event_city || '')} ${escapeHtml(event.event_zip || '')}</td>
+            <td>${escapeHtml(event.event_address || '—')}</td>
+            <td>${event.sandwich_count_planned || '?'}</td>
+            <td>${escapeHtml(event.destination_name || 'TBD')}</td>
+            <td><button class="button-secondary" style="padding: 8px 16px; font-size: 13px;" onclick="openEventDetail('${event.__backendId}'); event.stopPropagation();">Assign</button></td>
+          </tr>
+        `;
+      }).join('');
     }
 
     // Completed Events View
