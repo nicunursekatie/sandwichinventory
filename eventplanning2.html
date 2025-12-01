@@ -2569,38 +2569,30 @@
         return false;
       });
 
+      // Check if Google Maps API is available and working
       if (!window.google || !window.google.maps) {
-        container.innerHTML = `
-          <div style="text-align: center; color: #64748b; padding: 48px;">
-            <div style="font-size: 48px; margin-bottom: 16px;">🗺️</div>
-            <div style="font-weight: 600; margin-bottom: 8px; color: #1a202c;">Google Maps API Not Enabled</div>
-            <div style="font-size: 14px; margin-bottom: 16px; max-width: 500px; margin-left: auto; margin-right: auto;">
-              To enable the map view, you need to activate the Maps JavaScript API in Google Cloud Console:
-            </div>
-            <ol style="text-align: left; max-width: 500px; margin: 0 auto; font-size: 14px; line-height: 1.8;">
-              <li>Go to <a href="https://console.cloud.google.com/apis/library" target="_blank" style="color: #236383;">Google Cloud Console → APIs & Services → Library</a></li>
-              <li>Search for "Maps JavaScript API"</li>
-              <li>Click on it and press "Enable"</li>
-              <li>Wait a few minutes, then refresh this page</li>
-            </ol>
-            <div style="margin-top: 24px; padding: 16px; background: #f8fafc; border-radius: 8px; max-width: 500px; margin-left: auto; margin-right: auto;">
-              <div style="font-weight: 600; margin-bottom: 8px; color: #1a202c;">Alternative: View Events in List Format</div>
-              <button onclick="renderMapAsList()" style="padding: 8px 16px; background: #236383; color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 14px;">Show Events as List</button>
-            </div>
-          </div>
-        `;
+        // API not loaded yet or failed - show list view instead
+        renderMapAsList();
         return;
       }
 
-      // Initialize map if needed
-      if (!mapInstance) {
-        mapInstance = new google.maps.Map(container, {
-          zoom: 10,
-          center: { lat: 40.7128, lng: -74.0060 }, // Default to NYC, will adjust to events
-          mapTypeControl: true,
-          streetViewControl: true,
-          fullscreenControl: true
-        });
+      // Try to initialize map, but catch errors if API is not activated
+      try {
+        // Initialize map if needed
+        if (!mapInstance) {
+          mapInstance = new google.maps.Map(container, {
+            zoom: 10,
+            center: { lat: 40.7128, lng: -74.0060 }, // Default to NYC, will adjust to events
+            mapTypeControl: true,
+            streetViewControl: true,
+            fullscreenControl: true
+          });
+        }
+      } catch (error) {
+        // If map initialization fails (e.g., API not activated), show list view
+        console.warn('Google Maps initialization failed, using list view:', error);
+        renderMapAsList();
+        return;
       }
 
       // Clear existing markers
@@ -2621,7 +2613,7 @@
         if (!address) return;
 
         geocoder.geocode({ address: address }, (results, status) => {
-          if (status === 'OK' && results[0]) {
+          if (status === 'OK' && results[0] && window.google && window.google.maps) {
             const location = results[0].geometry.location;
             
             // Determine marker color based on status and needs
@@ -2716,8 +2708,28 @@
         return false;
       });
 
+      // Show helpful message at the top
+      let html = `
+        <div style="margin-bottom: 16px; padding: 16px; background: #fef3c7; border-left: 4px solid #fbad3f; border-radius: 8px;">
+          <div style="font-weight: 600; margin-bottom: 8px; color: #1a202c;">📍 Map View Unavailable</div>
+          <div style="font-size: 14px; color: #64748b; margin-bottom: 12px;">
+            Google Maps API is not enabled. Showing events in list format instead.
+          </div>
+          <details style="font-size: 13px; color: #64748b;">
+            <summary style="cursor: pointer; color: #236383; font-weight: 600;">How to enable map view</summary>
+            <ol style="margin-top: 8px; padding-left: 20px; line-height: 1.8;">
+              <li>Go to <a href="https://console.cloud.google.com/apis/library" target="_blank" style="color: #236383;">Google Cloud Console → APIs & Services → Library</a></li>
+              <li>Search for "Maps JavaScript API"</li>
+              <li>Click on it and press "Enable"</li>
+              <li>Wait a few minutes, then refresh this page</li>
+            </ol>
+          </details>
+        </div>
+      `;
+
       if (eventsToShow.length === 0) {
-        container.innerHTML = '<div style="text-align: center; color: #64748b; padding: 48px;"><div style="font-size: 48px; margin-bottom: 16px;">📍</div><div>No events to display</div></div>';
+        html += '<div style="text-align: center; color: #64748b; padding: 48px;"><div style="font-size: 48px; margin-bottom: 16px;">📍</div><div>No events to display</div></div>';
+        container.innerHTML = html;
         return;
       }
 
@@ -2728,7 +2740,7 @@
         return dateA - dateB;
       });
 
-      let html = '<div style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto; padding: 8px;">';
+      html += '<div style="display: flex; flex-direction: column; gap: 12px; max-height: 600px; overflow-y: auto; padding: 8px;">';
       
       eventsToShow.forEach(event => {
         const address = `${event.event_address || ''} ${event.event_city || ''} ${event.event_zip || ''}`.trim();
