@@ -864,11 +864,25 @@
        </div>
       </div>
      </div>
+     <div id="pipeline-bulk-actions" style="display: none; margin-bottom: 16px; padding: 12px; background: #f8fafc; border-radius: 8px; display: flex; align-items: center; gap: 12px;">
+      <span id="pipeline-selected-count" style="font-weight: 600; color: #1a202c;">0 events selected</span>
+      <select id="bulk-status-change" style="padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 14px;">
+       <option value="">Change status to...</option>
+       <option value="New">New</option>
+       <option value="In Process">In Process</option>
+       <option value="Scheduled">Scheduled</option>
+       <option value="Completed">Completed</option>
+       <option value="Canceled">Canceled</option>
+      </select>
+      <button class="action-button" onclick="applyBulkStatusChange()" style="padding: 8px 16px; font-size: 14px;">Apply</button>
+      <button class="button-secondary" onclick="clearPipelineSelection()" style="padding: 8px 16px; font-size: 14px;">Clear Selection</button>
+     </div>
      <div class="pipeline-table">
       <div class="table-wrapper">
        <table>
         <thead>
          <tr>
+          <th style="width: 40px;"><input type="checkbox" id="select-all-pipeline" onchange="toggleSelectAllPipeline()" title="Select All"></th>
           <th>Date</th>
           <th>Group / Department</th>
           <th>Status</th>
@@ -1105,7 +1119,7 @@
         </div>
        </div><!-- Driver Section -->
        <div style="margin-top: 20px; padding: 16px; background: #f8fafc; border-radius: 8px;">
-        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><strong style="font-size: 15px;">🚗 Driver</strong> <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"> <input type="checkbox" id="driver-needed" onchange="toggleDriverSection()"> <span>Driver Needed</span> </label>
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;"><strong style="font-size: 15px;">🚗 Driver</strong> <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;"> <input type="checkbox" id="driver-needed" onchange="toggleDriverSection()"> <span>Driver Needed</span> </label> <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; margin-left: 16px;"> <input type="checkbox" id="self-transport" onchange="toggleSelfTransport()"> <span style="color: #059669; font-weight: 600;">🚚 Self-Transport</span> </label>
         </div>
         <div id="driver-details" style="display: none;">
          <div class="form-grid">
@@ -1733,7 +1747,7 @@
 
     function renderUpcomingMissingItem(event) {
       const missing = [];
-      if (event.driver_needed && !event.driver_name_assigned) {
+      if (event.driver_needed && !event.driver_name_assigned && !event.self_transport) {
         const count = event.driver_count > 1 ? ` (${event.driver_count})` : '';
         missing.push(`Driver${count}`);
       }
@@ -1763,6 +1777,7 @@
           <div class="event-item-meta">
             <span>📅 ${formatDate(event.event_date)}</span>
             ${event.refrigerated_van_needed ? '<span style="color: #a31c41; font-weight: 600;">❄️ Fridge Van</span>' : ''}
+            ${event.self_transport ? '<span style="color: #059669; font-weight: 600;">🚚 Self-Transport</span>' : ''}
           </div>
           <div class="missing-icons">
             ${missing.map(m => `<span class="missing-icon">⚠️ ${m}</span>`).join('')}
@@ -1806,9 +1821,16 @@
       });
 
       filtered.sort((a, b) => {
-        const dateA = new Date(a.event_date);
-        const dateB = new Date(b.event_date);
-        return dateA - dateB;
+        // Handle missing dates - put them at the end
+        if (!a.event_date && !b.event_date) return 0;
+        if (!a.event_date) return 1;
+        if (!b.event_date) return -1;
+        
+        // For YYYY-MM-DD format, string comparison works perfectly
+        // This is more reliable than Date object comparison
+        if (a.event_date < b.event_date) return -1;
+        if (a.event_date > b.event_date) return 1;
+        return 0;
       });
 
       const tbody = document.getElementById('pipeline-table-body');
@@ -1819,7 +1841,7 @@
       }
 
       tbody.innerHTML = filtered.map(event => {
-        const hasDriver = event.driver_needed ? !!event.driver_name_assigned : true;
+        const hasDriver = event.self_transport ? true : (event.driver_needed ? !!event.driver_name_assigned : true);
         const hasSpeaker = event.speaker_needed ? !!event.speaker_name_assigned : true;
         const hasVolunteer = event.volunteer_needed ? !!event.volunteer_name_assigned : true;
         const hasDestination = !!event.destination_name;
@@ -1831,22 +1853,24 @@
           : `<strong>${escapeHtml(event.group_name)}</strong>`;
 
         return `
-          <tr onclick="openEventDetail('${event.__backendId}')">
-            <td>
+          <tr>
+            <td onclick="event.stopPropagation()"><input type="checkbox" class="pipeline-event-checkbox" value="${event.__backendId}" onchange="updatePipelineBulkActions()" onclick="event.stopPropagation()"></td>
+            <td onclick="openEventDetail('${event.__backendId}')">
               ${formatDate(event.event_date)}<br>
               <span style="font-size: 12px; color: #64748b;">
                 ${event.event_start_time ? event.event_start_time : '—'} - ${event.event_end_time ? event.event_end_time : '—'}
                 ${event.pickup_time ? `<br>Pickup: ${event.pickup_time}` : ''}
               </span>
               ${event.refrigerated_van_needed ? '<br><span style="font-size: 11px; color: #a31c41; font-weight: 600;">❄️ Fridge Van</span>' : ''}
+              ${event.self_transport ? '<br><span style="font-size: 11px; color: #059669; font-weight: 600;">🚚 Self-Transport</span>' : ''}
             </td>
-            <td>${groupDisplay}</td>
-            <td><span class="status-badge status-${event.status.toLowerCase().replace(' ', '-')}">${event.status}</span></td>
-            <td>${escapeHtml(event.tsp_contact || '—')}</td>
-            <td>${event.sandwich_count_planned || '?'}</td>
-            <td>
+            <td onclick="openEventDetail('${event.__backendId}')">${groupDisplay}</td>
+            <td onclick="openEventDetail('${event.__backendId}')"><span class="status-badge status-${event.status.toLowerCase().replace(' ', '-')}">${event.status}</span></td>
+            <td onclick="openEventDetail('${event.__backendId}')">${escapeHtml(event.tsp_contact || '—')}</td>
+            <td onclick="openEventDetail('${event.__backendId}')">${event.sandwich_count_planned || '?'}</td>
+            <td onclick="openEventDetail('${event.__backendId}')">
               <div class="completeness-indicators">
-                ${event.driver_needed ? `<span class="indicator-icon ${hasDriver ? 'complete' : 'incomplete'}" title="Driver">🚗</span>` : ''}
+                ${event.self_transport ? `<span class="indicator-icon complete" title="Self-Transport">🚚</span>` : (event.driver_needed ? `<span class="indicator-icon ${hasDriver ? 'complete' : 'incomplete'}" title="Driver">🚗</span>` : '')}
                 ${event.speaker_needed ? `<span class="indicator-icon ${hasSpeaker ? 'complete' : 'incomplete'}" title="Speaker">🎤</span>` : ''}
                 ${event.volunteer_needed ? `<span class="indicator-icon ${hasVolunteer ? 'complete' : 'incomplete'}" title="Volunteer">🙋</span>` : ''}
                 <span class="indicator-icon ${hasDestination ? 'complete' : 'incomplete'}" title="Destination">📍</span>
@@ -1857,12 +1881,121 @@
           </tr>
         `;
       }).join('');
+      
+      // Update select all checkbox state
+      updateSelectAllCheckbox();
+    }
+
+    // Bulk editing functions for pipeline
+    function toggleSelectAllPipeline() {
+      const selectAll = document.getElementById('select-all-pipeline').checked;
+      const checkboxes = document.querySelectorAll('.pipeline-event-checkbox');
+      checkboxes.forEach(cb => cb.checked = selectAll);
+      updatePipelineBulkActions();
+    }
+
+    function updateSelectAllCheckbox() {
+      const checkboxes = document.querySelectorAll('.pipeline-event-checkbox');
+      const selectAll = document.getElementById('select-all-pipeline');
+      if (checkboxes.length === 0) {
+        selectAll.checked = false;
+        selectAll.indeterminate = false;
+        return;
+      }
+      const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+      selectAll.checked = checkedCount === checkboxes.length;
+      selectAll.indeterminate = checkedCount > 0 && checkedCount < checkboxes.length;
+    }
+
+    function updatePipelineBulkActions() {
+      const checkboxes = document.querySelectorAll('.pipeline-event-checkbox:checked');
+      const bulkActions = document.getElementById('pipeline-bulk-actions');
+      const selectedCount = document.getElementById('pipeline-selected-count');
+      
+      if (checkboxes.length > 0) {
+        bulkActions.style.display = 'flex';
+        selectedCount.textContent = `${checkboxes.length} event${checkboxes.length !== 1 ? 's' : ''} selected`;
+      } else {
+        bulkActions.style.display = 'none';
+      }
+      
+      updateSelectAllCheckbox();
+    }
+
+    function clearPipelineSelection() {
+      const checkboxes = document.querySelectorAll('.pipeline-event-checkbox');
+      checkboxes.forEach(cb => cb.checked = false);
+      document.getElementById('select-all-pipeline').checked = false;
+      document.getElementById('select-all-pipeline').indeterminate = false;
+      document.getElementById('bulk-status-change').value = '';
+      updatePipelineBulkActions();
+    }
+
+    async function applyBulkStatusChange() {
+      const newStatus = document.getElementById('bulk-status-change').value;
+      if (!newStatus) {
+        showToast('Please select a status to apply', 'error');
+        return;
+      }
+
+      const checkboxes = document.querySelectorAll('.pipeline-event-checkbox:checked');
+      if (checkboxes.length === 0) {
+        showToast('Please select at least one event', 'error');
+        return;
+      }
+
+      if (!database) {
+        showToast('Firebase database is not available. Please refresh the page and try again.', 'error');
+        return;
+      }
+
+      const selectedIds = Array.from(checkboxes).map(cb => cb.value);
+      const now = new Date().toISOString();
+      
+      // Determine which timestamp field to update based on status
+      let timestampField = '';
+      if (newStatus === 'New') timestampField = 'status_new_at';
+      else if (newStatus === 'In Process') timestampField = 'status_in_process_at';
+      else if (newStatus === 'Scheduled') timestampField = 'status_scheduled_at';
+      else if (newStatus === 'Completed') timestampField = 'status_completed_at';
+
+      const updatePromises = selectedIds.map(async (id) => {
+        const event = allEvents.find(e => e.__backendId === id);
+        if (!event) return;
+
+        const updateData = {
+          status: newStatus,
+          last_activity_at: now
+        };
+
+        // Only update timestamp if status changed
+        if (event.status !== newStatus && timestampField) {
+          updateData[timestampField] = now;
+        }
+
+        try {
+          await database.ref(`events/${id}`).update(updateData);
+        } catch (error) {
+          console.error(`Error updating event ${id}:`, error);
+          throw error;
+        }
+      });
+
+      try {
+        await Promise.all(updatePromises);
+        showToast(`Successfully updated ${selectedIds.length} event${selectedIds.length !== 1 ? 's' : ''} to "${newStatus}"`, 'success');
+        clearPipelineSelection();
+        document.getElementById('bulk-status-change').value = '';
+      } catch (error) {
+        console.error('Error in bulk status update:', error);
+        showToast('Error updating events. Some may have been updated. Please refresh and try again.', 'error');
+      }
     }
 
     // Driver Needs View
     function renderDriverNeeds() {
       let needsDriver = allEvents.filter(e => 
-        e.status === 'Scheduled' && e.driver_needed && (!e.driver_name_assigned || e.driver_name_assigned.trim() === '')
+        e.status === 'Scheduled' && e.driver_needed && !e.self_transport && (!e.driver_name_assigned || e.driver_name_assigned.trim() === '')
       );
 
       // Update badge
@@ -2123,7 +2256,28 @@
     // Toggle functions for role sections
     function toggleDriverSection() {
       const needed = document.getElementById('driver-needed').checked;
+      const selfTransport = document.getElementById('self-transport').checked;
+      
+      // If self-transport is checked, uncheck driver needed
+      if (selfTransport && needed) {
+        document.getElementById('driver-needed').checked = false;
+        needed = false;
+      }
+      
       document.getElementById('driver-details').style.display = needed ? 'block' : 'none';
+      updateDriverAssignmentState();
+    }
+    
+    function toggleSelfTransport() {
+      const selfTransport = document.getElementById('self-transport').checked;
+      const driverNeeded = document.getElementById('driver-needed');
+      const driverDetails = document.getElementById('driver-details');
+      
+      if (selfTransport) {
+        // Uncheck driver needed and hide driver details
+        driverNeeded.checked = false;
+        driverDetails.style.display = 'none';
+      }
       updateDriverAssignmentState();
     }
 
@@ -2150,29 +2304,23 @@
     function updateDriverAssignmentState() {
       const status = document.getElementById('event-status').value;
       const needed = document.getElementById('driver-needed').checked;
+      const selfTransport = document.getElementById('self-transport').checked;
       const driverNameInput = document.getElementById('driver-name');
       const driverAttendanceField = document.getElementById('driver-attendance-field');
       
-      const canAssign = needed && (status === 'In Process' || status === 'Scheduled' || status === 'Completed');
+      const canAssign = needed && !selfTransport && (status === 'In Process' || status === 'Scheduled' || status === 'Completed');
       const isCompleted = status === 'Completed';
       
       driverNameInput.disabled = !canAssign;
       
-      // Show attendance checkbox only when event is completed
-      if (needed && isCompleted) {
+      // Show attendance checkbox only when event is completed and driver is needed (not self-transport)
+      if (needed && !selfTransport && isCompleted) {
         driverAttendanceField.style.display = 'flex';
       } else {
         driverAttendanceField.style.display = 'none';
       }
       
-      if (canAssign) {
-        const count = document.getElementById('driver-count').value || 1;
-        driverNameInput.placeholder = count > 1 ? 'Enter names, separate with commas' : 'Enter driver name';
-      } else if (!needed) {
-        driverNameInput.placeholder = 'Driver not needed for this event';
-      } else {
-        driverNameInput.placeholder = 'Available when event is In Process or Scheduled';
-      }
+      // Note: placeholder removed for select elements
     }
 
     function updateSpeakerAssignmentState() {
@@ -2230,6 +2378,7 @@
       
       // Reset role sections
       document.getElementById('driver-needed').checked = false;
+      document.getElementById('self-transport').checked = false;
       document.getElementById('speaker-needed').checked = false;
       document.getElementById('volunteer-needed').checked = false;
       toggleDriverSection();
@@ -2274,6 +2423,7 @@
       
       // Driver section
       document.getElementById('driver-needed').checked = currentEvent.driver_needed || false;
+      document.getElementById('self-transport').checked = currentEvent.self_transport || false;
       document.getElementById('driver-count').value = currentEvent.driver_count || 1;
       document.getElementById('refrigerated-van-needed').checked = currentEvent.refrigerated_van_needed || false;
       // Set selected drivers (handle both string and array)
@@ -2403,6 +2553,7 @@
         destination_address: document.getElementById('destination-address').value,
         tsp_contact: document.getElementById('tsp-contact').value,
         driver_needed: document.getElementById('driver-needed').checked,
+        self_transport: document.getElementById('self-transport').checked,
         driver_count: parseInt(document.getElementById('driver-count').value) || 1,
         refrigerated_van_needed: document.getElementById('refrigerated-van-needed').checked,
         driver_name_assigned: Array.from(document.getElementById('driver-name').selectedOptions).map(opt => opt.value).filter(v => v).join(', '),
