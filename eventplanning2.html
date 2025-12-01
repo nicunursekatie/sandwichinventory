@@ -1456,11 +1456,156 @@
     let driverSortAsc = true;
     let pendingImportData = [];
     
-    // Role lists
+    // Role lists - hardcoded volunteer roster
+    const defaultRoleList = [
+      'Alaysia Venable',
+      'Alex Farquarson',
+      'Allison Tanenbaum',
+      'Amy Santy',
+      'Amy Kelsch',
+      'Amy Price',
+      'Ana LaBoy',
+      'Andrew McElroy',
+      'Andy Hiles',
+      'Angie Bradenburg',
+      'Arlyn Bisogno',
+      'Ashley Roseberry',
+      'Ashley Rush',
+      'Ataesia Mickens',
+      'Ben Carroll',
+      'Benjamin Gross',
+      'Bettina Smalley',
+      'Brandon Graby',
+      'Bree Roe',
+      'Brent Bernath',
+      'Brian Williams',
+      'Brigith Gonzalez',
+      'Caitlin Fitch',
+      'Catherine Newsome',
+      'Cherie Syiek',
+      'Chris Frye',
+      'Chris Van Buren',
+      'Christian Rivers',
+      'Christina Dardano',
+      'Christine Cooper Nowicki',
+      'Claire Jo Wise',
+      'Corinne Cramer',
+      'Daniel Bekerman',
+      'Darren Wolkow',
+      'Dawn Mullican',
+      'Debbie Cicero',
+      'Deborah G. Shendelman',
+      'Deborah Mastin',
+      'Debra Brown',
+      'Deirdre Joe',
+      'Della Fried',
+      'Doug Bradenburg',
+      'Ed Ogletree',
+      'Elaine Strauss',
+      'Elisabeth Callahan',
+      'Elizabeth Dickson',
+      'Elizabeth Gordon',
+      'Ellen Tighe',
+      'Elyn Daza',
+      'Emily Nelson',
+      'Emily Roscher',
+      'Erica Miller',
+      'Ethan Levine',
+      'Farah Angersola',
+      'Felipe Buzeta',
+      'Gary Munder',
+      'Gina Matthews',
+      'Glenda Lalljee',
+      'Greg L. Rosher',
+      'Holly Smith',
+      'Hunter Oskouei',
+      'Jade Schoenberg',
+      'James Cramer',
+      'Jan Jay',
+      'Jason Smeija',
+      'Jay Rein',
+      'Jeff Gross',
+      'Jenn Parks',
+      'Jessica Garrido',
+      'Jim Tropauer',
+      'John Paine',
+      'John Stembel',
+      'John Truono',
+      'Jonathan Hobson',
+      'Jonathan Weintraub',
+      'Jordan Horne',
+      'Josh Tamarkin',
+      'Judy Toenmeiser',
+      'Karen Cohen',
+      'Kathy Ledford',
+      'Katie Conroy',
+      'Kellie Whitley',
+      'Kelly McDonald',
+      'Kerol Guaqueta',
+      'Kim Ross',
+      'Kristin Storm',
+      'Laura Warren',
+      'Lauren Eckman',
+      'Lauren Roberts',
+      'Laurie Myler',
+      'Leslie Johnson',
+      'Lexi Hayne',
+      'Libby Clement',
+      'Linda Beer',
+      'Linda Wohlbach',
+      'Lisa Gordon',
+      'Lisa Hiles',
+      'Lori Wilson',
+      'Luz',
+      'Luz Trujillo',
+      'Lynn Grant',
+      'Marni Bekerman',
+      'Mary Mitchell',
+      'Melinda DeMaria',
+      'Melissa Spencer',
+      'Melody Mitchell',
+      'Mimi Loson',
+      'Miriam Falaki',
+      'Missionary Meshall Goolsby',
+      'Nabih Karim',
+      'Nancy Miller',
+      'Nedia Hicks',
+      'Nisha Gross',
+      'Noel Clark',
+      'Pamela Kinsley',
+      'Parker Cohen',
+      'Pat McGreevy',
+      'Patricia Hunter',
+      'Randy Whiting',
+      'Rayna Nash',
+      'Renee Harris',
+      'Renee Walton',
+      'Rina Wolfe',
+      'Sarah Dolphino',
+      'Sarah Kass',
+      'Serena Terry',
+      'Sharron Hope',
+      'Shayla Smith',
+      'Sonika Tataria',
+      'Steve Miles',
+      'Susan McKenzie',
+      'Susan Soper',
+      'Susanna + Richard Warren',
+      'Suzanne Grosswald',
+      'Suzanne O\'Brien',
+      'Suzanne Sackleh',
+      'Tom Riddick',
+      'Tonya Brown',
+      'Ty Vatzakas',
+      'Veronia (and daughter) Kelly-Cash',
+      'Vicki Cherry',
+      'Victoria Rosetti'
+    ];
+
     let roleLists = {
-      drivers: [],
-      speakers: [],
-      volunteers: []
+      drivers: [...defaultRoleList],
+      speakers: [...defaultRoleList],
+      volunteers: [...defaultRoleList]
     };
 
     // Default config
@@ -4039,15 +4184,27 @@
     }
 
     function loadRoleLists() {
+      // Helper to ensure we always have the default list as fallback
+      function ensureDefaults(lists) {
+        return {
+          drivers: (lists.drivers && lists.drivers.length > 0) ? lists.drivers : [...defaultRoleList],
+          speakers: (lists.speakers && lists.speakers.length > 0) ? lists.speakers : [...defaultRoleList],
+          volunteers: (lists.volunteers && lists.volunteers.length > 0) ? lists.volunteers : [...defaultRoleList]
+        };
+      }
+
       if (!database) {
         // Fallback to localStorage
         const stored = localStorage.getItem('roleLists');
         if (stored) {
           try {
-            roleLists = JSON.parse(stored);
+            roleLists = ensureDefaults(JSON.parse(stored));
           } catch (e) {
             console.error('Error parsing stored role lists:', e);
+            roleLists = ensureDefaults({});
           }
+        } else {
+          roleLists = ensureDefaults({});
         }
         populateRoleManagementFields();
         return;
@@ -4056,13 +4213,7 @@
       database.ref('roleLists').once('value')
         .then(snapshot => {
           const data = snapshot.val();
-          if (data) {
-            roleLists = {
-              drivers: data.drivers || [],
-              speakers: data.speakers || [],
-              volunteers: data.volunteers || []
-            };
-          }
+          roleLists = ensureDefaults(data || {});
           populateRoleManagementFields();
           populateRoleDropdowns();
         })
@@ -4072,10 +4223,13 @@
           const stored = localStorage.getItem('roleLists');
           if (stored) {
             try {
-              roleLists = JSON.parse(stored);
+              roleLists = ensureDefaults(JSON.parse(stored));
             } catch (e) {
               console.error('Error parsing stored role lists:', e);
+              roleLists = ensureDefaults({});
             }
+          } else {
+            roleLists = ensureDefaults({});
           }
           populateRoleManagementFields();
           populateRoleDropdowns();
