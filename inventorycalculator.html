@@ -1861,14 +1861,8 @@
             }
             const coolersNeeded = Math.ceil(sandwichCount / 100);
 
-            // Calculate total ounces needed for shopping
-            const totalMeatOzNeeded = sandwichCount * meatPerSandwichOz;
-            // Round up to nearest 2-3 oz increment
-            const increment = meatPerSandwichOz; // Use the same increment as per sandwich (2 or 3 oz)
-            const meatOzToBuy = Math.ceil(totalMeatOzNeeded / increment) * increment;
-            
-            // Helper function to format ounces nicely
-            function formatOunces(oz) {
+            // Helper function to format package size nicely
+            function formatPackageSize(oz) {
                 if (oz >= 16) {
                     const lbs = Math.floor(oz / 16);
                     const remainingOz = oz % 16;
@@ -1975,13 +1969,27 @@
             
             // No longer showing excess ingredient details to maintain trust and professionalism
 
+            // Format package description
+            function formatPackageSize(oz) {
+                if (oz >= 16) {
+                    const lbs = Math.floor(oz / 16);
+                    const remainingOz = oz % 16;
+                    if (remainingOz === 0) {
+                        return `${lbs} ${lbs === 1 ? 'lb' : 'lbs'}`;
+                    } else {
+                        return `${lbs} ${lbs === 1 ? 'lb' : 'lbs'} ${remainingOz} oz`;
+                    }
+                }
+                return `${oz} oz`;
+            }
+            
             document.getElementById('calcResult').innerHTML = `
                 ${budgetStatusMessage}
                 <div class="result-grid">
                     <div class="result-item">
-                        <h4>Meat Needed</h4>
-                        <div class="number">${formatOunces(meatOzToBuy)}</div>
-                        <div class="description">Buy in ${increment} oz increments</div>
+                        <h4>Meat Packages</h4>
+                        <div class="number">${meatPackages}</div>
+                        <div class="description">${meatDescription} (${formatPackageSize(meatPackageWeightOz)} each)</div>
                     </div>
                     <div class="result-item">
                         <h4>Cheese Packages</h4>
@@ -2042,8 +2050,8 @@
                     meatTypeName = 'Meat';
             }
             
-            // Create shopping description with ounces
-            const meatShoppingDescription = `${formatOunces(meatOzToBuy)} of ${meatTypeName} (buy in ${increment} oz increments)`;
+            // Create shopping description with package count
+            const meatShoppingDescription = `${meatPackages} × ${meatTypeName} (${formatPackageSize(meatPackageWeightOz)} packages)`;
             let cheeseShoppingDescription;
             switch(cheeseType) {
                 case 'adams-reserve':
@@ -2094,13 +2102,8 @@
             const meatPerSandwich = meatPerSandwichOz * 2; // Convert oz to slices for package calculations
             const cheesePerSandwich = 2;
             
-            // Calculate total ounces needed
-            const totalMeatOzNeeded = sandwichCount * meatPerSandwichOz;
-            const increment = meatPerSandwichOz;
-            const meatOzToBuy = Math.ceil(totalMeatOzNeeded / increment) * increment;
-            
-            // Helper function to format ounces nicely
-            function formatOunces(oz) {
+            // Helper function to format package size nicely
+            function formatPackageSize(oz) {
                 if (oz >= 16) {
                     const lbs = Math.floor(oz / 16);
                     const remainingOz = oz % 16;
@@ -2299,7 +2302,7 @@
                         <h3>Budget Summary</h3>
                         <div class="pdf-grid">
                             <div>
-                                <p><strong>Meat needed:</strong> ${formatOunces(meatOzToBuy)} (buy in ${increment} oz increments)</p>
+                                <p><strong>Meat packages needed:</strong> ${meatPackages} (${formatPackageSize(meatPackageWeightOz)} each)</p>
                                 <p><strong>Cheese packages needed:</strong> ${cheesePackages}</p>
                                 <p><strong>Bread packages needed:</strong> ${breadPackages}</p>
                             </div>
@@ -2314,7 +2317,7 @@
                     <div class="pdf-section">
                         <h3>Shopping Checklist</h3>
                         <ul class="pdf-checklist">
-                            <li>☐ ${formatOunces(meatOzToBuy)} of ${meatTypeName} (buy in ${increment} oz increments)</li>
+                            <li>☐ ${meatPackages} × ${meatTypeName} (${formatPackageSize(meatPackageWeightOz)} packages)</li>
                             <li>☐ ${cheesePackages} × ${cheeseText.replace('🧀 ', '').split(' (')[0]} cheese slices</li>
                             <li>☐ ${breadPackages} × ${breadText.replace('🍞 ', '').split(' (')[0]}</li>
                             <li>☐ ${Math.ceil(sandwichCount / 480)} × Zip-lock sandwich bags (480 count)</li>
