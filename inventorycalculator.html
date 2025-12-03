@@ -547,6 +547,25 @@
             margin: 20px 0;
         }
         
+        .safety-banner > div {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            text-align: left;
+        }
+        
+        @media (max-width: 900px) {
+            .safety-banner > div {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 500px) {
+            .safety-banner > div {
+                grid-template-columns: 1fr;
+            }
+        }
+        
         .recipe-card {
             background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
             color: white;
@@ -1488,8 +1507,8 @@
             <h2>🥪 Perfect Sandwich Recipe</h2>
             <div class="recipe-card">
                 <h3>Deli Sandwich - Every Sandwich Contains</h3>
-                <div style="margin-bottom: 20px;">
-                    <img src="sandwich assembly with ounces.png" alt="Deli sandwich assembly guide" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div style="margin-bottom: 20px; text-align: center;">
+                    <img src="sandwich assembly with ounces.png" alt="Deli sandwich assembly guide" style="width: 100%; max-width: 400px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 </div>
                 <div class="recipe-ingredients">
                     <div class="ingredient">
@@ -1505,12 +1524,15 @@
                         <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
                     </div>
                 </div>
+                <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.15); border-radius: 8px; font-size: 0.95em;">
+                    <strong>Assembly Order:</strong> Bread → Cheese → Meat → Cheese → Bread
+                </div>
             </div>
             
             <div class="recipe-card" style="margin-top: 30px;">
                 <h3>PB&J Sandwich - Assembly Instructions</h3>
-                <div style="margin-bottom: 20px;">
-                    <img src="PBJ & ASSEMBLY PEANUT BUTTER ON BOTH SIDES, JELLY ON ONE (1).png" alt="PB&J sandwich assembly guide" style="width: 100%; max-width: 600px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div style="margin-bottom: 20px; text-align: center;">
+                    <img src="PBJ & ASSEMBLY PEANUT BUTTER ON BOTH SIDES, JELLY ON ONE (1).png" alt="PB&J sandwich assembly guide" style="width: 100%; max-width: 400px; height: auto; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 </div>
                 <div class="recipe-ingredients">
                     <div class="ingredient">
@@ -1533,7 +1555,7 @@
         </div>
 
         <div class="safety-banner">
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; text-align: left;">
+            <div>
                 <div>🛡️ <strong>Keep ingredients refrigerated</strong></div>
                 <div>🧤 <strong>Please use gloves & hair ties + hair/beard nets</strong></div>
                 <div>📦 <strong>Remove only 1 package of meat at a time</strong></div>
