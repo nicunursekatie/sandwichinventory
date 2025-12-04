@@ -9,6 +9,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js"></script>
+  <!-- Firebase Data Connect SDK -->
+  <script src="/_sdk/data_sdk.js" onerror="console.warn('Firebase Data Connect SDK failed to load')"></script>
   <!-- Google Maps API -->
   <script>
     // Global callback for Google Maps
@@ -1717,8 +1719,8 @@
         return;
       }
 
-      if (!database) {
-        console.warn('Firebase database not available, skipping auto-complete');
+      if (!database && !window.dataSdk) {
+        console.warn('Neither Firebase database nor Data SDK available, skipping auto-complete');
         return;
       }
 
@@ -3475,9 +3477,9 @@
       e.preventDefault();
 
       // Check if Firebase database is available
-      if (!database) {
-        showToast('Firebase database is not available. Please refresh the page and try again.', 'error');
-        console.error('Firebase database not available when attempting to save event');
+      if (!database && !window.dataSdk) {
+        showToast('Neither Firebase database nor Data SDK available. Please refresh the page and try again.', 'error');
+        console.error('Firebase database and Data SDK not available when attempting to save event');
         return;
       }
 
@@ -3603,9 +3605,9 @@
       if (!currentEvent) return;
 
       // Check if Firebase database is available
-      if (!database) {
-        showToast('Firebase database is not available. Please refresh the page and try again.', 'error');
-        console.error('Firebase database not available when attempting to delete event');
+      if (!database && !window.dataSdk) {
+        showToast('Neither Firebase database nor Data SDK available. Please refresh the page and try again.', 'error');
+        console.error('Firebase database and Data SDK not available when attempting to delete event');
         return;
       }
 
@@ -4116,10 +4118,10 @@
         return;
       }
 
-      // Check if Firebase database is available
-      if (!database) {
-        showToast('Firebase database is not available. Please refresh the page and try again.', 'error');
-        console.error('Firebase database not available');
+      // Check if Firebase database or Data SDK is available
+      if (!database && !window.dataSdk) {
+        showToast('Neither Firebase database nor Data SDK available. Please refresh the page and try again.', 'error');
+        console.error('Firebase database and Data SDK not available for import');
         return;
       }
 
