@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Donation Receipt Generator - The Sandwich Project</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -126,6 +127,117 @@
             line-height: 1.5;
         }
 
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            color: #236383;
+        }
+
+        .tab.active {
+            color: #236383;
+            border-bottom-color: #fbad3f;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .file-upload {
+            border: 2px dashed #47b3cb;
+            border-radius: 6px;
+            padding: 30px;
+            text-align: center;
+            background: #f9f9f9;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: #007e8c;
+            background: #f0f8ff;
+        }
+
+        .file-upload input[type="file"] {
+            display: none;
+        }
+
+        .file-upload-label {
+            display: block;
+            cursor: pointer;
+            color: #236383;
+            font-weight: 600;
+        }
+
+        .file-info {
+            margin-top: 15px;
+            padding: 15px;
+            background: #e8f5e9;
+            border-radius: 6px;
+            display: none;
+        }
+
+        .file-info.show {
+            display: block;
+        }
+
+        .batch-preview {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            padding: 15px;
+            background: #fafafa;
+        }
+
+        .batch-preview table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .batch-preview th,
+        .batch-preview td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+            font-size: 13px;
+        }
+
+        .batch-preview th {
+            background: #236383;
+            color: white;
+            font-weight: 600;
+        }
+
+        .batch-preview tr:hover {
+            background: #f0f0f0;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #47b3cb 0%, #007e8c 100%);
+        }
+
         @media (max-width: 600px) {
             .row {
                 grid-template-columns: 1fr;
@@ -153,7 +265,14 @@
             <strong>For Benevity & Corporate Matching:</strong> This generator creates official donation acknowledgment letters with all required elements including EIN, donation details, and the required "no goods or services" statement.
         </div>
 
-        <form id="receiptForm">
+        <div class="tabs">
+            <button type="button" class="tab active" onclick="switchTab('single')">Single Receipt</button>
+            <button type="button" class="tab" onclick="switchTab('batch')">Batch Process</button>
+        </div>
+
+        <!-- Single Receipt Form -->
+        <div id="single-tab" class="tab-content active">
+            <form id="receiptForm">
             <div class="row">
                 <div class="form-group">
                     <label for="donorName">Donor Name *</label>
@@ -206,246 +325,442 @@
                 </div>
             </div>
 
-            <button type="submit" class="btn">Generate PDF Receipt</button>
-        </form>
+                <button type="submit" class="btn">Generate PDF Receipt</button>
+            </form>
+        </div>
+
+        <!-- Batch Processing Form -->
+        <div id="batch-tab" class="tab-content">
+            <form id="batchForm">
+                <div class="info-text" style="margin-bottom: 20px;">
+                    <strong>Excel Format Required:</strong> Your Excel file should have headers in the first row: <strong>date</strong>, <strong>person</strong>, <strong>email</strong>, <strong>amount</strong>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Excel File (.xlsx or .xls) *</label>
+                    <div class="file-upload" onclick="document.getElementById('excelFile').click()">
+                        <input type="file" id="excelFile" accept=".xlsx,.xls" required>
+                        <label for="excelFile" class="file-upload-label">
+                            <div style="font-size: 48px; margin-bottom: 10px;">📁</div>
+                            Click to upload Excel file
+                            <div style="font-size: 12px; color: #666; margin-top: 5px;">Supports .xlsx and .xls files</div>
+                        </label>
+                    </div>
+                    <div id="fileInfo" class="file-info">
+                        <strong>File loaded:</strong> <span id="fileName"></span><br>
+                        <strong>Rows found:</strong> <span id="rowCount"></span>
+                    </div>
+                </div>
+
+                <div id="batchPreview" class="batch-preview" style="display: none;">
+                    <h3 style="margin-bottom: 10px; color: #236383; font-size: 16px;">Preview (first 10 rows):</h3>
+                    <table id="previewTable"></table>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="batchSignerName">Signer Name *</label>
+                        <input type="text" id="batchSignerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="batchSignerTitle">Signer Title *</label>
+                        <input type="text" id="batchSignerTitle" placeholder="e.g., Executive Director" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="batchOrganizationEIN">Organization EIN *</label>
+                    <input type="text" id="batchOrganizationEIN" value="87-0939484" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="batchOrganizationAddress">Organization Address *</label>
+                    <textarea id="batchOrganizationAddress" rows="2" required>5074 Wickford Way, Dunwoody, GA 30338</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="batchDonationDescription">Donation Description *</label>
+                    <input type="text" id="batchDonationDescription" value="Prepared sandwiches made from groceries" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="batchLetterDate">Letter Date *</label>
+                    <input type="date" id="batchLetterDate" required>
+                </div>
+
+                <button type="submit" class="btn btn-secondary" id="batchGenerateBtn" disabled>Generate All PDFs</button>
+            </form>
+        </div>
     </div>
 
     <script>
         // Set today's date as default for letter date
         document.getElementById('letterDate').valueAsDate = new Date();
+        document.getElementById('batchLetterDate').valueAsDate = new Date();
 
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            if (tab === 'single') {
+                document.querySelector('.tab:first-child').classList.add('active');
+                document.getElementById('single-tab').classList.add('active');
+            } else {
+                document.querySelector('.tab:last-child').classList.add('active');
+                document.getElementById('batch-tab').classList.add('active');
+            }
+        }
+
+        // Excel file parsing
+        let batchData = [];
+        
+        document.getElementById('excelFile').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+                    const jsonData = XLSX.utils.sheet_to_json(firstSheet, { header: 1 });
+
+                    if (jsonData.length < 2) {
+                        alert('Excel file must have at least a header row and one data row.');
+                        return;
+                    }
+
+                    // Get headers and normalize them
+                    const headers = jsonData[0].map(h => String(h).toLowerCase().trim());
+                    const dateIdx = headers.findIndex(h => h.includes('date'));
+                    const personIdx = headers.findIndex(h => h.includes('person') || h.includes('name'));
+                    const emailIdx = headers.findIndex(h => h.includes('email'));
+                    const amountIdx = headers.findIndex(h => h.includes('amount') || h.includes('value') || h.includes('donation'));
+
+                    if (dateIdx === -1 || personIdx === -1 || amountIdx === -1) {
+                        alert('Required columns not found. Please ensure your Excel file has columns: date, person, amount (and optionally email).');
+                        return;
+                    }
+
+                    // Parse data rows
+                    batchData = [];
+                    for (let i = 1; i < jsonData.length; i++) {
+                        const row = jsonData[i];
+                        if (!row[dateIdx] || !row[personIdx] || !row[amountIdx]) continue; // Skip empty rows
+
+                        // Handle date parsing
+                        let dateValue = row[dateIdx];
+                        if (!dateValue) continue; // Skip if date is empty
+                        
+                        if (dateValue instanceof Date) {
+                            // Already a Date object
+                            dateValue = dateValue;
+                        } else if (typeof dateValue === 'number') {
+                            // Excel date serial number
+                            try {
+                                const parsed = XLSX.SSF.parse_date_code(dateValue);
+                                dateValue = new Date(parsed.y, parsed.m - 1, parsed.d);
+                            } catch (e) {
+                                // If parsing fails, try treating as timestamp
+                                dateValue = new Date((dateValue - 25569) * 86400 * 1000);
+                            }
+                        } else if (typeof dateValue === 'string') {
+                            dateValue = new Date(dateValue);
+                        }
+                        
+                        // Validate date
+                        if (isNaN(dateValue.getTime())) {
+                            console.warn(`Invalid date in row ${i + 1}: ${row[dateIdx]}`);
+                            continue; // Skip invalid dates
+                        }
+
+                        batchData.push({
+                            date: dateValue,
+                            person: String(row[personIdx]).trim(),
+                            email: emailIdx !== -1 ? (row[emailIdx] ? String(row[emailIdx]).trim() : '') : '',
+                            amount: parseFloat(row[amountIdx]) || 0
+                        });
+                    }
+
+                    if (batchData.length === 0) {
+                        alert('No valid data rows found in the Excel file.');
+                        return;
+                    }
+
+                    // Show file info
+                    document.getElementById('fileName').textContent = file.name;
+                    document.getElementById('rowCount').textContent = batchData.length;
+                    document.getElementById('fileInfo').classList.add('show');
+
+                    // Show preview
+                    showPreview(batchData);
+                    document.getElementById('batchGenerateBtn').disabled = false;
+                } catch (error) {
+                    alert('Error reading Excel file: ' + error.message);
+                    console.error(error);
+                }
+            };
+            reader.readAsArrayBuffer(file);
+        });
+
+        function showPreview(data) {
+            const preview = document.getElementById('batchPreview');
+            const table = document.getElementById('previewTable');
+            preview.style.display = 'block';
+
+            const previewData = data.slice(0, 10);
+            let html = '<thead><tr><th>Date</th><th>Person</th><th>Email</th><th>Amount</th></tr></thead><tbody>';
+            
+            previewData.forEach(row => {
+                const dateStr = row.date instanceof Date ? row.date.toLocaleDateString() : String(row.date);
+                html += `<tr>
+                    <td>${dateStr}</td>
+                    <td>${row.person}</td>
+                    <td>${row.email || '—'}</td>
+                    <td>$${row.amount.toFixed(2)}</td>
+                </tr>`;
+            });
+            
+            html += '</tbody>';
+            if (data.length > 10) {
+                html += `<tfoot><tr><td colspan="4" style="text-align: center; padding: 10px; color: #666;">... and ${data.length - 10} more rows</td></tr></tfoot>`;
+            }
+            
+            table.innerHTML = html;
+        }
+
+        // Reusable PDF generation function - returns a Promise
+        function generateReceiptPDF(receiptData) {
+            return new Promise((resolve) => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
+
+                const {
+                    donorName,
+                    donationDate,
+                    letterDate,
+                    donationDescription,
+                    donationValue,
+                    ein,
+                    address,
+                    signerName,
+                    signerTitle
+                } = receiptData;
+
+                const donationDateFormatted = donationDate instanceof Date 
+                    ? donationDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                    : new Date(donationDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                
+                const letterDateFormatted = letterDate instanceof Date
+                    ? letterDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+                    : new Date(letterDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+
+                const donationValueFormatted = parseFloat(donationValue).toFixed(2);
+
+                const logoImg = new Image();
+                logoImg.src = 'sandwich logo.png';
+
+                function generatePDFContent(hasLogo, logoWidth, logoHeight) {
+                    let yPos = hasLogo ? 15 + logoHeight + 10 : 25;
+
+                    // Add logo if available
+                    if (hasLogo) {
+                        doc.addImage(logoImg, 'PNG', (210 - logoWidth) / 2, 15, logoWidth, logoHeight);
+                    }
+
+                    // Header - Organization name (centered, blue)
+                    doc.setFontSize(16);
+                    doc.setFont(undefined, 'bold');
+                    doc.setTextColor(35, 99, 131); // #236383
+                    doc.text('The Sandwich Project', 105, yPos, { align: 'center' });
+                    yPos += 7;
+
+                    // EIN (centered)
+                    doc.setFontSize(10);
+                    doc.setFont(undefined, 'normal');
+                    doc.text(`EIN: ${ein}`, 105, yPos, { align: 'center' });
+                    yPos += 5;
+
+                    // Address (centered, handle multi-line)
+                    const addressLines = doc.splitTextToSize(address, 160);
+                    addressLines.forEach(line => {
+                        doc.text(line, 105, yPos, { align: 'center' });
+                        yPos += 5;
+                    });
+
+                    yPos += 5;
+
+                    // Horizontal line (orange)
+                    doc.setDrawColor(251, 173, 63); // #fbad3f
+                    doc.setLineWidth(0.5);
+                    doc.line(20, yPos, 190, yPos);
+                    yPos += 10;
+
+                    // Letter date
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(11);
+                    doc.text(`Date: ${letterDateFormatted}`, 20, yPos);
+                    yPos += 10;
+
+                    // Salutation
+                    doc.text(`Dear ${donorName},`, 20, yPos);
+                    yPos += 10;
+
+                    // Body paragraph
+                    doc.setFontSize(11);
+                    const bodyText = `This letter acknowledges your in-kind donation to The Sandwich Project on ${donationDateFormatted} consisting of ${donationDescription} valued at $${donationValueFormatted}.`;
+                    const bodyLines = doc.splitTextToSize(bodyText, 170);
+                    bodyLines.forEach(line => {
+                        doc.text(line, 20, yPos);
+                        yPos += 6;
+                    });
+
+                    yPos += 4;
+
+                    // No goods or services statement (bold, teal)
+                    doc.setFont(undefined, 'bold');
+                    doc.setTextColor(0, 126, 140); // #007e8c
+                    const noGoodsText = 'No goods or services were provided in exchange for this contribution.';
+                    const noGoodsLines = doc.splitTextToSize(noGoodsText, 170);
+                    noGoodsLines.forEach(line => {
+                        doc.text(line, 20, yPos);
+                        yPos += 6;
+                    });
+
+                    yPos += 4;
+
+                    // Thank you paragraph
+                    doc.setFont(undefined, 'normal');
+                    doc.setTextColor(0, 0, 0);
+                    const thankYouText = 'Thank you for your support in fighting food insecurity in our community. Your generosity makes a meaningful difference in the lives of those we serve.';
+                    const thankYouLines = doc.splitTextToSize(thankYouText, 170);
+                    thankYouLines.forEach(line => {
+                        doc.text(line, 20, yPos);
+                        yPos += 6;
+                    });
+
+                    yPos += 10;
+
+                    // Closing
+                    doc.text('Sincerely,', 20, yPos);
+                    yPos += 15;
+
+                    // Signature line
+                    doc.setDrawColor(0, 0, 0);
+                    doc.setLineWidth(0.3);
+                    doc.line(20, yPos, 80, yPos);
+                    yPos += 5;
+
+                    // Signer name and title
+                    doc.setFont(undefined, 'normal');
+                    doc.text(signerName, 20, yPos);
+                    yPos += 5;
+                    doc.text(signerTitle, 20, yPos);
+
+                    // Footer note (small, centered, light blue)
+                    doc.setFontSize(8);
+                    doc.setTextColor(71, 179, 203); // #47b3cb
+                    doc.text('Please retain this letter for your tax records and corporate matching submission.', 105, 280, { align: 'center' });
+
+                    // Generate filename
+                    const dateStr = donationDate instanceof Date 
+                        ? donationDate.toISOString().split('T')[0]
+                        : new Date(donationDate).toISOString().split('T')[0];
+                    const fileName = `Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${dateStr}.pdf`;
+                    
+                    doc.save(fileName);
+                    resolve();
+                }
+
+                logoImg.onload = function() {
+                    const logoWidth = 50;
+                    const logoHeight = (logoImg.height / logoImg.width) * logoWidth;
+                    generatePDFContent(true, logoWidth, logoHeight);
+                };
+
+                logoImg.onerror = function() {
+                    generatePDFContent(false, 0, 0);
+                };
+            });
+        }
+
+        // Single receipt form handler
         document.getElementById('receiptForm').addEventListener('submit', async function(e) {
             e.preventDefault();
 
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
-
-            // Get form values
-            const donorName = document.getElementById('donorName').value;
-            const donationDate = new Date(document.getElementById('donationDate').value).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            const letterDate = new Date(document.getElementById('letterDate').value).toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-            const donationDescription = document.getElementById('donationDescription').value;
-            const donationValue = parseFloat(document.getElementById('donationValue').value).toFixed(2);
-            const ein = document.getElementById('organizationEIN').value;
-            const address = document.getElementById('organizationAddress').value;
-            const signerName = document.getElementById('signerName').value;
-            const signerTitle = document.getElementById('signerTitle').value;
-
-            // Add logo
-            const logoImg = new Image();
-            logoImg.src = 'sandwich logo.png';
-
-            logoImg.onload = function() {
-                // Add logo (centered)
-                const logoWidth = 50;
-                const logoHeight = (logoImg.height / logoImg.width) * logoWidth;
-                doc.addImage(logoImg, 'PNG', (210 - logoWidth) / 2, 15, logoWidth, logoHeight);
-
-                let yPos = 15 + logoHeight + 10;
-
-                // Header - Organization name (centered, blue)
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                doc.setTextColor(35, 99, 131); // #236383
-                doc.text('The Sandwich Project', 105, yPos, { align: 'center' });
-                yPos += 7;
-
-                // EIN (centered)
-                doc.setFontSize(10);
-                doc.setFont(undefined, 'normal');
-                doc.text(`EIN: ${ein}`, 105, yPos, { align: 'center' });
-                yPos += 5;
-
-                // Address (centered, handle multi-line)
-                const addressLines = doc.splitTextToSize(address, 160);
-                addressLines.forEach(line => {
-                    doc.text(line, 105, yPos, { align: 'center' });
-                    yPos += 5;
-                });
-
-                yPos += 5;
-
-                // Horizontal line (orange)
-                doc.setDrawColor(251, 173, 63); // #fbad3f
-                doc.setLineWidth(0.5);
-                doc.line(20, yPos, 190, yPos);
-                yPos += 10;
-
-                // Letter date
-                doc.setTextColor(0, 0, 0);
-                doc.setFontSize(11);
-                doc.text(`Date: ${letterDate}`, 20, yPos);
-                yPos += 10;
-
-                // Salutation
-                doc.text(`Dear ${donorName},`, 20, yPos);
-                yPos += 10;
-
-                // Body paragraph
-                doc.setFontSize(11);
-                const bodyText = `This letter acknowledges your in-kind donation to The Sandwich Project on ${donationDate} consisting of ${donationDescription} valued at $${donationValue}.`;
-                const bodyLines = doc.splitTextToSize(bodyText, 170);
-                bodyLines.forEach(line => {
-                    doc.text(line, 20, yPos);
-                    yPos += 6;
-                });
-
-                yPos += 4;
-
-                // No goods or services statement (bold, teal)
-                doc.setFont(undefined, 'bold');
-                doc.setTextColor(0, 126, 140); // #007e8c
-                const noGoodsText = 'No goods or services were provided in exchange for this contribution.';
-                const noGoodsLines = doc.splitTextToSize(noGoodsText, 170);
-                noGoodsLines.forEach(line => {
-                    doc.text(line, 20, yPos);
-                    yPos += 6;
-                });
-
-                yPos += 4;
-
-                // Thank you paragraph
-                doc.setFont(undefined, 'normal');
-                doc.setTextColor(0, 0, 0);
-                const thankYouText = 'Thank you for your support in fighting food insecurity in our community. Your generosity makes a meaningful difference in the lives of those we serve.';
-                const thankYouLines = doc.splitTextToSize(thankYouText, 170);
-                thankYouLines.forEach(line => {
-                    doc.text(line, 20, yPos);
-                    yPos += 6;
-                });
-
-                yPos += 10;
-
-                // Closing
-                doc.text('Sincerely,', 20, yPos);
-                yPos += 15;
-
-                // Signature line
-                doc.setDrawColor(0, 0, 0);
-                doc.setLineWidth(0.3);
-                doc.line(20, yPos, 80, yPos);
-                yPos += 5;
-
-                // Signer name and title
-                doc.setFont(undefined, 'normal');
-                doc.text(signerName, 20, yPos);
-                yPos += 5;
-                doc.text(signerTitle, 20, yPos);
-
-                // Footer note (small, centered, light blue)
-                doc.setFontSize(8);
-                doc.setTextColor(71, 179, 203); // #47b3cb
-                doc.text('Please retain this letter for your tax records and corporate matching submission.', 105, 280, { align: 'center' });
-
-                // Save the PDF
-                const fileName = `Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${new Date(document.getElementById('donationDate').value).toISOString().split('T')[0]}.pdf`;
-                doc.save(fileName);
+            const receiptData = {
+                donorName: document.getElementById('donorName').value,
+                donationDate: document.getElementById('donationDate').value,
+                letterDate: document.getElementById('letterDate').value,
+                donationDescription: document.getElementById('donationDescription').value,
+                donationValue: document.getElementById('donationValue').value,
+                ein: document.getElementById('organizationEIN').value,
+                address: document.getElementById('organizationAddress').value,
+                signerName: document.getElementById('signerName').value,
+                signerTitle: document.getElementById('signerTitle').value
             };
 
-            logoImg.onerror = function() {
-                alert('Error loading logo. The PDF will be generated without it.');
-                // Generate without logo if image fails to load
-                generatePDFWithoutLogo();
-            };
+            generateReceiptPDF(receiptData);
+        });
 
-            function generatePDFWithoutLogo() {
-                let yPos = 25;
+        // Batch form handler
+        document.getElementById('batchForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
 
-                // Header - Organization name (centered, blue)
-                doc.setFontSize(16);
-                doc.setFont(undefined, 'bold');
-                doc.setTextColor(35, 99, 131);
-                doc.text('The Sandwich Project', 105, yPos, { align: 'center' });
-                yPos += 7;
-
-                // EIN
-                doc.setFontSize(10);
-                doc.setFont(undefined, 'normal');
-                doc.text(`EIN: ${ein}`, 105, yPos, { align: 'center' });
-                yPos += 5;
-
-                // Address
-                const addressLines = doc.splitTextToSize(address, 160);
-                addressLines.forEach(line => {
-                    doc.text(line, 105, yPos, { align: 'center' });
-                    yPos += 5;
-                });
-
-                yPos += 5;
-
-                // Continue with rest of document...
-                doc.setDrawColor(251, 173, 63);
-                doc.setLineWidth(0.5);
-                doc.line(20, yPos, 190, yPos);
-                yPos += 10;
-
-                doc.setTextColor(0, 0, 0);
-                doc.setFontSize(11);
-                doc.text(`Date: ${letterDate}`, 20, yPos);
-                yPos += 10;
-
-                doc.text(`Dear ${donorName},`, 20, yPos);
-                yPos += 10;
-
-                const bodyText = `This letter acknowledges your in-kind donation to The Sandwich Project on ${donationDate} consisting of ${donationDescription} valued at $${donationValue}.`;
-                const bodyLines = doc.splitTextToSize(bodyText, 170);
-                bodyLines.forEach(line => {
-                    doc.text(line, 20, yPos);
-                    yPos += 6;
-                });
-
-                yPos += 4;
-
-                doc.setFont(undefined, 'bold');
-                doc.setTextColor(0, 126, 140);
-                const noGoodsText = 'No goods or services were provided in exchange for this contribution.';
-                const noGoodsLines = doc.splitTextToSize(noGoodsText, 170);
-                noGoodsLines.forEach(line => {
-                    doc.text(line, 20, yPos);
-                    yPos += 6;
-                });
-
-                yPos += 4;
-
-                doc.setFont(undefined, 'normal');
-                doc.setTextColor(0, 0, 0);
-                const thankYouText = 'Thank you for your support in fighting food insecurity in our community. Your generosity makes a meaningful difference in the lives of those we serve.';
-                const thankYouLines = doc.splitTextToSize(thankYouText, 170);
-                thankYouLines.forEach(line => {
-                    doc.text(line, 20, yPos);
-                    yPos += 6;
-                });
-
-                yPos += 10;
-
-                doc.text('Sincerely,', 20, yPos);
-                yPos += 15;
-
-                doc.setDrawColor(0, 0, 0);
-                doc.setLineWidth(0.3);
-                doc.line(20, yPos, 80, yPos);
-                yPos += 5;
-
-                doc.setFont(undefined, 'normal');
-                doc.text(signerName, 20, yPos);
-                yPos += 5;
-                doc.text(signerTitle, 20, yPos);
-
-                doc.setFontSize(8);
-                doc.setTextColor(71, 179, 203);
-                doc.text('Please retain this letter for your tax records and corporate matching submission.', 105, 280, { align: 'center' });
-
-                const fileName = `Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${new Date(document.getElementById('donationDate').value).toISOString().split('T')[0]}.pdf`;
-                doc.save(fileName);
+            if (batchData.length === 0) {
+                alert('Please upload an Excel file first.');
+                return;
             }
+
+            const signerName = document.getElementById('batchSignerName').value;
+            const signerTitle = document.getElementById('batchSignerTitle').value;
+            const ein = document.getElementById('batchOrganizationEIN').value;
+            const address = document.getElementById('batchOrganizationAddress').value;
+            const donationDescription = document.getElementById('batchDonationDescription').value;
+            const letterDate = document.getElementById('batchLetterDate').value;
+
+            // Disable button and show progress
+            const btn = document.getElementById('batchGenerateBtn');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = `Generating ${batchData.length} PDFs...`;
+
+            let generated = 0;
+            const total = batchData.length;
+
+            // Generate PDFs one by one (with small delay to avoid browser blocking)
+            for (let i = 0; i < batchData.length; i++) {
+                const row = batchData[i];
+                
+                const receiptData = {
+                    donorName: row.person,
+                    donationDate: row.date,
+                    letterDate: letterDate,
+                    donationDescription: donationDescription,
+                    donationValue: row.amount,
+                    ein: ein,
+                    address: address,
+                    signerName: signerName,
+                    signerTitle: signerTitle
+                };
+
+                // Wait for PDF to be generated and saved
+                await generateReceiptPDF(receiptData);
+                
+                // Small delay between PDFs to avoid browser blocking downloads
+                if (i < batchData.length - 1) {
+                    await new Promise(resolve => setTimeout(resolve, 300));
+                }
+                
+                generated++;
+            }
+
+            // Re-enable button
+            btn.disabled = false;
+            btn.textContent = originalText;
+            alert(`Successfully generated ${generated} PDF receipt(s)!`);
         });
     </script>
 </body>
