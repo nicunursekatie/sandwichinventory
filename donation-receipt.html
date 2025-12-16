@@ -1034,6 +1034,22 @@
             // Use first row for test
             const testRow = batchData[0];
             
+            // Get signature image (check if selector has a value and load if needed)
+            let signatureToUse = batchSignatureImageData;
+            const signatureSelector = document.getElementById('batchSignatureSelector');
+            if (signatureSelector.value && signatureSelector.value !== '' && signatureSelector.value !== 'custom' && !signatureToUse) {
+                // Signature was selected but not loaded yet - try to load it
+                const sigValue = signatureSelector.value;
+                if (availableSignatures[sigValue]) {
+                    // Wait a moment for image to load
+                    await new Promise((resolve) => {
+                        loadSignatureFromFile(sigValue, 'batchSignaturePreviewImg', 'batchSignaturePreview', 'batch');
+                        setTimeout(resolve, 500); // Give time for image to load
+                    });
+                    signatureToUse = batchSignatureImageData;
+                }
+            }
+            
             const receiptData = {
                 donorName: testRow.person,
                 donationDate: testRow.date,
@@ -1045,12 +1061,13 @@
                 signerName: signerName,
                 signerTitle: signerTitle,
                 donationType: donationType,
-                signatureImage: batchSignatureImageData
+                signatureImage: signatureToUse
             };
 
             // Generate test PDF
             await generateReceiptPDF(receiptData);
-            alert(`Test receipt generated for: ${testRow.person} ($${testRow.amount.toFixed(2)}). Review it before generating all ${batchData.length} receipts.`);
+            const sigNote = signatureToUse ? ' (with signature)' : ' (no signature selected)';
+            alert(`Test receipt generated for: ${testRow.person} ($${testRow.amount.toFixed(2)})${sigNote}. Review it before generating all ${batchData.length} receipts.`);
         });
 
         // Batch form handler
