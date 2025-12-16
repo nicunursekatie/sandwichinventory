@@ -762,17 +762,17 @@
                     }
 
                     // Header - Organization name (centered, blue)
-                    doc.setFontSize(16);
-                    doc.setFont(undefined, 'bold');
+                    doc.setFontSize(18);
+                    doc.setFont('times', 'bold');
                     doc.setTextColor(35, 99, 131); // #236383
                     doc.text('The Sandwich Project', 105, yPos, { align: 'center' });
-                    yPos += 7;
+                    yPos += 8;
 
                     // EIN (centered)
                     doc.setFontSize(10);
-                    doc.setFont(undefined, 'normal');
+                    doc.setFont('times', 'normal');
                     doc.text(`EIN: ${ein}`, 105, yPos, { align: 'center' });
-                    yPos += 5;
+                    yPos += 6;
 
                     // Address (centered, handle multi-line)
                     const addressLines = doc.splitTextToSize(address, 160);
@@ -792,20 +792,31 @@
                     // Letter date
                     doc.setTextColor(0, 0, 0);
                     doc.setFontSize(11);
+                    doc.setFont('times', 'normal');
                     doc.text(`Date: ${letterDateFormatted}`, 20, yPos);
-                    yPos += 10;
+                    yPos += 12;
 
                     // Salutation
+                    doc.setFont('times', 'normal');
                     doc.text(`Dear ${donorName},`, 20, yPos);
-                    yPos += 10;
+                    yPos += 8;
 
                     // Body paragraph
                     doc.setFontSize(11);
+                    doc.setFont('times', 'normal');
                     let bodyText;
                     if (donationType === 'cash') {
-                        bodyText = `This letter acknowledges your monetary contribution of $${donationValueFormatted} to The Sandwich Project on ${donationDateFormatted}${donationDescription ? ` for ${donationDescription}` : ''}.`;
+                        bodyText = `This letter acknowledges your monetary contribution of $${donationValueFormatted} to The Sandwich Project on ${donationDateFormatted}${donationDescription ? `. Your contribution was designated for ${donationDescription.toLowerCase()}` : ''}.`;
                     } else {
-                        bodyText = `This letter acknowledges your in-kind donation to The Sandwich Project on ${donationDateFormatted} consisting of ${donationDescription} valued at $${donationValueFormatted}.`;
+                        // More natural wording for in-kind donations
+                        // Clean up description if it redundantly mentions "The Sandwich Project"
+                        let cleanDescription = donationDescription;
+                        if (cleanDescription.toLowerCase().includes('the sandwich project')) {
+                            cleanDescription = cleanDescription.replace(/for donation to The Sandwich Project/gi, '');
+                            cleanDescription = cleanDescription.replace(/to The Sandwich Project/gi, '');
+                            cleanDescription = cleanDescription.trim();
+                        }
+                        bodyText = `This letter acknowledges your in-kind donation to The Sandwich Project on ${donationDateFormatted}. Your donation of ${cleanDescription.toLowerCase()} is valued at $${donationValueFormatted}.`;
                     }
                     const bodyLines = doc.splitTextToSize(bodyText, 170);
                     bodyLines.forEach(line => {
@@ -816,7 +827,7 @@
                     yPos += 4;
 
                     // No goods or services statement (bold, teal)
-                    doc.setFont(undefined, 'bold');
+                    doc.setFont('times', 'bold');
                     doc.setTextColor(0, 126, 140); // #007e8c
                     const noGoodsText = 'No goods or services were provided in exchange for this contribution.';
                     const noGoodsLines = doc.splitTextToSize(noGoodsText, 170);
@@ -825,10 +836,10 @@
                         yPos += 6;
                     });
 
-                    yPos += 4;
+                    yPos += 6;
 
                     // Thank you paragraph
-                    doc.setFont(undefined, 'normal');
+                    doc.setFont('times', 'normal');
                     doc.setTextColor(0, 0, 0);
                     const thankYouText = 'Thank you for your support in fighting food insecurity in our community. Your generosity makes a meaningful difference in the lives of those we serve.';
                     const thankYouLines = doc.splitTextToSize(thankYouText, 170);
@@ -840,8 +851,9 @@
                     yPos += 10;
 
                     // Closing
+                    doc.setFont('times', 'normal');
                     doc.text('Sincerely,', 20, yPos);
-                    yPos += 15;
+                    yPos += 10;
 
                     // Signature - either image or line
                     if (signatureImage) {
@@ -864,13 +876,16 @@
                             sigWidth = sigWidth * ratio;
                             sigHeight = sigHeight * ratio;
                             
-                            doc.addImage(sigImg, 'PNG', 20, yPos - sigHeight, sigWidth, sigHeight);
+                            doc.addImage(sigImg, 'PNG', 20, yPos, sigWidth, sigHeight);
                             
-                            // Signer name and title below signature
-                            yPos += sigHeight + 5;
-                            doc.setFont(undefined, 'normal');
+                            // Signer name and title below signature (reduced spacing)
+                            yPos += sigHeight + 1;
+                            doc.setFont('times', 'normal');
+                            doc.setFontSize(11);
                             doc.text(signerName, 20, yPos);
-                            yPos += 5;
+                            yPos += 3;
+                            doc.setFontSize(10);
+                            doc.setFont('times', 'italic');
                             doc.text(signerTitle, 20, yPos);
                             
                             // Footer note
@@ -878,11 +893,13 @@
                             doc.setTextColor(71, 179, 203); // #47b3cb
                             doc.text('Please retain this letter for your tax records and corporate matching submission.', 105, 280, { align: 'center' });
                             
-                            // Generate filename
+                            // Generate filename with identifying information
                             const dateStr = donationDate instanceof Date 
                                 ? donationDate.toISOString().split('T')[0]
                                 : new Date(donationDate).toISOString().split('T')[0];
-                            const fileName = `Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${dateStr}.pdf`;
+                            const cleanDonorName = donorName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+                            const amountStr = donationValueFormatted.replace('.', '_');
+                            const fileName = `Donation_Receipt_${cleanDonorName}_${dateStr}_$${amountStr}.pdf`;
                             
                             doc.save(fileName);
                             resolve();
@@ -893,11 +910,14 @@
                             doc.setDrawColor(0, 0, 0);
                             doc.setLineWidth(0.3);
                             doc.line(20, yPos, 80, yPos);
-                            yPos += 5;
+                            yPos += 3;
                             
-                            doc.setFont(undefined, 'normal');
+                            doc.setFont('times', 'normal');
+                            doc.setFontSize(11);
                             doc.text(signerName, 20, yPos);
-                            yPos += 5;
+                            yPos += 3;
+                            doc.setFontSize(10);
+                            doc.setFont('times', 'italic');
                             doc.text(signerTitle, 20, yPos);
                             
                             // Footer note
@@ -905,11 +925,13 @@
                             doc.setTextColor(71, 179, 203); // #47b3cb
                             doc.text('Please retain this letter for your tax records and corporate matching submission.', 105, 280, { align: 'center' });
                             
-                            // Generate filename
+                            // Generate filename with identifying information
                             const dateStr = donationDate instanceof Date 
                                 ? donationDate.toISOString().split('T')[0]
                                 : new Date(donationDate).toISOString().split('T')[0];
-                            const fileName = `Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${dateStr}.pdf`;
+                            const cleanDonorName = donorName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+                            const amountStr = donationValueFormatted.replace('.', '_');
+                            const fileName = `Donation_Receipt_${cleanDonorName}_${dateStr}_$${amountStr}.pdf`;
                             
                             doc.save(fileName);
                             resolve();
@@ -919,12 +941,14 @@
                         doc.setDrawColor(0, 0, 0);
                         doc.setLineWidth(0.3);
                         doc.line(20, yPos, 80, yPos);
-                        yPos += 5;
+                        yPos += 3;
 
-                        // Signer name and title
+                        // Signer name and title (reduced spacing)
                         doc.setFont(undefined, 'normal');
+                        doc.setFontSize(11);
                         doc.text(signerName, 20, yPos);
-                        yPos += 5;
+                        yPos += 4;
+                        doc.setFontSize(10);
                         doc.text(signerTitle, 20, yPos);
                         
                         // Footer note
@@ -932,11 +956,13 @@
                         doc.setTextColor(71, 179, 203); // #47b3cb
                         doc.text('Please retain this letter for your tax records and corporate matching submission.', 105, 280, { align: 'center' });
                         
-                        // Generate filename
+                        // Generate filename with identifying information
                         const dateStr = donationDate instanceof Date 
                             ? donationDate.toISOString().split('T')[0]
                             : new Date(donationDate).toISOString().split('T')[0];
-                        const fileName = `Donation_Receipt_${donorName.replace(/\s+/g, '_')}_${dateStr}.pdf`;
+                        const cleanDonorName = donorName.replace(/[^a-zA-Z0-9\s]/g, '').replace(/\s+/g, '_');
+                        const amountStr = donationValueFormatted.replace('.', '_');
+                        const fileName = `Donation_Receipt_${cleanDonorName}_${dateStr}_$${amountStr}.pdf`;
                         
                         doc.save(fileName);
                         resolve();
