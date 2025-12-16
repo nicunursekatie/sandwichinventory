@@ -475,7 +475,10 @@
                     <input type="date" id="batchLetterDate" required>
                 </div>
 
-                <button type="submit" class="btn btn-secondary" id="batchGenerateBtn" disabled>Generate All PDFs</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="button" class="btn" id="batchTestBtn" disabled style="flex: 1; background: linear-gradient(135deg, #47b3cb 0%, #007e8c 100%);">Generate Test Receipt (First Row)</button>
+                    <button type="submit" class="btn btn-secondary" id="batchGenerateBtn" disabled style="flex: 1;">Generate All PDFs</button>
+                </div>
             </form>
         </div>
     </div>
@@ -686,6 +689,7 @@
                     // Show preview
                     showPreview(batchData);
                     document.getElementById('batchGenerateBtn').disabled = false;
+                    document.getElementById('batchTestBtn').disabled = false;
                 } catch (error) {
                     alert('Error reading Excel file: ' + error.message);
                     console.error(error);
@@ -1002,6 +1006,51 @@
             };
 
             generateReceiptPDF(receiptData);
+        });
+
+        // Batch test receipt handler (generates first row only)
+        document.getElementById('batchTestBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            if (batchData.length === 0) {
+                alert('Please upload an Excel file first.');
+                return;
+            }
+
+            const signerName = document.getElementById('batchSignerName').value;
+            const signerTitle = document.getElementById('batchSignerTitle').value;
+            const ein = document.getElementById('batchOrganizationEIN').value;
+            const address = document.getElementById('batchOrganizationAddress').value;
+            const donationDescription = document.getElementById('batchDonationDescription').value;
+            const letterDate = document.getElementById('batchLetterDate').value;
+            const donationType = document.querySelector('input[name="batchDonationType"]:checked').value;
+
+            // Validate required fields
+            if (!signerName || !signerTitle || !ein || !address || !donationDescription || !letterDate) {
+                alert('Please fill in all required fields before generating a test receipt.');
+                return;
+            }
+
+            // Use first row for test
+            const testRow = batchData[0];
+            
+            const receiptData = {
+                donorName: testRow.person,
+                donationDate: testRow.date,
+                letterDate: letterDate,
+                donationDescription: donationDescription,
+                donationValue: testRow.amount,
+                ein: ein,
+                address: address,
+                signerName: signerName,
+                signerTitle: signerTitle,
+                donationType: donationType,
+                signatureImage: batchSignatureImageData
+            };
+
+            // Generate test PDF
+            await generateReceiptPDF(receiptData);
+            alert(`Test receipt generated for: ${testRow.person} ($${testRow.amount.toFixed(2)}). Review it before generating all ${batchData.length} receipts.`);
         });
 
         // Batch form handler
