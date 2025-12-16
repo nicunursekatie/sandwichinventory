@@ -328,9 +328,9 @@
             </div>
 
             <div class="form-group">
-                <label for="donationDescription">Donation Description *</label>
+                <label for="donationDescription">Donation Description</label>
                 <input type="text" id="donationDescription"
-                       value="Prepared sandwiches made from groceries" required>
+                       value="Prepared sandwiches made from groceries" placeholder="e.g., Prepared sandwiches made from groceries">
             </div>
 
             <div class="row">
@@ -466,8 +466,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label for="batchDonationDescription">Donation Description *</label>
-                    <input type="text" id="batchDonationDescription" value="Prepared sandwiches made from groceries" required>
+                    <label for="batchDonationDescription">Donation Description</label>
+                    <input type="text" id="batchDonationDescription" value="Prepared sandwiches made from groceries" placeholder="e.g., Prepared sandwiches made from groceries">
                 </div>
 
                 <div class="form-group">
@@ -810,16 +810,26 @@
                     doc.setFont('times', 'normal');
                     let bodyText;
                     if (donationType === 'cash') {
-                        bodyText = `This letter acknowledges your monetary contribution of $${donationValueFormatted} to The Sandwich Project on ${donationDateFormatted}${donationDescription ? `. Your contribution was designated for ${donationDescription.toLowerCase()}` : ''}.`;
-                    } else {
-                        // Clean up description if it redundantly mentions "The Sandwich Project"
-                        let cleanDescription = donationDescription;
-                        if (cleanDescription.toLowerCase().includes('the sandwich project')) {
-                            cleanDescription = cleanDescription.replace(/for donation to The Sandwich Project/gi, '');
-                            cleanDescription = cleanDescription.replace(/to The Sandwich Project/gi, '');
-                            cleanDescription = cleanDescription.trim();
+                        if (donationDescription && donationDescription.trim()) {
+                            bodyText = `This letter acknowledges your monetary contribution of $${donationValueFormatted} to The Sandwich Project on ${donationDateFormatted}. Your contribution was designated for ${donationDescription.trim().toLowerCase()}.`;
+                        } else {
+                            bodyText = `This letter acknowledges your monetary contribution of $${donationValueFormatted} to The Sandwich Project on ${donationDateFormatted}.`;
                         }
-                        bodyText = `This letter acknowledges your in-kind donation of ${cleanDescription.toLowerCase()} to The Sandwich Project on ${donationDateFormatted}. Your donation is valued at $${donationValueFormatted}.`;
+                    } else {
+                        // In-kind donation - handle with or without description
+                        if (donationDescription && donationDescription.trim()) {
+                            // Clean up description if it redundantly mentions "The Sandwich Project"
+                            let cleanDescription = donationDescription.trim();
+                            if (cleanDescription.toLowerCase().includes('the sandwich project')) {
+                                cleanDescription = cleanDescription.replace(/for donation to The Sandwich Project/gi, '');
+                                cleanDescription = cleanDescription.replace(/to The Sandwich Project/gi, '');
+                                cleanDescription = cleanDescription.trim();
+                            }
+                            bodyText = `This letter acknowledges your in-kind donation of ${cleanDescription.toLowerCase()} to The Sandwich Project on ${donationDateFormatted}. Your donation is valued at $${donationValueFormatted}.`;
+                        } else {
+                            // No description provided - use generic wording
+                            bodyText = `This letter acknowledges your in-kind contribution to The Sandwich Project on ${donationDateFormatted}, valued at $${donationValueFormatted}.`;
+                        }
                     }
                     const bodyLines = doc.splitTextToSize(bodyText, 170);
                     bodyLines.forEach(line => {
@@ -1025,7 +1035,7 @@
             const donationType = document.querySelector('input[name="batchDonationType"]:checked').value;
 
             // Validate required fields
-            if (!signerName || !signerTitle || !ein || !address || !donationDescription || !letterDate) {
+            if (!signerName || !signerTitle || !ein || !address || !letterDate) {
                 alert('Please fill in all required fields before generating a test receipt.');
                 return;
             }
