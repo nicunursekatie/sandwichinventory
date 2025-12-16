@@ -812,7 +812,6 @@
                     if (donationType === 'cash') {
                         bodyText = `This letter acknowledges your monetary contribution of $${donationValueFormatted} to The Sandwich Project on ${donationDateFormatted}${donationDescription ? `. Your contribution was designated for ${donationDescription.toLowerCase()}` : ''}.`;
                     } else {
-                        // More natural wording for in-kind donations
                         // Clean up description if it redundantly mentions "The Sandwich Project"
                         let cleanDescription = donationDescription;
                         if (cleanDescription.toLowerCase().includes('the sandwich project')) {
@@ -820,7 +819,7 @@
                             cleanDescription = cleanDescription.replace(/to The Sandwich Project/gi, '');
                             cleanDescription = cleanDescription.trim();
                         }
-                        bodyText = `This letter acknowledges your in-kind donation to The Sandwich Project on ${donationDateFormatted}. Your donation of ${cleanDescription.toLowerCase()} is valued at $${donationValueFormatted}.`;
+                        bodyText = `This letter acknowledges your in-kind donation of ${cleanDescription.toLowerCase()} to The Sandwich Project on ${donationDateFormatted}. Your donation is valued at $${donationValueFormatted}.`;
                     }
                     const bodyLines = doc.splitTextToSize(bodyText, 170);
                     bodyLines.forEach(line => {
