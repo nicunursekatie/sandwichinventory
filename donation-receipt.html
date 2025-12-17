@@ -475,10 +475,42 @@
                     <input type="date" id="batchLetterDate" required>
                 </div>
 
+                <div class="info-text" style="margin-top: 10px; margin-bottom: 15px;">
+                    <strong>Optional: Email receipts instead of downloading</strong><br>
+                    To enable email sending, deploy the Firebase Function and paste the Function URL + token below. Use <strong>Send Test Email</strong> before sending all.
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="receiptFunctionUrl">Receipt Email Function URL</label>
+                        <input type="text" id="receiptFunctionUrl" placeholder="https://us-central1-YOUR_PROJECT.cloudfunctions.net/sendDonationReceiptEmail">
+                    </div>
+                    <div class="form-group">
+                        <label for="receiptFunctionToken">Receipt Function Token</label>
+                        <input type="password" id="receiptFunctionToken" placeholder="(set in Firebase functions config)">
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label for="testEmailOverride">Test Email Override (recommended)</label>
+                        <input type="email" id="testEmailOverride" placeholder="your.email@domain.com">
+                    </div>
+                    <div class="form-group">
+                        <label>&nbsp;</label>
+                        <div style="font-size: 12px; color: #666; line-height: 1.4; padding-top: 4px;">
+                            Test send will email the <strong>first row</strong> receipt to this address (or the row email if left blank).
+                        </div>
+                    </div>
+                </div>
+
                 <div style="display: flex; gap: 10px;">
                     <button type="button" class="btn" id="batchTestBtn" disabled style="flex: 1; background: linear-gradient(135deg, #47b3cb 0%, #007e8c 100%);">Generate Test Receipt (First Row)</button>
+                    <button type="button" class="btn" id="batchTestSendBtn" disabled style="flex: 1; background: linear-gradient(135deg, #236383 0%, #007e8c 100%);">Send Test Email (First Row)</button>
                     <button type="submit" class="btn btn-secondary" id="batchGenerateBtn" disabled style="flex: 1;">Generate All PDFs</button>
                 </div>
+
+                <button type="button" class="btn btn-secondary" id="batchSendAllBtn" disabled style="margin-top: 10px;">Send All Emails (No Downloads)</button>
             </form>
         </div>
     </div>
@@ -690,6 +722,8 @@
                     showPreview(batchData);
                     document.getElementById('batchGenerateBtn').disabled = false;
                     document.getElementById('batchTestBtn').disabled = false;
+                    document.getElementById('batchTestSendBtn').disabled = false;
+                    document.getElementById('batchSendAllBtn').disabled = false;
                 } catch (error) {
                     alert('Error reading Excel file: ' + error.message);
                     console.error(error);
@@ -725,7 +759,10 @@
         }
 
         // Reusable PDF generation function - returns a Promise
-        function generateReceiptPDF(receiptData) {
+        // options.mode:
+        // - "download" (default): triggers browser download
+        // - "email": returns { pdfBase64, filename } without downloading
+        function generateReceiptPDF(receiptData, options = { mode: 'download' }) {
             return new Promise((resolve) => {
                 const { jsPDF } = window.jspdf;
                 const doc = new jsPDF();
@@ -756,6 +793,18 @@
 
                 const logoImg = new Image();
                 logoImg.src = 'sandwich logo.png';
+
+                function finalizePdfAndResolve(fileName) {
+                    if (options?.mode === 'email') {
+                        // data:application/pdf;filename=generated.pdf;base64,....
+                        const dataUri = doc.output('datauristring');
+                        const base64 = dataUri.split(',')[1] || '';
+                        resolve({ pdfBase64: base64, filename: fileName });
+                        return;
+                    }
+                    doc.save(fileName);
+                    resolve({ filename: fileName });
+                }
 
                 function generatePDFContent(hasLogo, logoWidth, logoHeight, sigImgData) {
                     let yPos = hasLogo ? 15 + logoHeight + 10 : 25;
@@ -914,8 +963,7 @@
                             const amountStr = donationValueFormatted.replace('.', '_');
                             const fileName = `Donation_Receipt_${cleanDonorName}_${dateStr}_$${amountStr}.pdf`;
                             
-                            doc.save(fileName);
-                            resolve();
+                            finalizePdfAndResolve(fileName);
                         };
                         
                         sigImg.onerror = function() {
@@ -946,8 +994,7 @@
                             const amountStr = donationValueFormatted.replace('.', '_');
                             const fileName = `Donation_Receipt_${cleanDonorName}_${dateStr}_$${amountStr}.pdf`;
                             
-                            doc.save(fileName);
-                            resolve();
+                            finalizePdfAndResolve(fileName);
                         };
                     } else {
                         // Signature line (no image)
@@ -977,8 +1024,7 @@
                         const amountStr = donationValueFormatted.replace('.', '_');
                         const fileName = `Donation_Receipt_${cleanDonorName}_${dateStr}_$${amountStr}.pdf`;
                         
-                        doc.save(fileName);
-                        resolve();
+                        finalizePdfAndResolve(fileName);
                     }
                 }
 
@@ -1077,6 +1123,204 @@
             await generateReceiptPDF(receiptData);
             const sigNote = signatureToUse ? ' (with signature)' : ' (no signature selected)';
             alert(`Test receipt generated for: ${testRow.person} ($${testRow.amount.toFixed(2)})${sigNote}. Review it before generating all ${batchData.length} receipts.`);
+        });
+
+        async function sendReceiptEmail({ to, subject, html, pdfBase64, filename, test }) {
+            const url = (document.getElementById('receiptFunctionUrl')?.value || '').trim();
+            if (!url) throw new Error('Missing Receipt Email Function URL');
+            const token = (document.getElementById('receiptFunctionToken')?.value || '').trim();
+
+            const resp = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(token ? { 'x-receipt-token': token } : {})
+                },
+                body: JSON.stringify({ to, subject, html, pdfBase64, filename, test: !!test })
+            });
+
+            const data = await resp.json().catch(() => ({}));
+            if (!resp.ok || !data.ok) {
+                throw new Error(data.error || `Email send failed (${resp.status})`);
+            }
+        }
+
+        function buildReceiptEmailHtml({ donorName, donationDateFormatted, donationValueFormatted, donationType, donationDescription }) {
+            const safe = (s) => String(s || '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+            const desc = (donationDescription && donationDescription.trim()) ? donationDescription.trim() : '';
+            let summary;
+            if (donationType === 'cash') {
+                summary = desc
+                    ? `Monetary contribution of <strong>$${safe(donationValueFormatted)}</strong> on <strong>${safe(donationDateFormatted)}</strong> (designated for ${safe(desc)}).`
+                    : `Monetary contribution of <strong>$${safe(donationValueFormatted)}</strong> on <strong>${safe(donationDateFormatted)}</strong>.`;
+            } else {
+                summary = desc
+                    ? `In-kind donation on <strong>${safe(donationDateFormatted)}</strong> valued at <strong>$${safe(donationValueFormatted)}</strong> (${safe(desc)}).`
+                    : `In-kind contribution on <strong>${safe(donationDateFormatted)}</strong> valued at <strong>$${safe(donationValueFormatted)}</strong>.`;
+            }
+            return `
+                <div style="font-family: Arial, sans-serif; color: #111827; line-height: 1.5;">
+                    <p>Dear ${safe(donorName)},</p>
+                    <p>Please find your donation acknowledgment letter attached.</p>
+                    <p style="margin: 12px 0; padding: 10px 12px; background: #f3f4f6; border-radius: 8px;">
+                        ${summary}
+                    </p>
+                    <p>Thank you for your support in fighting food insecurity in our community.</p>
+                    <p style="color:#6b7280; font-size: 12px;">No goods or services were provided in exchange for this contribution.</p>
+                </div>
+            `;
+        }
+
+        // Batch test email handler (first row only)
+        document.getElementById('batchTestSendBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            if (batchData.length === 0) {
+                alert('Please upload an Excel file first.');
+                return;
+            }
+
+            const signerName = document.getElementById('batchSignerName').value;
+            const signerTitle = document.getElementById('batchSignerTitle').value;
+            const ein = document.getElementById('batchOrganizationEIN').value;
+            const address = document.getElementById('batchOrganizationAddress').value;
+            const donationDescription = document.getElementById('batchDonationDescription').value;
+            const letterDate = document.getElementById('batchLetterDate').value;
+            const donationType = document.querySelector('input[name="batchDonationType"]:checked').value;
+
+            if (!signerName || !signerTitle || !ein || !address || !letterDate) {
+                alert('Please fill in all required fields before sending a test email.');
+                return;
+            }
+
+            const testRow = batchData[0];
+            const to = (document.getElementById('testEmailOverride').value || testRow.email || '').trim();
+            if (!to) {
+                alert('No email available. Provide Test Email Override or ensure the spreadsheet has an email column.');
+                return;
+            }
+
+            const receiptData = {
+                donorName: testRow.person,
+                donationDate: testRow.date,
+                letterDate: letterDate,
+                donationDescription: donationDescription,
+                donationValue: testRow.amount,
+                ein: ein,
+                address: address,
+                signerName: signerName,
+                signerTitle: signerTitle,
+                donationType: donationType,
+                signatureImage: batchSignatureImageData
+            };
+
+            const btn = document.getElementById('batchTestSendBtn');
+            const original = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Sending test email...';
+
+            try {
+                const donationDateFormatted = (testRow.date instanceof Date ? testRow.date : new Date(testRow.date))
+                    .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                const donationValueFormatted = parseFloat(testRow.amount).toFixed(2);
+                const subject = `Donation Receipt - ${testRow.person} - ${donationDateFormatted} - $${donationValueFormatted}`;
+                const html = buildReceiptEmailHtml({ donorName: testRow.person, donationDateFormatted, donationValueFormatted, donationType, donationDescription });
+
+                const { pdfBase64, filename } = await generateReceiptPDF(receiptData, { mode: 'email' });
+                await sendReceiptEmail({ to, subject, html, pdfBase64, filename, test: true });
+                alert(`Test email sent to ${to}. Please confirm it looks right before sending all ${batchData.length}.`);
+            } catch (err) {
+                alert('Test email failed: ' + err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = original;
+            }
+        });
+
+        // Send all emails (no downloads)
+        document.getElementById('batchSendAllBtn').addEventListener('click', async function(e) {
+            e.preventDefault();
+
+            if (batchData.length === 0) {
+                alert('Please upload an Excel file first.');
+                return;
+            }
+
+            const signerName = document.getElementById('batchSignerName').value;
+            const signerTitle = document.getElementById('batchSignerTitle').value;
+            const ein = document.getElementById('batchOrganizationEIN').value;
+            const address = document.getElementById('batchOrganizationAddress').value;
+            const donationDescription = document.getElementById('batchDonationDescription').value;
+            const letterDate = document.getElementById('batchLetterDate').value;
+            const donationType = document.querySelector('input[name="batchDonationType"]:checked').value;
+
+            if (!signerName || !signerTitle || !ein || !address || !letterDate) {
+                alert('Please fill in all required fields before sending.');
+                return;
+            }
+
+            const confirmSend = confirm(`This will email ${batchData.length} receipt(s). Continue?`);
+            if (!confirmSend) return;
+
+            const btn = document.getElementById('batchSendAllBtn');
+            const original = btn.textContent;
+            btn.disabled = true;
+
+            let sent = 0;
+            let skipped = 0;
+            const failures = [];
+
+            for (let i = 0; i < batchData.length; i++) {
+                const row = batchData[i];
+                const to = (row.email || '').trim();
+                if (!to) {
+                    skipped++;
+                    continue;
+                }
+
+                btn.textContent = `Sending emails... (${i + 1}/${batchData.length})`;
+
+                const receiptData = {
+                    donorName: row.person,
+                    donationDate: row.date,
+                    letterDate: letterDate,
+                    donationDescription: donationDescription,
+                    donationValue: row.amount,
+                    ein: ein,
+                    address: address,
+                    signerName: signerName,
+                    signerTitle: signerTitle,
+                    donationType: donationType,
+                    signatureImage: batchSignatureImageData
+                };
+
+                try {
+                    const donationDateFormatted = (row.date instanceof Date ? row.date : new Date(row.date))
+                        .toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    const donationValueFormatted = parseFloat(row.amount).toFixed(2);
+                    const subject = `Donation Receipt - ${row.person} - ${donationDateFormatted} - $${donationValueFormatted}`;
+                    const html = buildReceiptEmailHtml({ donorName: row.person, donationDateFormatted, donationValueFormatted, donationType, donationDescription });
+
+                    const { pdfBase64, filename } = await generateReceiptPDF(receiptData, { mode: 'email' });
+                    await sendReceiptEmail({ to, subject, html, pdfBase64, filename, test: false });
+                    sent++;
+                } catch (err) {
+                    failures.push({ row: i + 1, person: row.person, email: to, error: err.message });
+                }
+
+                // small delay to avoid hammering
+                await new Promise(r => setTimeout(r, 250));
+            }
+
+            btn.disabled = false;
+            btn.textContent = original;
+
+            if (failures.length) {
+                console.error('Email send failures:', failures);
+                alert(`Done. Sent: ${sent}. Skipped (missing email): ${skipped}. Failed: ${failures.length}. Check console for details.`);
+            } else {
+                alert(`Done. Sent: ${sent}. Skipped (missing email): ${skipped}.`);
+            }
         });
 
         // Batch form handler
