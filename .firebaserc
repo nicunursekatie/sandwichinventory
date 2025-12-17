@@ -1,6 +1,6 @@
 {
   "projects": {
-    "default": "tsp-event-planner"
+    "default": "donation-receipt-generator"
   },
   "targets": {},
   "etags": {
