@@ -483,7 +483,7 @@
                 <div class="row">
                     <div class="form-group">
                         <label for="receiptFunctionUrl">Receipt Email Function URL</label>
-                        <input type="text" id="receiptFunctionUrl" placeholder="https://us-central1-YOUR_PROJECT.cloudfunctions.net/sendDonationReceiptEmail">
+                        <input type="text" id="receiptFunctionUrl" placeholder="https://us-central1-YOUR_PROJECT.cloudfunctions.net/sendDonationReceiptEmail" value="https://us-central1-donation-receipt-generator.cloudfunctions.net/sendDonationReceiptEmail">
                     </div>
                     <div class="form-group">
                         <label for="receiptFunctionToken">Receipt Function Token</label>
@@ -519,6 +519,40 @@
         // Set today's date as default for letter date
         document.getElementById('letterDate').valueAsDate = new Date();
         document.getElementById('batchLetterDate').valueAsDate = new Date();
+
+        // Persist Email Function settings (so you don't paste every time)
+        (function initReceiptEmailSettings() {
+            const urlEl = document.getElementById('receiptFunctionUrl');
+            const tokenEl = document.getElementById('receiptFunctionToken');
+            const testEmailEl = document.getElementById('testEmailOverride');
+            if (!urlEl || !tokenEl || !testEmailEl) return;
+
+            const STORAGE_KEY = 'tsp_receipt_email_settings_v1';
+            try {
+                const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}');
+                if (saved.url && typeof saved.url === 'string') urlEl.value = saved.url;
+                if (saved.token && typeof saved.token === 'string') tokenEl.value = saved.token;
+                if (saved.testEmail && typeof saved.testEmail === 'string') testEmailEl.value = saved.testEmail;
+            } catch (_) {
+                // ignore
+            }
+
+            function save() {
+                try {
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify({
+                        url: (urlEl.value || '').trim(),
+                        token: (tokenEl.value || '').trim(),
+                        testEmail: (testEmailEl.value || '').trim()
+                    }));
+                } catch (_) {
+                    // ignore
+                }
+            }
+
+            urlEl.addEventListener('change', save);
+            tokenEl.addEventListener('change', save);
+            testEmailEl.addEventListener('change', save);
+        })();
 
         // Signature image handlers
         let signatureImageData = null;
