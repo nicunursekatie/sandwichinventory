@@ -1,13 +1,7 @@
 {
   /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
   "rules": {
-    "events": {
-      ".read": true,
-      ".write": true
-    },
-    "roleLists": {
-      ".read": true,
-      ".write": true
-    }
+    ".read": false,
+    ".write": false
   }
 }
