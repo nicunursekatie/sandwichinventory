@@ -2004,8 +2004,8 @@
                 }
                 // Estimate max sandwiches for this budget
                 // Cost per sandwich = (meat + cheese + bread + bag) per sandwich
-                // Calculate sandwiches per package based on weight
-                const sandwichesPerMeatPackage = meatPackageWeightOz / meatPerSandwichOz;
+                // Calculate sandwiches per package based on SLICES (not weight)
+                const sandwichesPerMeatPackage = meatPerPackage / meatSlicesPerSandwich;
                 const meatCostPerSandwich = meatPrice / sandwichesPerMeatPackage;
                 const cheeseCostPerSandwich = cheesePrice / (cheesePerPackage / cheesePerSandwich);
                 const breadCostPerSandwich = breadPrice / breadSandwichesPerPackage;
