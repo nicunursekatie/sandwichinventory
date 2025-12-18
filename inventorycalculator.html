@@ -1841,7 +1841,7 @@
 
             // Legacy oz-based variables kept for budget mode cost estimation
             // These are approximate and used for price calculations only
-            const meatPerSandwichOz = meatSlicesPerSandwich; // Rough estimate: ~1oz per slice average
+            const meatPerSandwichOz = meatSlicesPerSandwich * 0.5; // Rough estimate: ~0.5 oz per slice average
 
             // Package sizes and prices
             let meatPerPackage, meatPrice, meatDescription, meatPackageWeightOz;
