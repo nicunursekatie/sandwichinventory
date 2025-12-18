@@ -1007,11 +1007,64 @@
             <div class="shopping-calculator" style="background: linear-gradient(135deg, #A31C41 0%, #8B1639 100%);">
                 <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Calculate Sandwiches from Your Package</h3>
 
+                <!-- Input method toggle -->
+                <div style="margin-bottom: 24px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
+                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 12px; color: #236383;">What info do you have from the package label?</label>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        <label style="display: flex; align-items: center; gap: 10px; font-size: 1em; cursor: pointer; color: #333; padding: 8px; border-radius: 6px; background: #f8f9fa;">
+                            <input type="radio" name="customInputMethod" value="slices" checked onchange="toggleCustomInputMethod()">
+                            <span><strong>I can count the slices</strong> (most accurate)</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 10px; font-size: 1em; cursor: pointer; color: #333; padding: 8px; border-radius: 6px; background: #f8f9fa;">
+                            <input type="radio" name="customInputMethod" value="oz" onchange="toggleCustomInputMethod()">
+                            <span><strong>I only have oz/servings info</strong> (we'll estimate slices)</span>
+                        </label>
+                    </div>
+                </div>
+
                 <div class="calc-form">
-                    <div class="calc-input-group">
+                    <!-- Method 1: Direct slice count -->
+                    <div id="sliceInputGroup" class="calc-input-group">
                         <label for="customPackageSlices">Number of slices in package</label>
                         <input type="number" id="customPackageSlices" min="1" max="500" placeholder="e.g., 24">
-                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices in your package, or check the label</span>
+                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the label</span>
+                    </div>
+
+                    <!-- Method 2: Oz/Servings based estimation -->
+                    <div id="ozInputGroup" style="display: none;">
+                        <div class="calc-input-group" style="margin-bottom: 20px;">
+                            <label for="customPackageOz">Package weight (oz)</label>
+                            <input type="number" id="customPackageOz" min="1" max="100" step="0.1" placeholder="e.g., 16">
+                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Look for "Net Wt" on the package</span>
+                        </div>
+
+                        <div class="calc-input-group" style="margin-bottom: 20px;">
+                            <label for="customServings">Servings per container (optional)</label>
+                            <input type="number" id="customServings" min="1" max="100" placeholder="e.g., 8">
+                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">If listed on nutrition label</span>
+                        </div>
+
+                        <div class="calc-input-group" style="margin-bottom: 20px;">
+                            <label for="customServingSize">Serving size in oz (optional)</label>
+                            <input type="number" id="customServingSize" min="0.5" max="10" step="0.1" placeholder="e.g., 2">
+                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Usually 2 oz for deli meat</span>
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="customSliceThickness">Slice thickness</label>
+                            <select id="customSliceThickness">
+                                <option value="thin">Thin sliced (~0.5 oz per slice) - most common</option>
+                                <option value="regular">Regular sliced (~0.75 oz per slice)</option>
+                                <option value="thick">Thick sliced (~1 oz per slice)</option>
+                            </select>
+                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Check if package says "thin sliced" or similar</span>
+                        </div>
+
+                        <div id="sliceEstimate" style="margin-top: 15px; padding: 12px; background: rgba(251,173,63,0.3); border-radius: 8px; display: none;">
+                            <span style="color: #fff; font-weight: 600;">Estimated slices: </span>
+                            <span id="estimatedSliceCount" style="color: #FBAD3F; font-weight: 700; font-size: 1.2em;">--</span>
+                            <button onclick="useEstimatedSlices()" style="margin-left: 15px; padding: 6px 12px; background: #FBAD3F; color: #333; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Use this estimate</button>
+                        </div>
                     </div>
 
                     <div class="calc-input-group">
@@ -1024,7 +1077,7 @@
                     <input type="hidden" id="customMeatSlicesPerSandwich" value="3">
 
                     <div class="calc-button-container">
-                        <button class="calc-button" onclick="calculateCustomPackage()">Calculate</button>
+                        <button class="calc-button" onclick="calculateCustomPackage()">Calculate Sandwiches</button>
                     </div>
                 </div>
 
@@ -2693,14 +2746,108 @@
             document.getElementById('pbjResult').style.display = 'block';
         }
 
+        // Custom Package Calculator - Toggle between slice count and oz/servings input
+        function toggleCustomInputMethod() {
+            const method = document.querySelector('input[name="customInputMethod"]:checked').value;
+            const sliceGroup = document.getElementById('sliceInputGroup');
+            const ozGroup = document.getElementById('ozInputGroup');
+
+            if (method === 'slices') {
+                sliceGroup.style.display = 'flex';
+                ozGroup.style.display = 'none';
+            } else {
+                sliceGroup.style.display = 'none';
+                ozGroup.style.display = 'block';
+            }
+        }
+
+        // Estimate slices from oz/servings info
+        function estimateSlicesFromOz() {
+            const packageOz = parseFloat(document.getElementById('customPackageOz').value);
+            const servings = parseFloat(document.getElementById('customServings').value);
+            const servingSize = parseFloat(document.getElementById('customServingSize').value);
+            const thickness = document.getElementById('customSliceThickness').value;
+
+            if (!packageOz || packageOz <= 0) {
+                document.getElementById('sliceEstimate').style.display = 'none';
+                return;
+            }
+
+            // Oz per slice based on thickness
+            let ozPerSlice;
+            switch (thickness) {
+                case 'thin': ozPerSlice = 0.5; break;
+                case 'regular': ozPerSlice = 0.75; break;
+                case 'thick': ozPerSlice = 1.0; break;
+                default: ozPerSlice = 0.5;
+            }
+
+            // Calculate estimated slices
+            const estimatedSlices = Math.round(packageOz / ozPerSlice);
+
+            // Show the estimate
+            document.getElementById('estimatedSliceCount').textContent = estimatedSlices;
+            document.getElementById('sliceEstimate').style.display = 'block';
+
+            // Store the estimate for later use
+            document.getElementById('sliceEstimate').dataset.estimate = estimatedSlices;
+        }
+
+        // Use the estimated slice count
+        function useEstimatedSlices() {
+            const estimate = document.getElementById('sliceEstimate').dataset.estimate;
+            if (estimate) {
+                document.getElementById('customPackageSlices').value = estimate;
+                // Switch back to slice input method to show the value
+                document.querySelector('input[name="customInputMethod"][value="slices"]').checked = true;
+                toggleCustomInputMethod();
+            }
+        }
+
+        // Add event listeners for oz estimation inputs
+        document.addEventListener('DOMContentLoaded', function() {
+            const ozInputs = ['customPackageOz', 'customServings', 'customServingSize', 'customSliceThickness'];
+            ozInputs.forEach(function(id) {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('input', estimateSlicesFromOz);
+                    element.addEventListener('change', estimateSlicesFromOz);
+                }
+            });
+        });
+
         // Custom Package Calculator - Single Package
         function calculateCustomPackage() {
-            const slicesInPackage = parseInt(document.getElementById('customPackageSlices').value);
+            const inputMethod = document.querySelector('input[name="customInputMethod"]:checked').value;
+            let slicesInPackage;
+
+            if (inputMethod === 'slices') {
+                slicesInPackage = parseInt(document.getElementById('customPackageSlices').value);
+            } else {
+                // Use oz-based estimation
+                const packageOz = parseFloat(document.getElementById('customPackageOz').value);
+                const thickness = document.getElementById('customSliceThickness').value;
+
+                if (!packageOz || packageOz <= 0) {
+                    alert('Please enter the package weight in oz');
+                    return;
+                }
+
+                let ozPerSlice;
+                switch (thickness) {
+                    case 'thin': ozPerSlice = 0.5; break;
+                    case 'regular': ozPerSlice = 0.75; break;
+                    case 'thick': ozPerSlice = 1.0; break;
+                    default: ozPerSlice = 0.5;
+                }
+                slicesInPackage = Math.round(packageOz / ozPerSlice);
+            }
+
             const packagePrice = parseFloat(document.getElementById('customPackagePrice').value);
             const meatSlicesPerSandwich = parseInt(document.getElementById('customMeatSlicesPerSandwich').value);
 
             if (!slicesInPackage || slicesInPackage <= 0) {
-                alert('Please enter a valid number of slices in your package');
+                alert('Please enter a valid number of slices or package oz');
                 return;
             }
 
@@ -2709,9 +2856,15 @@
             const leftoverSlices = slicesInPackage % meatSlicesPerSandwich;
             const costPerSandwich = packagePrice ? (packagePrice / sandwichesPossible).toFixed(2) : 'N/A';
             const costPerSlice = packagePrice ? (packagePrice / slicesInPackage).toFixed(2) : 'N/A';
+            const isEstimate = inputMethod === 'oz';
 
             // Display result
             document.getElementById('customResult').innerHTML = `
+                ${isEstimate ? `
+                <div style="background: rgba(251,173,63,0.25); border: 1px solid #FBAD3F; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+                    <span style="color: #fff;">📊 Based on estimated <strong>${slicesInPackage} slices</strong> (from oz + thickness)</span>
+                </div>
+                ` : ''}
                 <div class="result-grid">
                     <div class="result-item">
                         <h4>Sandwiches from This Package</h4>
