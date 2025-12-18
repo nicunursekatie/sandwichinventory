@@ -2974,7 +2974,7 @@
 
                 // Use binary search to find optimal sandwich count within budget
                 let low = 1;
-                let high = Math.floor(budget / 0.30); // Assume minimum $0.30 per sandwich
+                let high = Math.floor(budget / 0.50); // Assume minimum $0.50 per sandwich
                 let bestSandwichCount = 0;
 
                 while (low <= high) {
@@ -2986,10 +2986,12 @@
                     const testBreadPkgs = Math.ceil(mid / breadSandwichesPerPkg);
                     const testBagPkgs = Math.ceil(mid / 480);
 
-                    const testCost = (testMeatPkgs * meatPricePerPkg) +
-                                    (testCheesePkgs * cheesePricePerPkg) +
-                                    (testBreadPkgs * breadPricePerPkg) +
-                                    (testBagPkgs * bagPrice);
+                    const testCost = Math.round(
+                        (testMeatPkgs * meatPricePerPkg) +
+                        (testCheesePkgs * cheesePricePerPkg) +
+                        (testBreadPkgs * breadPricePerPkg) +
+                        (testBagPkgs * bagPrice)
+                    );
 
                     if (testCost <= budget) {
                         bestSandwichCount = mid;
@@ -3049,7 +3051,7 @@
                 if (budget <= 50) {
                     tightBudgetWarning = `
                         <p style="color: #E65100; margin-top: 12px; font-size: 1em; font-weight: 600;">
-                            ⚠️ Note: Budgets under $50 are quite tight. Consider increasing your budget for better value.
+                            ⚠️ Note: Budgets under $50 are quite tight and yield limited quantities. Consider increasing your budget for better value.
                         </p>
                     `;
                 }
@@ -3061,7 +3063,7 @@
                             <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
                             <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
                                 <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
-                                Remaining: <strong>$${remaining.toFixed(2)}</strong> (${savingsPercent}% under budget)
+                                Remaining budget: <strong>$${remaining.toFixed(2)}</strong> (${savingsPercent}% under budget)
                             </p>
                             <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
                                 Maximum sandwiches possible within your $${budget.toFixed(2)} budget with these custom packages.
@@ -3093,7 +3095,7 @@
                                 <strong>${totalSandwichesPossible} sandwiches</strong> for exactly <strong>$${totalCost.toFixed(2)}</strong>
                             </p>
                             <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                Uses your entire $${budget.toFixed(2)} budget.
+                                This is the maximum number of sandwiches you can make with your selected ingredients and $${budget.toFixed(2)} budget (uses your entire budget).
                             </p>
                             ${tightBudgetWarning}
                         </div>
