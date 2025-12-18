@@ -926,14 +926,8 @@
                         <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the total amount you want to spend.</span>
                     </div>
 
-                    <div class="calc-input-group">
-                        <label>Meat slices per sandwich</label>
-                        <select id="meatAmount">
-                            <option value="3" selected>3 slices (standard - recommended)</option>
-                            <option value="2">2 slices (lighter sandwich)</option>
-                        </select>
-                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Standard recipe: 3 slices of deli meat per sandwich</span>
-                    </div>
+                    <!-- Meat amount is fixed at 3 slices per standard recipe - hidden input -->
+                    <input type="hidden" id="meatAmount" value="3">
 
                     <div class="calc-input-group">
                         <label>Meat type</label>
@@ -1026,13 +1020,8 @@
                         <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
                     </div>
 
-                    <div class="calc-input-group">
-                        <label for="customMeatSlicesPerSandwich">Meat slices per sandwich</label>
-                        <select id="customMeatSlicesPerSandwich">
-                            <option value="3" selected>3 slices (standard)</option>
-                            <option value="2">2 slices (lighter)</option>
-                        </select>
-                    </div>
+                    <!-- Meat amount is fixed at 3 slices per standard recipe -->
+                    <input type="hidden" id="customMeatSlicesPerSandwich" value="3">
 
                     <div class="calc-button-container">
                         <button class="calc-button" onclick="calculateCustomPackage()">Calculate</button>
@@ -2727,7 +2716,7 @@
                     <div class="result-item">
                         <h4>Sandwiches from This Package</h4>
                         <div class="number">${sandwichesPossible}</div>
-                        <div class="description">Using ${meatSlicesPerSandwich} slices per sandwich</div>
+                        <div class="description">at 3 slices per sandwich (standard recipe)</div>
                     </div>
                     <div class="result-item">
                         <h4>Leftover Slices</h4>
