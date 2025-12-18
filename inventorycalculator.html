@@ -2851,8 +2851,9 @@
                 return;
             }
 
-            if (!meatSlicesPerSandwich || meatSlicesPerSandwich <= 0) {
-                alert('Please enter a valid number of meat slices per sandwich');
+            // Check if package has enough slices for at least one sandwich
+            if (slicesInPackage < meatSlicesPerSandwich) {
+                alert(`This package only has ${slicesInPackage} slice(s), but you need ${meatSlicesPerSandwich} slices to make one sandwich. You'll need a larger package or multiple packages.`);
                 return;
             }
 
