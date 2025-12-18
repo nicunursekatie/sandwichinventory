@@ -2851,10 +2851,17 @@
                 return;
             }
 
+            if (!meatSlicesPerSandwich || meatSlicesPerSandwich <= 0) {
+                alert('Please enter a valid number of meat slices per sandwich');
+                return;
+            }
+
             // Calculate sandwiches possible from this package
             const sandwichesPossible = Math.floor(slicesInPackage / meatSlicesPerSandwich);
             const leftoverSlices = slicesInPackage % meatSlicesPerSandwich;
-            const costPerSandwich = packagePrice ? (packagePrice / sandwichesPossible).toFixed(2) : 'N/A';
+            const costPerSandwich = (packagePrice && sandwichesPossible > 0)
+                ? (packagePrice / sandwichesPossible).toFixed(2)
+                : 'N/A';
             const costPerSlice = packagePrice ? (packagePrice / slicesInPackage).toFixed(2) : 'N/A';
             const isEstimate = inputMethod === 'oz';
 
