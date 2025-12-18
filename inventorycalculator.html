@@ -2763,10 +2763,15 @@
 
         // Estimate slices from oz/servings info
         function estimateSlicesFromOz() {
-            const packageOz = parseFloat(document.getElementById('customPackageOz').value);
+            let packageOz = parseFloat(document.getElementById('customPackageOz').value);
             const servings = parseFloat(document.getElementById('customServings').value);
             const servingSize = parseFloat(document.getElementById('customServingSize').value);
             const thickness = document.getElementById('customSliceThickness').value;
+
+            // If package oz not provided but servings info is available, calculate it
+            if ((!packageOz || packageOz <= 0) && servings > 0 && servingSize > 0) {
+                packageOz = servings * servingSize;
+            }
 
             if (!packageOz || packageOz <= 0) {
                 document.getElementById('sliceEstimate').style.display = 'none';
