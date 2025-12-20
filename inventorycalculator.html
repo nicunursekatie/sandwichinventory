@@ -1094,6 +1094,184 @@
             background: #FBAD3F;
             color: #fff;
         }
+        
+        /* Multi-step wizard styles */
+        .wizard-container {
+            position: relative;
+        }
+        
+        .wizard-steps {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 30px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .wizard-step {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 25px;
+            color: rgba(255,255,255,0.7);
+            font-weight: 500;
+            font-size: 0.95em;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .wizard-step.active {
+            background: rgba(255,255,255,0.95);
+            color: #236383;
+            border-color: #FBAD3F;
+            font-weight: 600;
+        }
+        
+        .wizard-step.completed {
+            background: rgba(251,173,63,0.3);
+            color: rgba(255,255,255,0.9);
+            border-color: rgba(251,173,63,0.5);
+        }
+        
+        .wizard-step-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            font-weight: 700;
+            font-size: 0.9em;
+        }
+        
+        .wizard-step.active .wizard-step-number {
+            background: #236383;
+            color: white;
+        }
+        
+        .wizard-step.completed .wizard-step-number {
+            background: #FBAD3F;
+            color: #1a4d66;
+        }
+        
+        .wizard-content {
+            min-height: 300px;
+        }
+        
+        .wizard-panel {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .wizard-panel.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .wizard-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            gap: 15px;
+        }
+        
+        .wizard-btn {
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            min-width: 140px;
+        }
+        
+        .wizard-btn-back {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .wizard-btn-back:hover {
+            background: rgba(255,255,255,0.3);
+            border-color: rgba(255,255,255,0.5);
+        }
+        
+        .wizard-btn-next {
+            background: linear-gradient(135deg, #FBAD3F 0%, #F39C12 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(251,173,63,0.4);
+        }
+        
+        .wizard-btn-next:hover {
+            background: linear-gradient(135deg, #F39C12 0%, #FBAD3F 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251,173,63,0.5);
+        }
+        
+        .wizard-btn-calculate {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(35,99,131,0.4);
+        }
+        
+        .wizard-btn-calculate:hover {
+            background: linear-gradient(135deg, #007E8C 0%, #236383 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(35,99,131,0.5);
+        }
+        
+        .wizard-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .wizard-step-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .wizard-step-description {
+            color: rgba(255,255,255,0.9);
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 1.05em;
+        }
+        
+        @media (max-width: 768px) {
+            .wizard-steps {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .wizard-step {
+                justify-content: center;
+            }
+            
+            .wizard-navigation {
+                flex-direction: column;
+            }
+            
+            .wizard-btn {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1392,72 +1570,127 @@
             <!-- Full Custom Shopping Calculator -->
             <div style="margin-top: 30px;">
                 <h3 style="color: #1a4d66; margin-bottom: 15px;">📊 Full Custom Shopping List Builder</h3>
-                <p style="color: #64748b; margin-bottom: 20px;">Have custom packages for all your ingredients? Enter details below to build a complete shopping list.</p>
+                <p style="color: #64748b; margin-bottom: 20px;">Have custom packages for all your ingredients? We'll guide you through step by step!</p>
 
-                <div class="shopping-calculator" style="background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);">
-                    <!-- Plan mode toggle -->
-                    <div style="margin-bottom: 24px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
-                        <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 12px; color: #236383;">How would you like to plan?</label>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
-                                <input type="radio" name="customPlanMode" id="customPlanBySandwiches" value="sandwiches" checked onchange="toggleCustomPlanMode()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
-                                <span>How much will it cost to make <strong>___ sandwiches</strong>?</span>
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
-                                <input type="radio" name="customPlanMode" id="customPlanByBudget" value="budget" onchange="toggleCustomPlanMode()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
-                                <span>How many sandwiches can I make with <strong>$___ budget</strong>?</span>
-                            </label>
+                <div class="shopping-calculator wizard-container" style="background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);">
+                    <!-- Step indicator -->
+                    <div class="wizard-steps">
+                        <div class="wizard-step active" id="step-indicator-1">
+                            <div class="wizard-step-number">1</div>
+                            <span>Planning</span>
+                        </div>
+                        <div class="wizard-step" id="step-indicator-2">
+                            <div class="wizard-step-number">2</div>
+                            <span>Meat</span>
+                        </div>
+                        <div class="wizard-step" id="step-indicator-3">
+                            <div class="wizard-step-number">3</div>
+                            <span>Cheese & Bread</span>
                         </div>
                     </div>
 
-                    <div class="calc-form">
-                        <div class="calc-input-group" id="customSandwichCountGroup">
-                            <label for="customTargetSandwiches">Target number of sandwiches</label>
-                            <input type="number" id="customTargetSandwiches" min="1" max="5000" placeholder="e.g., 100">
-                        </div>
-                        <div class="calc-input-group" id="customBudgetGroup" style="display: none;">
-                            <label for="customBudgetAmount">Budget ($)</label>
-                            <input type="number" id="customBudgetAmount" min="1" max="10000" placeholder="Enter your budget (e.g., 200)">
-                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Enter the total amount you want to spend.</span>
+                    <div class="wizard-content">
+                        <!-- Step 1: Planning Mode -->
+                        <div class="wizard-panel active" id="wizard-step-1">
+                            <div class="wizard-step-title">Step 1: How would you like to plan?</div>
+                            <div class="wizard-step-description">Choose whether you want to plan by sandwich count or budget</div>
+                            
+                            <div style="margin-bottom: 30px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                                        <input type="radio" name="wizardPlanMode" id="wizardPlanBySandwiches" value="sandwiches" checked onchange="updateWizardStep1()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                                        <span>How much will it cost to make <strong>___ sandwiches</strong>?</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                                        <input type="radio" name="wizardPlanMode" id="wizardPlanByBudget" value="budget" onchange="updateWizardStep1()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                                        <span>How many sandwiches can I make with <strong>$___ budget</strong>?</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="calc-form" style="grid-template-columns: 1fr; max-width: 400px; margin: 0 auto;">
+                                <div class="calc-input-group" id="wizardSandwichCountGroup">
+                                    <label for="wizardTargetSandwiches">Target number of sandwiches</label>
+                                    <input type="number" id="wizardTargetSandwiches" min="1" max="5000" placeholder="e.g., 100" oninput="updateWizardStep1()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Enter the number of sandwiches you want to make</span>
+                                </div>
+                                <div class="calc-input-group" id="wizardBudgetGroup" style="display: none;">
+                                    <label for="wizardBudgetAmount">Budget ($)</label>
+                                    <input type="number" id="wizardBudgetAmount" min="1" max="10000" placeholder="e.g., 200" oninput="updateWizardStep1()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Enter the total amount you want to spend</span>
+                                </div>
+                            </div>
+
+                            <div class="wizard-navigation">
+                                <div></div>
+                                <button class="wizard-btn wizard-btn-next" onclick="nextWizardStep()" id="wizard-next-1" disabled>Next: Meat Details →</button>
+                            </div>
                         </div>
 
-                        <div class="calc-input-group">
-                            <label for="customMeatSlices">Slices per meat package</label>
-                            <input type="number" id="customMeatSlices" min="1" max="500" placeholder="e.g., 30">
+                        <!-- Step 2: Meat Details -->
+                        <div class="wizard-panel" id="wizard-step-2">
+                            <div class="wizard-step-title">Step 2: Meat Package Details</div>
+                            <div class="wizard-step-description">Tell us about your meat package</div>
+                            
+                            <div class="calc-form" style="grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto;">
+                                <div class="calc-input-group">
+                                    <label for="wizardMeatSlices">Slices per meat package</label>
+                                    <input type="number" id="wizardMeatSlices" min="1" max="500" placeholder="e.g., 30" oninput="updateWizardStep2()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the package label</span>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label for="wizardMeatPrice">Meat package price ($)</label>
+                                    <input type="number" id="wizardMeatPrice" min="0" step="0.01" placeholder="e.g., 7.99" oninput="updateWizardStep2()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
+                                </div>
+                            </div>
+
+                            <div class="wizard-navigation">
+                                <button class="wizard-btn wizard-btn-back" onclick="prevWizardStep()">← Back</button>
+                                <button class="wizard-btn wizard-btn-next" onclick="nextWizardStep()" id="wizard-next-2" disabled>Next: Cheese & Bread →</button>
+                            </div>
                         </div>
 
-                        <div class="calc-input-group">
-                            <label for="customMeatPrice">Meat package price ($)</label>
-                            <input type="number" id="customMeatPrice" min="0" step="0.01" placeholder="e.g., 7.99">
-                        </div>
+                        <!-- Step 3: Cheese & Bread Details -->
+                        <div class="wizard-panel" id="wizard-step-3">
+                            <div class="wizard-step-title">Step 3: Cheese & Bread Details</div>
+                            <div class="wizard-step-description">Enter your cheese and bread package information</div>
+                            
+                            <div class="calc-form" style="grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto;">
+                                <div class="calc-input-group">
+                                    <label for="wizardCheeseSlices">Slices per cheese package</label>
+                                    <input type="number" id="wizardCheeseSlices" min="1" max="200" placeholder="e.g., 40" oninput="updateWizardStep3()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the package</span>
+                                </div>
 
-                        <div class="calc-input-group">
-                            <label for="customCheeseSlices">Slices per cheese package</label>
-                            <input type="number" id="customCheeseSlices" min="1" max="200" placeholder="e.g., 40">
-                        </div>
+                                <div class="calc-input-group">
+                                    <label for="wizardCheesePrice">Cheese package price ($)</label>
+                                    <input type="number" id="wizardCheesePrice" min="0" step="0.01" placeholder="e.g., 7.70" oninput="updateWizardStep3()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
+                                </div>
 
-                        <div class="calc-input-group">
-                            <label for="customCheesePrice">Cheese package price ($)</label>
-                            <input type="number" id="customCheesePrice" min="0" step="0.01" placeholder="e.g., 7.70">
-                        </div>
+                                <div class="calc-input-group">
+                                    <label for="wizardBreadSandwiches">Sandwiches per bread package</label>
+                                    <input type="number" id="wizardBreadSandwiches" min="1" max="100" placeholder="e.g., 20" oninput="updateWizardStep3()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">A double loaf typically makes 20 sandwiches</span>
+                                </div>
 
-                        <div class="calc-input-group">
-                            <label for="customBreadSandwiches">Sandwiches per bread package</label>
-                            <input type="number" id="customBreadSandwiches" min="1" max="100" placeholder="e.g., 20">
-                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">A double loaf typically makes 20 sandwiches</span>
-                        </div>
+                                <div class="calc-input-group">
+                                    <label for="wizardBreadPrice">Bread package price ($)</label>
+                                    <input type="number" id="wizardBreadPrice" min="0" step="0.01" placeholder="e.g., 4.49" oninput="updateWizardStep3()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
+                                </div>
+                            </div>
 
-                        <div class="calc-input-group">
-                            <label for="customBreadPrice">Bread package price ($)</label>
-                            <input type="number" id="customBreadPrice" min="0" step="0.01" placeholder="e.g., 4.49">
-                        </div>
-
-                        <div class="calc-button-container">
-                            <button class="calc-button" onclick="calculateFullCustom()">Calculate Full Order</button>
+                            <div class="wizard-navigation">
+                                <button class="wizard-btn wizard-btn-back" onclick="prevWizardStep()">← Back</button>
+                                <button class="wizard-btn wizard-btn-calculate" onclick="calculateWizardFullCustom()" id="wizard-calculate" disabled>Calculate Order</button>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="calc-result" id="fullCustomResult"></div>
+                    <div class="calc-result" id="wizardFullCustomResult" style="display: none;"></div>
                 </div>
             </div>
 
@@ -2203,6 +2436,11 @@
                     });
                 });
             });
+            
+            // Initialize wizard
+            if (document.getElementById('wizardTargetSandwiches')) {
+                updateWizardStep1();
+            }
         });
         
         // Close dropdowns when clicking outside
@@ -3302,6 +3540,297 @@
                 </div>
             `;
             document.getElementById('customResult').style.display = 'block';
+        }
+
+        // Wizard navigation and validation
+        let currentWizardStep = 1;
+        const totalWizardSteps = 3;
+
+        function updateWizardStep1() {
+            const planMode = document.querySelector('input[name="wizardPlanMode"]:checked').value;
+            const sandwichCount = document.getElementById('wizardTargetSandwiches').value;
+            const budgetAmount = document.getElementById('wizardBudgetAmount').value;
+            
+            // Show/hide appropriate input
+            if (planMode === 'sandwiches') {
+                document.getElementById('wizardSandwichCountGroup').style.display = 'flex';
+                document.getElementById('wizardBudgetGroup').style.display = 'none';
+                document.getElementById('wizard-next-1').disabled = !sandwichCount || parseInt(sandwichCount) <= 0;
+            } else {
+                document.getElementById('wizardSandwichCountGroup').style.display = 'none';
+                document.getElementById('wizardBudgetGroup').style.display = 'flex';
+                document.getElementById('wizard-next-1').disabled = !budgetAmount || parseFloat(budgetAmount) <= 0;
+            }
+        }
+
+        function updateWizardStep2() {
+            const meatSlices = document.getElementById('wizardMeatSlices').value;
+            const meatPrice = document.getElementById('wizardMeatPrice').value;
+            document.getElementById('wizard-next-2').disabled = !meatSlices || parseInt(meatSlices) <= 0 || !meatPrice || parseFloat(meatPrice) <= 0;
+        }
+
+        function updateWizardStep3() {
+            const cheeseSlices = document.getElementById('wizardCheeseSlices').value;
+            const cheesePrice = document.getElementById('wizardCheesePrice').value;
+            const breadSandwiches = document.getElementById('wizardBreadSandwiches').value;
+            const breadPrice = document.getElementById('wizardBreadPrice').value;
+            
+            const isValid = cheeseSlices && parseInt(cheeseSlices) > 0 && 
+                           cheesePrice && parseFloat(cheesePrice) > 0 &&
+                           breadSandwiches && parseInt(breadSandwiches) > 0 &&
+                           breadPrice && parseFloat(breadPrice) > 0;
+            
+            document.getElementById('wizard-calculate').disabled = !isValid;
+        }
+
+        function nextWizardStep() {
+            if (currentWizardStep < totalWizardSteps) {
+                // Hide current step
+                document.getElementById(`wizard-step-${currentWizardStep}`).classList.remove('active');
+                document.getElementById(`step-indicator-${currentWizardStep}`).classList.remove('active');
+                document.getElementById(`step-indicator-${currentWizardStep}`).classList.add('completed');
+                
+                // Show next step
+                currentWizardStep++;
+                document.getElementById(`wizard-step-${currentWizardStep}`).classList.add('active');
+                document.getElementById(`step-indicator-${currentWizardStep}`).classList.add('active');
+            }
+        }
+
+        function prevWizardStep() {
+            if (currentWizardStep > 1) {
+                // Hide current step
+                document.getElementById(`wizard-step-${currentWizardStep}`).classList.remove('active');
+                document.getElementById(`step-indicator-${currentWizardStep}`).classList.remove('active');
+                document.getElementById(`step-indicator-${currentWizardStep}`).classList.remove('completed');
+                
+                // Show previous step
+                currentWizardStep--;
+                document.getElementById(`wizard-step-${currentWizardStep}`).classList.add('active');
+                document.getElementById(`step-indicator-${currentWizardStep}`).classList.add('active');
+                document.getElementById(`step-indicator-${currentWizardStep}`).classList.remove('completed');
+            }
+        }
+
+        function calculateWizardFullCustom() {
+            const bySandwiches = document.getElementById('wizardPlanBySandwiches').checked;
+            const meatSlicesPerPkg = parseInt(document.getElementById('wizardMeatSlices').value);
+            const meatPricePerPkg = parseFloat(document.getElementById('wizardMeatPrice').value) || 0;
+            const cheeseSlicesPerPkg = parseInt(document.getElementById('wizardCheeseSlices').value);
+            const cheesePricePerPkg = parseFloat(document.getElementById('wizardCheesePrice').value) || 0;
+            const breadSandwichesPerPkg = parseInt(document.getElementById('wizardBreadSandwiches').value);
+            const breadPricePerPkg = parseFloat(document.getElementById('wizardBreadPrice').value) || 0;
+
+            // Validate required package info fields
+            if (!meatSlicesPerPkg || meatSlicesPerPkg <= 0) {
+                alert('Please enter the number of meat slices per package');
+                return;
+            }
+            if (!cheeseSlicesPerPkg || cheeseSlicesPerPkg <= 0) {
+                alert('Please enter the number of cheese slices per package');
+                return;
+            }
+            if (!breadSandwichesPerPkg || breadSandwichesPerPkg <= 0) {
+                alert('Please enter the number of sandwiches per bread package');
+                return;
+            }
+
+            // Standard recipe: 3 slices meat, 2 slices cheese per sandwich
+            const meatSlicesPerSandwich = 3;
+            const cheeseSlicesPerSandwich = 2;
+            const bagPrice = 7.99;
+
+            let targetSandwiches;
+            let budget = null;
+
+            if (bySandwiches) {
+                targetSandwiches = parseInt(document.getElementById('wizardTargetSandwiches').value);
+                if (!targetSandwiches || targetSandwiches <= 0) {
+                    alert('Please enter a valid target number of sandwiches');
+                    return;
+                }
+            } else {
+                // Budget mode
+                budget = parseFloat(document.getElementById('wizardBudgetAmount').value);
+                if (!budget || budget <= 0) {
+                    alert('Please enter a valid budget amount');
+                    return;
+                }
+                // Require prices in budget mode
+                if (!meatPricePerPkg || !cheesePricePerPkg || !breadPricePerPkg) {
+                    alert('Budget mode requires all package prices to be entered');
+                    return;
+                }
+
+                // Use binary search to find optimal sandwich count within budget
+                let low = 1;
+                let high = Math.floor(budget / 0.50); // Assume minimum $0.50 per sandwich
+                let bestSandwichCount = 0;
+
+                while (low <= high) {
+                    const mid = Math.floor((low + high) / 2);
+
+                    // Calculate packages needed for mid sandwiches
+                    const testMeatPkgs = Math.ceil((mid * meatSlicesPerSandwich) / meatSlicesPerPkg);
+                    const testCheesePkgs = Math.ceil((mid * cheeseSlicesPerSandwich) / cheeseSlicesPerPkg);
+                    const testBreadPkgs = Math.ceil(mid / breadSandwichesPerPkg);
+                    const testBagPkgs = Math.ceil(mid / 480);
+
+                    const testCost = Math.round(
+                        (testMeatPkgs * meatPricePerPkg) +
+                        (testCheesePkgs * cheesePricePerPkg) +
+                        (testBreadPkgs * breadPricePerPkg) +
+                        (testBagPkgs * bagPrice)
+                    );
+
+                    if (testCost <= budget) {
+                        bestSandwichCount = mid;
+                        low = mid + 1;
+                    } else {
+                        high = mid - 1;
+                    }
+                }
+
+                if (bestSandwichCount < 1) {
+                    alert('Budget too low for even 1 sandwich with these packages. Try increasing your budget or finding cheaper ingredients.');
+                    return;
+                }
+
+                targetSandwiches = bestSandwichCount;
+            }
+
+            // Calculate packages needed
+            const totalMeatSlicesNeeded = targetSandwiches * meatSlicesPerSandwich;
+            const totalCheeseSlicesNeeded = targetSandwiches * cheeseSlicesPerSandwich;
+
+            const meatPackagesNeeded = Math.ceil(totalMeatSlicesNeeded / meatSlicesPerPkg);
+            const cheesePackagesNeeded = Math.ceil(totalCheeseSlicesNeeded / cheeseSlicesPerPkg);
+            const breadPackagesNeeded = Math.ceil(targetSandwiches / breadSandwichesPerPkg);
+            const bagPackagesNeeded = Math.ceil(targetSandwiches / 480);
+
+            // Calculate costs
+            const meatCost = meatPackagesNeeded * meatPricePerPkg;
+            const cheeseCost = cheesePackagesNeeded * cheesePricePerPkg;
+            const breadCost = breadPackagesNeeded * breadPricePerPkg;
+            const bagCost = bagPackagesNeeded * bagPrice;
+            const totalCost = meatCost + cheeseCost + breadCost + bagCost;
+
+            // Calculate extras (leftover slices)
+            const meatSlicesProvided = meatPackagesNeeded * meatSlicesPerPkg;
+            const cheeseSlicesProvided = cheesePackagesNeeded * cheeseSlicesPerPkg;
+            const breadSandwichesProvided = breadPackagesNeeded * breadSandwichesPerPkg;
+
+            const extraMeatSlices = meatSlicesProvided - totalMeatSlicesNeeded;
+            const extraCheeseSlices = cheeseSlicesProvided - totalCheeseSlicesNeeded;
+            const extraBreadSlots = breadSandwichesProvided - targetSandwiches;
+
+            // Calculate possible extra sandwiches
+            const extraFromMeat = Math.floor(extraMeatSlices / meatSlicesPerSandwich);
+            const extraFromCheese = Math.floor(extraCheeseSlices / cheeseSlicesPerSandwich);
+            const extraFromBread = extraBreadSlots;
+            const possibleExtraSandwiches = Math.min(extraFromMeat, extraFromCheese, extraFromBread);
+            const totalSandwichesPossible = targetSandwiches + possibleExtraSandwiches;
+
+            // Build budget status message for budget mode
+            let budgetStatusMessage = '';
+            if (!bySandwiches && budget) {
+                const remaining = Math.round((budget - totalCost) * 100) / 100;
+                const savingsPercent = Math.round((remaining / budget) * 100);
+
+                let tightBudgetWarning = '';
+                if (budget <= 50) {
+                    tightBudgetWarning = `
+                        <p style="color: #E65100; margin-top: 12px; font-size: 1em; font-weight: 600;">
+                            ⚠️ Note: Budgets under $50 are quite tight and yield limited quantities. Consider increasing your budget for better value.
+                        </p>
+                    `;
+                }
+
+                if (remaining > 5) {
+                    budgetStatusMessage = `
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
+                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
+                                Remaining budget: <strong>$${remaining.toFixed(2)}</strong> (${savingsPercent}% under budget)
+                            </p>
+                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
+                                Maximum sandwiches possible within your $${budget.toFixed(2)} budget with these custom packages.
+                            </p>
+                            ${tightBudgetWarning}
+                        </div>
+                    `;
+                } else if (remaining >= 0) {
+                    budgetStatusMessage = `
+                        <div style="background: rgba(255,193,63,0.15); border: 3px solid #FFC107; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">💰</div>
+                            <h4 style="color: #F57C00; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
+                            <p style="color: #E65100; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
+                                Remaining: <strong>$${remaining.toFixed(2)}</strong>
+                            </p>
+                            ${tightBudgetWarning}
+                        </div>
+                    `;
+                } else {
+                    budgetStatusMessage = `
+                        <div style="background: rgba(244,67,54,0.15); border: 3px solid #F44336; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
+                            <h4 style="color: #C62828; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Over Budget</h4>
+                            <p style="color: #B71C1C; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                Cost: <strong>$${totalCost.toFixed(2)}</strong> | Budget: <strong>$${budget.toFixed(2)}</strong> | Over by: <strong>$${Math.abs(remaining).toFixed(2)}</strong>
+                            </p>
+                        </div>
+                    `;
+                }
+            }
+
+            // Build results display
+            const resultHTML = `
+                ${budgetStatusMessage}
+                <div class="result-grid">
+                    <div class="result-item">
+                        <h4>Meat Packages</h4>
+                        <div class="number">${meatPackagesNeeded}</div>
+                        <div class="description">${meatSlicesPerPkg} slices per package</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">$${meatCost.toFixed(2)}</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Cheese Packages</h4>
+                        <div class="number">${cheesePackagesNeeded}</div>
+                        <div class="description">${cheeseSlicesPerPkg} slices per package</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">$${cheeseCost.toFixed(2)}</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Bread Packages</h4>
+                        <div class="number">${breadPackagesNeeded}</div>
+                        <div class="description">${breadSandwichesPerPkg} sandwiches per package</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">$${breadCost.toFixed(2)}</div>
+                    </div>
+                    <div class="result-item">
+                        <h4>Sandwich Bags</h4>
+                        <div class="number">${bagPackagesNeeded}</div>
+                        <div class="description">480 count boxes</div>
+                        <div style="margin-top: 10px; font-size: 0.9em;">$${bagCost.toFixed(2)}</div>
+                    </div>
+                </div>
+                <div style="margin-top: 25px; padding: 20px; background: rgba(251,173,63,0.2); border-radius: 12px; text-align: center;">
+                    <h4 style="color: #fff; font-size: 1.4em; margin-bottom: 10px;">Total Estimated Cost</h4>
+                    <div style="font-size: 3em; font-weight: 700; color: #fff;">$${totalCost.toFixed(2)}</div>
+                    <div style="color: rgba(255,255,255,0.9); font-size: 1.1em; margin-top: 8px;">
+                        for ${targetSandwiches} sandwiches${possibleExtraSandwiches > 0 ? ` (up to ${totalSandwichesPossible} possible with extras)` : ''}<br>
+                        (≈ $${(totalCost / targetSandwiches).toFixed(2)} per sandwich)
+                    </div>
+                </div>
+            `;
+
+            // Show results and hide wizard
+            document.getElementById('wizardFullCustomResult').innerHTML = resultHTML;
+            document.getElementById('wizardFullCustomResult').style.display = 'block';
+            
+            // Scroll to results
+            document.getElementById('wizardFullCustomResult').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         // Full Custom Shopping Calculator
