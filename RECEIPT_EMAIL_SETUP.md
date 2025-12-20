@@ -2,6 +2,12 @@
 
 This repo includes a Cloud Function `sendDonationReceiptEmail` that sends a receipt PDF attachment via SendGrid.
 
+### Firebase project console
+
+Use this to manage the project (and billing/Blaze plan if prompted for Functions):
+
+`https://console.firebase.google.com/project/donation-receipt-generator/overview`
+
 ### 1) Install function dependencies
 
 From the repo root:

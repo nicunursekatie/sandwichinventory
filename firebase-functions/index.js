@@ -1,6 +1,10 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const cors = require('cors')({ origin: true });
+const cors = require('cors')({
+  origin: true,
+  methods: ['POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'x-receipt-token', 'authorization'],
+});
 const sgMail = require('@sendgrid/mail');
 
 admin.initializeApp();
@@ -43,6 +47,11 @@ function isValidEmail(email) {
 exports.sendDonationReceiptEmail = functions.https.onRequest((req, res) => {
   cors(req, res, async () => {
     try {
+      // CORS preflight
+      if (req.method === 'OPTIONS') {
+        return res.status(204).send('');
+      }
+
       assertAuth(req);
       if (req.method !== 'POST') return res.status(405).json({ ok: false, error: 'Method not allowed' });
 

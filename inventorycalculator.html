@@ -1030,7 +1030,7 @@
                         <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the label</span>
                     </div>
 
-                    <!-- Method 2: Oz/Servings based estimation -->
+                    <!-- Method 2: Oz-based estimation -->
                     <div id="ozInputGroup" style="display: none;">
                         <div class="calc-input-group" style="margin-bottom: 20px;">
                             <label for="customPackageOz">Package weight (oz)</label>
@@ -1090,10 +1090,30 @@
                 <p style="color: #64748b; margin-bottom: 20px;">Have custom packages for all your ingredients? Enter details below to build a complete shopping list.</p>
 
                 <div class="shopping-calculator" style="background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);">
+                    <!-- Plan mode toggle -->
+                    <div style="margin-bottom: 24px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
+                        <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 12px; color: #236383;">How would you like to plan?</label>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <label style="display: flex; align-items: center; gap: 10px; font-size: 1em; cursor: pointer; color: #333; padding: 8px; border-radius: 6px; background: #f8f9fa;">
+                                <input type="radio" name="customPlanMode" id="customPlanBySandwiches" value="sandwiches" checked onchange="toggleCustomPlanMode()">
+                                <span>How much will it cost to make <strong>___ sandwiches</strong>?</span>
+                            </label>
+                            <label style="display: flex; align-items: center; gap: 10px; font-size: 1em; cursor: pointer; color: #333; padding: 8px; border-radius: 6px; background: #f8f9fa;">
+                                <input type="radio" name="customPlanMode" id="customPlanByBudget" value="budget" onchange="toggleCustomPlanMode()">
+                                <span>How many sandwiches can I make with <strong>$___ budget</strong>?</span>
+                            </label>
+                        </div>
+                    </div>
+
                     <div class="calc-form">
-                        <div class="calc-input-group">
+                        <div class="calc-input-group" id="customSandwichCountGroup">
                             <label for="customTargetSandwiches">Target number of sandwiches</label>
                             <input type="number" id="customTargetSandwiches" min="1" max="5000" placeholder="e.g., 100">
+                        </div>
+                        <div class="calc-input-group" id="customBudgetGroup" style="display: none;">
+                            <label for="customBudgetAmount">Budget ($)</label>
+                            <input type="number" id="customBudgetAmount" min="1" max="10000" placeholder="Enter your budget (e.g., 200)">
+                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Enter the total amount you want to spend.</span>
                         </div>
 
                         <div class="calc-input-group">
@@ -1836,12 +1856,12 @@
 
             // Ingredient constants - SLICE-BASED CALCULATION
             // Each sandwich uses: 2 slices bread, 2 slices cheese, and 3 slices meat (standard recipe)
-            const meatSlicesPerSandwich = meatAmount; // User selected: 3 slices (standard) or 2 slices (lighter)
+            const meatSlicesPerSandwich = meatAmount; // Currently configured meat slices per sandwich (default: 3 slices standard recipe)
             const cheesePerSandwich = 2; // 2 slices per sandwich
 
             // Legacy oz-based variables kept for budget mode cost estimation
             // These are approximate and used for price calculations only
-            const meatPerSandwichOz = meatSlicesPerSandwich; // Rough estimate: ~1oz per slice average
+            const meatPerSandwichOz = meatSlicesPerSandwich * 0.5; // Rough estimate: ~0.5 oz per slice average
 
             // Package sizes and prices
             let meatPerPackage, meatPrice, meatDescription, meatPackageWeightOz;
@@ -2004,8 +2024,8 @@
                 }
                 // Estimate max sandwiches for this budget
                 // Cost per sandwich = (meat + cheese + bread + bag) per sandwich
-                // Calculate sandwiches per package based on weight
-                const sandwichesPerMeatPackage = meatPackageWeightOz / meatPerSandwichOz;
+                // Calculate sandwiches per package based on SLICES (not weight)
+                const sandwichesPerMeatPackage = meatPerPackage / meatSlicesPerSandwich;
                 const meatCostPerSandwich = meatPrice / sandwichesPerMeatPackage;
                 const cheeseCostPerSandwich = cheesePrice / (cheesePerPackage / cheesePerSandwich);
                 const breadCostPerSandwich = breadPrice / breadSandwichesPerPackage;
@@ -2595,6 +2615,12 @@
             document.getElementById('budgetGroup').style.display = bySandwiches ? 'none' : '';
         }
 
+        function toggleCustomPlanMode() {
+            const bySandwiches = document.getElementById('customPlanBySandwiches').checked;
+            document.getElementById('customSandwichCountGroup').style.display = bySandwiches ? '' : 'none';
+            document.getElementById('customBudgetGroup').style.display = bySandwiches ? 'none' : '';
+        }
+
         function calculatePBJ() {
             const pbjCount = parseInt(document.getElementById('pbjCount').value);
             const pbType = document.getElementById('pbType').value;
@@ -2761,7 +2787,7 @@
             }
         }
 
-        // Estimate slices from oz/servings info
+        // Estimate slices from oz + thickness
         function estimateSlicesFromOz() {
             let packageOz = parseFloat(document.getElementById('customPackageOz').value);
             const servings = parseFloat(document.getElementById('customServings').value);
@@ -2856,10 +2882,18 @@
                 return;
             }
 
+            // Check if package has enough slices for at least one sandwich
+            if (slicesInPackage < meatSlicesPerSandwich) {
+                alert(`This package only has ${slicesInPackage} slice(s), but you need ${meatSlicesPerSandwich} slices to make one sandwich. You'll need a larger package or multiple packages.`);
+                return;
+            }
+
             // Calculate sandwiches possible from this package
             const sandwichesPossible = Math.floor(slicesInPackage / meatSlicesPerSandwich);
             const leftoverSlices = slicesInPackage % meatSlicesPerSandwich;
-            const costPerSandwich = packagePrice ? (packagePrice / sandwichesPossible).toFixed(2) : 'N/A';
+            const costPerSandwich = (packagePrice && sandwichesPossible > 0)
+                ? (packagePrice / sandwichesPossible).toFixed(2)
+                : 'N/A';
             const costPerSlice = packagePrice ? (packagePrice / slicesInPackage).toFixed(2) : 'N/A';
             const isEstimate = inputMethod === 'oz';
 
@@ -2908,7 +2942,7 @@
 
         // Full Custom Shopping Calculator
         function calculateFullCustom() {
-            const targetSandwiches = parseInt(document.getElementById('customTargetSandwiches').value);
+            const bySandwiches = document.getElementById('customPlanBySandwiches').checked;
             const meatSlicesPerPkg = parseInt(document.getElementById('customMeatSlices').value);
             const meatPricePerPkg = parseFloat(document.getElementById('customMeatPrice').value) || 0;
             const cheeseSlicesPerPkg = parseInt(document.getElementById('customCheeseSlices').value);
@@ -2916,11 +2950,7 @@
             const breadSandwichesPerPkg = parseInt(document.getElementById('customBreadSandwiches').value);
             const breadPricePerPkg = parseFloat(document.getElementById('customBreadPrice').value) || 0;
 
-            // Validate required fields
-            if (!targetSandwiches || targetSandwiches <= 0) {
-                alert('Please enter a valid target number of sandwiches');
-                return;
-            }
+            // Validate required package info fields
             if (!meatSlicesPerPkg || meatSlicesPerPkg <= 0) {
                 alert('Please enter the number of meat slices per package');
                 return;
@@ -2937,6 +2967,66 @@
             // Standard recipe: 3 slices meat, 2 slices cheese per sandwich
             const meatSlicesPerSandwich = 3;
             const cheeseSlicesPerSandwich = 2;
+            const bagPrice = 7.99;
+
+            let targetSandwiches;
+            let budget = null;
+
+            if (bySandwiches) {
+                targetSandwiches = parseInt(document.getElementById('customTargetSandwiches').value);
+                if (!targetSandwiches || targetSandwiches <= 0) {
+                    alert('Please enter a valid target number of sandwiches');
+                    return;
+                }
+            } else {
+                // Budget mode
+                budget = parseFloat(document.getElementById('customBudgetAmount').value);
+                if (!budget || budget <= 0) {
+                    alert('Please enter a valid budget amount');
+                    return;
+                }
+                // Require prices in budget mode
+                if (!meatPricePerPkg || !cheesePricePerPkg || !breadPricePerPkg) {
+                    alert('Budget mode requires all package prices to be entered');
+                    return;
+                }
+
+                // Use binary search to find optimal sandwich count within budget
+                let low = 1;
+                let high = Math.floor(budget / 0.50); // Assume minimum $0.50 per sandwich
+                let bestSandwichCount = 0;
+
+                while (low <= high) {
+                    const mid = Math.floor((low + high) / 2);
+
+                    // Calculate packages needed for mid sandwiches
+                    const testMeatPkgs = Math.ceil((mid * meatSlicesPerSandwich) / meatSlicesPerPkg);
+                    const testCheesePkgs = Math.ceil((mid * cheeseSlicesPerSandwich) / cheeseSlicesPerPkg);
+                    const testBreadPkgs = Math.ceil(mid / breadSandwichesPerPkg);
+                    const testBagPkgs = Math.ceil(mid / 480);
+
+                    const testCost = Math.round(
+                        (testMeatPkgs * meatPricePerPkg) +
+                        (testCheesePkgs * cheesePricePerPkg) +
+                        (testBreadPkgs * breadPricePerPkg) +
+                        (testBagPkgs * bagPrice)
+                    );
+
+                    if (testCost <= budget) {
+                        bestSandwichCount = mid;
+                        low = mid + 1;
+                    } else {
+                        high = mid - 1;
+                    }
+                }
+
+                if (bestSandwichCount < 1) {
+                    alert('Budget too low for even 1 sandwich with these packages. Try increasing your budget or finding cheaper ingredients.');
+                    return;
+                }
+
+                targetSandwiches = bestSandwichCount;
+            }
 
             // Calculate packages needed
             const totalMeatSlicesNeeded = targetSandwiches * meatSlicesPerSandwich;
@@ -2951,7 +3041,7 @@
             const meatCost = meatPackagesNeeded * meatPricePerPkg;
             const cheeseCost = cheesePackagesNeeded * cheesePricePerPkg;
             const breadCost = breadPackagesNeeded * breadPricePerPkg;
-            const bagCost = bagPackagesNeeded * 7.99; // Standard bag price
+            const bagCost = bagPackagesNeeded * bagPrice;
             const totalCost = meatCost + cheeseCost + breadCost + bagCost;
 
             // Calculate extras (leftover slices)
@@ -2968,9 +3058,73 @@
             const extraFromCheese = Math.floor(extraCheeseSlices / cheeseSlicesPerSandwich);
             const extraFromBread = extraBreadSlots;
             const possibleExtraSandwiches = Math.min(extraFromMeat, extraFromCheese, extraFromBread);
+            const totalSandwichesPossible = targetSandwiches + possibleExtraSandwiches;
+
+            // Build budget status message for budget mode
+            let budgetStatusMessage = '';
+            if (!bySandwiches && budget) {
+                const remaining = Math.round((budget - totalCost) * 100) / 100;
+                const savingsPercent = Math.round((remaining / budget) * 100);
+
+                let tightBudgetWarning = '';
+                if (budget <= 50) {
+                    tightBudgetWarning = `
+                        <p style="color: #E65100; margin-top: 12px; font-size: 1em; font-weight: 600;">
+                            ⚠️ Note: Budgets under $50 are quite tight and yield limited quantities. Consider increasing your budget for better value.
+                        </p>
+                    `;
+                }
+
+                if (remaining > 5) {
+                    budgetStatusMessage = `
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
+                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
+                                Remaining budget: <strong>$${remaining.toFixed(2)}</strong> (${savingsPercent}% under budget)
+                            </p>
+                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
+                                Maximum sandwiches possible within your $${budget.toFixed(2)} budget with these custom packages.
+                            </p>
+                            ${tightBudgetWarning}
+                        </div>
+                    `;
+                } else if (remaining > 0) {
+                    budgetStatusMessage = `
+                        <div style="background: rgba(255,152,0,0.2); border: 3px solid #FF9800; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
+                            <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
+                            <p style="color: #BF360C; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
+                                Only <strong>$${remaining.toFixed(2)}</strong> remaining
+                            </p>
+                            <p style="color: #E65100; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
+                                This maximizes your sandwich count within your $${budget.toFixed(2)} budget.
+                            </p>
+                            ${tightBudgetWarning}
+                        </div>
+                    `;
+                } else {
+                    budgetStatusMessage = `
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 12px;">🎯</div>
+                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Perfect Budget Match!</h4>
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for exactly <strong>$${totalCost.toFixed(2)}</strong>
+                            </p>
+                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
+                                This is the maximum number of sandwiches you can make with your selected ingredients and $${budget.toFixed(2)} budget (uses your entire budget).
+                            </p>
+                            ${tightBudgetWarning}
+                        </div>
+                    `;
+                }
+            }
 
             // Display results
             document.getElementById('fullCustomResult').innerHTML = `
+                ${budgetStatusMessage}
                 <div class="result-grid">
                     <div class="result-item">
                         <h4>Meat Packages</h4>
@@ -2997,7 +3151,7 @@
                         <div style="margin-top: 10px; font-size: 0.9em;">$${bagCost.toFixed(2)}</div>
                     </div>
                 </div>
-                ${(meatPricePerPkg || cheesePricePerPkg || breadPricePerPkg) ? `
+                ${(meatPricePerPkg || cheesePricePerPkg || breadPricePerPkg) && bySandwiches ? `
                 <div style="margin-top: 25px; padding: 20px; background: rgba(251,173,63,0.2); border-radius: 12px; text-align: center;">
                     <h4 style="color: #fff; font-size: 1.4em; margin-bottom: 10px;">Total Estimated Cost</h4>
                     <div style="font-size: 3em; font-weight: 700; color: #fff;">$${totalCost.toFixed(2)}</div>
@@ -3007,7 +3161,7 @@
                     </div>
                 </div>
                 ` : ''}
-                ${possibleExtraSandwiches > 0 ? `
+                ${possibleExtraSandwiches > 0 && bySandwiches ? `
                 <div style="margin-top: 15px; padding: 15px; background: rgba(76,175,80,0.2); border-radius: 10px; text-align: center;">
                     <p style="color: #fff; font-size: 1.1em; margin: 0;">
                         <strong>Bonus:</strong> You'll have enough leftover ingredients to make <strong>${possibleExtraSandwiches}</strong> extra sandwiches!

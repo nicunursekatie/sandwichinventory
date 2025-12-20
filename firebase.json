@@ -7,13 +7,28 @@
   },
   "functions": [
     {
-      "source": "firebase-functions",
       "codebase": "default",
       "ignore": [
         "node_modules",
         ".git",
         "firebase-debug.log",
         "firebase-debug.*.log"
+      ],
+      "source": "firebase-functions"
+    },
+    {
+      "source": "donation-receipt-generator",
+      "codebase": "donation-receipt-generator",
+      "disallowLegacyRuntimeConfig": true,
+      "ignore": [
+        "node_modules",
+        ".git",
+        "firebase-debug.log",
+        "firebase-debug.*.log",
+        "*.local"
+      ],
+      "predeploy": [
+        "npm --prefix \"$RESOURCE_DIR\" run lint"
       ]
     }
   ],
@@ -21,44 +36,11 @@
     "source": "dataconnect"
   },
   "hosting": {
-    "public": ".",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
-      "**/node_modules/**",
-      "dataconnect/**",
-      "firebase-functions/**",
-      "src/**",
-      "*.md",
-      "*.pdf",
-      "*.png",
-      "*.jpg",
-      "*.xlsx",
-      "*.gs",
-      "*.js",
-      "package.json",
-      "package-lock.json"
-    ],
-    "rewrites": [
-      {
-        "source": "/",
-        "destination": "/eventplanning2.html"
-      },
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ],
-    "headers": [
-      {
-        "source": "**/*.html",
-        "headers": [
-          {
-            "key": "Cache-Control",
-            "value": "no-cache, no-store, must-revalidate"
-          }
-        ]
-      }
+      "**/node_modules/**"
     ]
   },
   "storage": {
