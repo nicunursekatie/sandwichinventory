@@ -1038,18 +1038,6 @@
                             <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Look for "Net Wt" on the package</span>
                         </div>
 
-                        <div class="calc-input-group" style="margin-bottom: 20px;">
-                            <label for="customServings">Servings per container (optional)</label>
-                            <input type="number" id="customServings" min="1" max="100" placeholder="e.g., 8">
-                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">If listed on nutrition label</span>
-                        </div>
-
-                        <div class="calc-input-group" style="margin-bottom: 20px;">
-                            <label for="customServingSize">Serving size in oz (optional)</label>
-                            <input type="number" id="customServingSize" min="0.5" max="10" step="0.1" placeholder="e.g., 2">
-                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Usually 2 oz for deli meat</span>
-                        </div>
-
                         <div class="calc-input-group">
                             <label for="customSliceThickness">Slice thickness</label>
                             <select id="customSliceThickness">
@@ -2837,7 +2825,7 @@
 
         // Add event listeners for oz estimation inputs
         document.addEventListener('DOMContentLoaded', function() {
-            const ozInputs = ['customPackageOz', 'customServings', 'customServingSize', 'customSliceThickness'];
+            const ozInputs = ['customPackageOz', 'customSliceThickness'];
             ozInputs.forEach(function(id) {
                 const element = document.getElementById(id);
                 if (element) {
