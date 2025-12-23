@@ -230,11 +230,103 @@
         }
         
         @media print {
+            @page {
+                size: letter;
+                margin: 0.75in 0.5in;
+            }
+            
+            body {
+                background: white;
+                font-size: 11pt;
+                line-height: 1.4;
+            }
+            
             .container {
                 max-width: 100%;
+                margin: 0;
+                box-shadow: none;
             }
+            
+            header {
+                page-break-after: avoid;
+                background: #236383 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            .content {
+                padding: 0.5rem 0;
+            }
+            
+            .quick-flow {
+                page-break-after: avoid;
+                margin-bottom: 1rem;
+                background: #236383 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
             .safety-alert {
+                page-break-inside: avoid;
                 break-inside: avoid;
+                margin: 1rem 0;
+            }
+            
+            .roles-table {
+                page-break-inside: avoid;
+                margin-bottom: 1rem;
+            }
+            
+            table {
+                page-break-inside: avoid;
+            }
+            
+            tr {
+                page-break-inside: avoid;
+            }
+            
+            h2 {
+                page-break-after: avoid;
+                margin-top: 1.5rem;
+                margin-bottom: 0.75rem;
+                padding-top: 0.5rem;
+            }
+            
+            .stage {
+                page-break-inside: avoid;
+                margin-bottom: 1rem;
+            }
+            
+            .meat-options {
+                page-break-inside: avoid;
+            }
+            
+            .meat-option {
+                page-break-inside: avoid;
+            }
+            
+            .divider {
+                page-break-before: always;
+                margin-top: 1rem;
+                margin-bottom: 1rem;
+            }
+            
+            table {
+                page-break-inside: avoid;
+            }
+            
+            footer {
+                page-break-inside: avoid;
+                margin-top: 1rem;
+                background: #236383 !important;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+            
+            /* Ensure colors print */
+            * {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
         }
     </style>

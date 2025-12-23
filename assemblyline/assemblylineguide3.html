@@ -62,12 +62,72 @@
 
     /* Print styles: clean, high-contrast, page breaks between sections */
     @media print{
+      @page {
+        size: letter;
+        margin: 0.75in 0.5in;
+      }
+      
       :root{--bg:#fff;--fg:#000;--muted:#444;--card:#fff;--border:#bbb}
-      .wrap{padding:0}
-      body{background:#fff}
-      .flow{border-color:#999}
-      section{page-break-inside:avoid}
+      html,body{background:#fff;margin:0;padding:0}
+      .wrap{padding:0;max-width:100%;margin:0;box-shadow:none}
+      
+      header{
+        page-break-after:avoid;
+        margin-bottom:1rem
+      }
+      
+      .flow{
+        page-break-after:avoid;
+        border-color:#999;
+        margin-bottom:1rem
+      }
+      
+      .callout{
+        page-break-inside:avoid;
+        break-inside:avoid;
+        margin:1rem 0
+      }
+      
+      section{
+        page-break-inside:avoid;
+        break-inside:avoid;
+        margin:1.5rem 0;
+        page-break-before:auto
+      }
+      
+      section:first-of-type{
+        page-break-before:auto
+      }
+      
+      section h2{
+        page-break-after:avoid;
+        margin-top:0;
+        margin-bottom:0.75rem;
+        padding-top:0.5rem
+      }
+      
+      .step{
+        page-break-inside:avoid;
+        break-inside:avoid
+      }
+      
+      .two-col{
+        columns:1;
+        column-gap:0
+      }
+      
+      footer{
+        page-break-inside:avoid;
+        margin-top:1rem
+      }
+      
       a[href]::after{content:" (" attr(href) ")";font-size:10px;color:#666}
+      
+      /* Ensure colors print */
+      * {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
     }
   </style>
 </head>
