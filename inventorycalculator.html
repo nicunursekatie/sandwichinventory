@@ -1155,6 +1155,81 @@
             }
         }
         
+        /* Quick Access Link Styles */
+        .quick-access-link {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 24px 28px;
+            background: linear-gradient(135deg, #fffbf0 0%, #fef3e2 100%);
+            border: 3px solid #f4a261;
+            border-radius: 16px;
+            text-decoration: none;
+            color: #1a4d66;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(244, 162, 97, 0.2);
+            margin-bottom: 28px;
+        }
+        
+        .quick-access-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(244, 162, 97, 0.3);
+            border-color: #fb8500;
+            background: linear-gradient(135deg, #fffbf0 0%, #ffe5cc 100%);
+        }
+        
+        .quick-access-icon {
+            font-size: 3em;
+            flex-shrink: 0;
+        }
+        
+        .quick-access-content {
+            flex: 1;
+        }
+        
+        .quick-access-label {
+            font-size: 0.85em;
+            color: #d97706;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+        
+        .quick-access-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #1a4d66;
+            margin-bottom: 4px;
+        }
+        
+        .quick-access-description {
+            font-size: 1em;
+            color: #64748b;
+        }
+        
+        .quick-access-arrow {
+            font-size: 2em;
+            color: #f4a261;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .quick-access-link {
+                padding: 20px;
+                gap: 16px;
+            }
+            .quick-access-icon {
+                font-size: 2.5em;
+            }
+            .quick-access-title {
+                font-size: 1.15em;
+            }
+            .quick-access-description {
+                font-size: 0.9em;
+            }
+        }
+        
         /* Multi-step wizard styles */
         .wizard-container {
             position: relative;
@@ -1383,11 +1458,6 @@
                     <span class="toc-text">Which Calculator Should I Use? – Start here to choose or use the right tool</span>
                     <span class="toc-arrow">→</span>
                 </a>
-                <a href="#custom-calculator" class="toc-item" style="background: #fffbf0; border-color: #f4a261;">
-                    <span class="toc-icon">🛒</span>
-                    <span class="toc-text"><strong>Quick Access:</strong> Custom Calculator – For items NOT in our calculator (use while shopping!)</span>
-                    <span class="toc-arrow">→</span>
-                </a>
                 <a href="#pricing-info" class="toc-item">
                     <span class="toc-icon">📊</span>
                     <span class="toc-text">Ingredient Pricing – See what things cost so you can budget</span>
@@ -1414,6 +1484,17 @@
                 All pricing is based on recent shopping at various retailers (Costco, Kroger, Publix, etc.) and may vary by location.
             </p>
         </div>
+
+        <!-- Quick Access Link for Custom Calculator -->
+        <a href="#custom-calculator" class="quick-access-link">
+            <span class="quick-access-icon">🛒</span>
+            <div class="quick-access-content">
+                <div class="quick-access-label">Quick Access While Shopping</div>
+                <div class="quick-access-title">Custom Package Calculator</div>
+                <div class="quick-access-description">Found items NOT in our calculator? Use this tool to calculate servings from custom packages while you're in the store!</div>
+            </div>
+            <span class="quick-access-arrow">→</span>
+        </a>
 
         <!-- Calculator Guide Section -->
         <div class="section" id="calculator-guide">
