@@ -1407,6 +1407,60 @@
                 width: 100%;
             }
         }
+        
+        /* Section Divider Styles */
+        .section-divider {
+            margin: 50px 0;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-divider::before,
+        .section-divider::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: calc(50% - 100px);
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #47B3CB, transparent);
+        }
+        
+        .section-divider::before {
+            left: 0;
+        }
+        
+        .section-divider::after {
+            right: 0;
+        }
+        
+        .section-divider-content {
+            display: inline-block;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(35, 99, 131, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .section-divider {
+                margin: 40px 0;
+            }
+            
+            .section-divider::before,
+            .section-divider::after {
+                width: calc(50% - 80px);
+            }
+            
+            .section-divider-content {
+                padding: 12px 24px;
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -2114,6 +2168,13 @@
                         <div class="cost-item" style="font-size: 0.9em; color: #64748b; margin-top: 4px;">⭐ Best Value: Kroger Turkey Family - $1,520</div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <!-- Section Divider: Shopping/Planning to Execution -->
+        <div class="section-divider">
+            <div class="section-divider-content">
+                🛒 Shopping Complete → 🥪 Time to Make Sandwiches
             </div>
         </div>
 
