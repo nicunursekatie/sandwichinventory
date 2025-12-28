@@ -1095,6 +1095,66 @@
             color: #fff;
         }
         
+        /* Table of Contents Styles */
+        .toc-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 20px;
+        }
+        
+        .toc-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            background: #fff;
+            border-radius: 12px;
+            border: 2px solid #e9ecef;
+            text-decoration: none;
+            color: #236383;
+            transition: all 0.2s ease;
+        }
+        
+        .toc-item:hover {
+            border-color: #47B3CB;
+            background: #f8f9fa;
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(35, 99, 131, 0.1);
+        }
+        
+        .toc-icon {
+            font-size: 1.8em;
+            flex-shrink: 0;
+            width: 40px;
+            text-align: center;
+        }
+        
+        .toc-text {
+            flex: 1;
+            font-size: 1.05em;
+            font-weight: 500;
+        }
+        
+        .toc-arrow {
+            color: #47B3CB;
+            font-size: 1.2em;
+            flex-shrink: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .toc-item {
+                padding: 14px 16px;
+            }
+            .toc-icon {
+                font-size: 1.5em;
+                width: 35px;
+            }
+            .toc-text {
+                font-size: 0.95em;
+            }
+        }
+        
         /* Multi-step wizard styles */
         .wizard-container {
             position: relative;
@@ -1312,19 +1372,46 @@
 
 
         <div class="section" id="intro-section" style="margin-bottom: 28px; background: linear-gradient(135deg, #f8f9fa 80%, #e3f6f9 100%); border: 2px solid #FBAD3F; box-shadow: 0 4px 16px #FBAD3F22;">
-            <h2 style="color: #236383; font-size: 1.7em; font-weight: 700; margin-bottom: 10px;">Welcome to the Sandwich Project Planning Tool!</h2>
-            <p style="font-size: 1.15em; color: #236383; margin-bottom: 10px;">
-                This page is designed to help volunteers and organizers plan group sandwich-making events when working with The Sandwich Project! Use this tool to estimate costs, quantities, and supplies for your event— whether you’re making 20 or 2,000 sandwiches!
+            <h2 style="color: #236383; font-size: 1.7em; font-weight: 700; margin-bottom: 15px;">Welcome to the Sandwich Project Planning Tool!</h2>
+            <p style="font-size: 1.1em; color: #236383; margin-bottom: 20px;">
+                Plan group sandwich-making events with The Sandwich Project. Estimate costs, quantities, and supplies for events from 20 to 2,000 sandwiches!
             </p>
-            <ul style="font-size: 1.08em; color: #236383; margin-bottom: 10px; padding-left: 22px;">
-                <li>🧮 <strong>Interactive Calculator:</strong> Plan by sandwich count or budget.</li>
-                <li>📊 <strong>Current Ingredient Pricing:</strong> See up-to-date price estimates for bread, meat, cheese, and bags.</li>
-                <li>🎯 <strong>Quick Reference:</strong> Popular quantities and cost estimates at a glance.</li>
-                <li>🥪 <strong>Recipe & Safety:</strong> Standard sandwich recipe and food safety tips.</li>
-                <li>💡 <strong>Planning Tips:</strong> Advice for smooth, safe, and successful events.</li>
-            </ul>
-            <p style="font-size: 1em; color: #888; margin-bottom: 0;">
-                <strong>How to use:</strong> Start with the calculator below, or jump to any section for details and tips. All pricing is based on recent shopping at various retailers (Costco, Kroger, Publix, etc.) and may vary by location.
+            
+            <div class="toc-container">
+                <a href="#calculator-guide" class="toc-item">
+                    <span class="toc-icon">🎯</span>
+                    <span class="toc-text">Which Calculator Should I Use?</span>
+                    <span class="toc-arrow">→</span>
+                </a>
+                <a href="#pricing-info" class="toc-item">
+                    <span class="toc-icon">📊</span>
+                    <span class="toc-text">Ingredient Pricing: See up-to-date costs</span>
+                    <span class="toc-arrow">→</span>
+                </a>
+                <a href="#quick-reference" class="toc-item">
+                    <span class="toc-icon">🎯</span>
+                    <span class="toc-text">Quick Reference: Popular quantities at a glance</span>
+                    <span class="toc-arrow">→</span>
+                </a>
+                <a href="#recipe" class="toc-item">
+                    <span class="toc-icon">🥪</span>
+                    <span class="toc-text">Recipe & Assembly Instructions</span>
+                    <span class="toc-arrow">→</span>
+                </a>
+                <a href="#food-safety" class="toc-item">
+                    <span class="toc-icon">🛡️</span>
+                    <span class="toc-text">Food Safety Requirements</span>
+                    <span class="toc-arrow">→</span>
+                </a>
+                <a href="#planning-tips" class="toc-item">
+                    <span class="toc-icon">💡</span>
+                    <span class="toc-text">Planning Tips: Timing, storage, and quality</span>
+                    <span class="toc-arrow">→</span>
+                </a>
+            </div>
+            
+            <p style="font-size: 0.95em; color: #64748b; margin-top: 20px; margin-bottom: 0;">
+                All pricing is based on recent shopping at various retailers (Costco, Kroger, Publix, etc.) and may vary by location.
             </p>
         </div>
 
@@ -2184,7 +2271,7 @@
     <!-- Collapsible Ingredient Price Summary moved to very bottom -->
         
         <!-- Move Quick Reference section below calculator -->
-        <div class="section">
+        <div class="section" id="quick-reference">
             <h2>🎯 Quick Reference: Popular Quantities</h2>
             <p style="color: #64748b; font-size: 0.95em; margin-bottom: 16px;">Costs include meat, cheese, bread, and bags. Based on 3 slices meat per sandwich, Adams Reserve cheese, Nature's Own bread. Prices may vary by location.</p>
             <div class="quick-ref">
@@ -2346,7 +2433,7 @@
             </div>
         </div>
         
-        <div class="section">
+        <div class="section" id="planning-tips">
             <h2>💡 Planning Tips</h2>
             <div class="tips-grid">
                 <div class="tip-card">
