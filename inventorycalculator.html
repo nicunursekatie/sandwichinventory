@@ -1597,6 +1597,29 @@
             </div>
         </div>
 
+        <!-- Important Shopping Notes Section -->
+        <div class="section" style="background: #fffbf0; border: 2px solid #f4a261; box-shadow: 0 4px 12px rgba(244, 162, 97, 0.15);">
+            <h2 style="color: #d97706; font-size: 1.5em; margin-bottom: 20px; font-weight: 700;">
+                📝 Important Shopping Notes
+            </h2>
+            <div style="display: flex; flex-direction: column; gap: 18px; color: #555; font-size: 1.05em;">
+                <div style="display: flex; gap: 16px; align-items: start;">
+                    <span style="font-size: 1.6em; flex-shrink: 0;">🥩</span>
+                    <div>
+                        <strong style="color: #333; font-size: 1.1em;">Meat: Buy pre-packaged only</strong><br>
+                        <span style="font-size: 0.95em; color: #666;">Don't get meat sliced at the deli counter—pre-packaged is safer and easier to work with.</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 16px; align-items: start;">
+                    <span style="font-size: 1.6em; flex-shrink: 0;">🧀</span>
+                    <div>
+                        <strong style="color: #333; font-size: 1.1em;">Cheese: Avoid individually wrapped slices</strong><br>
+                        <span style="font-size: 0.95em; color: #666;">Individually wrapped American cheese slices do not hold up well and are so much work to unwrap during sandwich-making. Get deli-style sliced cheese—the kind sold together in one pack, not individually wrapped processed singles.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Interactive Calculator Section -->
         <div class="section" id="calculator">
             <h2>🧮 Interactive Calculator</h2>
@@ -1716,32 +1739,297 @@
             </div>
         </div>
 
-        <!-- Move Pricing Information section down here -->
-        <div class="section" id="pricing-info" style="margin-bottom: 32px;">
-            <h2>📊 Pricing Information <span style='font-size:0.7em; font-weight:400;'>(Updated 9/17/2025)</span></h2>
-            
-            <!-- Important shopping notes - NOT a hazmat warning -->
-            <div style="background: #fffbf0; border: 2px solid #f4a261; border-radius: 10px; padding: 20px; margin-bottom: 24px;">
-                <h3 style="color: #d97706; font-size: 1.2em; margin-bottom: 16px; font-weight: 600;">
-                    📝 Important Shopping Notes
-                </h3>
-                <div style="display: flex; flex-direction: column; gap: 14px; color: #555; font-size: 1.05em;">
-                    <div style="display: flex; gap: 12px; align-items: start;">
-                        <span style="font-size: 1.4em; flex-shrink: 0;">🥩</span>
-                        <div>
-                            <strong style="color: #333;">Meat: Buy pre-packaged only</strong><br>
-                            <span style="font-size: 0.95em;">Don't get meat sliced at the deli counter—pre-packaged is safer and easier to work with.</span>
+        <!-- Custom Package Calculator Section -->
+        <div class="section" id="custom-calculator">
+            <h2>🛒 Custom Package Calculator</h2>
+            <p style="color: #64748b; margin-bottom: 20px; font-size: 1.1em;"><strong>Found items that are NOT in our calculator dropdown?</strong> If you're shopping in-store and see meat, cheese, or bread that isn't listed in our pre-loaded options, use the tools below!</p>
+
+            <!-- Quick Single Package Calculator -->
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #1a4d66; margin-bottom: 10px; font-size: 1.3em;">⚡ Quick Calculator: Single Package</h3>
+                <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95em;">Use this when you're in the store and just need to check one package (meat, cheese, or bread) to see how many sandwiches it makes.</p>
+            </div>
+
+            <div class="shopping-calculator" style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%);">
+                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Calculate Sandwiches from Your Package</h3>
+
+                <!-- Input method toggle -->
+                <div style="margin-bottom: 24px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
+                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 12px; color: #236383;">What info do you have from the package label?</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                            <input type="radio" name="customInputMethod" value="slices" checked onchange="toggleCustomInputMethod()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                            <span><strong>I can count the slices</strong> (most accurate)</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                            <input type="radio" name="customInputMethod" value="oz" onchange="toggleCustomInputMethod()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                            <span><strong>I only have oz/servings info</strong> (we'll estimate slices)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="calc-form">
+                    <!-- Method 1: Direct slice count -->
+                    <div id="sliceInputGroup" class="calc-input-group">
+                        <label for="customPackageSlices">Number of slices in package</label>
+                        <input type="number" id="customPackageSlices" min="1" max="500" placeholder="e.g., 24">
+                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the label</span>
+                    </div>
+
+                    <!-- Method 2: Oz-based estimation -->
+                    <div id="ozInputGroup" style="display: none;">
+                        <div class="calc-input-group" style="margin-bottom: 20px;">
+                            <label for="customPackageOz">Package weight (oz)</label>
+                            <input type="number" id="customPackageOz" min="1" max="100" step="0.1" placeholder="e.g., 16">
+                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Look for "Net Wt" on the package</span>
+                        </div>
+
+                        <div class="calc-input-group">
+                            <label for="customSliceThickness">Slice thickness</label>
+                            <select id="customSliceThickness">
+                                <option value="thin">Thin sliced (~0.5 oz per slice) - most common</option>
+                                <option value="regular">Regular sliced (~0.75 oz per slice)</option>
+                                <option value="thick">Thick sliced (~1 oz per slice)</option>
+                            </select>
+                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Check if package says "thin sliced" or similar</span>
+                        </div>
+
+                        <div id="sliceEstimate" style="margin-top: 15px; padding: 12px; background: rgba(251,173,63,0.3); border-radius: 8px; display: none;">
+                            <span style="color: #fff; font-weight: 600;">Estimated slices: </span>
+                            <span id="estimatedSliceCount" style="color: #FBAD3F; font-weight: 700; font-size: 1.2em;">--</span>
+                            <button onclick="useEstimatedSlices()" style="margin-left: 15px; padding: 6px 12px; background: #FBAD3F; color: #333; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Use this estimate</button>
                         </div>
                     </div>
-                    <div style="display: flex; gap: 12px; align-items: start;">
-                        <span style="font-size: 1.4em; flex-shrink: 0;">🧀</span>
-                        <div>
-                            <strong style="color: #333;">Cheese: Avoid individually wrapped slices</strong><br>
-                            <span style="font-size: 0.95em;">Individually wrapped American cheese slices do not hold up well and are so much to work to unwrap during sandwich-making. Get deli-style sliced cheese—the kind sold together in one pack, not individually wrapped processed singles</span>
+
+                    <div class="calc-input-group">
+                        <label for="customPackagePrice">Package price ($)</label>
+                        <input type="number" id="customPackagePrice" min="0" step="0.01" placeholder="e.g., 8.99">
+                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
+                    </div>
+
+                    <!-- Meat amount is fixed at 3 slices per standard recipe -->
+                    <input type="hidden" id="customMeatSlicesPerSandwich" value="3">
+
+                    <div class="calc-button-container">
+                        <button class="calc-button" onclick="calculateCustomPackage()">Calculate Sandwiches</button>
+                    </div>
+                </div>
+
+                <div class="calc-result" id="customResult"></div>
+            </div>
+
+            <!-- Full Custom Shopping Calculator -->
+            <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;">
+                <h3 style="color: #1a4d66; margin-bottom: 10px; font-size: 1.3em;">📊 Full Custom Shopping List Builder</h3>
+                <p style="color: #64748b; margin-bottom: 20px;">Have custom packages for <strong>all your ingredients</strong> (meat, cheese, and bread)? This wizard works just like the Interactive Calculator above, but lets you enter custom package details for everything. We'll guide you through step by step!</p>
+
+                <div class="shopping-calculator wizard-container" style="background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);">
+                    <!-- Step indicator -->
+                    <div class="wizard-steps">
+                        <div class="wizard-step active" id="step-indicator-1">
+                            <div class="wizard-step-number">1</div>
+                            <span>Planning</span>
                         </div>
+                        <div class="wizard-step" id="step-indicator-2">
+                            <div class="wizard-step-number">2</div>
+                            <span>Meat</span>
+                        </div>
+                        <div class="wizard-step" id="step-indicator-3">
+                            <div class="wizard-step-number">3</div>
+                            <span>Cheese & Bread</span>
+                        </div>
+                    </div>
+
+                    <div class="wizard-content">
+                        <!-- Step 1: Planning Mode -->
+                        <div class="wizard-panel active" id="wizard-step-1">
+                            <div class="wizard-step-title">Step 1: How would you like to plan?</div>
+                            <div class="wizard-step-description">Choose whether you want to plan by sandwich count or budget</div>
+                            
+                            <div style="margin-bottom: 30px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
+                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                                    <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                                        <input type="radio" name="wizardPlanMode" id="wizardPlanBySandwiches" value="sandwiches" checked onchange="updateWizardStep1()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                                        <span>How much will it cost to make <strong>___ sandwiches</strong>?</span>
+                                    </label>
+                                    <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                                        <input type="radio" name="wizardPlanMode" id="wizardPlanByBudget" value="budget" onchange="updateWizardStep1()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                                        <span>How many sandwiches can I make with <strong>$___ budget</strong>?</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="calc-form" style="grid-template-columns: 1fr; max-width: 400px; margin: 0 auto;">
+                                <div class="calc-input-group" id="wizardSandwichCountGroup">
+                                    <label for="wizardTargetSandwiches">Target number of sandwiches</label>
+                                    <input type="number" id="wizardTargetSandwiches" min="1" max="5000" placeholder="e.g., 100" oninput="updateWizardStep1()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Enter the number of sandwiches you want to make</span>
+                                </div>
+                                <div class="calc-input-group" id="wizardBudgetGroup" style="display: none;">
+                                    <label for="wizardBudgetAmount">Budget ($)</label>
+                                    <input type="number" id="wizardBudgetAmount" min="1" max="10000" placeholder="e.g., 200" oninput="updateWizardStep1()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Enter the total amount you want to spend</span>
+                                </div>
+                            </div>
+
+                            <div class="wizard-navigation">
+                                <div></div>
+                                <button class="wizard-btn wizard-btn-next" onclick="nextWizardStep()" id="wizard-next-1" disabled>Next: Meat Details →</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Meat Details -->
+                        <div class="wizard-panel" id="wizard-step-2">
+                            <div class="wizard-step-title">Step 2: Meat Package Details</div>
+                            <div class="wizard-step-description">Tell us about your meat package</div>
+                            
+                            <div class="calc-form" style="grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto;">
+                                <div class="calc-input-group">
+                                    <label for="wizardMeatSlices">Slices per meat package</label>
+                                    <input type="number" id="wizardMeatSlices" min="1" max="500" placeholder="e.g., 30" oninput="updateWizardStep2()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the package label</span>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label for="wizardMeatPrice">Meat package price ($)</label>
+                                    <input type="number" id="wizardMeatPrice" min="0" step="0.01" placeholder="e.g., 7.99" oninput="updateWizardStep2()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
+                                </div>
+                            </div>
+
+                            <div class="wizard-navigation">
+                                <button class="wizard-btn wizard-btn-back" onclick="prevWizardStep()">← Back</button>
+                                <button class="wizard-btn wizard-btn-next" onclick="nextWizardStep()" id="wizard-next-2" disabled>Next: Cheese & Bread →</button>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Cheese & Bread Details -->
+                        <div class="wizard-panel" id="wizard-step-3">
+                            <div class="wizard-step-title">Step 3: Cheese & Bread Details</div>
+                            <div class="wizard-step-description">Enter your cheese and bread package information</div>
+                            
+                            <div class="calc-form" style="grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto;">
+                                <div class="calc-input-group">
+                                    <label for="wizardCheeseSlices">Slices per cheese package</label>
+                                    <input type="number" id="wizardCheeseSlices" min="1" max="200" placeholder="e.g., 40" oninput="updateWizardStep3()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the package</span>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label for="wizardCheesePrice">Cheese package price ($)</label>
+                                    <input type="number" id="wizardCheesePrice" min="0" step="0.01" placeholder="e.g., 7.70" oninput="updateWizardStep3()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label for="wizardBreadSandwiches">Sandwiches per bread package</label>
+                                    <input type="number" id="wizardBreadSandwiches" min="1" max="100" placeholder="e.g., 20" oninput="updateWizardStep3()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">A double loaf typically makes 20 sandwiches</span>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label for="wizardBreadPrice">Bread package price ($)</label>
+                                    <input type="number" id="wizardBreadPrice" min="0" step="0.01" placeholder="e.g., 4.49" oninput="updateWizardStep3()">
+                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
+                                </div>
+                            </div>
+
+                            <div class="wizard-navigation">
+                                <button class="wizard-btn wizard-btn-back" onclick="prevWizardStep()">← Back</button>
+                                <button class="wizard-btn wizard-btn-calculate" onclick="calculateWizardFullCustom()" id="wizard-calculate" disabled>Calculate Order</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="calc-result" id="wizardFullCustomResult" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Recipe reminder -->
+            <div class="recipe-card" style="margin-top: 25px;">
+                <h3>Standard Sandwich Recipe (Per Sandwich)</h3>
+                <div class="recipe-ingredients">
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">slices bread</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">slices cheese</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">3</span><span class="item">slices meat</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1</span><span class="item">sandwich bag</span>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; font-size: 0.95em; opacity: 0.9;">3 slices of deli meat = approximately 2-3 oz depending on slice thickness</p>
+            </div>
+        </div>
+
+        <!-- PB&J Calculator Section -->
+        <div class="section" id="pbj-calculator">
+            <h2>🥜 Peanut Butter & Jelly Calculator</h2>
+            <div class="shopping-calculator">
+                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
+                <div class="calc-form">
+                    <div class="calc-input-group">
+                        <label for="pbjCount">Number of PB&J sandwiches</label>
+                        <input type="number" id="pbjCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
+                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Peanut butter type</label>
+                        <select id="pbType">
+                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
+                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
+                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~30 tbsp) - $3.59</option>
+                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~31 tbsp) - $3.59</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Jelly type</label>
+                        <select id="jellyType">
+                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz (~60 tbsp) - $4.99</option>
+                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz (~56 tbsp) - $3.59</option>
+                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz (~38 tbsp) - $3.59</option>
+                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz (~34 tbsp) - $3.83</option>
+                        </select>
+                        <span style="font-size: 0.95em; color: #236383; margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
+                    </div>
+
+                    <div class="calc-button-container">
+                        <button class="calc-button" onclick="calculatePBJ()">Calculate PB&J Needs</button>
+                    </div>
+                </div>
+
+                <div class="calc-result" id="pbjResult">
+                </div>
+            </div>
+
+            <div class="recipe-card" style="margin-top: 25px;">
+                <h3>Every PB&J Sandwich Contains</h3>
+                <div class="recipe-ingredients">
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">slices bread</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">3</span><span class="item">tbsp peanut butter</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1.5</span><span class="item">tbsp jelly</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
                     </div>
                 </div>
             </div>
+        </div>
+
+        <!-- Move Pricing Information section down here -->
+        <div class="section" id="pricing-info" style="margin-bottom: 32px;">
+            <h2>📊 Pricing Information <span style='font-size:0.7em; font-weight:400;'>(Updated 9/17/2025)</span></h2>
             
             <!-- Pricing cards - clean, no wild gradients -->
             <!-- Pricing Section - Compact & Colorful -->
@@ -2318,294 +2606,6 @@
                 </div>
                 <div style="margin-top: 16px; padding: 12px; background: #f8f9fa; border-radius: 8px; font-size: 0.95em; color: #64748b;">
                     <strong>Assembly:</strong> Spread peanut butter on both slices of bread, then add jelly to one side. Press the two pieces together gently.
-                </div>
-            </div>
-        </div>
-
-        <!-- Custom Package Calculator Section -->
-        <div class="section" id="custom-calculator">
-            <h2>🛒 Custom Package Calculator</h2>
-            <p style="color: #64748b; margin-bottom: 20px; font-size: 1.1em;"><strong>Found items that are NOT in our calculator dropdown?</strong> If you're shopping in-store and see meat, cheese, or bread that isn't listed in our pre-loaded options, use the tools below!</p>
-
-            <!-- Quick Single Package Calculator -->
-            <div style="margin-bottom: 30px;">
-                <h3 style="color: #1a4d66; margin-bottom: 10px; font-size: 1.3em;">⚡ Quick Calculator: Single Package</h3>
-                <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95em;">Use this when you're in the store and just need to check one package (meat, cheese, or bread) to see how many sandwiches it makes.</p>
-            </div>
-
-            <div class="shopping-calculator" style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%);">
-                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Calculate Sandwiches from Your Package</h3>
-
-                <!-- Input method toggle -->
-                <div style="margin-bottom: 24px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
-                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 12px; color: #236383;">What info do you have from the package label?</label>
-                    <div style="display: flex; flex-direction: column; gap: 12px;">
-                        <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
-                            <input type="radio" name="customInputMethod" value="slices" checked onchange="toggleCustomInputMethod()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
-                            <span><strong>I can count the slices</strong> (most accurate)</span>
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
-                            <input type="radio" name="customInputMethod" value="oz" onchange="toggleCustomInputMethod()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
-                            <span><strong>I only have oz/servings info</strong> (we'll estimate slices)</span>
-                        </label>
-                    </div>
-                </div>
-
-                <div class="calc-form">
-                    <!-- Method 1: Direct slice count -->
-                    <div id="sliceInputGroup" class="calc-input-group">
-                        <label for="customPackageSlices">Number of slices in package</label>
-                        <input type="number" id="customPackageSlices" min="1" max="500" placeholder="e.g., 24">
-                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the label</span>
-                    </div>
-
-                    <!-- Method 2: Oz-based estimation -->
-                    <div id="ozInputGroup" style="display: none;">
-                        <div class="calc-input-group" style="margin-bottom: 20px;">
-                            <label for="customPackageOz">Package weight (oz)</label>
-                            <input type="number" id="customPackageOz" min="1" max="100" step="0.1" placeholder="e.g., 16">
-                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Look for "Net Wt" on the package</span>
-                        </div>
-
-                        <div class="calc-input-group">
-                            <label for="customSliceThickness">Slice thickness</label>
-                            <select id="customSliceThickness">
-                                <option value="thin">Thin sliced (~0.5 oz per slice) - most common</option>
-                                <option value="regular">Regular sliced (~0.75 oz per slice)</option>
-                                <option value="thick">Thick sliced (~1 oz per slice)</option>
-                            </select>
-                            <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Check if package says "thin sliced" or similar</span>
-                        </div>
-
-                        <div id="sliceEstimate" style="margin-top: 15px; padding: 12px; background: rgba(251,173,63,0.3); border-radius: 8px; display: none;">
-                            <span style="color: #fff; font-weight: 600;">Estimated slices: </span>
-                            <span id="estimatedSliceCount" style="color: #FBAD3F; font-weight: 700; font-size: 1.2em;">--</span>
-                            <button onclick="useEstimatedSlices()" style="margin-left: 15px; padding: 6px 12px; background: #FBAD3F; color: #333; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Use this estimate</button>
-                        </div>
-                    </div>
-
-                    <div class="calc-input-group">
-                        <label for="customPackagePrice">Package price ($)</label>
-                        <input type="number" id="customPackagePrice" min="0" step="0.01" placeholder="e.g., 8.99">
-                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
-                    </div>
-
-                    <!-- Meat amount is fixed at 3 slices per standard recipe -->
-                    <input type="hidden" id="customMeatSlicesPerSandwich" value="3">
-
-                    <div class="calc-button-container">
-                        <button class="calc-button" onclick="calculateCustomPackage()">Calculate Sandwiches</button>
-                    </div>
-                </div>
-
-                <div class="calc-result" id="customResult"></div>
-            </div>
-
-            <!-- Full Custom Shopping Calculator -->
-            <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;">
-                <h3 style="color: #1a4d66; margin-bottom: 10px; font-size: 1.3em;">📊 Full Custom Shopping List Builder</h3>
-                <p style="color: #64748b; margin-bottom: 20px;">Have custom packages for <strong>all your ingredients</strong> (meat, cheese, and bread)? This wizard works just like the Interactive Calculator above, but lets you enter custom package details for everything. We'll guide you through step by step!</p>
-
-                <div class="shopping-calculator wizard-container" style="background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);">
-                    <!-- Step indicator -->
-                    <div class="wizard-steps">
-                        <div class="wizard-step active" id="step-indicator-1">
-                            <div class="wizard-step-number">1</div>
-                            <span>Planning</span>
-                        </div>
-                        <div class="wizard-step" id="step-indicator-2">
-                            <div class="wizard-step-number">2</div>
-                            <span>Meat</span>
-                        </div>
-                        <div class="wizard-step" id="step-indicator-3">
-                            <div class="wizard-step-number">3</div>
-                            <span>Cheese & Bread</span>
-                        </div>
-                    </div>
-
-                    <div class="wizard-content">
-                        <!-- Step 1: Planning Mode -->
-                        <div class="wizard-panel active" id="wizard-step-1">
-                            <div class="wizard-step-title">Step 1: How would you like to plan?</div>
-                            <div class="wizard-step-description">Choose whether you want to plan by sandwich count or budget</div>
-                            
-                            <div style="margin-bottom: 30px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
-                                <div style="display: flex; flex-direction: column; gap: 12px;">
-                                    <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
-                                        <input type="radio" name="wizardPlanMode" id="wizardPlanBySandwiches" value="sandwiches" checked onchange="updateWizardStep1()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
-                                        <span>How much will it cost to make <strong>___ sandwiches</strong>?</span>
-                                    </label>
-                                    <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
-                                        <input type="radio" name="wizardPlanMode" id="wizardPlanByBudget" value="budget" onchange="updateWizardStep1()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
-                                        <span>How many sandwiches can I make with <strong>$___ budget</strong>?</span>
-                                    </label>
-                                </div>
-                            </div>
-
-                            <div class="calc-form" style="grid-template-columns: 1fr; max-width: 400px; margin: 0 auto;">
-                                <div class="calc-input-group" id="wizardSandwichCountGroup">
-                                    <label for="wizardTargetSandwiches">Target number of sandwiches</label>
-                                    <input type="number" id="wizardTargetSandwiches" min="1" max="5000" placeholder="e.g., 100" oninput="updateWizardStep1()">
-                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Enter the number of sandwiches you want to make</span>
-                                </div>
-                                <div class="calc-input-group" id="wizardBudgetGroup" style="display: none;">
-                                    <label for="wizardBudgetAmount">Budget ($)</label>
-                                    <input type="number" id="wizardBudgetAmount" min="1" max="10000" placeholder="e.g., 200" oninput="updateWizardStep1()">
-                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Enter the total amount you want to spend</span>
-                                </div>
-                            </div>
-
-                            <div class="wizard-navigation">
-                                <div></div>
-                                <button class="wizard-btn wizard-btn-next" onclick="nextWizardStep()" id="wizard-next-1" disabled>Next: Meat Details →</button>
-                            </div>
-                        </div>
-
-                        <!-- Step 2: Meat Details -->
-                        <div class="wizard-panel" id="wizard-step-2">
-                            <div class="wizard-step-title">Step 2: Meat Package Details</div>
-                            <div class="wizard-step-description">Tell us about your meat package</div>
-                            
-                            <div class="calc-form" style="grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto;">
-                                <div class="calc-input-group">
-                                    <label for="wizardMeatSlices">Slices per meat package</label>
-                                    <input type="number" id="wizardMeatSlices" min="1" max="500" placeholder="e.g., 30" oninput="updateWizardStep2()">
-                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the package label</span>
-                                </div>
-
-                                <div class="calc-input-group">
-                                    <label for="wizardMeatPrice">Meat package price ($)</label>
-                                    <input type="number" id="wizardMeatPrice" min="0" step="0.01" placeholder="e.g., 7.99" oninput="updateWizardStep2()">
-                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
-                                </div>
-                            </div>
-
-                            <div class="wizard-navigation">
-                                <button class="wizard-btn wizard-btn-back" onclick="prevWizardStep()">← Back</button>
-                                <button class="wizard-btn wizard-btn-next" onclick="nextWizardStep()" id="wizard-next-2" disabled>Next: Cheese & Bread →</button>
-                            </div>
-                        </div>
-
-                        <!-- Step 3: Cheese & Bread Details -->
-                        <div class="wizard-panel" id="wizard-step-3">
-                            <div class="wizard-step-title">Step 3: Cheese & Bread Details</div>
-                            <div class="wizard-step-description">Enter your cheese and bread package information</div>
-                            
-                            <div class="calc-form" style="grid-template-columns: 1fr 1fr; max-width: 600px; margin: 0 auto;">
-                                <div class="calc-input-group">
-                                    <label for="wizardCheeseSlices">Slices per cheese package</label>
-                                    <input type="number" id="wizardCheeseSlices" min="1" max="200" placeholder="e.g., 40" oninput="updateWizardStep3()">
-                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the package</span>
-                                </div>
-
-                                <div class="calc-input-group">
-                                    <label for="wizardCheesePrice">Cheese package price ($)</label>
-                                    <input type="number" id="wizardCheesePrice" min="0" step="0.01" placeholder="e.g., 7.70" oninput="updateWizardStep3()">
-                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
-                                </div>
-
-                                <div class="calc-input-group">
-                                    <label for="wizardBreadSandwiches">Sandwiches per bread package</label>
-                                    <input type="number" id="wizardBreadSandwiches" min="1" max="100" placeholder="e.g., 20" oninput="updateWizardStep3()">
-                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">A double loaf typically makes 20 sandwiches</span>
-                                </div>
-
-                                <div class="calc-input-group">
-                                    <label for="wizardBreadPrice">Bread package price ($)</label>
-                                    <input type="number" id="wizardBreadPrice" min="0" step="0.01" placeholder="e.g., 4.49" oninput="updateWizardStep3()">
-                                    <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
-                                </div>
-                            </div>
-
-                            <div class="wizard-navigation">
-                                <button class="wizard-btn wizard-btn-back" onclick="prevWizardStep()">← Back</button>
-                                <button class="wizard-btn wizard-btn-calculate" onclick="calculateWizardFullCustom()" id="wizard-calculate" disabled>Calculate Order</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="calc-result" id="wizardFullCustomResult" style="display: none;"></div>
-                </div>
-            </div>
-
-            <!-- Recipe reminder -->
-            <div class="recipe-card" style="margin-top: 25px;">
-                <h3>Standard Sandwich Recipe (Per Sandwich)</h3>
-                <div class="recipe-ingredients">
-                    <div class="ingredient">
-                        <span class="amount">2</span><span class="item">slices bread</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">2</span><span class="item">slices cheese</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">3</span><span class="item">slices meat</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1</span><span class="item">sandwich bag</span>
-                    </div>
-                </div>
-                <p style="margin-top: 15px; font-size: 0.95em; opacity: 0.9;">3 slices of deli meat = approximately 2-3 oz depending on slice thickness</p>
-            </div>
-        </div>
-
-        <!-- PB&J Calculator Section -->
-        <div class="section" id="pbj-calculator">
-            <h2>🥜 Peanut Butter & Jelly Calculator</h2>
-            <div class="shopping-calculator">
-                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
-                <div class="calc-form">
-                    <div class="calc-input-group">
-                        <label for="pbjCount">Number of PB&J sandwiches</label>
-                        <input type="number" id="pbjCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
-                    </div>
-
-                    <div class="calc-input-group">
-                        <label>Peanut butter type</label>
-                        <select id="pbType">
-                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
-                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
-                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~30 tbsp) - $3.59</option>
-                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~31 tbsp) - $3.59</option>
-                        </select>
-                    </div>
-
-                    <div class="calc-input-group">
-                        <label>Jelly type</label>
-                        <select id="jellyType">
-                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz (~60 tbsp) - $4.99</option>
-                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz (~56 tbsp) - $3.59</option>
-                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz (~38 tbsp) - $3.59</option>
-                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz (~34 tbsp) - $3.83</option>
-                        </select>
-                        <span style="font-size: 0.95em; color: #236383; margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
-                    </div>
-
-                    <div class="calc-button-container">
-                        <button class="calc-button" onclick="calculatePBJ()">Calculate PB&J Needs</button>
-                    </div>
-                </div>
-
-                <div class="calc-result" id="pbjResult">
-                </div>
-            </div>
-
-            <div class="recipe-card" style="margin-top: 25px;">
-                <h3>Every PB&J Sandwich Contains</h3>
-                <div class="recipe-ingredients">
-                    <div class="ingredient">
-                        <span class="amount">2</span><span class="item">slices bread</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">3</span><span class="item">tbsp peanut butter</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1.5</span><span class="item">tbsp jelly</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
-                    </div>
                 </div>
             </div>
         </div>
