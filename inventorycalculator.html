@@ -1681,8 +1681,9 @@
 
                     <div class="calc-input-group">
                         <label>Meat type</label>
-                        <select id="meatType">
+                        <select id="meatType" onchange="handleIngredientSelection('meat', this.value)">
                             <option value="">Choose your meat</option>
+                            <option value="custom">🛒 Use Custom Package (not in list)</option>
                             <optgroup label="⭐ Best Value Options">
                                 <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89) - $0.21/slice</option>
                                 <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $3.50) - $0.19/slice</option>
@@ -1703,8 +1704,9 @@
                     
                     <div class="calc-input-group">
                         <label>Cheese type</label>
-                        <select id="cheeseType">
+                        <select id="cheeseType" onchange="handleIngredientSelection('cheese', this.value)">
                             <option value="">Choose your cheese</option>
+                            <option value="custom">🛒 Use Custom Package (not in list)</option>
                             <option value="adams-reserve">🧀 Adams Reserve (44 slices, $7.70)</option>
                             <option value="finlandia">🧀 Finlandia Variety (40 slices, $9.69)</option>
                             <option value="arla-havarti">🧀 Arla Havarti (32 slices, $9.69)</option>
@@ -1713,8 +1715,9 @@
                     
                     <div class="calc-input-group">
                         <label>Bread type</label>
-                        <select id="breadType">
+                        <select id="breadType" onchange="handleIngredientSelection('bread', this.value)">
                             <option value="">Choose your bread</option>
+                            <option value="custom">🛒 Use Custom Package (not in list)</option>
                             <option value="natures-own-double">🍞 Nature's Own Double Loaf (20 sandwiches, $3.99-4.99)</option>
                             <option value="sunbeam-double">🍞 Sunbeam Double Loaf (26 sandwiches, $5.39)</option>
                             <option value="sunbeam-single">🍞 Sunbeam Single Loaf (13 sandwiches, $2.70)</option>
@@ -1747,6 +1750,39 @@
                 <ul class="checklist" id="shoppingChecklist">
                 </ul>
             </div>
+            
+            <!-- Ingredient Price Summary -->
+            <div style="max-width: 100%; margin: 30px 0 0 0;">
+                <details style="background: #fffbe8; border: 1.5px solid #f7c873; border-radius: 10px; box-shadow: 0 2px 8px #f7c87322; padding: 0 0 18px 0; font-size: 1em;">
+                    <summary style="display: flex; align-items: center; gap: 10px; padding: 0 18px; min-height: 56px; font-weight: 600; font-size: 1.08em; color: #236383; background: linear-gradient(90deg, #ffe6b3 60%, #fffbe8 100%); border-bottom: 1.5px solid #f7c873; border-radius: 10px 10px 0 0; box-shadow: 0 2px 8px #f7c87322; cursor: pointer; outline: none; letter-spacing: 0.01em;">
+                        <span style="font-size: 1.3em;">🛒</span>
+                        <span>Ingredient Price Summary</span>
+                        <span style="margin-left:auto; font-size:0.98em; color:#b97a1a; font-weight:400;">(click to view all ingredient prices used in calculations)</span>
+                    </summary>
+                    <div style="padding: 0 18px;">
+                        <table style="width:100%; margin-top: 10px; border-collapse: collapse;">
+                            <tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>
+                            <tr><td>Turkey (Kirkland 2-pack, 40 slices)</td><td>$13.99</td><td>40 slices total</td></tr>
+                            <tr><td>Ham (Kirkland 2-pack, 48 slices)</td><td>$9.89</td><td>48 slices total</td></tr>
+                            <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 oz / 32 slices</td></tr>
+                            <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 oz / 32 slices</td></tr>
+                            <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 oz / 18 slices</td></tr>
+                            <tr><td>Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced</td><td>$6.49</td><td>8 oz / 11-12 slices</td></tr>
+                            <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced</td><td>$3.99</td><td>9 oz / 18 slices</td></tr>
+                            <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size</td><td>$4.39</td><td>1 lb / 30-32 slices</td></tr>
+                            <tr><td>Adams Reserve Cheese</td><td>$7.70</td><td>44 slices</td></tr>
+                            <tr><td>Finlandia Swiss Cheese</td><td>$9.69</td><td>40 slices</td></tr>
+                            <tr><td>Arla Havarti Cheese</td><td>$9.69</td><td>32 slices</td></tr>
+                            <tr><td>Nature's Own Double Loaf</td><td>$3.99–$4.99</td><td>20 sandwiches</td></tr>
+                            <tr><td>Sunbeam Double Loaf</td><td>$5.39</td><td>26 sandwiches</td></tr>
+                            <tr><td>Sunbeam Single Loaf</td><td>$2.70</td><td>13 sandwiches</td></tr>
+                            <tr><td>Other Brands Double Loaf</td><td>$5.39</td><td>20 sandwiches</td></tr>
+                            <tr><td>Other Brands Single Loaf</td><td>$2.70</td><td>10 sandwiches</td></tr>
+                            <tr><td>Zip-lock Sandwich Bags</td><td>$7.99</td><td>480 count</td></tr>
+                        </table>
+                    </div>
+                </details>
+            </div>
         </div>
 
         <!-- Custom Package Calculator Section -->
@@ -1763,27 +1799,46 @@
             <div class="shopping-calculator" style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%);">
                 <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Calculate Sandwiches from Your Package</h3>
 
+                <!-- Ingredient Type Selection -->
+                <div style="margin-bottom: 24px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
+                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 12px; color: #236383;">What ingredient are you checking?</label>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                            <input type="radio" name="customIngredientType" value="meat" checked onchange="updateCustomIngredientType()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                            <span>🥩 <strong>Meat</strong> (3 slices per sandwich)</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                            <input type="radio" name="customIngredientType" value="cheese" onchange="updateCustomIngredientType()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                            <span>🧀 <strong>Cheese</strong> (2 slices per sandwich)</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
+                            <input type="radio" name="customIngredientType" value="bread" onchange="updateCustomIngredientType()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
+                            <span>🍞 <strong>Bread</strong> (2 slices per sandwich, enter sandwiches per package)</span>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Input method toggle -->
                 <div style="margin-bottom: 24px; padding: 18px; background: rgba(255,255,255,0.95); border-radius: 10px;">
                     <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 12px; color: #236383;">What info do you have from the package label?</label>
                     <div style="display: flex; flex-direction: column; gap: 12px;">
                         <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
                             <input type="radio" name="customInputMethod" value="slices" checked onchange="toggleCustomInputMethod()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
-                            <span><strong>I can count the slices</strong> (most accurate)</span>
+                            <span><strong id="customInputMethodLabel">I can count the slices</strong> (most accurate)</span>
                         </label>
                         <label style="display: flex; align-items: center; gap: 12px; font-size: 1em; cursor: pointer; color: #333; padding: 12px 16px; border-radius: 8px; background: #f8f9fa; border: 2px solid transparent; transition: all 0.2s ease;">
                             <input type="radio" name="customInputMethod" value="oz" onchange="toggleCustomInputMethod()" style="width: 18px; height: 18px; accent-color: #236383; flex-shrink: 0;">
-                            <span><strong>I only have oz/servings info</strong> (we'll estimate slices)</span>
+                            <span><strong id="customInputMethodLabelOz">I only have oz/servings info</strong> (we'll estimate slices)</span>
                         </label>
                     </div>
                 </div>
 
                 <div class="calc-form">
-                    <!-- Method 1: Direct slice count -->
+                    <!-- Method 1: Direct slice count (or sandwiches for bread) -->
                     <div id="sliceInputGroup" class="calc-input-group">
-                        <label for="customPackageSlices">Number of slices in package</label>
+                        <label for="customPackageSlices" id="customPackageSlicesLabel">Number of slices in package</label>
                         <input type="number" id="customPackageSlices" min="1" max="500" placeholder="e.g., 24">
-                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">Count the slices or check the label</span>
+                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;" id="customPackageSlicesHint">Count the slices or check the label</span>
                     </div>
 
                     <!-- Method 2: Oz-based estimation -->
@@ -1817,8 +1872,9 @@
                         <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;">The price you paid for this package</span>
                     </div>
 
-                    <!-- Meat amount is fixed at 3 slices per standard recipe -->
-                    <input type="hidden" id="customMeatSlicesPerSandwich" value="3">
+                    <!-- Ingredient slices per sandwich (will be updated based on type) -->
+                    <input type="hidden" id="customIngredientSlicesPerSandwich" value="3">
+                    <input type="hidden" id="customIngredientTypeValue" value="meat">
 
                     <div class="calc-button-container">
                         <button class="calc-button" onclick="calculateCustomPackage()">Calculate Sandwiches</button>
@@ -1831,7 +1887,7 @@
             <!-- Full Custom Shopping Calculator -->
             <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;">
                 <h3 style="color: #1a4d66; margin-bottom: 10px; font-size: 1.3em;">📊 Full Custom Shopping List Builder</h3>
-                <p style="color: #64748b; margin-bottom: 20px;">Have custom packages for <strong>all your ingredients</strong> (meat, cheese, and bread)? This wizard works just like the Interactive Calculator above, but lets you enter custom package details for everything. We'll guide you through step by step!</p>
+                <p style="color: #64748b; margin-bottom: 20px;">Have custom packages for <strong>all your ingredients</strong> (meat, cheese, and bread)? This wizard works just like the Interactive Calculator above, but lets you enter custom package details for everything. <strong>Tip:</strong> If you selected "Use Custom Package" in the Interactive Calculator above, your other selected ingredients will be pre-populated here automatically!</p>
 
                 <div class="shopping-calculator wizard-container" style="background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);">
                     <!-- Step indicator -->
@@ -2033,6 +2089,18 @@
                     <div class="ingredient">
                         <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
                     </div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #fffbe8 0%, #fef3e2 100%); border: 2px solid #f4a261; border-radius: 12px;">
+                <h3 style="color: #d97706; font-size: 1.3em; margin-bottom: 15px; font-weight: 600;">📄 Download PB&J Resources</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: #d97706; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; font-size: 1.05em; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);" onmouseover="this.style.background='#b86505'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(217, 119, 6, 0.4)';" onmouseout="this.style.background='#d97706'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(217, 119, 6, 0.3)';">
+                        📥 PB&J Sandwich Making 101 (PDF)
+                    </a>
+                    <a href="toolkit/Pbj labels.pdf" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: #d97706; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; font-size: 1.05em; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);" onmouseover="this.style.background='#b86505'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(217, 119, 6, 0.4)';" onmouseout="this.style.background='#d97706'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(217, 119, 6, 0.3)';">
+                        🏷️ PB&J Labels (PDF)
+                    </a>
                 </div>
             </div>
         </div>
@@ -2530,6 +2598,14 @@
             <div class="safety-banner" style="margin-top: 30px;">
                 ⚠️ REMEMBER: Recipients may be children, elderly, or immunocompromised. Food safety protects our most vulnerable community members.
             </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #fffbe8 0%, #fef3e2 100%); border: 2px solid #f4a261; border-radius: 12px;">
+                <h3 style="color: #d97706; font-size: 1.3em; margin-bottom: 12px; font-weight: 600;">📄 Download Food Safety Guide</h3>
+                <p style="color: #555; margin-bottom: 15px; font-size: 1.05em;">For comprehensive food safety guidelines, download our complete volunteer guide:</p>
+                <a href="toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 24px; background: #d97706; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: background 0.3s ease; font-size: 1.05em; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);" onmouseover="this.style.background='#b86505'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(217, 119, 6, 0.4)';" onmouseout="this.style.background='#d97706'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(217, 119, 6, 0.3)';">
+                    📥 Food Safety for Volunteers (PDF)
+                </a>
+            </div>
         </div>
 
         <!-- Planning Tips Section - Second thing after calculators/pricing -->
@@ -2592,6 +2668,18 @@
                 </div>
                 <div style="margin-top: 16px; padding: 12px; background: rgba(255,255,255,0.15); border-radius: 8px; font-size: 0.95em;">
                     <strong>Assembly Order:</strong> Bread → Cheese → Meat → Cheese → Bread
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #fffbe8 0%, #fef3e2 100%); border: 2px solid #f4a261; border-radius: 12px;">
+                <h3 style="color: #d97706; font-size: 1.3em; margin-bottom: 15px; font-weight: 600;">📄 Download Deli Sandwich Resources</h3>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <a href="toolkit/20250205-TSP-Deli Sandwich Making 101-Groups (2).pdf" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: #d97706; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; font-size: 1.05em; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);" onmouseover="this.style.background='#b86505'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(217, 119, 6, 0.4)';" onmouseout="this.style.background='#d97706'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(217, 119, 6, 0.3)';">
+                        📥 Deli Sandwich Making 101 (PDF)
+                    </a>
+                    <a href="toolkit/Deli labels_1749341916236.pdf" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: #d97706; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; font-size: 1.05em; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);" onmouseover="this.style.background='#b86505'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(217, 119, 6, 0.4)';" onmouseout="this.style.background='#d97706'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(217, 119, 6, 0.3)';">
+                        🏷️ Deli Sandwich Labels (PDF)
+                    </a>
                 </div>
             </div>
             
@@ -2693,12 +2781,131 @@
             }
         });
         
+        // Handle custom ingredient selection from Interactive Calculator
+        function handleIngredientSelection(ingredientType, value) {
+            if (value !== 'custom') return;
+            
+            // Store current Interactive Calculator values for pre-population
+            const meatType = document.getElementById('meatType').value;
+            const cheeseType = document.getElementById('cheeseType').value;
+            const breadType = document.getElementById('breadType').value;
+            const planMode = document.getElementById('planBySandwiches').checked ? 'sandwiches' : 'budget';
+            const sandwichCount = document.getElementById('sandwichCount').value;
+            const budgetAmount = document.getElementById('budgetAmount').value;
+            
+            // Store data for wizard pre-population
+            window.interactiveCalcData = {
+                customIngredient: ingredientType,
+                planMode: planMode,
+                sandwichCount: sandwichCount,
+                budgetAmount: budgetAmount,
+                meatType: meatType !== 'custom' ? meatType : null,
+                cheeseType: cheeseType !== 'custom' ? cheeseType : null,
+                breadType: breadType !== 'custom' ? breadType : null
+            };
+            
+            // Scroll to custom calculator
+            document.getElementById('custom-calculator').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Show a message
+            setTimeout(() => {
+                alert(`You selected a custom ${ingredientType} package. Scroll down to use the Custom Package Calculator, then click "Use This in Full Shopping Builder" to transfer your result. The Full Shopping Builder will be pre-populated with your other selected ingredients from the Interactive Calculator.`);
+            }, 500);
+        }
+
+        // Pre-populate wizard from Interactive Calculator data
+        function prePopulateWizardFromInteractive() {
+            if (!window.interactiveCalcData) return;
+            
+            const data = window.interactiveCalcData;
+            
+            // Set planning mode
+            if (data.planMode === 'sandwiches' && data.sandwichCount) {
+                document.getElementById('wizardPlanBySandwiches').checked = true;
+                document.getElementById('wizardTargetSandwiches').value = data.sandwichCount;
+            } else if (data.planMode === 'budget' && data.budgetAmount) {
+                document.getElementById('wizardPlanByBudget').checked = true;
+                document.getElementById('wizardBudgetAmount').value = data.budgetAmount;
+            }
+            updateWizardStep1();
+            
+            // Pre-populate meat if it's not the custom ingredient
+            if (data.customIngredient !== 'meat' && data.meatType) {
+                const meatData = getIngredientData('meat', data.meatType);
+                if (meatData) {
+                    document.getElementById('wizardMeatSlices').value = meatData.slices;
+                    document.getElementById('wizardMeatPrice').value = meatData.price;
+                }
+            }
+            
+            // Pre-populate cheese if it's not the custom ingredient
+            if (data.customIngredient !== 'cheese' && data.cheeseType) {
+                const cheeseData = getIngredientData('cheese', data.cheeseType);
+                if (cheeseData) {
+                    document.getElementById('wizardCheeseSlices').value = cheeseData.slices;
+                    document.getElementById('wizardCheesePrice').value = cheeseData.price;
+                }
+            }
+            
+            // Pre-populate bread if it's not the custom ingredient
+            if (data.customIngredient !== 'bread' && data.breadType) {
+                const breadData = getIngredientData('bread', data.breadType);
+                if (breadData) {
+                    document.getElementById('wizardBreadSandwiches').value = breadData.sandwiches;
+                    document.getElementById('wizardBreadPrice').value = breadData.price;
+                }
+            }
+        }
+        
+        // Helper function to get ingredient data from Interactive Calculator
+        function getIngredientData(type, value) {
+            if (type === 'meat') {
+                const meatData = {
+                    'turkey': { slices: 40, price: 13.99 },
+                    'ham': { slices: 48, price: 9.89 },
+                    'publix-turkey': { slices: 32, price: 7.07 },
+                    'land-o-frost-turkey': { slices: 32, price: 9.53 },
+                    'hillshire-turkey': { slices: 18, price: 6.07 },
+                    'kroger-turkey-regular': { slices: 12, price: 6.49 },
+                    'kroger-turkey-thin': { slices: 18, price: 3.99 },
+                    'kroger-chicken-thin': { slices: 18, price: 3.50 },
+                    'kroger-turkey-family': { slices: 31, price: 4.39 },
+                    'oscar-mayer-chicken-blackened': { slices: 12, price: 4.49 },
+                    'oscar-mayer-chicken-rotisserie': { slices: 32, price: 7.99 }
+                };
+                return meatData[value] || null;
+            } else if (type === 'cheese') {
+                const cheeseData = {
+                    'adams-reserve': { slices: 44, price: 7.70 },
+                    'finlandia': { slices: 40, price: 9.69 },
+                    'arla-havarti': { slices: 32, price: 9.69 }
+                };
+                return cheeseData[value] || null;
+            } else if (type === 'bread') {
+                const breadData = {
+                    'natures-own-double': { sandwiches: 20, price: 4.49 },
+                    'sunbeam-double': { sandwiches: 26, price: 5.39 },
+                    'sunbeam-single': { sandwiches: 13, price: 2.70 },
+                    'other-double': { sandwiches: 20, price: 5.39 },
+                    'other-single': { sandwiches: 10, price: 2.70 }
+                };
+                return breadData[value] || null;
+            }
+            return null;
+        }
+
         function calculateNeeds() {
             const bySandwiches = document.getElementById('planBySandwiches').checked;
             let sandwichCount;
             const meatType = document.getElementById('meatType').value;
             const cheeseType = document.getElementById('cheeseType').value;
             const breadType = document.getElementById('breadType').value;
+            
+            // Check if any ingredient is set to custom
+            if (meatType === 'custom' || cheeseType === 'custom' || breadType === 'custom') {
+                alert('You selected "Use Custom Package" for one or more ingredients. Please use the Custom Package Calculator below to calculate with custom packages.');
+                return;
+            }
             const meatAmount = parseInt(document.getElementById('meatAmount').value);
 
             // Ingredient constants - SLICE-BASED CALCULATION
@@ -3620,12 +3827,56 @@
         }
 
         // Custom Package Calculator - Toggle between slice count and oz/servings input
+        // Custom Package Calculator - Update ingredient type
+        function updateCustomIngredientType() {
+            const ingredientType = document.querySelector('input[name="customIngredientType"]:checked').value;
+            document.getElementById('customIngredientTypeValue').value = ingredientType;
+            
+            // Update slices per sandwich based on ingredient type
+            let slicesPerSandwich, labelText, hintText, inputMethodLabel, inputMethodLabelOz;
+            if (ingredientType === 'meat') {
+                slicesPerSandwich = 3;
+                labelText = 'Number of slices in package';
+                hintText = 'Count the slices or check the label';
+                inputMethodLabel = 'I can count the slices';
+                inputMethodLabelOz = 'I only have oz/servings info';
+            } else if (ingredientType === 'cheese') {
+                slicesPerSandwich = 2;
+                labelText = 'Number of slices in package';
+                hintText = 'Count the slices or check the label';
+                inputMethodLabel = 'I can count the slices';
+                inputMethodLabelOz = 'I only have oz/servings info';
+            } else { // bread
+                slicesPerSandwich = 1; // Special case: bread uses sandwiches per package
+                labelText = 'Number of sandwiches per bread package';
+                hintText = 'A double loaf typically makes 20 sandwiches';
+                inputMethodLabel = 'I know how many sandwiches this package makes';
+                inputMethodLabelOz = 'I only have oz/weight info';
+            }
+            
+            document.getElementById('customIngredientSlicesPerSandwich').value = slicesPerSandwich;
+            document.getElementById('customPackageSlicesLabel').textContent = labelText;
+            document.getElementById('customPackageSlicesHint').textContent = hintText;
+            document.getElementById('customInputMethodLabel').textContent = inputMethodLabel;
+            document.getElementById('customInputMethodLabelOz').textContent = inputMethodLabelOz;
+            
+            // For bread, hide oz input method (not applicable)
+            if (ingredientType === 'bread') {
+                document.querySelector('input[name="customInputMethod"][value="oz"]').parentElement.parentElement.style.display = 'none';
+                document.querySelector('input[name="customInputMethod"][value="slices"]').checked = true;
+                toggleCustomInputMethod();
+            } else {
+                document.querySelector('input[name="customInputMethod"][value="oz"]').parentElement.parentElement.style.display = 'flex';
+            }
+        }
+
         function toggleCustomInputMethod() {
             const method = document.querySelector('input[name="customInputMethod"]:checked').value;
+            const ingredientType = document.querySelector('input[name="customIngredientType"]:checked').value;
             const sliceGroup = document.getElementById('sliceInputGroup');
             const ozGroup = document.getElementById('ozInputGroup');
 
-            if (method === 'slices') {
+            if (method === 'slices' || ingredientType === 'bread') {
                 sliceGroup.style.display = 'flex';
                 ozGroup.style.display = 'none';
             } else {
@@ -3685,99 +3936,239 @@
                     element.addEventListener('change', estimateSlicesFromOz);
                 }
             });
+            
+            // Initialize custom ingredient type
+            if (document.querySelector('input[name="customIngredientType"]')) {
+                updateCustomIngredientType();
+            }
+            
+            // Check if we should pre-populate wizard from Interactive Calculator
+            if (window.interactiveCalcData) {
+                // Small delay to ensure wizard is rendered
+                setTimeout(() => {
+                    prePopulateWizardFromInteractive();
+                }, 100);
+            }
         });
 
         // Custom Package Calculator - Single Package
         function calculateCustomPackage() {
+            const ingredientType = document.querySelector('input[name="customIngredientType"]:checked').value;
             const inputMethod = document.querySelector('input[name="customInputMethod"]:checked').value;
             let slicesInPackage;
+            let ingredientName, ingredientIcon;
 
-            if (inputMethod === 'slices') {
+            if (ingredientType === 'bread') {
+                // Bread uses sandwiches per package directly
                 slicesInPackage = parseInt(document.getElementById('customPackageSlices').value);
+                ingredientName = 'bread';
+                ingredientIcon = '🍞';
             } else {
-                // Use oz-based estimation
-                const packageOz = parseFloat(document.getElementById('customPackageOz').value);
-                const thickness = document.getElementById('customSliceThickness').value;
+                if (inputMethod === 'slices') {
+                    slicesInPackage = parseInt(document.getElementById('customPackageSlices').value);
+                } else {
+                    // Use oz-based estimation
+                    const packageOz = parseFloat(document.getElementById('customPackageOz').value);
+                    const thickness = document.getElementById('customSliceThickness').value;
 
-                if (!packageOz || packageOz <= 0) {
-                    alert('Please enter the package weight in oz');
-                    return;
-                }
+                    if (!packageOz || packageOz <= 0) {
+                        alert('Please enter the package weight in oz');
+                        return;
+                    }
 
-                let ozPerSlice;
-                switch (thickness) {
-                    case 'thin': ozPerSlice = 0.5; break;
-                    case 'regular': ozPerSlice = 0.75; break;
-                    case 'thick': ozPerSlice = 1.0; break;
-                    default: ozPerSlice = 0.5;
+                    let ozPerSlice;
+                    switch (thickness) {
+                        case 'thin': ozPerSlice = 0.5; break;
+                        case 'regular': ozPerSlice = 0.75; break;
+                        case 'thick': ozPerSlice = 1.0; break;
+                        default: ozPerSlice = 0.5;
+                    }
+                    slicesInPackage = Math.round(packageOz / ozPerSlice);
                 }
-                slicesInPackage = Math.round(packageOz / ozPerSlice);
+                
+                if (ingredientType === 'meat') {
+                    ingredientName = 'meat';
+                    ingredientIcon = '🥩';
+                } else {
+                    ingredientName = 'cheese';
+                    ingredientIcon = '🧀';
+                }
             }
 
             const packagePrice = parseFloat(document.getElementById('customPackagePrice').value);
-            const meatSlicesPerSandwich = parseInt(document.getElementById('customMeatSlicesPerSandwich').value);
+            const slicesPerSandwich = parseInt(document.getElementById('customIngredientSlicesPerSandwich').value);
 
             if (!slicesInPackage || slicesInPackage <= 0) {
-                alert('Please enter a valid number of slices or package oz');
+                alert(ingredientType === 'bread' 
+                    ? 'Please enter a valid number of sandwiches per package'
+                    : 'Please enter a valid number of slices or package oz');
                 return;
             }
 
-            // Check if package has enough slices for at least one sandwich
-            if (slicesInPackage < meatSlicesPerSandwich) {
-                alert(`This package only has ${slicesInPackage} slice(s), but you need ${meatSlicesPerSandwich} slices to make one sandwich. You'll need a larger package or multiple packages.`);
-                return;
+            // For bread, slicesInPackage is actually sandwiches per package
+            let sandwichesPossible, leftoverSlices, displayUnit;
+            if (ingredientType === 'bread') {
+                sandwichesPossible = slicesInPackage; // Bread package makes X sandwiches
+                leftoverSlices = 0;
+                displayUnit = 'sandwiches';
+            } else {
+                // Check if package has enough slices for at least one sandwich
+                if (slicesInPackage < slicesPerSandwich) {
+                    alert(`This package only has ${slicesInPackage} slice(s), but you need ${slicesPerSandwich} slice(s) to make one sandwich. You'll need a larger package or multiple packages.`);
+                    return;
+                }
+                sandwichesPossible = Math.floor(slicesInPackage / slicesPerSandwich);
+                leftoverSlices = slicesInPackage % slicesPerSandwich;
+                displayUnit = 'slices';
             }
-
-            // Calculate sandwiches possible from this package
-            const sandwichesPossible = Math.floor(slicesInPackage / meatSlicesPerSandwich);
-            const leftoverSlices = slicesInPackage % meatSlicesPerSandwich;
+            
             const costPerSandwich = (packagePrice && sandwichesPossible > 0)
                 ? (packagePrice / sandwichesPossible).toFixed(2)
                 : 'N/A';
-            const costPerSlice = packagePrice ? (packagePrice / slicesInPackage).toFixed(2) : 'N/A';
-            const isEstimate = inputMethod === 'oz';
+            const costPerSlice = packagePrice && ingredientType !== 'bread' ? (packagePrice / slicesInPackage).toFixed(2) : 'N/A';
+            const isEstimate = inputMethod === 'oz' && ingredientType !== 'bread';
+
+            // Store data for transfer to wizard
+            window.customPackageResult = {
+                ingredientType: ingredientType,
+                slicesInPackage: slicesInPackage,
+                packagePrice: packagePrice,
+                sandwichesPossible: sandwichesPossible
+            };
 
             // Display result
+            const ingredientLabel = ingredientType === 'meat' ? 'meat' : ingredientType === 'cheese' ? 'cheese' : 'bread';
+            const ingredientLabelCap = ingredientType === 'meat' ? 'Meat' : ingredientType === 'cheese' ? 'Cheese' : 'Bread';
+            
             document.getElementById('customResult').innerHTML = `
                 ${isEstimate ? `
                 <div style="background: rgba(251,173,63,0.25); border: 1px solid #FBAD3F; padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-                    <span style="color: #fff;">📊 Based on estimated <strong>${slicesInPackage} slices</strong> (from oz + thickness)</span>
+                    <span style="color: #fff;">📊 Based on estimated <strong>${slicesInPackage} ${displayUnit}</strong> (from oz + thickness)</span>
                 </div>
                 ` : ''}
                 <div class="result-grid">
                     <div class="result-item">
                         <h4>Sandwiches from This Package</h4>
                         <div class="number">${sandwichesPossible}</div>
-                        <div class="description">at ${meatSlicesPerSandwich} slice${meatSlicesPerSandwich === 1 ? '' : 's'} per sandwich (standard recipe)</div>
+                        <div class="description">${ingredientType === 'bread' ? 'sandwiches per package' : `at ${slicesPerSandwich} slice${slicesPerSandwich === 1 ? '' : 's'} per sandwich (standard recipe)`}</div>
                     </div>
+                    ${ingredientType !== 'bread' ? `
                     <div class="result-item">
-                        <h4>Leftover Slices</h4>
+                        <h4>Leftover ${displayUnit === 'slices' ? 'Slices' : ''}</h4>
                         <div class="number">${leftoverSlices}</div>
-                        <div class="description">slices remaining after full sandwiches</div>
+                        <div class="description">${displayUnit} remaining after full sandwiches</div>
                     </div>
+                    ` : ''}
                     ${packagePrice ? `
                     <div class="result-item">
                         <h4>Cost Per Sandwich</h4>
                         <div class="number">$${costPerSandwich}</div>
-                        <div class="description">meat cost only</div>
+                        <div class="description">${ingredientLabel} cost only</div>
                     </div>
+                    ${ingredientType !== 'bread' ? `
                     <div class="result-item">
                         <h4>Cost Per Slice</h4>
                         <div class="number">$${costPerSlice}</div>
                         <div class="description">compare with other products</div>
                     </div>
                     ` : ''}
+                    ` : ''}
                 </div>
+                ${ingredientType !== 'bread' ? `
                 <div style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.15); border-radius: 10px;">
                     <h4 style="color: #FBAD3F; margin-bottom: 10px;">Need Multiple Packages?</h4>
                     <p style="color: rgba(255,255,255,0.9); margin-bottom: 10px;">To make <strong>100 sandwiches</strong> with this product:</p>
                     <div style="font-size: 1.3em; color: #fff; font-weight: 600;">
-                        You would need <strong>${Math.ceil((100 * meatSlicesPerSandwich) / slicesInPackage)}</strong> packages
-                        ${packagePrice ? `(≈ $${(Math.ceil((100 * meatSlicesPerSandwich) / slicesInPackage) * packagePrice).toFixed(2)} for meat)` : ''}
+                        You would need <strong>${Math.ceil((100 * slicesPerSandwich) / slicesInPackage)}</strong> packages
+                        ${packagePrice ? `(≈ $${(Math.ceil((100 * slicesPerSandwich) / slicesInPackage) * packagePrice).toFixed(2)} for ${ingredientLabel})` : ''}
                     </div>
+                </div>
+                ` : ''}
+                <div style="margin-top: 20px; padding: 18px; background: rgba(251,173,63,0.3); border: 2px solid #FBAD3F; border-radius: 12px; text-align: center;">
+                    <p style="color: #fff; font-weight: 600; margin-bottom: 12px; font-size: 1.05em;">Want to use this in the Full Shopping Builder?</p>
+                    <button onclick="transferToWizard('${ingredientType}')" style="padding: 12px 24px; background: #FBAD3F; color: #333; border: none; border-radius: 8px; font-weight: 700; font-size: 1.05em; cursor: pointer; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+                        📊 Use This in Full Shopping Builder →
+                    </button>
                 </div>
             `;
             document.getElementById('customResult').style.display = 'block';
+        }
+
+        // Transfer quick calculator result to wizard
+        function transferToWizard(ingredientType) {
+            if (!window.customPackageResult) {
+                alert('Please calculate a package first');
+                return;
+            }
+
+            const result = window.customPackageResult;
+            
+            // Pre-populate wizard with Interactive Calculator data if available
+            prePopulateWizardFromInteractive();
+            
+            // Scroll to wizard
+            document.querySelector('#custom-calculator .wizard-container').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            
+            // Auto-advance to the appropriate step
+            if (ingredientType === 'meat') {
+                // Go to step 2 (meat)
+                if (currentWizardStep !== 2) {
+                    // Advance to step 2
+                    document.getElementById('wizard-step-1').classList.remove('active');
+                    document.getElementById('step-indicator-1').classList.remove('active');
+                    document.getElementById('step-indicator-1').classList.add('completed');
+                    currentWizardStep = 2;
+                    document.getElementById('wizard-step-2').classList.add('active');
+                    document.getElementById('step-indicator-2').classList.add('active');
+                }
+                document.getElementById('wizardMeatSlices').value = result.slicesInPackage;
+                document.getElementById('wizardMeatPrice').value = result.packagePrice || '';
+                updateWizardStep2();
+            } else if (ingredientType === 'cheese') {
+                // Go to step 3 (cheese & bread)
+                if (currentWizardStep !== 3) {
+                    // Advance to step 3
+                    if (currentWizardStep === 1) {
+                        document.getElementById('wizard-step-1').classList.remove('active');
+                        document.getElementById('step-indicator-1').classList.remove('active');
+                        document.getElementById('step-indicator-1').classList.add('completed');
+                        currentWizardStep = 2;
+                        document.getElementById('wizard-step-2').classList.add('active');
+                        document.getElementById('step-indicator-2').classList.add('active');
+                    }
+                    document.getElementById('wizard-step-2').classList.remove('active');
+                    document.getElementById('step-indicator-2').classList.remove('active');
+                    document.getElementById('step-indicator-2').classList.add('completed');
+                    currentWizardStep = 3;
+                    document.getElementById('wizard-step-3').classList.add('active');
+                    document.getElementById('step-indicator-3').classList.add('active');
+                }
+                document.getElementById('wizardCheeseSlices').value = result.slicesInPackage;
+                document.getElementById('wizardCheesePrice').value = result.packagePrice || '';
+                updateWizardStep3();
+            } else if (ingredientType === 'bread') {
+                // Go to step 3 (cheese & bread)
+                if (currentWizardStep !== 3) {
+                    // Advance to step 3
+                    if (currentWizardStep === 1) {
+                        document.getElementById('wizard-step-1').classList.remove('active');
+                        document.getElementById('step-indicator-1').classList.remove('active');
+                        document.getElementById('step-indicator-1').classList.add('completed');
+                        currentWizardStep = 2;
+                        document.getElementById('wizard-step-2').classList.add('active');
+                        document.getElementById('step-indicator-2').classList.add('active');
+                    }
+                    document.getElementById('wizard-step-2').classList.remove('active');
+                    document.getElementById('step-indicator-2').classList.remove('active');
+                    document.getElementById('step-indicator-2').classList.add('completed');
+                    currentWizardStep = 3;
+                    document.getElementById('wizard-step-3').classList.add('active');
+                    document.getElementById('step-indicator-3').classList.add('active');
+                }
+                document.getElementById('wizardBreadSandwiches').value = result.slicesInPackage; // For bread, this is sandwiches per package
+                document.getElementById('wizardBreadPrice').value = result.packagePrice || '';
+                updateWizardStep3();
+            }
         }
 
         // Wizard navigation and validation
@@ -4304,37 +4695,6 @@
         }
 
     </script>
-</div>
-<div class="section" style="max-width: 700px; margin: 40px auto 24px auto;">
-    <details style="background: #fffbe8; border: 1.5px solid #f7c873; border-radius: 10px; box-shadow: 0 2px 8px #f7c87322; padding: 0 0 18px 0; font-size: 1em;">
-        <summary style="display: flex; align-items: center; gap: 10px; padding: 0 18px; min-height: 56px; font-weight: 600; font-size: 1.08em; color: #236383; background: linear-gradient(90deg, #ffe6b3 60%, #fffbe8 100%); border-bottom: 1.5px solid #f7c873; border-radius: 10px 10px 0 0; box-shadow: 0 2px 8px #f7c87322; cursor: pointer; outline: none; letter-spacing: 0.01em;">
-            <span style="font-size: 1.3em;">🛒</span>
-            <span>Ingredient Price Summary</span>
-            <span style="margin-left:auto; font-size:0.98em; color:#b97a1a; font-weight:400;">(click to view all ingredient prices used in calculations)</span>
-        </summary>
-        <div style="padding: 0 18px;">
-            <table style="width:100%; margin-top: 10px; border-collapse: collapse;">
-                <tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>
-                <tr><td>Turkey (Kirkland 2-pack, 40 slices)</td><td>$13.99</td><td>40 slices total</td></tr>
-                <tr><td>Ham (Kirkland 2-pack, 48 slices)</td><td>$9.89</td><td>48 slices total</td></tr>
-                <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 oz / 32 slices</td></tr>
-                <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 oz / 32 slices</td></tr>
-                <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 oz / 18 slices</td></tr>
-                <tr><td>Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced</td><td>$6.49</td><td>8 oz / 11-12 slices</td></tr>
-                <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced</td><td>$3.99</td><td>9 oz / 18 slices</td></tr>
-                <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size</td><td>$4.39</td><td>1 lb / 30-32 slices</td></tr>
-                <tr><td>Adams Reserve Cheese</td><td>$7.70</td><td>44 slices</td></tr>
-                <tr><td>Finlandia Swiss Cheese</td><td>$9.69</td><td>40 slices</td></tr>
-                <tr><td>Arla Havarti Cheese</td><td>$9.69</td><td>32 slices</td></tr>
-                <tr><td>Nature's Own Double Loaf</td><td>$3.99–$4.99</td><td>20 sandwiches</td></tr>
-                <tr><td>Sunbeam Double Loaf</td><td>$5.39</td><td>26 sandwiches</td></tr>
-                <tr><td>Sunbeam Single Loaf</td><td>$2.70</td><td>13 sandwiches</td></tr>
-                <tr><td>Other Brands Double Loaf</td><td>$5.39</td><td>20 sandwiches</td></tr>
-                <tr><td>Other Brands Single Loaf</td><td>$2.70</td><td>10 sandwiches</td></tr>
-                <tr><td>Zip-lock Sandwich Bags</td><td>$7.99</td><td>480 count</td></tr>
-            </table>
-        </div>
-    </details>
 </div>
 </body>
 </html>
