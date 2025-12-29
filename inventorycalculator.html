@@ -1055,7 +1055,16 @@
             font-size: 1.3em;
             font-weight: 700;
             color: #1a4d66;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
+        }
+
+        .guide-card-purpose {
+            font-size: 1em;
+            color: #236383;
+            font-weight: 500;
+            margin-bottom: 14px;
+            line-height: 1.4;
+            font-style: italic;
         }
 
         .guide-card-situation {
@@ -1539,6 +1548,30 @@
             </p>
         </div>
 
+        <!-- Important Shopping Notes Banner -->
+        <div style="background: linear-gradient(135deg, #fffbf0 0%, #fef3e2 100%); border: 3px solid #f4a261; border-radius: 16px; padding: 24px 28px; margin-bottom: 28px; box-shadow: 0 6px 20px rgba(244, 162, 97, 0.25);">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
+                <span style="font-size: 2em;">📝</span>
+                <h3 style="color: #d97706; font-size: 1.4em; font-weight: 700; margin: 0;">Important Shopping Notes</h3>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 20px;">
+                <div style="display: flex; gap: 18px; align-items: start; padding: 16px; background: rgba(255,255,255,0.6); border-radius: 12px; border-left: 4px solid #f4a261;">
+                    <span style="font-size: 2.2em; flex-shrink: 0;">🥩</span>
+                    <div style="flex: 1;">
+                        <strong style="color: #333; font-size: 1.15em; display: block; margin-bottom: 6px;">Meat: Buy pre-packaged only</strong>
+                        <span style="font-size: 1em; color: #666; line-height: 1.5;">Don't get meat sliced at the deli counter—pre-packaged is safer and easier to work with.</span>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 18px; align-items: start; padding: 16px; background: rgba(255,255,255,0.6); border-radius: 12px; border-left: 4px solid #f4a261;">
+                    <span style="font-size: 2.2em; flex-shrink: 0;">🧀</span>
+                    <div style="flex: 1;">
+                        <strong style="color: #333; font-size: 1.15em; display: block; margin-bottom: 6px;">Cheese: Avoid individually wrapped slices</strong>
+                        <span style="font-size: 1em; color: #666; line-height: 1.5;">Individually wrapped American cheese slices do not hold up well and are so much work to unwrap during sandwich-making. Get deli-style sliced cheese—the kind sold together in one pack, not individually wrapped processed singles.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Quick Access Link for Custom Calculator -->
         <a href="#custom-calculator" class="quick-access-link">
             <span class="quick-access-icon">🛒</span>
@@ -1560,9 +1593,9 @@
                 <a href="#calculator" class="guide-card deli">
                     <div class="guide-card-icon">🧮</div>
                     <div class="guide-card-title">Interactive Deli Calculator</div>
+                    <div class="guide-card-purpose">– Calculate deli meat, cheese, and bread quantities based on sandwich count or budget</div>
                     <div class="guide-card-situation">
-                        <strong>Use this if:</strong><br>
-                        You're shopping at <strong>Kroger, Publix, Costco</strong>, or similar stores and want to pick from our <strong>pre-loaded meat, cheese, and bread options</strong> with known pricing. This builds a complete shopping list with all ingredients.
+                        <strong>Use this if:</strong> You're shopping at <strong>Kroger, Publix, Costco</strong>, or similar stores and want to pick from our pre-loaded meat, cheese, and bread options with known pricing. This builds a complete shopping list with all ingredients.
                     </div>
                     <div class="guide-card-action">
                         Take me there <span>→</span>
@@ -1573,9 +1606,9 @@
                 <a href="#custom-calculator" class="guide-card custom">
                     <div class="guide-card-icon">🛒</div>
                     <div class="guide-card-title">Custom Package Calculator</div>
+                    <div class="guide-card-purpose">– Use this if you have unusual package sizes or prices and need to work out how many sandwiches you can make</div>
                     <div class="guide-card-situation">
-                        <strong>Use this if:</strong><br>
-                        You're <strong>shopping in-store</strong> and found items that are <strong>NOT in our dropdown</strong>. This section has two tools: a quick single-package calculator (for checking one item) and a full shopping list builder wizard (for custom packages of all ingredients).
+                        <strong>Use this if:</strong> You're <strong>shopping in-store</strong> and found items that are <strong>NOT in our dropdown</strong>. This section has two tools: a quick single-package calculator (for checking one item) and a full shopping list builder wizard (for custom packages of all ingredients).
                     </div>
                     <div class="guide-card-action">
                         Take me there <span>→</span>
@@ -1586,37 +1619,14 @@
                 <a href="#pbj-calculator" class="guide-card pbj">
                     <div class="guide-card-icon">🥜</div>
                     <div class="guide-card-title">PB&J Calculator</div>
+                    <div class="guide-card-purpose">– Calculate peanut butter, jelly, bread, and bag quantities for peanut butter and jelly sandwiches</div>
                     <div class="guide-card-situation">
-                        <strong>Use this if:</strong><br>
-                        You're making <strong>peanut butter & jelly sandwiches</strong> instead of deli meat sandwiches. Different ingredients, different calculations!
+                        <strong>Use this if:</strong> You're making <strong>peanut butter & jelly sandwiches</strong> instead of deli meat sandwiches. Different ingredients, different calculations!
                     </div>
                     <div class="guide-card-action">
                         Take me there <span>→</span>
                     </div>
                 </a>
-            </div>
-        </div>
-
-        <!-- Important Shopping Notes Section -->
-        <div class="section" style="background: #fffbf0; border: 2px solid #f4a261; box-shadow: 0 4px 12px rgba(244, 162, 97, 0.15);">
-            <h2 style="color: #d97706; font-size: 1.5em; margin-bottom: 20px; font-weight: 700;">
-                📝 Important Shopping Notes
-            </h2>
-            <div style="display: flex; flex-direction: column; gap: 18px; color: #555; font-size: 1.05em;">
-                <div style="display: flex; gap: 16px; align-items: start;">
-                    <span style="font-size: 1.6em; flex-shrink: 0;">🥩</span>
-                    <div>
-                        <strong style="color: #333; font-size: 1.1em;">Meat: Buy pre-packaged only</strong><br>
-                        <span style="font-size: 0.95em; color: #666;">Don't get meat sliced at the deli counter—pre-packaged is safer and easier to work with.</span>
-                    </div>
-                </div>
-                <div style="display: flex; gap: 16px; align-items: start;">
-                    <span style="font-size: 1.6em; flex-shrink: 0;">🧀</span>
-                    <div>
-                        <strong style="color: #333; font-size: 1.1em;">Cheese: Avoid individually wrapped slices</strong><br>
-                        <span style="font-size: 0.95em; color: #666;">Individually wrapped American cheese slices do not hold up well and are so much work to unwrap during sandwich-making. Get deli-style sliced cheese—the kind sold together in one pack, not individually wrapped processed singles.</span>
-                    </div>
-                </div>
             </div>
         </div>
 
