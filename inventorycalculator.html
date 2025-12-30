@@ -1719,8 +1719,8 @@
                             <option value="">Choose your bread</option>
                             <option value="custom">🛒 Use Custom Package (not in list)</option>
                             <option value="natures-own-double">🍞 Nature's Own Double Loaf (20 sandwiches, $3.99-4.99)</option>
-                            <option value="sunbeam-double">🍞 Sunbeam Double Loaf (26 sandwiches, $5.39)</option>
-                            <option value="sunbeam-single">🍞 Sunbeam Single Loaf (13 sandwiches, $2.70)</option>
+                            <option value="sunbeam-double">🍞 Sunbeam Double Loaf (20 sandwiches, $5.39)</option>
+                            <option value="sunbeam-single">🍞 Sunbeam Single Loaf (10 sandwiches, $2.70)</option>
                             <option value="other-double">🍞 Other Brands Double Loaf (20 sandwiches, $5.39)</option>
                             <option value="other-single">🍞 Other Brands Single Loaf (10 sandwiches, $2.70)</option>
                         </select>
@@ -1774,8 +1774,8 @@
                             <tr><td>Finlandia Swiss Cheese</td><td>$9.69</td><td>40 slices</td></tr>
                             <tr><td>Arla Havarti Cheese</td><td>$9.69</td><td>32 slices</td></tr>
                             <tr><td>Nature's Own Double Loaf</td><td>$3.99–$4.99</td><td>20 sandwiches</td></tr>
-                            <tr><td>Sunbeam Double Loaf</td><td>$5.39</td><td>26 sandwiches</td></tr>
-                            <tr><td>Sunbeam Single Loaf</td><td>$2.70</td><td>13 sandwiches</td></tr>
+                            <tr><td>Sunbeam Double Loaf</td><td>$5.39</td><td>20 sandwiches</td></tr>
+                            <tr><td>Sunbeam Single Loaf</td><td>$2.70</td><td>10 sandwiches</td></tr>
                             <tr><td>Other Brands Double Loaf</td><td>$5.39</td><td>20 sandwiches</td></tr>
                             <tr><td>Other Brands Single Loaf</td><td>$2.70</td><td>10 sandwiches</td></tr>
                             <tr><td>Zip-lock Sandwich Bags</td><td>$7.99</td><td>480 count</td></tr>
@@ -2884,8 +2884,8 @@
             } else if (type === 'bread') {
                 const breadData = {
                     'natures-own-double': { sandwiches: 20, price: 4.49 },
-                    'sunbeam-double': { sandwiches: 26, price: 5.39 },
-                    'sunbeam-single': { sandwiches: 13, price: 2.70 },
+                    'sunbeam-double': { sandwiches: 20, price: 5.39 },
+                    'sunbeam-single': { sandwiches: 10, price: 2.70 },
                     'other-double': { sandwiches: 20, price: 5.39 },
                     'other-single': { sandwiches: 10, price: 2.70 }
                 };
@@ -3025,13 +3025,13 @@
                     breadPrice = 4.49;
                     break;
                 case 'sunbeam-double':
-                    breadSandwichesPerPackage = 26;
-                    breadDescription = 'double loaves (26 sandwiches each)';
+                    breadSandwichesPerPackage = 20;
+                    breadDescription = 'double loaves (20 sandwiches each)';
                     breadPrice = 5.39;
                     break;
                 case 'sunbeam-single':
-                    breadSandwichesPerPackage = 13;
-                    breadDescription = 'single loaves (13 sandwiches each)';
+                    breadSandwichesPerPackage = 10;
+                    breadDescription = 'single loaves (10 sandwiches each)';
                     breadPrice = 2.70;
                     break;
                 case 'other-double':
@@ -3542,11 +3542,11 @@
                     breadPrice = 4.49;
                     break;
                 case 'sunbeam-double':
-                    breadSandwichesPerPackage = 26;
+                    breadSandwichesPerPackage = 20;
                     breadPrice = 5.39;
                     break;
                 case 'sunbeam-single':
-                    breadSandwichesPerPackage = 13;
+                    breadSandwichesPerPackage = 10;
                     breadPrice = 2.70;
                     break;
                 case 'other-double':
