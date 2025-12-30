@@ -3220,45 +3220,27 @@
                 
                 if (remaining > 5) { // More than $5 remaining
                     budgetStatusMessage = `
-                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
-                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong> | 
-                                Remaining budget: <strong>$${remaining}</strong> (${savingsPercent}% under budget)
-                            </p>
-                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                This is the maximum number of sandwiches you can make within your $${budget} budget with your selected ingredients.
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong> | <strong>$${remaining}</strong> remaining
                             </p>
                             ${tightBudgetWarning}
                         </div>
                     `;
                 } else if (remaining > 0) { // Small amount remaining
                     budgetStatusMessage = `
-                        <div style="background: rgba(255,152,0,0.2); border: 3px solid #FF9800; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
-                            <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
-                            <p style="color: #BF360C; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong> | 
-                                Only <strong>$${remaining}</strong> remaining (${savingsPercent}% under budget)
-                            </p>
-                            <p style="color: #E65100; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                This maximizes your sandwich count within your $${budget} budget.
+                        <div style="background: rgba(255,152,0,0.2); border: 3px solid #FF9800; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #BF360C; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong> | <strong>$${remaining}</strong> remaining
                             </p>
                             ${tightBudgetWarning}
                         </div>
                     `;
                 } else { // Exactly at budget
                     budgetStatusMessage = `
-                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">🎯</div>
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Perfect Budget Match!</h4>
-                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for exactly <strong>$${totalCost}</strong> | 
-                                Uses your entire $${budget} budget
-                            </p>
-                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                This is the maximum number of sandwiches you can make with your selected ingredients and budget.
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong>
                             </p>
                             ${tightBudgetWarning}
                         </div>
@@ -3282,28 +3264,51 @@
                 return `${oz} oz`;
             }
             
+            // Simplify descriptions - extract key info only
+            let simplifiedMeatDesc = meatDescription;
+            if (meatDescription.includes('2-packs')) {
+                simplifiedMeatDesc = meatDescription.match(/\d+ slices/)?.[0] || meatDescription.replace('2-packs (', '').replace(')', '');
+            } else if (meatDescription.includes('packages')) {
+                // Extract slice count from patterns like "16 oz packages (32 slices)" or "1 lb packages (30-32 slices)"
+                const sliceMatch = meatDescription.match(/(\d+-\d+|\d+) slices/);
+                if (sliceMatch) {
+                    simplifiedMeatDesc = sliceMatch[0];
+                }
+            }
+            
+            let simplifiedBreadDesc = breadDescription;
+            if (breadDescription.includes('loaves')) {
+                // Extract sandwich count from "single loaves (10 sandwiches each)" or "double loaves (20 sandwiches each)"
+                const sandwichMatch = breadDescription.match(/(\d+) sandwiches/);
+                if (sandwichMatch) {
+                    simplifiedBreadDesc = `${sandwichMatch[1]} sandwiches`;
+                }
+            }
+            
+            let simplifiedCheeseDesc = cheeseDescription.replace(' each', '');
+            
             document.getElementById('calcResult').innerHTML = `
                 ${budgetStatusMessage}
                 <div class="result-grid">
                     <div class="result-item">
-                        <h4>Meat Packages</h4>
+                        <h4>Meat</h4>
                         <div class="number">${meatPackages}</div>
-                        <div class="description">${meatDescription} (${formatPackageSize(meatPackageWeightOz)} each)</div>
+                        <div class="description">${simplifiedMeatDesc}</div>
                     </div>
                     <div class="result-item">
-                        <h4>Cheese Packages</h4>
+                        <h4>Cheese</h4>
                         <div class="number">${cheesePackages}</div>
-                        <div class="description">${cheeseDescription}</div>
+                        <div class="description">${simplifiedCheeseDesc}</div>
                     </div>
                     <div class="result-item">
-                        <h4>Bread Packages</h4>
+                        <h4>Bread</h4>
                         <div class="number">${breadPackages}</div>
-                        <div class="description">${breadDescription}</div>
+                        <div class="description">${simplifiedBreadDesc}</div>
                     </div>
                     <div class="result-item">
-                        <h4>Total Cost</h4>
+                        <h4>Total</h4>
                         <div class="number">$${totalCost}</div>
-                        <div class="description">estimated retail pricing</div>
+                        <div class="description">${totalSandwichesPossible} sandwiches</div>
                     </div>
                 </div>
             `;
@@ -4377,38 +4382,27 @@
 
                 if (remaining > 5) {
                     budgetStatusMessage = `
-                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
-                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
-                                Remaining budget: <strong>$${remaining.toFixed(2)}</strong> (${savingsPercent}% under budget)
-                            </p>
-                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                Maximum sandwiches possible within your $${budget.toFixed(2)} budget with these custom packages.
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> | <strong>$${remaining.toFixed(2)}</strong> remaining
                             </p>
                             ${tightBudgetWarning}
                         </div>
                     `;
                 } else if (remaining >= 0) {
                     budgetStatusMessage = `
-                        <div style="background: rgba(255,193,63,0.15); border: 3px solid #FFC107; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">💰</div>
-                            <h4 style="color: #F57C00; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
-                            <p style="color: #E65100; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
-                                Remaining: <strong>$${remaining.toFixed(2)}</strong>
+                        <div style="background: rgba(255,193,63,0.15); border: 3px solid #FFC107; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #E65100; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong>${remaining > 0 ? ` | $${remaining.toFixed(2)} remaining` : ''}
                             </p>
                             ${tightBudgetWarning}
                         </div>
                     `;
                 } else {
                     budgetStatusMessage = `
-                        <div style="background: rgba(244,67,54,0.15); border: 3px solid #F44336; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
-                            <h4 style="color: #C62828; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Over Budget</h4>
-                            <p style="color: #B71C1C; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                Cost: <strong>$${totalCost.toFixed(2)}</strong> | Budget: <strong>$${budget.toFixed(2)}</strong> | Over by: <strong>$${Math.abs(remaining).toFixed(2)}</strong>
+                        <div style="background: rgba(244,67,54,0.15); border: 3px solid #F44336; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #B71C1C; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>$${totalCost.toFixed(2)}</strong> | Over budget by <strong>$${Math.abs(remaining).toFixed(2)}</strong>
                             </p>
                         </div>
                     `;
@@ -4420,36 +4414,34 @@
                 ${budgetStatusMessage}
                 <div class="result-grid">
                     <div class="result-item">
-                        <h4>Meat Packages</h4>
+                        <h4>Meat</h4>
                         <div class="number">${meatPackagesNeeded}</div>
-                        <div class="description">${meatSlicesPerPkg} slices per package</div>
+                        <div class="description">${meatSlicesPerPkg} slices</div>
                         <div style="margin-top: 10px; font-size: 0.9em;">$${meatCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
-                        <h4>Cheese Packages</h4>
+                        <h4>Cheese</h4>
                         <div class="number">${cheesePackagesNeeded}</div>
-                        <div class="description">${cheeseSlicesPerPkg} slices per package</div>
+                        <div class="description">${cheeseSlicesPerPkg} slices</div>
                         <div style="margin-top: 10px; font-size: 0.9em;">$${cheeseCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
-                        <h4>Bread Packages</h4>
+                        <h4>Bread</h4>
                         <div class="number">${breadPackagesNeeded}</div>
-                        <div class="description">${breadSandwichesPerPkg} sandwiches per package</div>
+                        <div class="description">${breadSandwichesPerPkg} sandwiches</div>
                         <div style="margin-top: 10px; font-size: 0.9em;">$${breadCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
-                        <h4>Sandwich Bags</h4>
+                        <h4>Bags</h4>
                         <div class="number">${bagPackagesNeeded}</div>
-                        <div class="description">480 count boxes</div>
+                        <div class="description">480 count</div>
                         <div style="margin-top: 10px; font-size: 0.9em;">$${bagCost.toFixed(2)}</div>
                     </div>
                 </div>
                 <div style="margin-top: 25px; padding: 20px; background: rgba(251,173,63,0.2); border-radius: 12px; text-align: center;">
-                    <h4 style="color: #fff; font-size: 1.4em; margin-bottom: 10px;">Total Estimated Cost</h4>
                     <div style="font-size: 3em; font-weight: 700; color: #fff;">$${totalCost.toFixed(2)}</div>
                     <div style="color: rgba(255,255,255,0.9); font-size: 1.1em; margin-top: 8px;">
-                        for ${targetSandwiches} sandwiches${possibleExtraSandwiches > 0 ? ` (up to ${totalSandwichesPossible} possible with extras)` : ''}<br>
-                        (≈ $${(totalCost / targetSandwiches).toFixed(2)} per sandwich)
+                        ${totalSandwichesPossible} sandwiches
                     </div>
                 </div>
             `;
@@ -4599,44 +4591,27 @@
 
                 if (remaining > 5) {
                     budgetStatusMessage = `
-                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
-                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
-                                Remaining budget: <strong>$${remaining.toFixed(2)}</strong> (${savingsPercent}% under budget)
-                            </p>
-                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                Maximum sandwiches possible within your $${budget.toFixed(2)} budget with these custom packages.
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> | <strong>$${remaining.toFixed(2)}</strong> remaining
                             </p>
                             ${tightBudgetWarning}
                         </div>
                     `;
                 } else if (remaining > 0) {
                     budgetStatusMessage = `
-                        <div style="background: rgba(255,152,0,0.2); border: 3px solid #FF9800; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
-                            <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
-                            <p style="color: #BF360C; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> |
-                                Only <strong>$${remaining.toFixed(2)}</strong> remaining
-                            </p>
-                            <p style="color: #E65100; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                This maximizes your sandwich count within your $${budget.toFixed(2)} budget.
+                        <div style="background: rgba(255,152,0,0.2); border: 3px solid #FF9800; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #BF360C; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> | <strong>$${remaining.toFixed(2)}</strong> remaining
                             </p>
                             ${tightBudgetWarning}
                         </div>
                     `;
                 } else {
                     budgetStatusMessage = `
-                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">🎯</div>
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Perfect Budget Match!</h4>
-                            <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for exactly <strong>$${totalCost.toFixed(2)}</strong>
-                            </p>
-                            <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
-                                This is the maximum number of sandwiches you can make with your selected ingredients and $${budget.toFixed(2)} budget (uses your entire budget).
+                        <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 16px; margin-bottom: 20px; text-align: center;">
+                            <p style="color: #1B5E20; margin: 0; font-size: 1.1em; font-weight: 600;">
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong>
                             </p>
                             ${tightBudgetWarning}
                         </div>
@@ -4649,27 +4624,27 @@
                 ${budgetStatusMessage}
                 <div class="result-grid">
                     <div class="result-item">
-                        <h4>Meat Packages</h4>
+                        <h4>Meat</h4>
                         <div class="number">${meatPackagesNeeded}</div>
-                        <div class="description">${meatSlicesPerPkg} slices each<br>(${extraMeatSlices} extra slices)</div>
+                        <div class="description">${meatSlicesPerPkg} slices</div>
                         ${meatPricePerPkg ? `<div style="margin-top: 10px; font-size: 0.9em;">$${meatCost.toFixed(2)}</div>` : ''}
                     </div>
                     <div class="result-item">
-                        <h4>Cheese Packages</h4>
+                        <h4>Cheese</h4>
                         <div class="number">${cheesePackagesNeeded}</div>
-                        <div class="description">${cheeseSlicesPerPkg} slices each<br>(${extraCheeseSlices} extra slices)</div>
+                        <div class="description">${cheeseSlicesPerPkg} slices</div>
                         ${cheesePricePerPkg ? `<div style="margin-top: 10px; font-size: 0.9em;">$${cheeseCost.toFixed(2)}</div>` : ''}
                     </div>
                     <div class="result-item">
-                        <h4>Bread Packages</h4>
+                        <h4>Bread</h4>
                         <div class="number">${breadPackagesNeeded}</div>
-                        <div class="description">${breadSandwichesPerPkg} sandwiches each<br>(${extraBreadSlots} extra spots)</div>
+                        <div class="description">${breadSandwichesPerPkg} sandwiches</div>
                         ${breadPricePerPkg ? `<div style="margin-top: 10px; font-size: 0.9em;">$${breadCost.toFixed(2)}</div>` : ''}
                     </div>
                     <div class="result-item">
-                        <h4>Sandwich Bags</h4>
+                        <h4>Bags</h4>
                         <div class="number">${bagPackagesNeeded}</div>
-                        <div class="description">480-count boxes</div>
+                        <div class="description">480 count</div>
                         <div style="margin-top: 10px; font-size: 0.9em;">$${bagCost.toFixed(2)}</div>
                     </div>
                 </div>
