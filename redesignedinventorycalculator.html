@@ -1487,14 +1487,595 @@
                 font-size: 1em;
             }
         }
+
+        /* ==========================================
+           UI/UX POLISH - Design System Variables
+           ========================================== */
+        :root {
+            /* Spacing Scale */
+            --space-xs: 4px;
+            --space-sm: 8px;
+            --space-md: 16px;
+            --space-lg: 24px;
+            --space-xl: 32px;
+            --space-2xl: 48px;
+
+            /* Colors - Brand */
+            --color-primary: #236383;
+            --color-primary-dark: #1a4d66;
+            --color-secondary: #007E8C;
+            --color-accent: #47B3CB;
+            --color-gold: #FBAD3F;
+            --color-gold-dark: #F39C12;
+            --color-burgundy: #A31C41;
+            --color-warning: #d97706;
+
+            /* Colors - Neutral */
+            --color-text: #2c3e50;
+            --color-text-muted: #64748b;
+            --color-text-light: #94a3b8;
+            --color-bg-light: #f8f9fa;
+            --color-border: #e9ecef;
+            --color-border-light: #f0f0f0;
+
+            /* Shadows */
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 30px rgba(0,0,0,0.12);
+
+            /* Border Radius */
+            --radius-sm: 6px;
+            --radius-md: 10px;
+            --radius-lg: 16px;
+            --radius-xl: 20px;
+
+            /* Transitions */
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.25s ease;
+            --transition-slow: 0.35s ease;
+        }
+
+        /* ==========================================
+           Reusable Component Classes (replacing inline styles)
+           ========================================== */
+
+        /* Flex utilities */
+        .flex { display: flex; }
+        .flex-col { flex-direction: column; }
+        .flex-wrap { flex-wrap: wrap; }
+        .items-center { align-items: center; }
+        .items-start { align-items: start; }
+        .justify-center { justify-content: center; }
+        .justify-between { justify-content: space-between; }
+        .gap-xs { gap: var(--space-xs); }
+        .gap-sm { gap: var(--space-sm); }
+        .gap-md { gap: var(--space-md); }
+        .gap-lg { gap: var(--space-lg); }
+        .gap-xl { gap: var(--space-xl); }
+
+        /* Text utilities */
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-muted { color: var(--color-text-muted); }
+        .text-gold { color: var(--color-gold); }
+        .text-primary { color: var(--color-primary); }
+        .text-warning { color: var(--color-warning); }
+        .text-white { color: white; }
+        .font-semibold { font-weight: 600; }
+        .font-bold { font-weight: 700; }
+
+        /* Spacing utilities */
+        .mt-sm { margin-top: var(--space-sm); }
+        .mt-md { margin-top: var(--space-md); }
+        .mt-lg { margin-top: var(--space-lg); }
+        .mt-xl { margin-top: var(--space-xl); }
+        .mb-sm { margin-bottom: var(--space-sm); }
+        .mb-md { margin-bottom: var(--space-md); }
+        .mb-lg { margin-bottom: var(--space-lg); }
+        .mb-xl { margin-bottom: var(--space-xl); }
+        .p-md { padding: var(--space-md); }
+        .p-lg { padding: var(--space-lg); }
+
+        /* ==========================================
+           Improved Form Feedback System
+           ========================================== */
+
+        /* Inline validation messages */
+        .form-feedback {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-sm) var(--space-md);
+            border-radius: var(--radius-sm);
+            font-size: 0.9em;
+            font-weight: 500;
+            margin-top: var(--space-sm);
+            animation: slideIn 0.2s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-feedback.success {
+            background: rgba(34, 197, 94, 0.15);
+            color: #15803d;
+            border: 1px solid rgba(34, 197, 94, 0.3);
+        }
+
+        .form-feedback.error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #dc2626;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .form-feedback.warning {
+            background: rgba(251, 173, 63, 0.15);
+            color: #b45309;
+            border: 1px solid rgba(251, 173, 63, 0.3);
+        }
+
+        .form-feedback.info {
+            background: rgba(71, 179, 203, 0.15);
+            color: var(--color-primary);
+            border: 1px solid rgba(71, 179, 203, 0.3);
+        }
+
+        /* Loading spinner */
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid currentColor;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Button loading state */
+        .btn-loading {
+            position: relative;
+            color: transparent !important;
+            pointer-events: none;
+        }
+
+        .btn-loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 20px;
+            height: 20px;
+            border: 2px solid white;
+            border-right-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.75s linear infinite;
+        }
+
+        /* Improved disabled button state */
+        .calc-button:disabled,
+        .calc-button[disabled] {
+            background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+            cursor: not-allowed;
+            opacity: 0.6;
+            box-shadow: none;
+            transform: none;
+        }
+
+        .calc-button:disabled:hover {
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ==========================================
+           Accessibility Improvements
+           ========================================== */
+
+        /* Skip to main content link */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--color-primary);
+            color: white;
+            padding: var(--space-sm) var(--space-md);
+            z-index: 9999;
+            transition: top var(--transition-fast);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 0 0 var(--radius-sm) 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+            outline: 3px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+
+        /* Improved focus states */
+        *:focus-visible {
+            outline: 3px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid var(--color-gold);
+            outline-offset: 2px;
+        }
+
+        /* ARIA live region for announcements */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Improved color contrast for gold text */
+        .gold-contrast {
+            color: #b45309;
+            font-weight: 600;
+        }
+
+        /* Better placeholder contrast */
+        .calc-input-group input::placeholder {
+            color: #6b7280;
+            opacity: 1;
+        }
+
+        /* ==========================================
+           Standardized Section Components
+           ========================================== */
+
+        /* Info banner component */
+        .info-banner {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-lg);
+            padding: var(--space-lg);
+            background: linear-gradient(135deg, #fffbf0 0%, #fef3e2 100%);
+            border: 2px solid #f4a261;
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .info-banner-icon {
+            font-size: 2em;
+            flex-shrink: 0;
+        }
+
+        .info-banner-content {
+            flex: 1;
+        }
+
+        .info-banner-title {
+            color: var(--color-warning);
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: var(--space-sm);
+        }
+
+        /* Note card component */
+        .note-card {
+            display: flex;
+            gap: var(--space-lg);
+            align-items: flex-start;
+            padding: var(--space-md);
+            background: rgba(255,255,255,0.6);
+            border-radius: var(--radius-md);
+            border-left: 4px solid #f4a261;
+        }
+
+        .note-card-icon {
+            font-size: 2em;
+            flex-shrink: 0;
+        }
+
+        .note-card-content {
+            flex: 1;
+        }
+
+        .note-card-title {
+            color: var(--color-text);
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: var(--space-xs);
+        }
+
+        .note-card-text {
+            font-size: 1em;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Mode selection cards - improved */
+        .mode-selection {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-lg);
+            max-width: 800px;
+            margin: 0 auto var(--space-lg);
+        }
+
+        @media (max-width: 600px) {
+            .mode-selection {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .mode-card-improved {
+            display: flex;
+            flex-direction: column;
+            padding: var(--space-lg);
+            border: 3px solid var(--color-border);
+            border-radius: var(--radius-md);
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            background: var(--color-bg-light);
+            position: relative;
+        }
+
+        .mode-card-improved:hover {
+            border-color: var(--color-accent);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .mode-card-improved.selected {
+            border-color: var(--color-secondary);
+            background: rgba(0, 126, 140, 0.08);
+            box-shadow: 0 0 0 3px rgba(0, 126, 140, 0.15);
+        }
+
+        .mode-card-improved input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .mode-card-icon {
+            font-size: 2em;
+            margin-bottom: var(--space-sm);
+        }
+
+        .mode-card-title {
+            font-weight: 600;
+            font-size: 1.1em;
+            color: var(--color-primary);
+            margin-bottom: var(--space-sm);
+        }
+
+        .mode-card-description {
+            font-size: 0.95em;
+            color: var(--color-text-muted);
+        }
+
+        /* Selected package info display */
+        .selected-package-info {
+            margin-top: var(--space-md);
+            padding: var(--space-md);
+            background: rgba(251,173,63,0.2);
+            border-radius: var(--radius-sm);
+            font-size: 0.9em;
+            color: rgba(255,255,255,0.95);
+        }
+
+        /* Custom entry form */
+        .custom-entry-form {
+            display: none;
+        }
+
+        .custom-entry-form.visible {
+            display: block;
+        }
+
+        .custom-entry-input {
+            width: 100%;
+            padding: var(--space-md);
+            border-radius: var(--radius-sm);
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.95);
+            margin-bottom: var(--space-sm);
+            font-size: 1em;
+        }
+
+        .custom-entry-actions {
+            display: flex;
+            gap: var(--space-sm);
+            align-items: center;
+            margin-bottom: var(--space-sm);
+        }
+
+        .parse-button {
+            padding: var(--space-sm) var(--space-md);
+            background: var(--color-gold);
+            color: #333;
+            border: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .parse-button:hover {
+            background: var(--color-gold-dark);
+            transform: translateY(-1px);
+        }
+
+        .parse-button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .manual-entry-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--space-sm);
+            margin-top: var(--space-sm);
+        }
+
+        .manual-entry-input {
+            padding: var(--space-sm);
+            border-radius: var(--radius-sm);
+            border: 2px solid rgba(255,255,255,0.3);
+            background: rgba(255,255,255,0.95);
+            font-size: 0.95em;
+        }
+
+        /* Results display improvements */
+        .calc-result {
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .result-item {
+            animation: scaleIn 0.3s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .result-item:nth-child(1) { animation-delay: 0.1s; }
+        .result-item:nth-child(2) { animation-delay: 0.2s; }
+        .result-item:nth-child(3) { animation-delay: 0.3s; }
+        .result-item:nth-child(4) { animation-delay: 0.4s; }
+        .result-item:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Download button component */
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-sm);
+            padding: var(--space-md) var(--space-lg);
+            background: var(--color-warning);
+            color: white;
+            text-decoration: none;
+            border-radius: var(--radius-sm);
+            font-weight: 600;
+            transition: all var(--transition-normal);
+            font-size: 1.05em;
+            box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);
+        }
+
+        .download-btn:hover {
+            background: #b86505;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(217, 119, 6, 0.4);
+        }
+
+        /* Advanced options details */
+        .advanced-options {
+            margin-top: var(--space-lg);
+            padding: var(--space-md);
+            background: rgba(255,255,255,0.1);
+            border-radius: var(--radius-sm);
+        }
+
+        .advanced-options summary {
+            cursor: pointer;
+            font-weight: 600;
+            color: rgba(255,255,255,0.95);
+            font-size: 1em;
+            padding: var(--space-sm) 0;
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+        }
+
+        .advanced-options summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .advanced-options summary::before {
+            content: '▶';
+            font-size: 0.75em;
+            transition: transform var(--transition-fast);
+        }
+
+        .advanced-options[open] summary::before {
+            transform: rotate(90deg);
+        }
+
+        .advanced-options-content {
+            padding-top: var(--space-md);
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        /* Help tooltip styles */
+        .help-tip {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 18px;
+            height: 18px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            font-size: 0.75em;
+            font-weight: 700;
+            cursor: help;
+            margin-left: var(--space-xs);
+        }
+
+        .help-tip:hover {
+            background: rgba(255,255,255,0.3);
+        }
     </style>
 </head>
 <body>
+    <!-- Accessibility: Skip to main content -->
+    <a href="#calculator-guide" class="skip-link">Skip to main content</a>
+
+    <!-- ARIA live region for screen reader announcements -->
+    <div id="announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
+
     <div class="container">
-        <div class="header">
+        <header class="header" role="banner">
             <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 500px; width: 100%; height: auto; margin-bottom: 20px;">
             <p>Interactive Group Event Planning Guide</p>
-        </div>
+        </header>
 
         <div class="nav-menu">
             <h3>Quick Navigation</h3>
@@ -1565,28 +2146,28 @@
         </div>
 
         <!-- Important Shopping Notes Banner -->
-        <div style="background: linear-gradient(135deg, #fffbf0 0%, #fef3e2 100%); border: 3px solid #f4a261; border-radius: 16px; padding: 24px 28px; margin-bottom: 28px; box-shadow: 0 6px 20px rgba(244, 162, 97, 0.25);">
-            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
-                <span style="font-size: 2em;">📝</span>
-                <h3 style="color: #d97706; font-size: 1.4em; font-weight: 700; margin: 0;">Important Shopping Notes</h3>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 20px;">
-                <div style="display: flex; gap: 18px; align-items: start; padding: 16px; background: rgba(255,255,255,0.6); border-radius: 12px; border-left: 4px solid #f4a261;">
-                    <span style="font-size: 2.2em; flex-shrink: 0;">🥩</span>
-                    <div style="flex: 1;">
-                        <strong style="color: #333; font-size: 1.15em; display: block; margin-bottom: 6px;">Meat: Buy pre-packaged only</strong>
-                        <span style="font-size: 1em; color: #666; line-height: 1.5;">Don't get meat sliced at the deli counter—pre-packaged is safer and easier to work with.</span>
+        <aside class="info-banner mb-lg" role="note" aria-label="Important shopping notes">
+            <div class="info-banner-icon" aria-hidden="true">📝</div>
+            <div class="info-banner-content">
+                <h3 class="info-banner-title">Important Shopping Notes</h3>
+                <div class="flex flex-col gap-lg">
+                    <div class="note-card">
+                        <span class="note-card-icon" aria-hidden="true">🥩</span>
+                        <div class="note-card-content">
+                            <div class="note-card-title">Meat: Buy pre-packaged only</div>
+                            <div class="note-card-text">Don't get meat sliced at the deli counter—pre-packaged is safer and easier to work with.</div>
+                        </div>
+                    </div>
+                    <div class="note-card">
+                        <span class="note-card-icon" aria-hidden="true">🧀</span>
+                        <div class="note-card-content">
+                            <div class="note-card-title">Cheese: Avoid individually wrapped slices</div>
+                            <div class="note-card-text">Individually wrapped American cheese slices do not hold up well and are so much work to unwrap during sandwich-making. Get deli-style sliced cheese—the kind sold together in one pack, not individually wrapped processed singles.</div>
+                        </div>
                     </div>
                 </div>
-                <div style="display: flex; gap: 18px; align-items: start; padding: 16px; background: rgba(255,255,255,0.6); border-radius: 12px; border-left: 4px solid #f4a261;">
-                    <span style="font-size: 2.2em; flex-shrink: 0;">🧀</span>
-                    <div style="flex: 1;">
-                        <strong style="color: #333; font-size: 1.15em; display: block; margin-bottom: 6px;">Cheese: Avoid individually wrapped slices</strong>
-                        <span style="font-size: 1em; color: #666; line-height: 1.5;">Individually wrapped American cheese slices do not hold up well and are so much work to unwrap during sandwich-making. Get deli-style sliced cheese—the kind sold together in one pack, not individually wrapped processed singles.</span>
-                    </div>
-                </div>
             </div>
-        </div>
+        </aside>
 
         <!-- Quick Access Link for Calculator -->
         <a href="#calculator" class="quick-access-link">
@@ -1639,23 +2220,24 @@
             <p style="color: #64748b; margin-bottom: 25px; font-size: 1.1em;">Calculate costs or quantities for your sandwich project.</p>
 
             <!-- Mode Selection -->
-            <div style="background: rgba(255,255,255,0.95); border: 2px solid #47B3CB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+            <fieldset class="mode-selection-container" style="background: rgba(255,255,255,0.95); border: 2px solid #47B3CB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                <legend class="sr-only">Choose your planning mode</legend>
                 <h3 style="color: #1a4d66; margin-bottom: 20px; font-size: 1.3em; text-align: center;">Choose Your Planning Mode</h3>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; max-width: 800px; margin-left: auto; margin-right: auto;">
-                    <label class="mode-card" style="display: flex; flex-direction: column; padding: 20px; border: 3px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: #f8f9fa;" id="mode-card-sandwiches">
-                        <input type="radio" name="calcMode" value="sandwiches" checked onchange="updateCalculatorMode()" style="display: none;">
-                        <div style="font-size: 2em; margin-bottom: 10px;">🎯</div>
-                        <div style="font-weight: 600; font-size: 1.1em; color: #236383; margin-bottom: 8px;">Cost for Target Sandwiches</div>
-                        <div style="font-size: 0.95em; color: #64748b;">We need X sandwiches; what will it cost?</div>
-                        </label>
-                    <label class="mode-card" style="display: flex; flex-direction: column; padding: 20px; border: 3px solid #e0e0e0; border-radius: 12px; cursor: pointer; transition: all 0.3s ease; background: #f8f9fa;" id="mode-card-budget">
-                        <input type="radio" name="calcMode" value="budget" onchange="updateCalculatorMode()" style="display: none;">
-                        <div style="font-size: 2em; margin-bottom: 10px;">💰</div>
-                        <div style="font-weight: 600; font-size: 1.1em; color: #236383; margin-bottom: 8px;">Sandwiches for Target Budget</div>
-                        <div style="font-size: 0.95em; color: #64748b;">We have $Y; how many sandwiches can we make?</div>
-                        </label>
-                    </div>
-                    </div>
+                <div class="mode-selection" role="radiogroup" aria-label="Planning mode selection">
+                    <label class="mode-card-improved" id="mode-card-sandwiches" tabindex="0" role="radio" aria-checked="true">
+                        <input type="radio" name="calcMode" value="sandwiches" checked onchange="updateCalculatorMode()">
+                        <div class="mode-card-icon" aria-hidden="true">🎯</div>
+                        <div class="mode-card-title">Cost for Target Sandwiches</div>
+                        <div class="mode-card-description">We need X sandwiches; what will it cost?</div>
+                    </label>
+                    <label class="mode-card-improved" id="mode-card-budget" tabindex="0" role="radio" aria-checked="false">
+                        <input type="radio" name="calcMode" value="budget" onchange="updateCalculatorMode()">
+                        <div class="mode-card-icon" aria-hidden="true">💰</div>
+                        <div class="mode-card-title">Sandwiches for Target Budget</div>
+                        <div class="mode-card-description">We have $Y; how many sandwiches can we make?</div>
+                    </label>
+                </div>
+            </fieldset>
 
             <div class="shopping-calculator" id="calculatorForm">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
@@ -2556,6 +3138,151 @@
         // NEW SIMPLIFIED CALCULATOR FUNCTIONS
         // ============================================
 
+        // ============================================
+        // UI/UX POLISH: Form Feedback Utilities
+        // ============================================
+
+        /**
+         * Show inline feedback message instead of alert
+         * @param {string} containerId - ID of container to append feedback to
+         * @param {string} message - Message to display
+         * @param {string} type - 'success', 'error', 'warning', or 'info'
+         * @param {number} duration - Auto-hide duration in ms (0 = permanent)
+         */
+        function showFeedback(containerId, message, type = 'info', duration = 5000) {
+            const container = document.getElementById(containerId);
+            if (!container) return;
+
+            // Remove existing feedback in this container
+            const existing = container.querySelector('.form-feedback');
+            if (existing) existing.remove();
+
+            // Create feedback element
+            const feedback = document.createElement('div');
+            feedback.className = `form-feedback ${type}`;
+            feedback.setAttribute('role', 'alert');
+            feedback.setAttribute('aria-live', 'polite');
+
+            const icons = {
+                success: '✓',
+                error: '✕',
+                warning: '⚠',
+                info: 'ℹ'
+            };
+
+            feedback.innerHTML = `<span aria-hidden="true">${icons[type]}</span> ${message}`;
+            container.appendChild(feedback);
+
+            // Announce to screen readers
+            announceToScreenReader(message);
+
+            // Auto-hide if duration specified
+            if (duration > 0) {
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                    feedback.style.transform = 'translateY(-8px)';
+                    setTimeout(() => feedback.remove(), 200);
+                }, duration);
+            }
+
+            return feedback;
+        }
+
+        /**
+         * Show feedback near a specific element
+         * @param {HTMLElement} element - Element to show feedback near
+         * @param {string} message - Message to display
+         * @param {string} type - 'success', 'error', 'warning', or 'info'
+         */
+        function showInlineFeedback(element, message, type = 'info', duration = 5000) {
+            const parent = element.closest('.calc-input-group') || element.parentElement;
+            if (!parent) return;
+
+            // Create a unique container for this feedback
+            let feedbackContainer = parent.querySelector('.feedback-container');
+            if (!feedbackContainer) {
+                feedbackContainer = document.createElement('div');
+                feedbackContainer.className = 'feedback-container';
+                parent.appendChild(feedbackContainer);
+            }
+
+            feedbackContainer.id = 'feedback-' + Date.now();
+            return showFeedback(feedbackContainer.id, message, type, duration);
+        }
+
+        /**
+         * Announce message to screen readers via live region
+         * @param {string} message - Message to announce
+         */
+        function announceToScreenReader(message) {
+            const announcer = document.getElementById('announcements');
+            if (announcer) {
+                announcer.textContent = message;
+                // Clear after announcement
+                setTimeout(() => { announcer.textContent = ''; }, 1000);
+            }
+        }
+
+        /**
+         * Set loading state on a button
+         * @param {HTMLElement} button - Button element
+         * @param {boolean} loading - Whether button is loading
+         * @param {string} loadingText - Optional text to show while loading
+         */
+        function setButtonLoading(button, loading, loadingText = 'Processing...') {
+            if (loading) {
+                button.dataset.originalText = button.textContent;
+                button.classList.add('btn-loading');
+                button.disabled = true;
+                button.setAttribute('aria-busy', 'true');
+            } else {
+                button.classList.remove('btn-loading');
+                button.disabled = false;
+                button.textContent = button.dataset.originalText || button.textContent;
+                button.removeAttribute('aria-busy');
+            }
+        }
+
+        // Initialize mode card selection on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial selected state on mode cards
+            updateModeCardSelection();
+
+            // Add keyboard support for mode cards
+            document.querySelectorAll('.mode-card-improved').forEach(card => {
+                card.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        const radio = this.querySelector('input[type="radio"]');
+                        if (radio) {
+                            radio.checked = true;
+                            updateCalculatorMode();
+                        }
+                    }
+                });
+            });
+        });
+
+        function updateModeCardSelection() {
+            const mode = document.querySelector('input[name="calcMode"]:checked')?.value;
+            const sandwichesCard = document.getElementById('mode-card-sandwiches');
+            const budgetCard = document.getElementById('mode-card-budget');
+
+            if (sandwichesCard && budgetCard) {
+                if (mode === 'sandwiches') {
+                    sandwichesCard.classList.add('selected');
+                    sandwichesCard.setAttribute('aria-checked', 'true');
+                    budgetCard.classList.remove('selected');
+                    budgetCard.setAttribute('aria-checked', 'false');
+                } else {
+                    budgetCard.classList.add('selected');
+                    budgetCard.setAttribute('aria-checked', 'true');
+                    sandwichesCard.classList.remove('selected');
+                    sandwichesCard.setAttribute('aria-checked', 'false');
+                }
+            }
+        }
+
         // Package data for suggested packages
         const packageData = {
             meat: {
@@ -2599,26 +3326,32 @@
             const targetLabel = document.getElementById('targetLabel');
             const targetHint = document.getElementById('targetHint');
             const calculatorTitle = document.getElementById('calculatorTitle');
-            const modeCardSandwiches = document.getElementById('mode-card-sandwiches');
-            const modeCardBudget = document.getElementById('mode-card-budget');
+            const targetInput = document.getElementById('targetValue');
 
             if (mode === 'sandwiches') {
                 targetLabel.textContent = 'Number of sandwiches';
                 targetHint.textContent = 'Enter the number of sandwiches you want to make';
                 calculatorTitle.textContent = 'Calculate Cost for Your Sandwiches';
-                modeCardSandwiches.style.borderColor = '#47B3CB';
-                modeCardSandwiches.style.background = '#e8f5f9';
-                modeCardBudget.style.borderColor = '#e0e0e0';
-                modeCardBudget.style.background = '#f8f9fa';
+                if (targetInput) {
+                    targetInput.placeholder = 'e.g., 100';
+                    targetInput.setAttribute('aria-label', 'Number of sandwiches');
+                }
             } else {
                 targetLabel.textContent = 'Budget ($)';
                 targetHint.textContent = 'Enter the total amount you want to spend';
                 calculatorTitle.textContent = 'Calculate Sandwiches for Your Budget';
-                modeCardBudget.style.borderColor = '#47B3CB';
-                modeCardBudget.style.background = '#e8f5f9';
-                modeCardSandwiches.style.borderColor = '#e0e0e0';
-                modeCardSandwiches.style.background = '#f8f9fa';
+                if (targetInput) {
+                    targetInput.placeholder = 'e.g., 500';
+                    targetInput.setAttribute('aria-label', 'Budget in dollars');
+                }
             }
+
+            // Update mode card visual state
+            updateModeCardSelection();
+
+            // Announce mode change for screen readers
+            announceToScreenReader(`Calculator mode changed to ${mode === 'sandwiches' ? 'cost calculation' : 'budget calculation'}`);
+
             validateInputs();
         }
 
@@ -2704,18 +3437,17 @@
 
         // Parse package text using GPT-4 API
         async function parseMeatPackage() {
-            const text = document.getElementById('meatCustomText').value.trim();
+            const textInput = document.getElementById('meatCustomText');
+            const text = textInput.value.trim();
             const parseButton = event.target;
-            
+
             if (!text) {
-                alert('Please enter a package description.');
+                showInlineFeedback(textInput, 'Please enter a package description.', 'warning');
                 return;
             }
 
-            // Show loading state
-            const originalText = parseButton.textContent;
-            parseButton.disabled = true;
-            parseButton.textContent = 'Parsing...';
+            // Show loading state with spinner
+            setButtonLoading(parseButton, true);
 
             try {
                 const response = await fetch(API_ENDPOINT, {
@@ -2737,7 +3469,7 @@
 
                 if (result.success && result.data) {
                     const data = result.data;
-                    
+
                     // Populate fields based on extracted data
                     if (data.weight_oz !== null) {
                         document.getElementById('meatWeightOz').value = data.weight_oz;
@@ -2746,34 +3478,35 @@
                         document.getElementById('meatPrice').value = data.price_usd;
                     }
 
-                    // Show success message with confidence
+                    // Show success message with confidence (inline)
                     const confidence = (data.confidence * 100).toFixed(0);
-                    alert(`Package info extracted! (${confidence}% confidence)\n\n${data.extracted_text}\n\nPlease verify the values and adjust if needed.`);
+                    showInlineFeedback(textInput, `Package info extracted (${confidence}% confidence). Please verify values.`, 'success', 8000);
+
+                    // Trigger validation
+                    validateInputs();
                 } else {
                     throw new Error(result.error || 'Failed to extract package information');
                 }
             } catch (error) {
                 console.error('Error parsing package:', error);
-                alert(`Could not parse package automatically: ${error.message}\n\nPlease enter weight and price manually.`);
+                showInlineFeedback(textInput, `Could not parse automatically. Please enter values manually.`, 'error', 8000);
             } finally {
-                parseButton.disabled = false;
-                parseButton.textContent = originalText;
+                setButtonLoading(parseButton, false);
             }
         }
 
         async function parseCheesePackage() {
-            const text = document.getElementById('cheeseCustomText').value.trim();
+            const textInput = document.getElementById('cheeseCustomText');
+            const text = textInput.value.trim();
             const parseButton = event.target;
-            
+
             if (!text) {
-                alert('Please enter a package description.');
+                showInlineFeedback(textInput, 'Please enter a package description.', 'warning');
                 return;
             }
 
-            // Show loading state
-            const originalText = parseButton.textContent;
-            parseButton.disabled = true;
-            parseButton.textContent = 'Parsing...';
+            // Show loading state with spinner
+            setButtonLoading(parseButton, true);
 
             try {
                 const response = await fetch(API_ENDPOINT, {
@@ -2795,7 +3528,7 @@
 
                 if (result.success && result.data) {
                     const data = result.data;
-                    
+
                     // Populate fields based on extracted data
                     if (data.slices !== null) {
                         document.getElementById('cheeseSlices').value = data.slices;
@@ -2804,34 +3537,35 @@
                         document.getElementById('cheesePrice').value = data.price_usd;
                     }
 
-                    // Show success message with confidence
+                    // Show success message with confidence (inline)
                     const confidence = (data.confidence * 100).toFixed(0);
-                    alert(`Package info extracted! (${confidence}% confidence)\n\n${data.extracted_text}\n\nPlease verify the values and adjust if needed.`);
+                    showInlineFeedback(textInput, `Package info extracted (${confidence}% confidence). Please verify values.`, 'success', 8000);
+
+                    // Trigger validation
+                    validateInputs();
                 } else {
                     throw new Error(result.error || 'Failed to extract package information');
                 }
             } catch (error) {
                 console.error('Error parsing package:', error);
-                alert(`Could not parse package automatically: ${error.message}\n\nPlease enter slices and price manually.`);
+                showInlineFeedback(textInput, `Could not parse automatically. Please enter values manually.`, 'error', 8000);
             } finally {
-                parseButton.disabled = false;
-                parseButton.textContent = originalText;
+                setButtonLoading(parseButton, false);
             }
         }
 
         async function parseBreadPackage() {
-            const text = document.getElementById('breadCustomText').value.trim();
+            const textInput = document.getElementById('breadCustomText');
+            const text = textInput.value.trim();
             const parseButton = event.target;
-            
+
             if (!text) {
-                alert('Please enter a package description.');
+                showInlineFeedback(textInput, 'Please enter a package description.', 'warning');
                 return;
             }
 
-            // Show loading state
-            const originalText = parseButton.textContent;
-            parseButton.disabled = true;
-            parseButton.textContent = 'Parsing...';
+            // Show loading state with spinner
+            setButtonLoading(parseButton, true);
 
             try {
                 const response = await fetch(API_ENDPOINT, {
@@ -2853,7 +3587,7 @@
 
                 if (result.success && result.data) {
                     const data = result.data;
-                    
+
                     // Populate fields based on extracted data
                     if (data.sandwiches_per_package !== null) {
                         document.getElementById('breadSandwiches').value = data.sandwiches_per_package;
@@ -2862,18 +3596,20 @@
                         document.getElementById('breadPrice').value = data.price_usd;
                     }
 
-                    // Show success message with confidence
+                    // Show success message with confidence (inline)
                     const confidence = (data.confidence * 100).toFixed(0);
-                    alert(`Package info extracted! (${confidence}% confidence)\n\n${data.extracted_text}\n\nPlease verify the values and adjust if needed.`);
+                    showInlineFeedback(textInput, `Package info extracted (${confidence}% confidence). Please verify values.`, 'success', 8000);
+
+                    // Trigger validation
+                    validateInputs();
                 } else {
                     throw new Error(result.error || 'Failed to extract package information');
                 }
             } catch (error) {
                 console.error('Error parsing package:', error);
-                alert(`Could not parse package automatically: ${error.message}\n\nPlease enter sandwiches per loaf and price manually.`);
+                showInlineFeedback(textInput, `Could not parse automatically. Please enter values manually.`, 'error', 8000);
             } finally {
-                parseButton.disabled = false;
-                parseButton.textContent = originalText;
+                setButtonLoading(parseButton, false);
             }
         }
 
@@ -2909,14 +3645,16 @@
             const mode = document.querySelector('input[name="calcMode"]:checked').value;
             const targetValue = parseFloat(document.getElementById('targetValue').value);
             const meatOzPerSandwich = parseFloat(document.getElementById('meatOzPerSandwich').value) || 2.5;
-            
+            const calcButton = document.getElementById('calculateBtn');
+
             // Get package info for each ingredient
             const meatPkg = getMeatPackageInfo();
             const cheesePkg = getCheesePackageInfo();
             const breadPkg = getBreadPackageInfo();
-            
+
             if (!meatPkg || !cheesePkg || !breadPkg) {
-                alert('Please complete all ingredient selections.');
+                showFeedback('calcResult', 'Please complete all ingredient selections (meat, cheese, and bread).', 'warning');
+                document.getElementById('calcResult').style.display = 'block';
                 return;
             }
             
@@ -3051,7 +3789,15 @@
         function displayResults(result) {
             const resultDiv = document.getElementById('calcResult');
             resultDiv.style.display = 'block';
-            
+            resultDiv.setAttribute('role', 'region');
+            resultDiv.setAttribute('aria-label', 'Calculation results');
+
+            // Announce results to screen readers
+            const announcementText = result.mode === 'cost'
+                ? `Calculation complete. ${result.targetSandwiches} sandwiches will cost approximately $${result.totalCost.toFixed(2)}`
+                : `Calculation complete. With $${result.budget}, you can make ${result.maxSandwiches} sandwiches`;
+            announceToScreenReader(announcementText);
+
             let html = '<div class="result-grid">';
             
             if (result.mode === 'cost') {
