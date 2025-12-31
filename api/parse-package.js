@@ -84,8 +84,7 @@ Return the JSON object with the extracted information.`;
                     { role: 'user', content: userPrompt }
                 ],
                 temperature: 0.1, // Low temperature for consistent extraction
-                max_tokens: 200,
-                response_format: { type: 'json_object' } // Force JSON response
+                max_tokens: 200
             })
         });
 
@@ -153,7 +152,18 @@ module.exports = async (req, res) => {
     }
 
     try {
-        const { text, ingredientType } = req.body;
+        // Parse request body - Vercel may not auto-parse in some cases
+        let body = req.body;
+        if (typeof body === 'string' || !body) {
+            try {
+                body = JSON.parse(req.body || '{}');
+            } catch (e) {
+                // If body is already parsed or empty, use as-is
+                body = req.body || {};
+            }
+        }
+
+        const { text, ingredientType } = body;
 
         if (!text || !ingredientType) {
             res.status(400).json({ error: 'Missing required fields: text and ingredientType' });
