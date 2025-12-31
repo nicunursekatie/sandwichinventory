@@ -2383,36 +2383,36 @@
 
             <!-- Mode Selection -->
             <fieldset class="mode-selection-container" style="background: rgba(255,255,255,0.95); border: 2px solid #47B3CB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
-                <legend class="sr-only">Choose your planning mode</legend>
-                <h3 style="color: #1a4d66; margin-bottom: 20px; font-size: 1.3em; text-align: center;">Choose Your Planning Mode</h3>
-                <div class="mode-selection" role="radiogroup" aria-label="Planning mode selection">
+                <legend class="sr-only">What do you want to calculate?</legend>
+                <h3 style="color: #1a4d66; margin-bottom: 20px; font-size: 1.3em; text-align: center;">What do you want to calculate?</h3>
+                <div class="mode-selection" role="radiogroup" aria-label="Calculation type">
                     <label class="mode-card-improved" id="mode-card-sandwiches" tabindex="0" role="radio" aria-checked="true">
                         <input type="radio" name="calcMode" value="sandwiches" checked onchange="updateCalculatorMode()">
-                        <div class="mode-card-icon" aria-hidden="true">🎯</div>
-                        <div class="mode-card-title">Cost for Target Sandwiches</div>
-                        <div class="mode-card-description">We need X sandwiches; what will it cost?</div>
+                        <div class="mode-card-icon" aria-hidden="true">🥪</div>
+                        <div class="mode-card-title">I know how many sandwiches I need</div>
+                        <div class="mode-card-description">Tell me what it will cost</div>
                     </label>
                     <label class="mode-card-improved" id="mode-card-budget" tabindex="0" role="radio" aria-checked="false">
                         <input type="radio" name="calcMode" value="budget" onchange="updateCalculatorMode()">
-                        <div class="mode-card-icon" aria-hidden="true">💰</div>
-                        <div class="mode-card-title">Sandwiches for Target Budget</div>
-                        <div class="mode-card-description">We have $Y; how many sandwiches can we make?</div>
+                        <div class="mode-card-icon" aria-hidden="true">💵</div>
+                        <div class="mode-card-title">I have a budget to spend</div>
+                        <div class="mode-card-description">Tell me how many sandwiches I can make</div>
                     </label>
                 </div>
             </fieldset>
 
             <div class="shopping-calculator" id="calculatorForm">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                    <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18); margin: 0;" id="calculatorTitle">Calculate Cost for Your Sandwiches</h3>
+                    <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18); margin: 0;" id="calculatorTitle">Enter Your Sandwich Details</h3>
                     <a href="#pricing-info" style="font-size: 0.9em; color: rgba(255,255,255,0.9); text-decoration: underline; padding: 6px 12px; background: rgba(255,255,255,0.15); border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)';" onmouseout="this.style.background='rgba(255,255,255,0.15)';">📊 View Pricing Info</a>
                     </div>
                     
                 <div class="calc-form">
                     <!-- Target Input (sandwiches or budget) -->
                     <div class="calc-input-group" id="targetInputGroup">
-                        <label for="targetValue" id="targetLabel">Number of sandwiches</label>
+                        <label for="targetValue" id="targetLabel">How many sandwiches do you need?</label>
                         <input type="number" id="targetValue" min="1" max="5000" placeholder="e.g., 100" oninput="validateInputs()">
-                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;" id="targetHint">Enter the number of sandwiches you want to make</span>
+                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;" id="targetHint">We'll calculate the cost and shopping list for you</span>
                     </div>
                     
                     <!-- Meat Selection -->
@@ -3599,17 +3599,17 @@
             const targetInput = document.getElementById('targetValue');
 
             if (mode === 'sandwiches') {
-                targetLabel.textContent = 'Number of sandwiches';
-                targetHint.textContent = 'Enter the number of sandwiches you want to make';
-                calculatorTitle.textContent = 'Calculate Cost for Your Sandwiches';
+                targetLabel.textContent = 'How many sandwiches do you need?';
+                targetHint.textContent = 'We\'ll calculate the cost and shopping list for you';
+                calculatorTitle.textContent = 'Enter Your Sandwich Details';
                 if (targetInput) {
                     targetInput.placeholder = 'e.g., 100';
-                    targetInput.setAttribute('aria-label', 'Number of sandwiches');
+                    targetInput.setAttribute('aria-label', 'Number of sandwiches needed');
                 }
             } else {
-                targetLabel.textContent = 'Budget ($)';
-                targetHint.textContent = 'Enter the total amount you want to spend';
-                calculatorTitle.textContent = 'Calculate Sandwiches for Your Budget';
+                targetLabel.textContent = 'What\'s your budget?';
+                targetHint.textContent = 'We\'ll tell you how many sandwiches you can make';
+                calculatorTitle.textContent = 'Enter Your Budget';
                 if (targetInput) {
                     targetInput.placeholder = 'e.g., 500';
                     targetInput.setAttribute('aria-label', 'Budget in dollars');
@@ -3620,7 +3620,7 @@
             updateModeCardSelection();
 
             // Announce mode change for screen readers
-            announceToScreenReader(`Calculator mode changed to ${mode === 'sandwiches' ? 'cost calculation' : 'budget calculation'}`);
+            announceToScreenReader(`Now calculating ${mode === 'sandwiches' ? 'cost for sandwiches' : 'sandwiches for budget'}`);
 
             validateInputs();
         }
