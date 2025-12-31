@@ -795,6 +795,58 @@
             background: white;
             padding: 10px;
         }
+
+        /* Meat type tabs */
+        .meat-type-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .meat-type-tab {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.9);
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .meat-type-tab:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .meat-type-tab.active {
+            background: rgba(255,255,255,0.95);
+            color: #236383;
+            border-color: #FBAD3F;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        .meat-type-tab .tab-icon {
+            font-size: 1.2em;
+        }
+
+        @media (max-width: 500px) {
+            .meat-type-tabs {
+                flex-wrap: wrap;
+            }
+            .meat-type-tab {
+                flex: 1 1 calc(50% - 4px);
+                padding: 10px 12px;
+                font-size: 0.9em;
+            }
+        }
+
         .section h2, .shopping-calculator h3 {
             color: #236383;
             text-shadow: none;
@@ -2434,34 +2486,64 @@
                     
                     <!-- Meat Selection -->
                     <div class="calc-input-group">
-                        <label for="meatSelection">Meat</label>
-                        <div style="display: flex; flex-direction: column; gap: 12px;">
-                            <select id="meatSelection" onchange="handleMeatSelection()" style="margin-bottom: 10px;">
-                                <option value="">Choose from suggested packages (optional)</option>
-                                <option value="kroger-turkey-family">Kroger Turkey Family Size (1 lb, $4.39) - Best Value</option>
-                                <option value="publix-turkey">Publix Turkey Breast (16 oz, $7.07)</option>
-                                <option value="ham">Kirkland Ham (2-pack, 48 slices, $9.89)</option>
-                                <option value="kroger-chicken-thin">Kroger Chicken Thin (9 oz, $3.50)</option>
-                                <option value="custom">Enter custom package →</option>
+                        <label>Meat</label>
+
+                        <!-- Meat Type Tabs -->
+                        <div class="meat-type-tabs" role="tablist" aria-label="Select meat type">
+                            <button type="button" class="meat-type-tab active" data-meat-type="turkey" onclick="selectMeatType('turkey')" role="tab" aria-selected="true">
+                                <span class="tab-icon">🦃</span> Turkey
+                            </button>
+                            <button type="button" class="meat-type-tab" data-meat-type="ham" onclick="selectMeatType('ham')" role="tab" aria-selected="false">
+                                <span class="tab-icon">🐷</span> Ham
+                            </button>
+                            <button type="button" class="meat-type-tab" data-meat-type="chicken" onclick="selectMeatType('chicken')" role="tab" aria-selected="false">
+                                <span class="tab-icon">🐔</span> Chicken
+                            </button>
+                        </div>
+
+                        <!-- Brand Dropdown (filtered by meat type) -->
+                        <select id="meatSelection" onchange="handleMeatSelection()">
+                            <option value="">Select a brand...</option>
+                            <!-- Turkey options (shown by default) -->
+                            <option value="kroger-turkey-family" data-type="turkey">Kroger Turkey Family Size (16 oz) - $4.39 ⭐ Best Value</option>
+                            <option value="kroger-turkey-thin" data-type="turkey">Kroger Turkey Thin Sliced (9 oz) - $3.99</option>
+                            <option value="publix-turkey" data-type="turkey">Publix Turkey Breast (16 oz) - $7.07</option>
+                            <option value="kirkland-turkey" data-type="turkey">Kirkland Turkey (2 lb) - $13.99</option>
+                            <option value="land-o-frost-turkey" data-type="turkey">Land O'Frost Turkey (16 oz) - $9.53</option>
+                            <option value="hillshire-turkey" data-type="turkey">Hillshire Farm Turkey (9 oz) - $6.07</option>
+                            <option value="oscar-mayer-turkey" data-type="turkey">Oscar Mayer Turkey (16 oz) - $7.99</option>
+                            <!-- Ham options (hidden by default) -->
+                            <option value="kirkland-ham" data-type="ham" style="display: none;">Kirkland Ham (2 lb, 48 slices) - $9.89</option>
+                            <option value="kroger-ham" data-type="ham" style="display: none;">Kroger Ham (16 oz) - $4.99</option>
+                            <option value="hillshire-ham" data-type="ham" style="display: none;">Hillshire Farm Ham (9 oz) - $5.49</option>
+                            <!-- Chicken options (hidden by default) -->
+                            <option value="kroger-chicken-thin" data-type="chicken" style="display: none;">Kroger Chicken Thin (9 oz) - $3.50</option>
+                            <option value="oscar-mayer-chicken-rotisserie" data-type="chicken" style="display: none;">Oscar Mayer Rotisserie Chicken (16 oz) - $7.99</option>
+                            <option value="oscar-mayer-chicken-blackened" data-type="chicken" style="display: none;">Oscar Mayer Blackened Chicken (8 oz) - $4.49</option>
+                            <!-- Custom option always visible -->
+                            <option value="custom">Enter custom package →</option>
                         </select>
-                            <div id="meatCustomEntry" style="display: none;">
-                                <input type="text" id="meatCustomText" placeholder="Paste package description (e.g., 'Publix turkey breast 16 oz $7.99')" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); margin-bottom: 10px;">
-                                <div style="display: flex; gap: 10px; align-items: center;">
-                                    <button onclick="parseMeatPackage()" style="padding: 8px 16px; background: #FBAD3F; color: #333; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Parse Package</button>
-                                    <span style="font-size: 0.9em; color: rgba(255,255,255,0.8);">or enter manually:</span>
-                    </div>
-                                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                                    <input type="number" id="meatWeightOz" placeholder="Weight (oz)" step="0.1" min="1" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
-                                    <input type="number" id="meatPrice" placeholder="Price ($)" step="0.01" min="0" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
-                    </div>
-                </div>
-                </div>
+
+                        <!-- Custom Entry (hidden by default) -->
+                        <div id="meatCustomEntry" style="display: none; margin-top: 12px;">
+                            <input type="text" id="meatCustomText" placeholder="Paste package description (e.g., 'Publix turkey breast 16 oz $7.99')" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); margin-bottom: 10px;">
+                            <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
+                                <button onclick="parseMeatPackage()" style="padding: 8px 16px; background: #FBAD3F; color: #333; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Parse Package</button>
+                                <span style="font-size: 0.9em; color: rgba(255,255,255,0.8);">or enter manually:</span>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                                <input type="number" id="meatWeightOz" placeholder="Weight (oz)" step="0.1" min="1" oninput="validateInputs()" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
+                                <input type="number" id="meatPrice" placeholder="Price ($)" step="0.01" min="0" oninput="validateInputs()" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
+                            </div>
+                        </div>
+
+                        <!-- Selected package info -->
                         <div style="margin-top: 12px; padding: 12px; background: rgba(251,173,63,0.2); border-radius: 8px; display: none;" id="meatInfo">
                             <div style="font-size: 0.9em; color: rgba(255,255,255,0.95);">
                                 <strong>Selected:</strong> <span id="meatInfoText">-</span>
-            </div>
-            </div>
-            </div>
+                            </div>
+                        </div>
+                    </div>
             
                     <!-- Cheese Selection -->
                         <div class="calc-input-group">
@@ -3570,13 +3652,25 @@
             }
         }
 
-        // Package data for suggested packages
+        // Package data for suggested packages (expanded with all brands)
         const packageData = {
             meat: {
-                'kroger-turkey-family': { weightOz: 16, price: 4.39, name: 'Kroger Turkey Family Size' },
-                'publix-turkey': { weightOz: 16, price: 7.07, name: 'Publix Turkey Breast' },
-                'ham': { slices: 48, price: 9.89, name: 'Kirkland Ham' },
-                'kroger-chicken-thin': { weightOz: 9, price: 3.50, name: 'Kroger Chicken Thin' }
+                // Turkey options
+                'kroger-turkey-family': { weightOz: 16, price: 4.39, name: 'Kroger Turkey Family Size', type: 'turkey' },
+                'kroger-turkey-thin': { weightOz: 9, price: 3.99, name: 'Kroger Turkey Thin Sliced', type: 'turkey' },
+                'publix-turkey': { weightOz: 16, price: 7.07, name: 'Publix Turkey Breast', type: 'turkey' },
+                'kirkland-turkey': { weightOz: 32, price: 13.99, name: 'Kirkland Turkey', type: 'turkey' },
+                'land-o-frost-turkey': { weightOz: 16, price: 9.53, name: "Land O'Frost Turkey", type: 'turkey' },
+                'hillshire-turkey': { weightOz: 9, price: 6.07, name: 'Hillshire Farm Turkey', type: 'turkey' },
+                'oscar-mayer-turkey': { weightOz: 16, price: 7.99, name: 'Oscar Mayer Turkey', type: 'turkey' },
+                // Ham options
+                'kirkland-ham': { slices: 48, price: 9.89, name: 'Kirkland Ham', type: 'ham' },
+                'kroger-ham': { weightOz: 16, price: 4.99, name: 'Kroger Ham', type: 'ham' },
+                'hillshire-ham': { weightOz: 9, price: 5.49, name: 'Hillshire Farm Ham', type: 'ham' },
+                // Chicken options
+                'kroger-chicken-thin': { weightOz: 9, price: 3.50, name: 'Kroger Chicken Thin', type: 'chicken' },
+                'oscar-mayer-chicken-rotisserie': { weightOz: 16, price: 7.99, name: 'Oscar Mayer Rotisserie Chicken', type: 'chicken' },
+                'oscar-mayer-chicken-blackened': { weightOz: 8, price: 4.49, name: 'Oscar Mayer Blackened Chicken', type: 'chicken' }
             },
             cheese: {
                 'adams-reserve': { slices: 44, price: 7.70, name: 'Adams Reserve' },
@@ -3640,6 +3734,39 @@
             announceToScreenReader(`Now calculating ${mode === 'sandwiches' ? 'cost for sandwiches' : 'sandwiches for budget'}`);
 
             validateInputs();
+        }
+
+        // Current selected meat type
+        let currentMeatType = 'turkey';
+
+        // Select meat type (Turkey/Ham/Chicken tabs)
+        function selectMeatType(type) {
+            currentMeatType = type;
+
+            // Update tab active states
+            document.querySelectorAll('.meat-type-tab').forEach(tab => {
+                const isActive = tab.dataset.meatType === type;
+                tab.classList.toggle('active', isActive);
+                tab.setAttribute('aria-selected', isActive);
+            });
+
+            // Filter dropdown options by type
+            const select = document.getElementById('meatSelection');
+            const options = select.querySelectorAll('option[data-type]');
+
+            options.forEach(option => {
+                const optionType = option.dataset.type;
+                option.style.display = (optionType === type) ? '' : 'none';
+            });
+
+            // Reset selection when switching types
+            select.value = '';
+            selectedPackages.meat = null;
+            document.getElementById('meatInfo').style.display = 'none';
+            document.getElementById('meatCustomEntry').style.display = 'none';
+
+            validateInputs();
+            announceToScreenReader(`Showing ${type} options`);
         }
 
         // Handle meat selection
