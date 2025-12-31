@@ -277,7 +277,7 @@
             line-height: 1.4;
         }
         
-        .calc-input-group input, .calc-input-group select {
+        .calc-input-group input {
             padding: 14px 18px;
             border: none;
             border-radius: 10px;
@@ -292,10 +292,42 @@
             box-sizing: border-box;
             font-family: inherit;
         }
-        
-        .calc-input-group input:focus, .calc-input-group select:focus {
+
+        .calc-input-group select {
+            padding: 14px 18px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.05em;
+            font-weight: 400;
+            color: #2c3e50;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            width: 100%;
+            box-sizing: border-box;
+            font-family: inherit;
+            /* Custom dropdown arrow - background set in separate rule below */
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background: rgba(255,255,255,0.98) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23236383' d='M6 9L1 4h10z'/%3E%3C/svg%3E") no-repeat right 16px center;
+            background-size: 12px;
+            padding-right: 45px;
+            cursor: pointer;
+        }
+
+        .calc-input-group input:focus {
             outline: none;
             background: white;
+            border-color: #FBAD3F;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+        }
+
+        .calc-input-group select:focus {
+            outline: none;
+            background: white url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FBAD3F' d='M6 9L1 4h10z'/%3E%3C/svg%3E") no-repeat right 16px center;
+            background-size: 12px;
             border-color: #FBAD3F;
             transform: translateY(-1px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.12);
@@ -758,25 +790,10 @@
             /* This will be handled by JavaScript, but keeping for reference */
         }
         
-        /* Improve select dropdown styling */
-        .calc-input-group select {
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23236383' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 16px center;
-            background-size: 12px;
-            padding-right: 45px;
-            cursor: pointer;
-        }
-        
-        .calc-input-group select:focus {
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FBAD3F' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
-        }
-        
+        /* Select option styling */
         .calc-input-group select option {
-            background-image: none !important;
+            background: white;
+            padding: 10px;
         }
         .section h2, .shopping-calculator h3 {
             color: #236383;
