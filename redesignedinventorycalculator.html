@@ -1605,16 +1605,29 @@
             <p style="color: #64748b; margin-bottom: 5px;">Not sure where to start? Choose the option that best describes your situation:</p>
 
             <div class="calculator-guide">
-                <!-- Simplified Calculator Card -->
-                <a href="#calculator" class="guide-card deli">
-                    <div class="guide-card-icon">🧮</div>
-                    <div class="guide-card-title">Sandwich Calculator</div>
-                    <div class="guide-card-purpose">– Calculate costs or quantities for your sandwich project</div>
+                <!-- Cost for Target Sandwiches Card -->
+                <a href="#calculator" class="guide-card deli" onclick="setCalculatorMode('sandwiches'); return true;">
+                    <div class="guide-card-icon">🎯</div>
+                    <div class="guide-card-title">Calculate Cost for Target Sandwiches</div>
+                    <div class="guide-card-purpose">– We need X sandwiches; what will it cost?</div>
                     <div class="guide-card-situation">
-                        <strong>Use this if:</strong> You want to plan by sandwich count or budget. Choose from suggested packages or enter custom package details. Works for all ingredients (meat, cheese, bread).
+                        <strong>Use this if:</strong> You know how many sandwiches you want to make and need to know the total cost. Choose from suggested packages or enter custom package details.
                     </div>
                     <div class="guide-card-action">
-                        Take me there <span>→</span>
+                        Start calculating <span>→</span>
+                    </div>
+                </a>
+
+                <!-- Sandwiches for Target Budget Card -->
+                <a href="#calculator" class="guide-card deli" onclick="setCalculatorMode('budget'); return true;">
+                    <div class="guide-card-icon">💰</div>
+                    <div class="guide-card-title">Calculate Sandwiches for Target Budget</div>
+                    <div class="guide-card-purpose">– We have $Y; how many sandwiches can we make?</div>
+                    <div class="guide-card-situation">
+                        <strong>Use this if:</strong> You have a fixed budget and want to know how many sandwiches you can make. Choose from suggested packages or enter custom package details.
+                    </div>
+                    <div class="guide-card-action">
+                        Start calculating <span>→</span>
                     </div>
                 </a>
 
@@ -1636,7 +1649,7 @@
         <!-- Redesigned Simplified Calculator Section -->
         <div class="section" id="calculator">
             <h2>🧮 Sandwich Calculator</h2>
-            <p style="color: #64748b; margin-bottom: 25px; font-size: 1.1em;">Calculate costs or quantities for your sandwich project. Choose your planning mode below.</p>
+            <p style="color: #64748b; margin-bottom: 25px; font-size: 1.1em;">Calculate costs or quantities for your sandwich project.</p>
 
             <!-- Mode Selection -->
             <div style="background: rgba(255,255,255,0.95); border: 2px solid #47B3CB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
@@ -2582,6 +2595,16 @@
             cheese: null,
             bread: null
         };
+
+        // Set calculator mode from external link (e.g., from "Which Calculator?" cards)
+        function setCalculatorMode(mode) {
+            // Set the radio button
+            const radio = document.querySelector(`input[name="calcMode"][value="${mode}"]`);
+            if (radio) {
+                radio.checked = true;
+                updateCalculatorMode();
+            }
+        }
 
         // Update calculator mode (sandwiches vs budget)
         function updateCalculatorMode() {
