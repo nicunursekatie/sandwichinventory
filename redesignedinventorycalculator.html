@@ -2559,7 +2559,7 @@
 
                         <!-- Meat Type Tabs -->
                         <div class="meat-type-tabs" role="tablist" aria-label="Select meat type">
-                            <button type="button" class="meat-type-tab active" data-meat-type="turkey" onclick="selectMeatType('turkey')" role="tab" aria-selected="true">
+                            <button type="button" class="meat-type-tab" data-meat-type="turkey" onclick="selectMeatType('turkey')" role="tab" aria-selected="false">
                                 <span class="tab-icon">🦃</span> Turkey
                             </button>
                             <button type="button" class="meat-type-tab" data-meat-type="ham" onclick="selectMeatType('ham')" role="tab" aria-selected="false">
@@ -2572,25 +2572,25 @@
 
                         <!-- Brand Dropdown (filtered by meat type) -->
                         <select id="meatSelection" onchange="handleMeatSelection()">
-                            <option value="">Select a brand...</option>
-                            <!-- Turkey options (shown by default) -->
-                            <option value="kroger-turkey-family" data-type="turkey">Kroger Turkey Family Size (16 oz) - $4.39 ⭐ Best Value</option>
-                            <option value="kroger-turkey-thin" data-type="turkey">Kroger Turkey Thin Sliced (9 oz) - $3.99</option>
-                            <option value="publix-turkey" data-type="turkey">Publix Turkey Breast (16 oz) - $7.07</option>
-                            <option value="kirkland-turkey" data-type="turkey">Kirkland Turkey (2 lb) - $13.99</option>
-                            <option value="land-o-frost-turkey" data-type="turkey">Land O'Frost Turkey (16 oz) - $9.53</option>
-                            <option value="hillshire-turkey" data-type="turkey">Hillshire Farm Turkey (9 oz) - $6.07</option>
-                            <option value="oscar-mayer-turkey" data-type="turkey">Oscar Mayer Turkey (16 oz) - $7.99</option>
-                            <!-- Ham options (hidden by default) -->
+                            <option value="">First select a meat type above</option>
+                            <!-- Turkey options (hidden until turkey tab selected) -->
+                            <option value="kroger-turkey-family" data-type="turkey" style="display: none;">Kroger Turkey Family Size (16 oz) - $4.39 ⭐ Best Value</option>
+                            <option value="kroger-turkey-thin" data-type="turkey" style="display: none;">Kroger Turkey Thin Sliced (9 oz) - $3.99</option>
+                            <option value="publix-turkey" data-type="turkey" style="display: none;">Publix Turkey Breast (16 oz) - $7.07</option>
+                            <option value="kirkland-turkey" data-type="turkey" style="display: none;">Kirkland Turkey (2 lb) - $13.99</option>
+                            <option value="land-o-frost-turkey" data-type="turkey" style="display: none;">Land O'Frost Turkey (16 oz) - $9.53</option>
+                            <option value="hillshire-turkey" data-type="turkey" style="display: none;">Hillshire Farm Turkey (9 oz) - $6.07</option>
+                            <option value="oscar-mayer-turkey" data-type="turkey" style="display: none;">Oscar Mayer Turkey (16 oz) - $7.99</option>
+                            <!-- Ham options (hidden until ham tab selected) -->
                             <option value="kirkland-ham" data-type="ham" style="display: none;">Kirkland Ham (2 lb, 48 slices) - $9.89</option>
                             <option value="kroger-ham" data-type="ham" style="display: none;">Kroger Ham (16 oz) - $4.99</option>
                             <option value="hillshire-ham" data-type="ham" style="display: none;">Hillshire Farm Ham (9 oz) - $5.49</option>
-                            <!-- Chicken options (hidden by default) -->
+                            <!-- Chicken options (hidden until chicken tab selected) -->
                             <option value="kroger-chicken-thin" data-type="chicken" style="display: none;">Kroger Chicken Thin (9 oz) - $3.50</option>
                             <option value="oscar-mayer-chicken-rotisserie" data-type="chicken" style="display: none;">Oscar Mayer Rotisserie Chicken (16 oz) - $7.99</option>
                             <option value="oscar-mayer-chicken-blackened" data-type="chicken" style="display: none;">Oscar Mayer Blackened Chicken (8 oz) - $4.49</option>
-                            <!-- Custom option always visible -->
-                            <option value="custom">Enter custom package →</option>
+                            <!-- Custom option (hidden until meat type selected) -->
+                            <option value="custom" style="display: none;">Enter custom package →</option>
                         </select>
 
                         <!-- Custom Entry (hidden by default) -->
@@ -3808,8 +3808,8 @@
             validateInputs();
         }
 
-        // Current selected meat type
-        let currentMeatType = 'turkey';
+        // Current selected meat type (null until user selects)
+        let currentMeatType = null;
 
         // Select meat type (Turkey/Ham/Chicken tabs)
         function selectMeatType(type) {
@@ -3830,6 +3830,18 @@
                 const optionType = option.dataset.type;
                 option.style.display = (optionType === type) ? '' : 'none';
             });
+
+            // Show custom option when a meat type is selected
+            const customOption = select.querySelector('option[value="custom"]');
+            if (customOption) {
+                customOption.style.display = '';
+            }
+
+            // Update placeholder text
+            const placeholderOption = select.querySelector('option[value=""]');
+            if (placeholderOption) {
+                placeholderOption.textContent = 'Select a brand...';
+            }
 
             // Reset selection when switching types
             select.value = '';
