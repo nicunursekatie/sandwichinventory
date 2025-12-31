@@ -1,0 +1,14 @@
+{
+  "functions": {
+    "api/parse-package.js": {
+      "runtime": "nodejs18.x"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/api/parse-package",
+      "destination": "/api/parse-package.js"
+    }
+  ]
+}
+
