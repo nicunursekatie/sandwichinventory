@@ -2062,161 +2062,323 @@
         .help-tip:hover {
             background: rgba(255,255,255,0.3);
         }
+
+        /* ==========================================
+           Streamlined Hero Section
+           ========================================== */
+        .hero-streamlined {
+            text-align: center;
+            padding: 40px 30px;
+        }
+
+        .hero-title {
+            color: var(--color-primary-dark);
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            color: var(--color-text-muted);
+            font-size: 1.15em;
+            max-width: 600px;
+            margin: 0 auto 28px;
+            line-height: 1.5;
+        }
+
+        .hero-cta {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+            color: white;
+            text-decoration: none;
+            padding: 18px 48px;
+            border-radius: var(--radius-lg);
+            font-size: 1.3em;
+            font-weight: 700;
+            box-shadow: 0 8px 30px rgba(0, 126, 140, 0.35);
+            transition: all var(--transition-normal);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .hero-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 126, 140, 0.45);
+            background: linear-gradient(135deg, var(--color-accent) 0%, var(--color-secondary) 100%);
+        }
+
+        .hero-cta:focus-visible {
+            outline: 3px solid var(--color-gold);
+            outline-offset: 3px;
+        }
+
+        .hero-cta-arrow {
+            font-size: 1.1em;
+            transition: transform var(--transition-fast);
+        }
+
+        .hero-cta:hover .hero-cta-arrow {
+            transform: translateX(4px);
+        }
+
+        .hero-links {
+            display: flex;
+            justify-content: center;
+            gap: var(--space-lg);
+            margin-top: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        .hero-link {
+            color: var(--color-primary);
+            text-decoration: none;
+            font-size: 0.95em;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: var(--radius-sm);
+            transition: all var(--transition-fast);
+            border: 1px solid transparent;
+        }
+
+        .hero-link:hover {
+            background: var(--color-bg-light);
+            border-color: var(--color-border);
+        }
+
+        @media (max-width: 768px) {
+            .hero-streamlined {
+                padding: 30px 20px;
+            }
+
+            .hero-title {
+                font-size: 1.8em;
+            }
+
+            .hero-subtitle {
+                font-size: 1.05em;
+            }
+
+            .hero-cta {
+                padding: 16px 36px;
+                font-size: 1.15em;
+            }
+
+            .hero-links {
+                flex-direction: column;
+                gap: var(--space-md);
+            }
+        }
+
+        /* ==========================================
+           Sandwich Type Toggle (Deli vs PB&J)
+           ========================================== */
+        .sandwich-type-toggle {
+            display: flex;
+            justify-content: center;
+            gap: 0;
+            margin-bottom: var(--space-xl);
+            background: var(--color-bg-light);
+            border-radius: var(--radius-lg);
+            padding: 6px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            border: 2px solid var(--color-border);
+        }
+
+        .sandwich-type-btn {
+            flex: 1;
+            padding: 14px 24px;
+            border: none;
+            background: transparent;
+            color: var(--color-text-muted);
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .sandwich-type-btn:hover:not(.active) {
+            background: rgba(0, 126, 140, 0.08);
+            color: var(--color-primary);
+        }
+
+        .sandwich-type-btn.active {
+            background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-accent) 100%);
+            color: white;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .sandwich-type-btn .btn-icon {
+            font-size: 1.2em;
+        }
+
+        /* ==========================================
+           Collapsible Resource Sections
+           ========================================== */
+        .resource-accordion {
+            border: 2px solid var(--color-border);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-md);
+            overflow: hidden;
+            background: white;
+        }
+
+        .resource-accordion-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-lg);
+            background: var(--color-bg-light);
+            cursor: pointer;
+            transition: background var(--transition-fast);
+            border: none;
+            width: 100%;
+            text-align: left;
+            font-family: inherit;
+        }
+
+        .resource-accordion-header:hover {
+            background: #eef1f4;
+        }
+
+        .resource-accordion-title {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            font-size: 1.15em;
+            font-weight: 600;
+            color: var(--color-primary-dark);
+        }
+
+        .resource-accordion-title .accordion-icon {
+            font-size: 1.3em;
+        }
+
+        .resource-accordion-chevron {
+            font-size: 1em;
+            color: var(--color-text-muted);
+            transition: transform var(--transition-fast);
+        }
+
+        .resource-accordion.open .resource-accordion-chevron {
+            transform: rotate(180deg);
+        }
+
+        .resource-accordion-content {
+            display: none;
+            padding: var(--space-lg);
+            border-top: 1px solid var(--color-border);
+        }
+
+        .resource-accordion.open .resource-accordion-content {
+            display: block;
+            animation: slideDown 0.25s ease-out;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Shopping notes - compact version for below calculator */
+        .shopping-notes-compact {
+            background: linear-gradient(135deg, #fffbf0 0%, #fef3e2 100%);
+            border: 2px solid #f4a261;
+            border-radius: var(--radius-md);
+            padding: var(--space-md) var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .shopping-notes-compact .notes-title {
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 600;
+            color: var(--color-warning);
+            margin-bottom: var(--space-sm);
+        }
+
+        .shopping-notes-compact ul {
+            margin: 0;
+            padding-left: var(--space-lg);
+            color: var(--color-text);
+        }
+
+        .shopping-notes-compact li {
+            margin-bottom: var(--space-xs);
+            font-size: 0.95em;
+        }
     </style>
 </head>
 <body>
     <!-- Accessibility: Skip to main content -->
-    <a href="#calculator-guide" class="skip-link">Skip to main content</a>
+    <a href="#calculator" class="skip-link">Skip to calculator</a>
 
     <!-- ARIA live region for screen reader announcements -->
     <div id="announcements" class="sr-only" aria-live="polite" aria-atomic="true"></div>
 
     <div class="container">
-        <header class="header" role="banner">
-            <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 500px; width: 100%; height: auto; margin-bottom: 20px;">
-            <p>Interactive Group Event Planning Guide</p>
+        <!-- Streamlined Hero Section -->
+        <header class="header hero-streamlined" role="banner">
+            <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 400px; width: 100%; height: auto; margin-bottom: 16px;">
+            <h1 class="hero-title">Sandwich Planning Calculator</h1>
+            <p class="hero-subtitle">Plan your group sandwich-making event in minutes. Calculate costs, quantities, and supplies for 20 to 2,000+ sandwiches.</p>
+
+            <a href="#calculator" class="hero-cta" onclick="smoothScrollToCalculator(event)">
+                Start Planning
+                <span class="hero-cta-arrow">→</span>
+            </a>
+
+            <div class="hero-links">
+                <a href="eventestimator/sandwichprojecteventestimator.html" class="hero-link">👥 Group Capacity Estimator</a>
+                <a href="toolkit.html" class="hero-link">📚 Planning Toolkit</a>
+            </div>
         </header>
 
-        <div class="nav-menu">
-            <h3>Quick Navigation</h3>
-            <div class="nav-buttons">
-                <div class="nav-dropdown">
-                    <button class="nav-dropdown-btn" onclick="toggleDropdown('planning')">
-                        🧮 Planning Tools
-                    </button>
-                    <div class="nav-dropdown-menu" id="planning-menu">
-                        <a href="#calculator-guide" class="nav-dropdown-item">🎯 Which Calculator?</a>
-                        <a href="eventestimator/sandwichprojecteventestimator.html" class="nav-dropdown-item">👥 Group Capacity Estimator</a>
-                        <a href="#calculator" class="nav-dropdown-item">🧮 Sandwich Calculator</a>
-                        <a href="#pbj-calculator" class="nav-dropdown-item">🥜 PB&J Calculator</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <button class="nav-dropdown-btn" onclick="toggleDropdown('resources')">
-                        📚 Guides & Resources
-                    </button>
-                    <div class="nav-dropdown-menu" id="resources-menu">
-                        <a href="toolkit.html" class="nav-dropdown-item">📚 Planning Toolkit</a>
-                        <a href="#pricing-info" class="nav-dropdown-item">📊 Pricing Info</a>
-                        <a href="#recipe" class="nav-dropdown-item">🥪 Recipes</a>
-                        <a href="#food-safety" class="nav-dropdown-item">🛡️ Food Safety</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div class="section" id="intro-section" style="margin-bottom: 28px; background: linear-gradient(135deg, #f8f9fa 80%, #e3f6f9 100%); border: 2px solid #FBAD3F; box-shadow: 0 4px 16px #FBAD3F22;">
-            <h2 style="color: #236383; font-size: 1.7em; font-weight: 700; margin-bottom: 15px;">Welcome to the Sandwich Project Planning Tool!</h2>
-            <p style="font-size: 1.1em; color: #236383; margin-bottom: 20px;">
-                Plan group sandwich-making events with The Sandwich Project. Estimate costs, quantities, and supplies for events from 20 to 2,000 sandwiches!
-            </p>
-            
-            <div class="toc-container">
-                <a href="#calculator-guide" class="toc-item">
-                    <span class="toc-icon">🎯</span>
-                    <span class="toc-text">Which Calculator Should I Use? – Start here to choose the right tool</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-                <a href="#pricing-info" class="toc-item">
-                    <span class="toc-icon">📊</span>
-                    <span class="toc-text">Ingredient Pricing – See what things cost so you can budget</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-                <a href="#quick-reference" class="toc-item">
-                    <span class="toc-icon">🎯</span>
-                    <span class="toc-text">Quick Reference – Get typical quantities and cost estimates at a glance</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-                <a href="#recipe" class="toc-item">
-                    <span class="toc-icon">🥪</span>
-                    <span class="toc-text">Recipes & Food Safety – Know how to assemble sandwiches safely</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-                <a href="#planning-tips" class="toc-item">
-                    <span class="toc-icon">💡</span>
-                    <span class="toc-text">Planning Tips – Finish with advice on event logistics and storage</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-            </div>
-            
-            <p style="font-size: 0.95em; color: #64748b; margin-top: 20px; margin-bottom: 0;">
-                All pricing is based on recent shopping at various retailers (Costco, Kroger, Publix, etc.) and may vary by location.
-            </p>
-        </div>
-
-        <!-- Important Shopping Notes Banner -->
-        <aside class="info-banner mb-lg" role="note" aria-label="Important shopping notes">
-            <div class="info-banner-icon" aria-hidden="true">📝</div>
-            <div class="info-banner-content">
-                <h3 class="info-banner-title">Important Shopping Notes</h3>
-                <div class="flex flex-col gap-lg">
-                    <div class="note-card">
-                        <span class="note-card-icon" aria-hidden="true">🥩</span>
-                        <div class="note-card-content">
-                            <div class="note-card-title">Meat: Buy pre-packaged only</div>
-                            <div class="note-card-text">Don't get meat sliced at the deli counter—pre-packaged is safer and easier to work with.</div>
-                        </div>
-                    </div>
-                    <div class="note-card">
-                        <span class="note-card-icon" aria-hidden="true">🧀</span>
-                        <div class="note-card-content">
-                            <div class="note-card-title">Cheese: Avoid individually wrapped slices</div>
-                            <div class="note-card-text">Individually wrapped American cheese slices do not hold up well and are so much work to unwrap during sandwich-making. Get deli-style sliced cheese—the kind sold together in one pack, not individually wrapped processed singles.</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Quick Access Link for Calculator -->
-        <a href="#calculator" class="quick-access-link">
-            <span class="quick-access-icon">🧮</span>
-            <div class="quick-access-content">
-                <div class="quick-access-label">Quick Access While Shopping</div>
-                <div class="quick-access-title">Sandwich Calculator</div>
-                <div class="quick-access-description">Found items NOT in our calculator? Use this tool to calculate servings from custom packages while you're in the store!</div>
-            </div>
-            <span class="quick-access-arrow">→</span>
-        </a>
-
-        <!-- Calculator Guide Section - Choose Your Calculator -->
-        <div class="section" id="calculator-guide">
-            <h2>🎯 Which Calculator Should I Use?</h2>
-            <p style="color: #64748b; margin-bottom: 25px; font-size: 1.1em;">Choose the calculator that matches what you're making:</p>
-
-            <div class="calculator-guide">
-                <!-- Sandwich Calculator Card -->
-                <a href="#calculator" class="guide-card deli">
-                    <div class="guide-card-icon">🧮</div>
-                    <div class="guide-card-title">Sandwich Calculator</div>
-                    <div class="guide-card-purpose">– Calculate costs or quantities for deli meat sandwiches</div>
-                    <div class="guide-card-situation">
-                        <strong>Use this if:</strong> You're making <strong>deli meat sandwiches</strong> (turkey, ham, chicken) with cheese and bread. Choose from suggested packages or enter custom package details.
-                    </div>
-                    <div class="guide-card-action">
-                        Start calculating <span>→</span>
-                    </div>
-                </a>
-
-                <!-- PB&J Calculator Card -->
-                <a href="#pbj-calculator" class="guide-card pbj">
-                    <div class="guide-card-icon">🥜</div>
-                    <div class="guide-card-title">PB&J Calculator</div>
-                    <div class="guide-card-purpose">– Calculate peanut butter, jelly, bread, and bag quantities</div>
-                    <div class="guide-card-situation">
-                        <strong>Use this if:</strong> You're making <strong>peanut butter & jelly sandwiches</strong> instead of deli meat sandwiches. Different ingredients, different calculations!
-                    </div>
-                    <div class="guide-card-action">
-                        Start calculating <span>→</span>
-                    </div>
-                </a>
-            </div>
-        </div>
-
-        <!-- Redesigned Simplified Calculator Section -->
+        <!-- Unified Calculator Section -->
         <div class="section" id="calculator">
-            <h2>🧮 Sandwich Calculator</h2>
+            <h2 id="calculator-heading">🧮 Sandwich Calculator</h2>
+
+            <!-- Sandwich Type Toggle -->
+            <div class="sandwich-type-toggle" role="tablist" aria-label="Sandwich type">
+                <button class="sandwich-type-btn active" role="tab" aria-selected="true" aria-controls="deli-calculator-panel" id="deli-tab" onclick="switchSandwichType('deli')">
+                    <span class="btn-icon" aria-hidden="true">🥪</span>
+                    Deli Meat
+                </button>
+                <button class="sandwich-type-btn" role="tab" aria-selected="false" aria-controls="pbj-calculator-panel" id="pbj-tab" onclick="switchSandwichType('pbj')">
+                    <span class="btn-icon" aria-hidden="true">🥜</span>
+                    PB&J
+                </button>
+            </div>
+
+            <!-- Shopping Notes - Compact -->
+            <div class="shopping-notes-compact" id="deli-shopping-notes">
+                <div class="notes-title">
+                    <span aria-hidden="true">📝</span> Quick Shopping Reminders
+                </div>
+                <ul>
+                    <li><strong>Meat:</strong> Buy pre-packaged only (not sliced at deli counter)</li>
+                    <li><strong>Cheese:</strong> Get deli-style sliced cheese, NOT individually wrapped singles</li>
+                </ul>
+            </div>
+
+            <!-- Deli Calculator Panel -->
+            <div id="deli-calculator-panel" role="tabpanel" aria-labelledby="deli-tab">
             <p style="color: #64748b; margin-bottom: 25px; font-size: 1.1em;">Calculate costs or quantities for your sandwich project.</p>
 
             <!-- Mode Selection -->
@@ -2372,14 +2534,12 @@
                                 </div>
 
                 <div class="calc-result" id="calcResult" style="display: none;"></div>
-                                </div>
-                            </div>
+                </div>
+            </div>
+            </div> <!-- End deli-calculator-panel -->
 
-        <!-- OLD CALCULATOR SECTIONS REMOVED - Using new simplified calculator above -->
-
-        <!-- PB&J Calculator Section -->
-        <div class="section" id="pbj-calculator">
-            <h2>🥜 Peanut Butter & Jelly Calculator</h2>
+            <!-- PB&J Calculator Panel (hidden by default) -->
+            <div id="pbj-calculator-panel" role="tabpanel" aria-labelledby="pbj-tab" style="display: none;">
             <div class="shopping-calculator">
                 <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
                 <div class="calc-form">
@@ -2443,16 +2603,30 @@
                     <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: #d97706; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; font-size: 1.05em; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);" onmouseover="this.style.background='#b86505'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(217, 119, 6, 0.4)';" onmouseout="this.style.background='#d97706'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(217, 119, 6, 0.3)';">
                         📥 PB&J Sandwich Making 101 (PDF)
                     </a>
-                    <a href="toolkit/Pbj labels.pdf" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: #d97706; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; font-size: 1.05em; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);" onmouseover="this.style.background='#b86505'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(217, 119, 6, 0.4)';" onmouseout="this.style.background='#d97706'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(217, 119, 6, 0.3)';">
+                    <a href="toolkit/Pbj labels.pdf" target="_blank" class="download-btn">
                         🏷️ PB&J Labels (PDF)
                     </a>
                 </div>
             </div>
-        </div>
+            </div> <!-- End pbj-calculator-panel -->
+        </div> <!-- End unified calculator section -->
 
-        <!-- Move Pricing Information section down here -->
-        <div class="section" id="pricing-info" style="margin-bottom: 32px;">
-            <h2>📊 Pricing Information <span style='font-size:0.7em; font-weight:400;'>(Updated 9/17/2025)</span></h2>
+        <!-- Resources Section - Collapsible Accordions -->
+        <div class="section" id="resources-section">
+            <h2>📚 Resources & Guides</h2>
+            <p class="text-muted mb-lg">Expand any section below for detailed information on pricing, recipes, and food safety.</p>
+
+            <!-- Pricing Information Accordion -->
+            <div class="resource-accordion" id="pricing-accordion">
+                <button class="resource-accordion-header" onclick="toggleAccordion(this)" aria-expanded="false" aria-controls="pricing-content">
+                    <span class="resource-accordion-title">
+                        <span class="accordion-icon" aria-hidden="true">📊</span>
+                        Pricing Information
+                        <span style="font-size: 0.75em; font-weight: 400; color: var(--color-text-muted);">(Updated 9/17/2025)</span>
+                    </span>
+                    <span class="resource-accordion-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="resource-accordion-content" id="pricing-content">
             
             <!-- Pricing cards - clean, no wild gradients -->
             <!-- Pricing Section - Compact & Colorful -->
@@ -2833,12 +3007,21 @@
     </div>
 </div>
     <!-- Collapsible Ingredient Price Summary moved to very bottom -->
-        
-        <!-- Move Quick Reference section below calculator -->
-        <div class="section" id="quick-reference">
-            <h2>🎯 Quick Reference: Popular Quantities</h2>
-            <p style="color: #64748b; font-size: 0.95em; margin-bottom: 16px;">Costs include meat, cheese, bread, and bags. Based on 3 slices meat per sandwich, Adams Reserve cheese, Nature's Own bread. Prices may vary by location.</p>
-            <div class="quick-ref">
+                </div> <!-- End pricing-content -->
+            </div> <!-- End pricing-accordion -->
+
+            <!-- Quick Reference Accordion -->
+            <div class="resource-accordion" id="quick-ref-accordion">
+                <button class="resource-accordion-header" onclick="toggleAccordion(this)" aria-expanded="false" aria-controls="quick-ref-content">
+                    <span class="resource-accordion-title">
+                        <span class="accordion-icon" aria-hidden="true">🎯</span>
+                        Quick Reference: Popular Quantities
+                    </span>
+                    <span class="resource-accordion-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="resource-accordion-content" id="quick-ref-content">
+                    <p style="color: #64748b; font-size: 0.95em; margin-bottom: 16px;">Costs include meat, cheese, bread, and bags. Based on 3 slices meat per sandwich, Adams Reserve cheese, Nature's Own bread. Prices may vary by location.</p>
+                    <div class="quick-ref">
                 <div class="ref-card">
                     <div style="font-size: 2.5em; margin-bottom: 15px;">🏢</div>
                     <h3>100</h3>
@@ -2879,24 +3062,20 @@
                         <div class="cost-item" style="font-size: 0.9em; color: #64748b; margin-top: 4px;">⭐ Best Value: Kroger Turkey Family - $1,520</div>
                     </div>
                 </div>
-            </div>
-        </div>
+                    </div>
+                </div> <!-- End quick-ref-content -->
+            </div> <!-- End quick-ref-accordion -->
 
-        <!-- Section Divider: Shopping/Planning to Execution -->
-        <div class="section-divider">
-            <div class="section-divider-content">
-                🛒 Shopping Complete → 🥪 Time to Make Sandwiches
-            </div>
-        </div>
-
-        <!-- Resources Section - Food Safety, Recipes, and Planning Tips -->
-        <div class="section" id="resources">
-            <h2>📚 Resources</h2>
-            <p style="color: #64748b; margin-bottom: 25px; font-size: 1.1em;">Essential guides for food safety, recipes, and planning your sandwich-making event.</p>
-            
-            <!-- Food Safety Requirements Section -->
-            <div class="section" id="food-safety" style="margin-top: 0;">
-            <h2>🛡️ Food Safety Requirements</h2>
+            <!-- Food Safety Accordion -->
+            <div class="resource-accordion" id="food-safety-accordion">
+                <button class="resource-accordion-header" onclick="toggleAccordion(this)" aria-expanded="false" aria-controls="food-safety-content">
+                    <span class="resource-accordion-title">
+                        <span class="accordion-icon" aria-hidden="true">🛡️</span>
+                        Food Safety Requirements
+                    </span>
+                    <span class="resource-accordion-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="resource-accordion-content" id="food-safety-content">
             <div class="tips-grid">
                 <div class="tip-card">
                     <h3>🧤 Personal Hygiene</h3>
@@ -2992,12 +3171,20 @@
                         <li>Add 5-10% buffer for extras</li>
                     </ul>
                 </div>
-            </div>
-        </div>
+                </div>
+                </div> <!-- End food-safety-content -->
+            </div> <!-- End food-safety-accordion -->
 
-            <!-- Recipe Section -->
-            <div class="section" id="recipe" style="margin-top: 0;">
-            <h2>🥪 Perfect Sandwich Recipe</h2>
+            <!-- Recipe Accordion -->
+            <div class="resource-accordion" id="recipe-accordion">
+                <button class="resource-accordion-header" onclick="toggleAccordion(this)" aria-expanded="false" aria-controls="recipe-content">
+                    <span class="resource-accordion-title">
+                        <span class="accordion-icon" aria-hidden="true">🥪</span>
+                        Perfect Sandwich Recipe
+                    </span>
+                    <span class="resource-accordion-chevron" aria-hidden="true">▼</span>
+                </button>
+                <div class="resource-accordion-content" id="recipe-content">
             <div class="recipe-card">
                 <h3>Deli Sandwich - Every Sandwich Contains</h3>
                 <div style="margin-bottom: 20px; text-align: center;">
@@ -3057,11 +3244,12 @@
                     <strong>Assembly:</strong> Spread peanut butter on both slices of bread, then add jelly to one side. Press the two pieces together gently.
                 </div>
             </div>
-        </div>
-        </div>
-        <!-- End Resources Section -->
-    </div>
-    
+                </div> <!-- End recipe-content -->
+            </div> <!-- End recipe-accordion -->
+
+        </div> <!-- End resources-section -->
+    </div> <!-- End container -->
+
     <script>
         // Dropdown menu functions
         function toggleDropdown(type) {
@@ -3241,6 +3429,88 @@
                 button.textContent = button.dataset.originalText || button.textContent;
                 button.removeAttribute('aria-busy');
             }
+        }
+
+        // ============================================
+        // STREAMLINED NAVIGATION FUNCTIONS
+        // ============================================
+
+        /**
+         * Smooth scroll to calculator section
+         */
+        function smoothScrollToCalculator(event) {
+            event.preventDefault();
+            const calculator = document.getElementById('calculator');
+            if (calculator) {
+                calculator.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Focus the first interactive element for accessibility
+                setTimeout(() => {
+                    const firstInput = calculator.querySelector('input, button, select');
+                    if (firstInput) firstInput.focus();
+                }, 500);
+            }
+        }
+
+        /**
+         * Switch between Deli and PB&J calculator panels
+         * @param {string} type - 'deli' or 'pbj'
+         */
+        function switchSandwichType(type) {
+            const deliPanel = document.getElementById('deli-calculator-panel');
+            const pbjPanel = document.getElementById('pbj-calculator-panel');
+            const deliTab = document.getElementById('deli-tab');
+            const pbjTab = document.getElementById('pbj-tab');
+            const shoppingNotes = document.getElementById('deli-shopping-notes');
+            const heading = document.getElementById('calculator-heading');
+
+            if (type === 'deli') {
+                // Show deli, hide PB&J
+                deliPanel.style.display = 'block';
+                pbjPanel.style.display = 'none';
+                deliTab.classList.add('active');
+                deliTab.setAttribute('aria-selected', 'true');
+                pbjTab.classList.remove('active');
+                pbjTab.setAttribute('aria-selected', 'false');
+                shoppingNotes.style.display = 'block';
+                heading.textContent = '🧮 Sandwich Calculator';
+            } else {
+                // Show PB&J, hide deli
+                deliPanel.style.display = 'none';
+                pbjPanel.style.display = 'block';
+                pbjTab.classList.add('active');
+                pbjTab.setAttribute('aria-selected', 'true');
+                deliTab.classList.remove('active');
+                deliTab.setAttribute('aria-selected', 'false');
+                shoppingNotes.style.display = 'none';
+                heading.textContent = '🥜 PB&J Calculator';
+            }
+
+            // Announce change for screen readers
+            announceToScreenReader(`Switched to ${type === 'deli' ? 'Deli Meat' : 'Peanut Butter & Jelly'} calculator`);
+        }
+
+        /**
+         * Toggle resource accordion sections
+         * @param {HTMLElement} header - The accordion header element
+         */
+        function toggleAccordion(header) {
+            const accordion = header.closest('.resource-accordion');
+            const isOpen = accordion.classList.contains('open');
+
+            // Close all other accordions (optional - remove for multi-open behavior)
+            // document.querySelectorAll('.resource-accordion.open').forEach(acc => {
+            //     if (acc !== accordion) acc.classList.remove('open');
+            // });
+
+            // Toggle current accordion
+            accordion.classList.toggle('open');
+
+            // Update ARIA
+            header.setAttribute('aria-expanded', !isOpen);
+
+            // Announce for screen readers
+            const title = header.querySelector('.resource-accordion-title').textContent.trim();
+            announceToScreenReader(`${title} section ${isOpen ? 'collapsed' : 'expanded'}`);
         }
 
         // Initialize mode card selection on page load
