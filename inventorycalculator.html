@@ -749,6 +749,8 @@
         
         /* Improve select dropdown styling */
         .calc-input-group select {
+            -webkit-appearance: none;
+            -moz-appearance: none;
             appearance: none;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23236383' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
             background-repeat: no-repeat;
@@ -760,6 +762,19 @@
         
         .calc-input-group select:focus {
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23FBAD3F' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+        }
+        
+        /* Prevent background image from appearing in dropdown options */
+        .calc-input-group select option {
+            background: white !important;
+            background-image: none !important;
+            background-repeat: no-repeat !important;
+        }
+        
+        /* Ensure select dropdown menu itself doesn't show background patterns */
+        .calc-input-group select:active,
+        .calc-input-group select:focus {
+            background-repeat: no-repeat;
         }
         .section h2, .shopping-calculator h3 {
             color: #236383;
