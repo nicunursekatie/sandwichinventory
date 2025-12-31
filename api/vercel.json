@@ -4,6 +4,10 @@
     {
       "src": "parse-package.js",
       "use": "@vercel/node"
+    },
+    {
+      "src": "validate-calculation.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
@@ -14,6 +18,14 @@
     {
       "src": "/parse-package",
       "dest": "/parse-package.js"
+    },
+    {
+      "src": "/api/validate-calculation",
+      "dest": "/validate-calculation.js"
+    },
+    {
+      "src": "/validate-calculation",
+      "dest": "/validate-calculation.js"
     }
   ]
 }
