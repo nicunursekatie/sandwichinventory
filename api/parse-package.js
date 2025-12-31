@@ -135,42 +135,40 @@ Return the JSON object with the extracted information.`;
 
 // Export for different deployment environments
 
-// For Vercel/Netlify serverless functions
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = async (req, res) => {
-        // CORS headers
-        res.setHeader('Access-Control-Allow-Origin', '*');
-        res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-        res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+// For Vercel serverless functions (default export)
+module.exports = async (req, res) => {
+    // CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-        if (req.method === 'OPTIONS') {
-            res.status(200).end();
+    if (req.method === 'OPTIONS') {
+        res.status(200).end();
+        return;
+    }
+
+    if (req.method !== 'POST') {
+        res.status(405).json({ error: 'Method not allowed' });
+        return;
+    }
+
+    try {
+        const { text, ingredientType } = req.body;
+
+        if (!text || !ingredientType) {
+            res.status(400).json({ error: 'Missing required fields: text and ingredientType' });
             return;
         }
 
-        if (req.method !== 'POST') {
-            res.status(405).json({ error: 'Method not allowed' });
-            return;
-        }
-
-        try {
-            const { text, ingredientType } = req.body;
-
-            if (!text || !ingredientType) {
-                res.status(400).json({ error: 'Missing required fields: text and ingredientType' });
-                return;
-            }
-
-            const result = await extractPackageInfo(text, ingredientType);
-            res.status(200).json(result);
-        } catch (error) {
-            res.status(500).json({ 
-                success: false, 
-                error: error.message 
-            });
-        }
-    };
-}
+        const result = await extractPackageInfo(text, ingredientType);
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).json({ 
+            success: false, 
+            error: error.message 
+        });
+    }
+};
 
 // For Node.js/Express
 if (typeof exports !== 'undefined') {

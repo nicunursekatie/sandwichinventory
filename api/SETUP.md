@@ -1,12 +1,47 @@
 # Quick Setup Guide
 
-## 1. Set Your OpenAI API Key
+## Important: GitHub Pages Limitation
 
-**IMPORTANT:** Your API key should be stored securely and never committed to version control.
+**Your main site is hosted on GitHub Pages**, which only serves static files (HTML, CSS, JavaScript). The API endpoint needs to be deployed separately to a service that can run serverless functions.
 
-Get your API key from: https://platform.openai.com/api-keys
+**Recommended approach:** Deploy the API to Vercel (free) and keep your main site on GitHub Pages.
 
-### For Vercel Deployment:
+---
+
+## 1. Deploy the API Endpoint
+
+The API endpoint (`api/parse-package.js`) must be deployed to a serverless function platform. Choose one:
+
+### Option A: Vercel (Recommended - Free & Easy)
+
+1. **Install Vercel CLI:**
+   ```bash
+   npm i -g vercel
+   ```
+
+2. **Deploy just the API:**
+   ```bash
+   cd api
+   vercel
+   ```
+   - Follow the prompts to create a new project
+   - This will give you a URL like: `https://your-api-name.vercel.app`
+
+3. **Set your API key:**
+   ```bash
+   vercel env add OPENAI_API_KEY
+   # Paste your API key when prompted
+   # Select "Production" when asked
+   ```
+
+4. **Redeploy with the environment variable:**
+   ```bash
+   vercel --prod
+   ```
+
+5. **Note your API URL** - it will be: `https://your-api-name.vercel.app/api/parse-package`
+
+### Option B: Netlify Functions
 
 1. Install Vercel CLI: `npm i -g vercel`
 2. Navigate to project: `cd api`
@@ -33,13 +68,25 @@ node api/parse-package.js
 
 **Note:** Replace `your-api-key-here` with your actual OpenAI API key. Never commit your API key to version control.
 
-## 2. Update API Endpoint in HTML
+## 2. Update API Endpoint in Your HTML
 
-In `redesignedinventorycalculator.html`, update the `API_ENDPOINT` constant:
+Since your site is on GitHub Pages, update the API endpoint to point to your separately deployed API:
+
+**In `redesignedinventorycalculator.html`**, find this line (around line 3080):
 
 ```javascript
-const API_ENDPOINT = 'https://your-deployed-url.com/api/parse-package';
+const API_ENDPOINT = '/api/parse-package';
 ```
+
+**Change it to your Vercel/Netlify API URL:**
+
+```javascript
+const API_ENDPOINT = 'https://your-api-name.vercel.app/api/parse-package';
+// Or if using Netlify:
+// const API_ENDPOINT = 'https://your-site.netlify.app/.netlify/functions/parse-package';
+```
+
+**Important:** Use the full URL (with `https://`) since your site is on a different domain (GitHub Pages) than your API (Vercel/Netlify).
 
 ## 3. Test the API
 

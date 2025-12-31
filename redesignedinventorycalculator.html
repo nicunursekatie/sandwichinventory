@@ -3077,11 +3077,9 @@
         }
 
         // API endpoint configuration
-        // Update this to match your deployed API endpoint
-        // For local development: 'http://localhost:3000/api/parse-package'
-        // For Vercel: '/api/parse-package' (relative) or 'https://your-app.vercel.app/api/parse-package'
-        // For Netlify: '/.netlify/functions/parse-package'
-        const API_ENDPOINT = '/api/parse-package';
+        // IMPORTANT: Since this site is on GitHub Pages (static hosting), the API must be deployed separately
+        // The API is deployed to Vercel at the URL below
+        const API_ENDPOINT = 'https://api-dvrggxwxl-nicunursekaties-projects.vercel.app/api/parse-package';
 
         // Parse package text using GPT-4 API
         async function parseMeatPackage() {

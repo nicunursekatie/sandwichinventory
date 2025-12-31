@@ -1,13 +1,19 @@
 {
-  "functions": {
-    "api/parse-package.js": {
-      "runtime": "nodejs18.x"
-    }
-  },
-  "rewrites": [
+  "version": 2,
+  "builds": [
     {
-      "source": "/api/parse-package",
-      "destination": "/api/parse-package.js"
+      "src": "parse-package.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/parse-package",
+      "dest": "/parse-package.js"
+    },
+    {
+      "src": "/parse-package",
+      "dest": "/parse-package.js"
     }
   ]
 }
