@@ -2818,73 +2818,67 @@
 
             <!-- PB&J Calculator Panel (hidden by default) -->
             <div id="pbj-calculator-panel" role="tabpanel" aria-labelledby="pbj-tab" style="display: none;">
-            <div class="shopping-calculator">
-                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
-                <div class="calc-form">
+
+            <!-- Mode Selection for PB&J -->
+            <fieldset class="mode-selection-container" style="background: rgba(255,255,255,0.95); border: 2px solid #47B3CB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                <legend class="sr-only">What do you want to calculate?</legend>
+                <h3 style="color: #1a4d66; margin-bottom: 20px; font-size: 1.3em; text-align: center;">What do you want to calculate?</h3>
+                <div class="mode-selection" role="radiogroup" aria-label="PB&J calculation type">
+                    <label class="mode-card-improved" id="pbj-mode-card-sandwiches" tabindex="0" role="radio" aria-checked="true">
+                        <input type="radio" name="pbjCalcMode" value="sandwiches" checked onchange="updatePBJCalculatorMode()">
+                        <div class="mode-card-icon" aria-hidden="true">🥜</div>
+                        <div class="mode-card-title">I know how many sandwiches I need</div>
+                        <div class="mode-card-description">Enter your sandwich count to see the estimated total cost.</div>
+                    </label>
+                    <label class="mode-card-improved" id="pbj-mode-card-budget" tabindex="0" role="radio" aria-checked="false">
+                        <input type="radio" name="pbjCalcMode" value="budget" onchange="updatePBJCalculatorMode()">
+                        <div class="mode-card-icon" aria-hidden="true">💵</div>
+                        <div class="mode-card-title">I have a set budget to spend</div>
+                        <div class="mode-card-description">Enter your budget and we'll calculate the number of sandwiches.</div>
+                    </label>
+                </div>
+            </fieldset>
+
+            <div class="shopping-calculator" id="pbjCalculatorForm">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                    <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18); margin: 0;" id="pbjCalculatorTitle">Enter Your PB&J Details</h3>
+                </div>
+                <div class="calc-form" id="pbj-calculator">
+                    <!-- Target Input (sandwiches or budget) -->
                     <div class="calc-input-group">
-                        <label for="pbjCount">Number of PB&J sandwiches</label>
-                        <input type="number" id="pbjCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
+                        <label for="pbjTargetValue" id="pbjTargetLabel">How many sandwiches do you need?</label>
+                        <input type="number" id="pbjTargetValue" min="1" placeholder="e.g., 100" aria-label="Number of sandwiches needed">
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 4px;" id="pbjTargetHint">We'll calculate the cost and shopping list for you</span>
                     </div>
 
                     <div class="calc-input-group">
                         <label>Peanut butter type</label>
                         <select id="pbType">
-                            <option value="jif-40">🥜 Jif Creamy 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
-                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
-                            <option value="jif-16">🥜 Jif Creamy 16 oz (454g, ~30 tbsp) - $3.59</option>
-                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (462g, ~31 tbsp) - $3.59</option>
+                            <option value="jif-40">🥜 Jif Creamy 40 oz (~75 tbsp) - $7.99</option>
+                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (~75 tbsp) - $7.99</option>
+                            <option value="jif-16">🥜 Jif Creamy 16 oz (~30 tbsp) - $3.59</option>
+                            <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (~31 tbsp) - $3.59</option>
                         </select>
                     </div>
 
                     <div class="calc-input-group">
                         <label>Jelly type</label>
                         <select id="jellyType">
-                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz (~60 tbsp) - $4.99</option>
-                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz (~56 tbsp) - $3.59</option>
-                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz (~38 tbsp) - $3.59</option>
-                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz (~34 tbsp) - $3.83</option>
+                            <option value="smuckers-32">🍇 Smucker's Grape Jelly 32 oz (~60 tbsp) - $4.99</option>
+                            <option value="welchs-30">🍇 Welch's Grape Jelly 30 oz (~56 tbsp) - $3.59</option>
+                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Jelly 20 oz (~38 tbsp) - $3.59</option>
+                            <option value="welchs-squeeze-18">🍇 Welch's Squeeze Jelly 18 oz (~34 tbsp) - $3.83</option>
                         </select>
-                        <span style="font-size: 0.95em; color: #236383; margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 500;">⚠️ Use JELLY only - no jam, preserves, or fruit spread!</span>
                     </div>
 
                     <div class="calc-button-container">
-                        <button class="calc-button" onclick="calculatePBJ()">Calculate PB&J Needs</button>
+                        <button class="calc-button" onclick="calculatePBJ()" id="pbjCalculateBtn">Calculate</button>
+                        <div id="pbjValidationHint" class="validation-hint" style="display: none;"></div>
                     </div>
                 </div>
 
-                <div class="calc-result" id="pbjResult">
-                </div>
-            </div>
-
-            <div class="recipe-card" style="margin-top: 25px;">
-                <h3>Every PB&J Sandwich Contains</h3>
-                <div class="recipe-ingredients">
-                    <div class="ingredient">
-                        <span class="amount">2</span><span class="item">slices bread</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">3</span><span class="item">tbsp peanut butter</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1.5</span><span class="item">tbsp jelly</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
-                    </div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #fffbe8 0%, #fef3e2 100%); border: 2px solid #f4a261; border-radius: 12px;">
-                <h3 style="color: #d97706; font-size: 1.3em; margin-bottom: 15px; font-weight: 600;">📄 Download PB&J Resources</h3>
-                <div style="display: flex; flex-direction: column; gap: 12px;">
-                    <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf" target="_blank" style="display: inline-flex; align-items: center; gap: 8px; padding: 12px 20px; background: #d97706; color: white; text-decoration: none; border-radius: 8px; font-weight: 600; transition: all 0.3s ease; font-size: 1.05em; box-shadow: 0 2px 8px rgba(217, 119, 6, 0.3);" onmouseover="this.style.background='#b86505'; this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(217, 119, 6, 0.4)';" onmouseout="this.style.background='#d97706'; this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(217, 119, 6, 0.3)';">
-                        📥 PB&J Sandwich Making 101 (PDF)
-                    </a>
-                    <a href="toolkit/Pbj labels.pdf" target="_blank" class="download-btn">
-                        🏷️ PB&J Labels (PDF)
-                    </a>
-                </div>
+                <div class="calc-result" id="pbjResult"></div>
             </div>
             </div> <!-- End pbj-calculator-panel -->
 
@@ -5580,129 +5574,128 @@
             document.getElementById('customBudgetGroup').style.display = bySandwiches ? 'none' : '';
         }
 
+        // Update PB&J calculator mode (sandwiches vs budget)
+        function updatePBJCalculatorMode() {
+            const mode = document.querySelector('input[name="pbjCalcMode"]:checked').value;
+            const targetLabel = document.getElementById('pbjTargetLabel');
+            const targetHint = document.getElementById('pbjTargetHint');
+            const targetInput = document.getElementById('pbjTargetValue');
+
+            if (mode === 'sandwiches') {
+                targetLabel.textContent = 'How many sandwiches do you need?';
+                targetHint.textContent = "We'll calculate the cost and shopping list for you";
+                if (targetInput) {
+                    targetInput.placeholder = 'e.g., 100';
+                    targetInput.setAttribute('aria-label', 'Number of sandwiches needed');
+                }
+            } else {
+                targetLabel.textContent = "What's your budget?";
+                targetHint.textContent = "We'll tell you how many sandwiches you can make";
+                if (targetInput) {
+                    targetInput.placeholder = 'e.g., 200';
+                    targetInput.setAttribute('aria-label', 'Budget in dollars');
+                }
+            }
+
+            // Update mode card visual state
+            const sandwichCard = document.getElementById('pbj-mode-card-sandwiches');
+            const budgetCard = document.getElementById('pbj-mode-card-budget');
+            if (mode === 'sandwiches') {
+                sandwichCard.setAttribute('aria-checked', 'true');
+                budgetCard.setAttribute('aria-checked', 'false');
+            } else {
+                sandwichCard.setAttribute('aria-checked', 'false');
+                budgetCard.setAttribute('aria-checked', 'true');
+            }
+        }
+
         function calculatePBJ() {
-            const pbjCount = parseInt(document.getElementById('pbjCount').value);
+            const mode = document.querySelector('input[name="pbjCalcMode"]:checked').value;
+            const targetValue = parseFloat(document.getElementById('pbjTargetValue').value);
             const pbType = document.getElementById('pbType').value;
             const jellyType = document.getElementById('jellyType').value;
 
-            if (!pbjCount || pbjCount <= 0) {
-                alert('Please enter a valid number of PB&J sandwiches');
+            if (!targetValue || targetValue <= 0) {
+                const hintDiv = document.getElementById('pbjValidationHint');
+                hintDiv.textContent = mode === 'sandwiches' ? 'Please enter the number of sandwiches' : 'Please enter your budget';
+                hintDiv.style.display = 'block';
                 return;
             }
+
+            // Hide validation hint
+            document.getElementById('pbjValidationHint').style.display = 'none';
 
             // Constants
             const pbPerSandwich = 3; // 3 tbsp per sandwich
             const jellyPerSandwich = 1.5; // 1.5 tbsp per sandwich
             const breadSlicesPerSandwich = 2;
-
-            // Peanut butter options (1 oz PB = 1.875 tbsp)
-            let pbJarSize, pbTbspPerJar, pbJarPrice, pbDescription;
-            switch(pbType) {
-                case 'jif-40':
-                    pbJarSize = 40;
-                    pbTbspPerJar = 75;
-                    pbJarPrice = 7.99;
-                    pbDescription = 'Jif Creamy 40 oz (1.13kg)';
-                    break;
-                case 'skippy-40':
-                    pbJarSize = 40;
-                    pbTbspPerJar = 75;
-                    pbJarPrice = 7.99;
-                    pbDescription = 'Skippy Creamy 40 oz (1.13kg)';
-                    break;
-                case 'jif-16':
-                    pbJarSize = 16;
-                    pbTbspPerJar = 30;
-                    pbJarPrice = 3.59;
-                    pbDescription = 'Jif Creamy 16 oz (454g)';
-                    break;
-                case 'skippy-16':
-                    pbJarSize = 16.3;
-                    pbTbspPerJar = 31;
-                    pbJarPrice = 3.59;
-                    pbDescription = 'Skippy Creamy 16.3 oz (462g)';
-                    break;
-                default:
-                    pbJarSize = 40;
-                    pbTbspPerJar = 75;
-                    pbJarPrice = 7.99;
-                    pbDescription = 'Jif Creamy 40 oz (1.13kg)';
-            }
-
-            // Jelly options (1 oz jelly = 1.875 tbsp)
-            let jellyJarSize, jellyTbspPerJar, jellyJarPrice, jellyDescription;
-            switch(jellyType) {
-                case 'smuckers-32':
-                    jellyJarSize = 32;
-                    jellyTbspPerJar = 60;
-                    jellyJarPrice = 4.99;
-                    jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
-                    break;
-                case 'welchs-30':
-                    jellyJarSize = 30;
-                    jellyTbspPerJar = 56;
-                    jellyJarPrice = 3.59;
-                    jellyDescription = "Welch's Concord Grape Jelly 30 oz";
-                    break;
-                case 'smuckers-squeeze-20':
-                    jellyJarSize = 20;
-                    jellyTbspPerJar = 38;
-                    jellyJarPrice = 3.59;
-                    jellyDescription = "Smucker's Squeeze Grape Jelly 20 oz";
-                    break;
-                case 'welchs-squeeze-18':
-                    jellyJarSize = 18;
-                    jellyTbspPerJar = 34;
-                    jellyJarPrice = 3.83;
-                    jellyDescription = "Welch's Natural Concord Grape Squeeze 18 oz";
-                    break;
-                default:
-                    jellyJarSize = 32;
-                    jellyTbspPerJar = 60;
-                    jellyJarPrice = 4.99;
-                    jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
-            }
-
-            // Other container sizes
-            const breadSlicesPerLoaf = 22; // Standard loaf (20 usable + 2 heels)
-            const usableBreadSlicesPerLoaf = 20; // Excluding heels
+            const usableBreadSlicesPerLoaf = 20;
             const bagsPerBox = 480;
-
-            // Other prices
-            const breadPrice = 2.70; // Average single loaf price
+            const breadPrice = 2.70;
             const bagBoxPrice = 7.99;
 
-            // Calculate total needs
+            // Get peanut butter info
+            const pbInfo = getPBInfo(pbType);
+            const jellyInfo = getJellyInfo(jellyType);
+
+            // Calculate cost per sandwich
+            const pbCostPerSandwich = (pbPerSandwich / pbInfo.tbspPerJar) * pbInfo.price;
+            const jellyCostPerSandwich = (jellyPerSandwich / jellyInfo.tbspPerJar) * jellyInfo.price;
+            const breadCostPerSandwich = (breadSlicesPerSandwich / usableBreadSlicesPerLoaf) * breadPrice;
+            const bagCostPerSandwich = bagBoxPrice / bagsPerBox;
+            const totalCostPerSandwich = pbCostPerSandwich + jellyCostPerSandwich + breadCostPerSandwich + bagCostPerSandwich;
+
+            let pbjCount, totalCost;
+
+            if (mode === 'sandwiches') {
+                // Calculate cost for target sandwiches
+                pbjCount = Math.floor(targetValue);
+                totalCost = pbjCount * totalCostPerSandwich;
+            } else {
+                // Calculate sandwiches for target budget
+                pbjCount = Math.floor(targetValue / totalCostPerSandwich);
+                totalCost = pbjCount * totalCostPerSandwich;
+            }
+
+            // Calculate quantities needed
             const totalPbTbsp = pbjCount * pbPerSandwich;
             const totalJellyTbsp = pbjCount * jellyPerSandwich;
             const totalBreadSlices = pbjCount * breadSlicesPerSandwich;
 
-            // Calculate jars/packages needed
-            const pbJarsNeeded = Math.ceil(totalPbTbsp / pbTbspPerJar);
-            const jellyJarsNeeded = Math.ceil(totalJellyTbsp / jellyTbspPerJar);
+            const pbJarsNeeded = Math.ceil(totalPbTbsp / pbInfo.tbspPerJar);
+            const jellyJarsNeeded = Math.ceil(totalJellyTbsp / jellyInfo.tbspPerJar);
             const breadLoavesNeeded = Math.ceil(totalBreadSlices / usableBreadSlicesPerLoaf);
             const bagBoxesNeeded = Math.ceil(pbjCount / bagsPerBox);
 
-            // Calculate costs
-            const pbCost = pbJarsNeeded * pbJarPrice;
-            const jellyCost = jellyJarsNeeded * jellyJarPrice;
+            // Calculate actual costs based on whole packages
+            const pbCost = pbJarsNeeded * pbInfo.price;
+            const jellyCost = jellyJarsNeeded * jellyInfo.price;
             const breadCost = breadLoavesNeeded * breadPrice;
             const bagCost = bagBoxesNeeded * bagBoxPrice;
-            const totalCost = Math.round((pbCost + jellyCost + breadCost + bagCost) * 100) / 100;
+            const actualTotalCost = Math.round((pbCost + jellyCost + breadCost + bagCost) * 100) / 100;
 
-            // Display results
+            // Build result HTML
+            let headerText, summaryText;
+            if (mode === 'sandwiches') {
+                headerText = 'Total Estimated Cost';
+                summaryText = `for ${pbjCount} PB&J sandwiches<br>(≈ $${(actualTotalCost / pbjCount).toFixed(2)} per sandwich)`;
+            } else {
+                headerText = 'Sandwiches You Can Make';
+                summaryText = `with your $${targetValue.toFixed(2)} budget<br>(actual cost: $${actualTotalCost.toFixed(2)}, remaining: $${(targetValue - actualTotalCost).toFixed(2)})`;
+            }
+
             document.getElementById('pbjResult').innerHTML = `
                 <div class="result-grid">
                     <div class="result-item">
                         <h4>Peanut Butter</h4>
                         <div class="number">${pbJarsNeeded}</div>
-                        <div class="description">${pbDescription}<br>(~${pbTbspPerJar} tbsp each)</div>
+                        <div class="description">${pbInfo.description}<br>(~${pbInfo.tbspPerJar} tbsp each)</div>
                         <div style="margin-top: 10px; font-size: 0.9em;">$${pbCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
                         <h4>Jelly</h4>
                         <div class="number">${jellyJarsNeeded}</div>
-                        <div class="description">${jellyDescription}<br>(~${jellyTbspPerJar} tbsp each)</div>
+                        <div class="description">${jellyInfo.description}<br>(~${jellyInfo.tbspPerJar} tbsp each)</div>
                         <div style="margin-top: 10px; font-size: 0.9em;">$${jellyCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
@@ -5719,16 +5712,37 @@
                     </div>
                 </div>
                 <div style="margin-top: 25px; padding: 20px; background: rgba(251,173,63,0.2); border-radius: 12px; text-align: center;">
-                    <h4 style="color: #fff; font-size: 1.4em; margin-bottom: 10px;">Total Estimated Cost</h4>
-                    <div style="font-size: 3em; font-weight: 700; color: #fff;">$${totalCost.toFixed(2)}</div>
+                    <h4 style="color: #fff; font-size: 1.4em; margin-bottom: 10px;">${headerText}</h4>
+                    <div style="font-size: 3em; font-weight: 700; color: #fff;">${mode === 'sandwiches' ? '$' + actualTotalCost.toFixed(2) : pbjCount}</div>
                     <div style="color: rgba(255,255,255,0.9); font-size: 1.1em; margin-top: 8px;">
-                        for ${pbjCount} PB&J sandwiches<br>
-                        (≈ $${(totalCost / pbjCount).toFixed(2)} per sandwich)
+                        ${summaryText}
                     </div>
                 </div>
             `;
 
             document.getElementById('pbjResult').style.display = 'block';
+        }
+
+        // Helper function to get peanut butter info
+        function getPBInfo(pbType) {
+            const pbOptions = {
+                'jif-40': { tbspPerJar: 75, price: 7.99, description: 'Jif Creamy 40 oz' },
+                'skippy-40': { tbspPerJar: 75, price: 7.99, description: 'Skippy Creamy 40 oz' },
+                'jif-16': { tbspPerJar: 30, price: 3.59, description: 'Jif Creamy 16 oz' },
+                'skippy-16': { tbspPerJar: 31, price: 3.59, description: 'Skippy Creamy 16.3 oz' }
+            };
+            return pbOptions[pbType] || pbOptions['jif-40'];
+        }
+
+        // Helper function to get jelly info
+        function getJellyInfo(jellyType) {
+            const jellyOptions = {
+                'smuckers-32': { tbspPerJar: 60, price: 4.99, description: "Smucker's Grape Jelly 32 oz" },
+                'welchs-30': { tbspPerJar: 56, price: 3.59, description: "Welch's Grape Jelly 30 oz" },
+                'smuckers-squeeze-20': { tbspPerJar: 38, price: 3.59, description: "Smucker's Squeeze Jelly 20 oz" },
+                'welchs-squeeze-18': { tbspPerJar: 34, price: 3.83, description: "Welch's Squeeze Jelly 18 oz" }
+            };
+            return jellyOptions[jellyType] || jellyOptions['smuckers-32'];
         }
 
         // Custom Package Calculator - Toggle between slice count and oz/servings input
