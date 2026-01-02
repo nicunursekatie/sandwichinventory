@@ -857,147 +857,6 @@
             }
         }
 
-        .nav-menu {
-            background: white;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-            margin-bottom: 25px;
-            text-align: center;
-        }
-
-        .nav-menu h3 {
-            color: #1a4d66;
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            font-weight: 600;
-        }
-
-        .nav-buttons {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .nav-dropdown {
-            position: relative;
-            display: inline-block;
-        }
-
-        .nav-dropdown-btn {
-            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
-            color: white;
-            border: none;
-            padding: 18px 40px;
-            border-radius: 12px;
-            font-size: 1.2em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 6px 20px rgba(35,99,131,0.3);
-            text-transform: none;
-            letter-spacing: 0.5px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 220px;
-            justify-content: center;
-        }
-
-        .nav-dropdown-btn:hover {
-            background: linear-gradient(135deg, #007E8C 0%, #236383 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(35,99,131,0.4);
-        }
-
-        .nav-dropdown-btn.active {
-            background: linear-gradient(135deg, #007E8C 0%, #236383 100%);
-            box-shadow: 0 8px 25px rgba(35,99,131,0.4);
-        }
-
-        .nav-dropdown-btn::after {
-            content: '▼';
-            font-size: 0.8em;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-dropdown-btn.active::after {
-            transform: rotate(180deg);
-        }
-
-        .nav-dropdown-menu {
-            position: absolute;
-            top: calc(100% + 10px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            min-width: 280px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-50%) translateY(-10px);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            padding: 8px;
-            border: 2px solid #e8f5f9;
-        }
-
-        .nav-dropdown-menu.show {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .nav-dropdown-item {
-            display: block;
-            padding: 14px 20px;
-            color: #236383;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 1em;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            text-align: left;
-            margin-bottom: 4px;
-        }
-
-        .nav-dropdown-item:hover {
-            background: linear-gradient(135deg, #e8f5f9 0%, #f0f9fb 100%);
-            color: #1a4d66;
-            transform: translateX(4px);
-        }
-
-        .nav-dropdown-item:last-child {
-            margin-bottom: 0;
-        }
-
-        @media (max-width: 768px) {
-            .nav-buttons {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .nav-dropdown {
-                width: 100%;
-            }
-
-            .nav-dropdown-btn {
-                width: 100%;
-            }
-
-            .nav-dropdown-menu {
-                left: 0;
-                transform: translateY(-10px);
-                width: 100%;
-            }
-
-            .nav-dropdown-menu.show {
-                transform: translateY(0);
-            }
-        }
-
         /* Calculator Guide Styles */
         html {
             scroll-behavior: smooth;
@@ -1119,139 +978,41 @@
             color: #fff;
         }
         
-        /* Table of Contents Styles */
-        .toc-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-top: 20px;
-        }
-        
+        /* Get Started Button Style */
         .toc-item {
             display: flex;
             align-items: center;
             gap: 16px;
-            padding: 16px 20px;
-            background: #fff;
+            padding: 18px 28px;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
             border-radius: 12px;
-            border: 2px solid #e9ecef;
+            border: none;
             text-decoration: none;
-            color: #236383;
+            color: #fff;
+            font-weight: 600;
+            font-size: 1.1em;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 16px rgba(35, 99, 131, 0.3);
         }
-        
+
         .toc-item:hover {
-            border-color: #47B3CB;
-            background: #f8f9fa;
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(35, 99, 131, 0.1);
+            background: linear-gradient(135deg, #007E8C 0%, #236383 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(35, 99, 131, 0.4);
         }
-        
+
         .toc-icon {
-            font-size: 1.8em;
+            font-size: 1.5em;
             flex-shrink: 0;
-            width: 40px;
-            text-align: center;
         }
-        
+
         .toc-text {
             flex: 1;
-            font-size: 1.05em;
-            font-weight: 500;
         }
-        
+
         .toc-arrow {
-            color: #47B3CB;
             font-size: 1.2em;
             flex-shrink: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .toc-item {
-                padding: 14px 16px;
-            }
-            .toc-icon {
-                font-size: 1.5em;
-                width: 35px;
-            }
-            .toc-text {
-                font-size: 0.95em;
-            }
-        }
-        
-        /* Quick Access Link Styles */
-        .quick-access-link {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            padding: 24px 28px;
-            background: linear-gradient(135deg, #fffbf0 0%, #fef3e2 100%);
-            border: 3px solid #f4a261;
-            border-radius: 16px;
-            text-decoration: none;
-            color: #1a4d66;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 16px rgba(244, 162, 97, 0.2);
-            margin-bottom: 28px;
-        }
-        
-        .quick-access-link:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(244, 162, 97, 0.3);
-            border-color: #fb8500;
-            background: linear-gradient(135deg, #fffbf0 0%, #ffe5cc 100%);
-        }
-        
-        .quick-access-icon {
-            font-size: 3em;
-            flex-shrink: 0;
-        }
-        
-        .quick-access-content {
-            flex: 1;
-        }
-        
-        .quick-access-label {
-            font-size: 0.85em;
-            color: #d97706;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-        
-        .quick-access-title {
-            font-size: 1.3em;
-            font-weight: 700;
-            color: #1a4d66;
-            margin-bottom: 4px;
-        }
-        
-        .quick-access-description {
-            font-size: 1em;
-            color: #64748b;
-        }
-        
-        .quick-access-arrow {
-            font-size: 2em;
-            color: #f4a261;
-            flex-shrink: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .quick-access-link {
-                padding: 20px;
-                gap: 16px;
-            }
-            .quick-access-icon {
-                font-size: 2.5em;
-            }
-            .quick-access-title {
-                font-size: 1.15em;
-            }
-            .quick-access-description {
-                font-size: 0.9em;
-            }
         }
         
         /* Multi-step wizard styles */
@@ -1494,34 +1255,6 @@
             <p>Interactive Group Event Planning Guide</p>
         </div>
 
-        <div class="nav-menu">
-            <h3>Quick Navigation</h3>
-            <div class="nav-buttons">
-                <div class="nav-dropdown">
-                    <button class="nav-dropdown-btn" onclick="toggleDropdown('planning')">
-                        🧮 Planning Tools
-                    </button>
-                    <div class="nav-dropdown-menu" id="planning-menu">
-                        <a href="#calculator-guide" class="nav-dropdown-item">🎯 Which Calculator?</a>
-                        <a href="eventestimator/sandwichprojecteventestimator.html" class="nav-dropdown-item">👥 Group Capacity Estimator</a>
-                        <a href="#calculator" class="nav-dropdown-item">🧮 Deli Calculator</a>
-                        <a href="#custom-calculator" class="nav-dropdown-item">🛒 Custom Package Calculator</a>
-                        <a href="#pbj-calculator" class="nav-dropdown-item">🥜 PB&J Calculator</a>
-                    </div>
-                </div>
-                <div class="nav-dropdown">
-                    <button class="nav-dropdown-btn" onclick="toggleDropdown('resources')">
-                        📚 Guides & Resources
-                    </button>
-                    <div class="nav-dropdown-menu" id="resources-menu">
-                        <a href="toolkit.html" class="nav-dropdown-item">📚 Planning Toolkit</a>
-                        <a href="#pricing-info" class="nav-dropdown-item">📊 Pricing Info</a>
-                        <a href="#recipe" class="nav-dropdown-item">🥪 Recipes</a>
-                        <a href="#food-safety" class="nav-dropdown-item">🛡️ Food Safety</a>
-                    </div>
-                </div>
-            </div>
-        </div>
 
 
         <div class="section" id="intro-section" style="margin-bottom: 28px; background: linear-gradient(135deg, #f8f9fa 80%, #e3f6f9 100%); border: 2px solid #FBAD3F; box-shadow: 0 4px 16px #FBAD3F22;">
@@ -1530,33 +1263,12 @@
                 Plan group sandwich-making events with The Sandwich Project. Estimate costs, quantities, and supplies for events from 20 to 2,000 sandwiches!
             </p>
             
-            <div class="toc-container">
-                <a href="#calculator-guide" class="toc-item">
-                    <span class="toc-icon">🧮</span>
-                    <span class="toc-text">Which Calculator Should I Use? – Start here to choose or use the right tool</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-                <a href="#pricing-info" class="toc-item">
-                    <span class="toc-icon">📊</span>
-                    <span class="toc-text">Ingredient Pricing – See what things cost so you can budget</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-                <a href="#quick-reference" class="toc-item">
-                    <span class="toc-icon">🎯</span>
-                    <span class="toc-text">Quick Reference – Get typical quantities and cost estimates at a glance</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-                <a href="#recipe" class="toc-item">
-                    <span class="toc-icon">🥪</span>
-                    <span class="toc-text">Recipes & Food Safety – Know how to assemble sandwiches safely</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-                <a href="#planning-tips" class="toc-item">
-                    <span class="toc-icon">💡</span>
-                    <span class="toc-text">Planning Tips – Finish with advice on event logistics and storage</span>
-                    <span class="toc-arrow">→</span>
-                </a>
-            </div>
+            <!-- Single CTA to get started -->
+            <a href="#calculator-guide" class="toc-item" style="display: flex; justify-content: center; max-width: 400px; margin: 0 auto;">
+                <span class="toc-icon">🧮</span>
+                <span class="toc-text">Get Started – Choose your calculator</span>
+                <span class="toc-arrow">→</span>
+            </a>
             
             <p style="font-size: 0.95em; color: #64748b; margin-top: 20px; margin-bottom: 0;">
                 All pricing is based on recent shopping at various retailers (Costco, Kroger, Publix, etc.) and may vary by location.
@@ -1586,17 +1298,6 @@
                 </div>
             </div>
         </div>
-
-        <!-- Quick Access Link for Custom Calculator -->
-        <a href="#custom-calculator" class="quick-access-link">
-            <span class="quick-access-icon">🛒</span>
-            <div class="quick-access-content">
-                <div class="quick-access-label">Quick Access While Shopping</div>
-                <div class="quick-access-title">Custom Package Calculator</div>
-                <div class="quick-access-description">Found items NOT in our calculator? Use this tool to calculate servings from custom packages while you're in the store!</div>
-            </div>
-            <span class="quick-access-arrow">→</span>
-        </a>
 
         <!-- Calculator Guide Section -->
         <div class="section" id="calculator-guide">
@@ -2725,77 +2426,14 @@
     </div>
     
     <script>
-        // Dropdown menu functions
-        function toggleDropdown(type) {
-            const menu = document.getElementById(type + '-menu');
-            const btn = event.target.closest('.nav-dropdown').querySelector('.nav-dropdown-btn');
-            const isOpen = menu.classList.contains('show');
-            
-            // Close all other dropdowns
-            document.querySelectorAll('.nav-dropdown-menu').forEach(m => {
-                if (m !== menu) {
-                    m.classList.remove('show');
-                }
-            });
-            document.querySelectorAll('.nav-dropdown-btn').forEach(b => {
-                if (b !== btn) {
-                    b.classList.remove('active');
-                }
-            });
-            
-            // Toggle current dropdown
-            if (isOpen) {
-                menu.classList.remove('show');
-                btn.classList.remove('active');
-            } else {
-                menu.classList.add('show');
-                btn.classList.add('active');
-            }
-        }
-        
-        function closeDropdown(type) {
-            const menu = document.getElementById(type + '-menu');
-            const btn = document.querySelector(`.nav-dropdown:has(#${type}-menu) .nav-dropdown-btn`);
-            if (menu) {
-                menu.classList.remove('show');
-            }
-            if (btn) {
-                btn.classList.remove('active');
-            }
-        }
-        
-        // Close dropdowns when clicking on any dropdown item
+        // Initialize on page load
         document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.nav-dropdown-item').forEach(item => {
-                item.addEventListener('click', function() {
-                    // Close all dropdowns
-                    document.querySelectorAll('.nav-dropdown-menu').forEach(menu => {
-                        menu.classList.remove('show');
-                    });
-                    document.querySelectorAll('.nav-dropdown-btn').forEach(btn => {
-                        btn.classList.remove('active');
-                    });
-                });
-            });
-            
-            // Initialize wizard
+            // Initialize wizard if present
             if (document.getElementById('wizardTargetSandwiches')) {
                 updateWizardStep1();
             }
         });
-        
-        // Close dropdowns when clicking outside
-        window.addEventListener('click', function(event) {
-            if (!event.target.closest('.nav-dropdown')) {
-                document.querySelectorAll('.nav-dropdown-menu').forEach(menu => {
-                    menu.classList.remove('show');
-                });
-                document.querySelectorAll('.nav-dropdown-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-            }
-        });
-        
+
         // Handle custom ingredient selection from Interactive Calculator
         function handleIngredientSelection(ingredientType, value) {
             if (value !== 'custom') return;
