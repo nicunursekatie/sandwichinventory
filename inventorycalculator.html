@@ -920,6 +920,21 @@
             border-color: #f7c56e;
         }
 
+        /* Primary calculator buttons hover */
+        #calculator-guide a[href="#calculator"]:hover,
+        #calculator-guide a[href="#pbj-calculator"]:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Details/summary styling */
+        details summary::-webkit-details-marker {
+            display: none;
+        }
+        details[open] summary span:last-child {
+            transform: rotate(180deg);
+        }
+
         .guide-card-icon {
             font-size: 2.5em;
             margin-bottom: 12px;
@@ -1266,7 +1281,7 @@
             <!-- Single CTA to get started -->
             <a href="#calculator-guide" class="toc-item" style="display: flex; justify-content: center; max-width: 400px; margin: 0 auto;">
                 <span class="toc-icon">🧮</span>
-                <span class="toc-text">Get Started – Choose your calculator</span>
+                <span class="toc-text">Get Started</span>
                 <span class="toc-arrow">→</span>
             </a>
             
@@ -1301,49 +1316,80 @@
 
         <!-- Calculator Guide Section -->
         <div class="section" id="calculator-guide">
-            <h2>🎯 Which Calculator Should I Use?</h2>
-            <p style="color: #64748b; margin-bottom: 5px;">Not sure where to start? Choose the option that best describes your situation:</p>
+            <h2>🎯 Get Started</h2>
 
-            <div class="calculator-guide">
-                <!-- Interactive Deli Calculator Card - For pre-loaded options -->
-                <a href="#calculator" class="guide-card deli">
-                    <div class="guide-card-icon">🧮</div>
-                    <div class="guide-card-title">Interactive Deli Calculator</div>
-                    <div class="guide-card-purpose">– Calculate deli meat, cheese, and bread quantities based on sandwich count or budget</div>
-                    <div class="guide-card-situation">
-                        <strong>Use this if:</strong> You're shopping at <strong>Kroger, Publix, Costco</strong>, or similar stores and want to pick from our pre-loaded meat, cheese, and bread options with known pricing. This builds a complete shopping list with all ingredients.
-                    </div>
-                    <div class="guide-card-action">
-                        Take me there <span>→</span>
-                    </div>
-                </a>
+            <!-- Primary Path: Direct to Main Calculator -->
+            <div style="margin-bottom: 25px;">
+                <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 20px;">
+                    <!-- Main Deli Calculator - Primary CTA -->
+                    <a href="#calculator" style="flex: 1; min-width: 280px; display: flex; align-items: center; gap: 16px; padding: 20px 24px; background: linear-gradient(135deg, #007E8C 0%, #47B3CB 100%); color: white; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(0, 126, 140, 0.3); transition: all 0.3s ease;">
+                        <span style="font-size: 2.2em;">🥪</span>
+                        <div>
+                            <div style="font-size: 1.2em; font-weight: 600; margin-bottom: 4px;">Deli Sandwich Calculator</div>
+                            <div style="font-size: 0.95em; opacity: 0.9;">Turkey, ham, or chicken with cheese</div>
+                        </div>
+                        <span style="margin-left: auto; font-size: 1.5em;">→</span>
+                    </a>
 
-                <!-- Custom Package Calculator Card - For items NOT in calculator -->
-                <a href="#custom-calculator" class="guide-card custom">
-                    <div class="guide-card-icon">🛒</div>
-                    <div class="guide-card-title">Custom Package Calculator</div>
-                    <div class="guide-card-purpose">– Use this if you have unusual package sizes or prices and need to work out how many sandwiches you can make</div>
-                    <div class="guide-card-situation">
-                        <strong>Use this if:</strong> You're <strong>shopping in-store</strong> and found items that are <strong>NOT in our dropdown</strong>. This section has two tools: a quick single-package calculator (for checking one item) and a full shopping list builder wizard (for custom packages of all ingredients).
-                    </div>
-                    <div class="guide-card-action">
-                        Take me there <span>→</span>
-                    </div>
-                </a>
+                    <!-- PB&J Calculator - Secondary CTA -->
+                    <a href="#pbj-calculator" style="flex: 1; min-width: 280px; display: flex; align-items: center; gap: 16px; padding: 20px 24px; background: linear-gradient(135deg, #9f7aea 0%, #b794f4 100%); color: white; text-decoration: none; border-radius: 12px; box-shadow: 0 4px 15px rgba(159, 122, 234, 0.3); transition: all 0.3s ease;">
+                        <span style="font-size: 2.2em;">🥜</span>
+                        <div>
+                            <div style="font-size: 1.2em; font-weight: 600; margin-bottom: 4px;">PB&J Calculator</div>
+                            <div style="font-size: 0.95em; opacity: 0.9;">Peanut butter & jelly sandwiches</div>
+                        </div>
+                        <span style="margin-left: auto; font-size: 1.5em;">→</span>
+                    </a>
+                </div>
 
-                <!-- PB&J Calculator Card -->
-                <a href="#pbj-calculator" class="guide-card pbj">
-                    <div class="guide-card-icon">🥜</div>
-                    <div class="guide-card-title">PB&J Calculator</div>
-                    <div class="guide-card-purpose">– Calculate peanut butter, jelly, bread, and bag quantities for peanut butter and jelly sandwiches</div>
-                    <div class="guide-card-situation">
-                        <strong>Use this if:</strong> You're making <strong>peanut butter & jelly sandwiches</strong> instead of deli meat sandwiches. Different ingredients, different calculations!
-                    </div>
-                    <div class="guide-card-action">
-                        Take me there <span>→</span>
-                    </div>
-                </a>
+                <p style="text-align: center; color: #64748b; font-size: 0.95em; margin: 0;">
+                    Most users start here. Enter your sandwich count or budget to get a complete shopping list.
+                </p>
             </div>
+
+            <!-- Secondary Path: Advanced Options (Collapsible) -->
+            <details style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 0;">
+                <summary style="padding: 16px 20px; cursor: pointer; font-weight: 600; color: #1a4d66; display: flex; align-items: center; gap: 10px; list-style: none;">
+                    <span style="font-size: 1.1em;">🔧</span>
+                    <span>Need something more specific? See all calculator options</span>
+                    <span style="margin-left: auto; transition: transform 0.3s;">▼</span>
+                </summary>
+                <div style="padding: 20px; border-top: 1px solid #e9ecef;">
+                    <p style="color: #64748b; margin-bottom: 20px; font-size: 0.95em;">
+                        Looking to check a specific package or build a fully custom shopping list? These tools help with special situations.
+                    </p>
+
+                    <div class="calculator-guide">
+                        <!-- Quick Package Check -->
+                        <a href="#custom-calculator" class="guide-card custom">
+                            <div class="guide-card-icon">⚡</div>
+                            <div class="guide-card-title">Quick Package Check</div>
+                            <div class="guide-card-purpose">Check how many sandwiches ONE package makes</div>
+                            <div class="guide-card-situation">
+                                <strong>I'm in the store looking at a package.</strong><br>
+                                Found meat, cheese, or bread that's not in our dropdown? Enter the package details to see how many sandwiches it makes.
+                            </div>
+                            <div class="guide-card-action">
+                                Check a package <span>→</span>
+                            </div>
+                        </a>
+
+                        <!-- Full Custom -->
+                        <a href="#custom-calculator-full" class="guide-card" style="background: linear-gradient(135deg, #f8f4ff 0%, #fff 100%); border-color: #9f7aea;" onclick="document.getElementById('custom-calculator').scrollIntoView(); setTimeout(() => document.querySelector('#custom-calculator > div:last-of-type').scrollIntoView({behavior: 'smooth'}), 100); return false;">
+                            <div class="guide-card-icon">📋</div>
+                            <div class="guide-card-title">All-Custom Shopping List</div>
+                            <div class="guide-card-purpose">Build a list with ALL custom packages</div>
+                            <div class="guide-card-situation">
+                                <strong>ALL my packages are custom (not in dropdown).</strong><br>
+                                Enter custom details for meat, cheese, AND bread to build a complete shopping list from scratch.
+                            </div>
+                            <div class="guide-card-action">
+                                Build custom list <span>→</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </details>
         </div>
 
         <!-- Interactive Calculator Section -->
@@ -1503,14 +1549,8 @@
 
         <!-- Custom Package Calculator Section -->
         <div class="section" id="custom-calculator">
-            <h2>🛒 Custom Package Calculator</h2>
-            <p style="color: #64748b; margin-bottom: 20px; font-size: 1.1em;"><strong>Found items that are NOT in our calculator dropdown?</strong> If you're shopping in-store and see meat, cheese, or bread that isn't listed in our pre-loaded options, use the tools below!</p>
-
-            <!-- Quick Single Package Calculator -->
-            <div style="margin-bottom: 30px;">
-                <h3 style="color: #1a4d66; margin-bottom: 10px; font-size: 1.3em;">⚡ Quick Calculator: Single Package</h3>
-                <p style="color: #64748b; margin-bottom: 15px; font-size: 0.95em;">Use this when you're in the store and just need to check one package (meat, cheese, or bread) to see how many sandwiches it makes.</p>
-            </div>
+            <h2>⚡ Quick Package Check</h2>
+            <p style="color: #64748b; margin-bottom: 20px; font-size: 1.1em;">Found a package that's <strong>NOT in our dropdown</strong>? Enter the details below to see how many sandwiches it makes. Great for checking items while you're in the store!</p>
 
             <div class="shopping-calculator" style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%);">
                 <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(0,0,0,0.2);">Calculate Sandwiches from Your Package</h3>
@@ -1601,9 +1641,9 @@
             </div>
 
             <!-- Full Custom Shopping Calculator -->
-            <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;">
-                <h3 style="color: #1a4d66; margin-bottom: 10px; font-size: 1.3em;">📊 Full Custom Shopping List Builder</h3>
-                <p style="color: #64748b; margin-bottom: 20px;">Have custom packages for <strong>all your ingredients</strong> (meat, cheese, and bread)? This wizard works just like the Interactive Calculator above, but lets you enter custom package details for everything. <strong>Tip:</strong> If you selected "Use Custom Package" in the Interactive Calculator above, your other selected ingredients will be pre-populated here automatically!</p>
+            <div style="margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;" id="custom-calculator-full">
+                <h3 style="color: #1a4d66; margin-bottom: 10px; font-size: 1.5em;">📋 All-Custom Shopping List</h3>
+                <p style="color: #64748b; margin-bottom: 20px; font-size: 1.05em;">Need a complete shopping list but <strong>ALL your packages are custom</strong> (not in our dropdowns)? Enter your target sandwich count or budget, then add custom details for meat, cheese, and bread.</p>
 
                 <div class="shopping-calculator wizard-container" style="background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);">
                     <!-- Step indicator -->
