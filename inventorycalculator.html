@@ -1342,54 +1342,7 @@
                     </a>
                 </div>
 
-                <p style="text-align: center; color: #64748b; font-size: 0.95em; margin: 0;">
-                    Most users start here. Enter your sandwich count or budget to get a complete shopping list.
-                </p>
             </div>
-
-            <!-- Secondary Path: Custom Package Options (Collapsible) -->
-            <details style="background: #f8f9fa; border: 1px solid #e9ecef; border-radius: 12px; padding: 0;">
-                <summary style="padding: 16px 20px; cursor: pointer; font-weight: 600; color: #1a4d66; display: flex; align-items: center; gap: 10px; list-style: none;">
-                    <span style="font-size: 1.1em;">📦</span>
-                    <span>Have a package that isn't on our list?</span>
-                    <span style="margin-left: auto; transition: transform 0.3s;">▼</span>
-                </summary>
-                <div style="padding: 20px; border-top: 1px solid #e9ecef;">
-                    <p style="color: #64748b; margin-bottom: 20px; font-size: 0.95em;">
-                        Found meat, cheese, or bread at the store that's not in our dropdown? Use these tools to calculate with your own package details.
-                    </p>
-
-                    <div class="calculator-guide">
-                        <!-- Quick Package Check -->
-                        <a href="#custom-calculator" class="guide-card custom">
-                            <div class="guide-card-icon">⚡</div>
-                            <div class="guide-card-title">Quick Package Check</div>
-                            <div class="guide-card-purpose">Check how many sandwiches ONE package makes</div>
-                            <div class="guide-card-situation">
-                                <strong>I'm in the store looking at a package.</strong><br>
-                                Found meat, cheese, or bread that's not in our dropdown? Enter the package details to see how many sandwiches it makes.
-                            </div>
-                            <div class="guide-card-action">
-                                Check a package <span>→</span>
-                            </div>
-                        </a>
-
-                        <!-- Full Custom -->
-                        <a href="#custom-calculator-full" class="guide-card" style="background: linear-gradient(135deg, #f8f4ff 0%, #fff 100%); border-color: #9f7aea;" onclick="document.getElementById('custom-calculator').scrollIntoView(); setTimeout(() => document.querySelector('#custom-calculator > div:last-of-type').scrollIntoView({behavior: 'smooth'}), 100); return false;">
-                            <div class="guide-card-icon">📋</div>
-                            <div class="guide-card-title">All-Custom Shopping List</div>
-                            <div class="guide-card-purpose">Build a list with ALL custom packages</div>
-                            <div class="guide-card-situation">
-                                <strong>ALL my packages are custom (not in dropdown).</strong><br>
-                                Enter custom details for meat, cheese, AND bread to build a complete shopping list from scratch.
-                            </div>
-                            <div class="guide-card-action">
-                                Build custom list <span>→</span>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-            </details>
         </div>
 
         <!-- Interactive Calculator Section -->
@@ -1445,7 +1398,7 @@
                         <label>Meat type</label>
                         <select id="meatType" onchange="handleIngredientSelection('meat', this.value)">
                             <option value="">Choose your meat</option>
-                            <option value="custom">🛒 Use Custom Package (not in list)</option>
+                            <option value="custom">✏️ Enter my own (not listed)</option>
                             <optgroup label="⭐ Best Value Options">
                                 <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89) - $0.21/slice</option>
                                 <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $3.50) - $0.19/slice</option>
@@ -1468,7 +1421,7 @@
                         <label>Cheese type</label>
                         <select id="cheeseType" onchange="handleIngredientSelection('cheese', this.value)">
                             <option value="">Choose your cheese</option>
-                            <option value="custom">🛒 Use Custom Package (not in list)</option>
+                            <option value="custom">✏️ Enter my own (not listed)</option>
                             <option value="adams-reserve">🧀 Adams Reserve (44 slices, $7.70)</option>
                             <option value="finlandia">🧀 Finlandia Variety (40 slices, $9.69)</option>
                             <option value="arla-havarti">🧀 Arla Havarti (32 slices, $9.69)</option>
@@ -1479,16 +1432,19 @@
                         <label>Bread type</label>
                         <select id="breadType" onchange="handleIngredientSelection('bread', this.value)">
                             <option value="">Choose your bread</option>
-                            <option value="custom">🛒 Use Custom Package (not in list)</option>
+                            <option value="custom">✏️ Enter my own (not listed)</option>
                             <option value="natures-own-double">🍞 Nature's Own Double Loaf (20 sandwiches, $3.99-4.99)</option>
                             <option value="sunbeam-double">🍞 Sunbeam Double Loaf (20 sandwiches, $5.39)</option>
                             <option value="sunbeam-single">🍞 Sunbeam Single Loaf (10 sandwiches, $2.70)</option>
                             <option value="other-double">🍞 Other Brands Double Loaf (20 sandwiches, $5.39)</option>
                             <option value="other-single">🍞 Other Brands Single Loaf (10 sandwiches, $2.70)</option>
                         </select>
-                        </select>
                     </div>
-                    
+
+                    <p style="font-size: 0.9em; color: #64748b; margin: 10px 0 15px 0; text-align: center;">
+                        Don't see your brand or size? <a href="#custom-calculator" style="color: #007E8C;">Enter your own details</a> (slices, ounces, price).
+                    </p>
+
                     <div class="calc-button-container">
                         <button class="calc-button" onclick="calculateNeeds()">Calculate My Order</button>
                     </div>
@@ -2505,7 +2461,7 @@
             
             // Show a message
             setTimeout(() => {
-                alert(`You selected a custom ${ingredientType} package. Scroll down to use the Custom Package Calculator, then click "Use This in Full Shopping Builder" to transfer your result. The Full Shopping Builder will be pre-populated with your other selected ingredients from the Interactive Calculator.`);
+                alert(`Enter your ${ingredientType} details below (slices, ounces, price), then click "Use This in Full Shopping Builder" to add it to your shopping list.`);
             }, 500);
         }
 
@@ -2599,7 +2555,8 @@
             
             // Check if any ingredient is set to custom
             if (meatType === 'custom' || cheeseType === 'custom' || breadType === 'custom') {
-                alert('You selected "Use Custom Package" for one or more ingredients. Please use the Custom Package Calculator below to calculate with custom packages.');
+                alert('You selected "Enter my own" for one or more ingredients. Please enter your details in the calculator below.');
+                document.getElementById('custom-calculator').scrollIntoView({ behavior: 'smooth', block: 'start' });
                 return;
             }
             const meatAmount = parseInt(document.getElementById('meatAmount').value);
