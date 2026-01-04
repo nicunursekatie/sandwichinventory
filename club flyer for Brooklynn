@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sandwich Project at CHS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @page {
+            size: 8.5in 11in;
+            margin: 0;
+        }
+        
+        body {
+            font-family: 'Montserrat', sans-serif;
+            width: 8.5in;
+            height: 11in;
+            margin: 0 auto;
+            background: white;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .page {
+            width: 8.5in;
+            height: 11in;
+            padding: 0.4in;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: #236383;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+        
+        .logo {
+            width: 100px;
+            height: auto;
+            background: white;
+            border-radius: 12px;
+            padding: 8px;
+        }
+        
+        .title-block {
+            text-align: left;
+        }
+        
+        .title-block h1 {
+            font-size: 42px;
+            font-weight: 900;
+            color: white;
+            line-height: 1;
+            text-transform: uppercase;
+        }
+        
+        .title-block .at-chs {
+            font-size: 36px;
+            font-weight: 800;
+            color: #fbad3f;
+        }
+        
+        /* Big tagline */
+        .tagline {
+            text-align: center;
+            background: #fbad3f;
+            color: #236383;
+            padding: 18px 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .tagline h2 {
+            font-size: 36px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        /* Main content area */
+        .content {
+            background: white;
+            border-radius: 12px;
+            padding: 25px 30px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+        }
+        
+        .section-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #007e8c;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            border-bottom: 4px solid #47b3cb;
+            padding-bottom: 5px;
+            display: inline-block;
+        }
+        
+        .big-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .big-list li {
+            font-size: 22px;
+            font-weight: 700;
+            color: #236383;
+            padding: 8px 0;
+            padding-left: 35px;
+            position: relative;
+            line-height: 1.3;
+        }
+        
+        .big-list li::before {
+            content: "●";
+            position: absolute;
+            left: 0;
+            color: #fbad3f;
+            font-size: 24px;
+        }
+        
+        .big-list .sub {
+            font-size: 16px;
+            font-weight: 600;
+            color: #666;
+            display: block;
+            margin-top: 2px;
+        }
+        
+        /* Contact callout */
+        .contact {
+            background: #007e8c;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .contact span {
+            font-size: 20px;
+            font-weight: 700;
+        }
+        
+        .contact strong {
+            color: #fbad3f;
+            font-size: 22px;
+        }
+        
+        /* CTA */
+        .cta {
+            text-align: center;
+            margin-top: 15px;
+        }
+        
+        .cta-btn {
+            display: inline-block;
+            background: #a31c41;
+            color: white;
+            padding: 18px 60px;
+            font-size: 32px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 50px;
+        }
+        
+        .cta-sub {
+            font-size: 20px;
+            font-weight: 700;
+            color: #007e8c;
+            margin-top: 10px;
+        }
+        
+        /* Bottom stripe */
+        .bottom-stripe {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: linear-gradient(90deg, #fbad3f, #47b3cb, #007e8c);
+        }
+        
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- Header -->
+        <div class="header">
+            <img src="sandwich logo.png" alt="The Sandwich Project" class="logo">
+            <div class="title-block">
+                <h1>The Sandwich Project</h1>
+                <span class="at-chs">at CHS</span>
+            </div>
+        </div>
+        
+        <!-- Big Tagline -->
+        <div class="tagline">
+            <h2>Earn Community Service Hours</h2>
+        </div>
+        
+        <!-- Content Box -->
+        <div class="content">
+            <div>
+                <div class="section-title">Get Involved</div>
+                <ul class="big-list">
+                    <li>Sign up for monthly sandwich making events
+                        <span class="sub">Link in bio or scan QR code</span>
+                    </li>
+                    <li>Clubs can host their own events</li>
+                    <li>Fulfill the Amazon Wishlist
+                        <span class="sub">Link in bio</span>
+                    </li>
+                    <li>Donate under the CHS name
+                        <span class="sub">Link in bio</span>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="contact">
+                <span>Questions? Contact</span> <strong>Brooklynn Bowman</strong>
+            </div>
+            
+            <div class="cta">
+                <div class="cta-btn">Sign Up!</div>
+                <div class="cta-sub">Join the GroupMe to stay informed</div>
+            </div>
+        </div>
+        
+        <div class="bottom-stripe"></div>
+    </div>
+</body>
+</html>
