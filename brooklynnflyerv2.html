@@ -234,6 +234,9 @@
             padding: 8px;
             background: white;
             border: 3px solid #47b3cb;
+            display: block;
+            margin: 0 auto;
+            box-sizing: border-box;
         }
         
         .qr-block .qr-label {
@@ -256,6 +259,8 @@
             border-radius: 14px;
             margin-bottom: 12px;
             box-shadow: 0 6px 20px rgba(0,126,140,0.25);
+            overflow: hidden;
+            position: relative;
         }
         
         .info-block .contact span {
@@ -309,6 +314,19 @@
             body {
                 -webkit-print-color-adjust: exact;
                 print-color-adjust: exact;
+            }
+            
+            .qr-block img {
+                box-shadow: none;
+                border: 3px solid #47b3cb;
+            }
+            
+            .info-block .contact {
+                box-shadow: none;
+            }
+            
+            .page {
+                overflow: visible;
             }
         }
     </style>
