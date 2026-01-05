@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Sandwich Project at CHS</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        @page {
+            size: 8.5in 11in;
+            margin: 0;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            width: 8.5in;
+            height: 11in;
+            margin: 0 auto;
+            background: #236383;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+        
+        .page {
+            width: 8.5in;
+            height: 11in;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        /* Decorative top wave */
+        .top-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 260px;
+            background: linear-gradient(135deg, #fbad3f 0%, #f9c46b 100%);
+            clip-path: ellipse(80% 100% at 50% 0%);
+        }
+        
+        /* Content wrapper */
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            padding: 0.35in;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        /* Header */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+            margin-bottom: 15px;
+        }
+        
+        .logo {
+            width: 130px;
+            height: auto;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+        }
+        
+        .title-block {
+            text-align: left;
+        }
+        
+        .title-block h1 {
+            font-size: 42px;
+            font-weight: 900;
+            color: #236383;
+            line-height: 1.05;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+        }
+        
+        .title-block .at-chs {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        /* Main card */
+        .main-card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px 35px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+        }
+        
+        /* Tagline banner */
+        .tagline {
+            background: linear-gradient(135deg, #236383 0%, #007e8c 100%);
+            color: white;
+            padding: 16px 25px;
+            border-radius: 14px;
+            text-align: center;
+            margin-bottom: 22px;
+            box-shadow: 0 8px 25px rgba(35,99,131,0.3);
+        }
+        
+        .tagline h2 {
+            font-size: 28px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        /* Section */
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #007e8c;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .section-title::before,
+        .section-title::after {
+            content: "";
+            height: 3px;
+            background: linear-gradient(90deg, #47b3cb, transparent);
+            flex-grow: 1;
+        }
+        
+        .section-title::before {
+            background: linear-gradient(90deg, transparent, #47b3cb);
+        }
+        
+        /* List */
+        .big-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 18px 0;
+        }
+        
+        .big-list li {
+            font-size: 17px;
+            font-weight: 600;
+            color: #236383;
+            padding: 10px 15px;
+            padding-left: 50px;
+            position: relative;
+            line-height: 1.3;
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border-left: 4px solid #fbad3f;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        
+        .big-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 14px;
+            font-weight: 800;
+            background: #fbad3f;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .big-list li .sub {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            display: block;
+            margin-top: 2px;
+        }
+        
+        /* Donation note */
+        .donation-note {
+            background: linear-gradient(135deg, #a31c41 0%, #c42350 100%);
+            color: white;
+            padding: 12px 25px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            box-shadow: 0 6px 20px rgba(163,28,65,0.25);
+        }
+        
+        .donation-note strong {
+            color: #fbad3f;
+            font-weight: 800;
+        }
+        
+        /* Bottom section */
+        .bottom-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            flex-grow: 1;
+            padding: 15px 0;
+        }
+        
+        .qr-block {
+            text-align: center;
+        }
+        
+        .qr-block img {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            border-radius: 14px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            padding: 8px;
+            background: white;
+            border: 3px solid #47b3cb;
+        }
+        
+        .qr-block .qr-label {
+            font-size: 18px;
+            font-weight: 800;
+            color: #236383;
+            text-transform: uppercase;
+            margin-top: 10px;
+            letter-spacing: 1px;
+        }
+        
+        .info-block {
+            text-align: left;
+        }
+        
+        .info-block .contact {
+            background: linear-gradient(135deg, #007e8c 0%, #47b3cb 100%);
+            color: white;
+            padding: 16px 22px;
+            border-radius: 14px;
+            margin-bottom: 12px;
+            box-shadow: 0 6px 20px rgba(0,126,140,0.25);
+        }
+        
+        .info-block .contact span {
+            font-size: 14px;
+            font-weight: 600;
+            display: block;
+            opacity: 0.9;
+        }
+        
+        .info-block .contact strong {
+            color: #fbad3f;
+            font-size: 20px;
+            font-weight: 800;
+        }
+        
+        .info-block .groupme {
+            font-size: 15px;
+            font-weight: 700;
+            color: #236383;
+            padding-left: 5px;
+        }
+        
+        /* CTA */
+        .cta {
+            text-align: center;
+            margin-top: auto;
+        }
+        
+        .cta-text {
+            font-size: 22px;
+            font-weight: 800;
+            color: #236383;
+            letter-spacing: 0.5px;
+        }
+        
+        .cta-text span {
+            color: #a31c41;
+        }
+        
+        /* Bottom accent bar */
+        .bottom-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 12px;
+            background: linear-gradient(90deg, #fbad3f 0%, #47b3cb 50%, #007e8c 100%);
+        }
+        
+        @media print {
+            body {
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <!-- Top decorative wave -->
+        <div class="top-decoration"></div>
+        
+        <!-- Content -->
+        <div class="content-wrapper">
+            <!-- Header -->
+            <div class="header">
+                <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project" class="logo">
+                <div class="title-block">
+                    <h1>The Sandwich<br>Project</h1>
+                    <span class="at-chs">at CHS</span>
+                </div>
+            </div>
+            
+            <!-- Main Card -->
+            <div class="main-card">
+                <!-- Tagline -->
+                <div class="tagline">
+                    <h2>Earn Community Service Hours</h2>
+                </div>
+                
+                <!-- Ways to Participate Section -->
+                <div class="section-title">Ways to Participate</div>
+                
+                <ul class="big-list">
+                    <li>Sign up for school-wide monthly sandwich making events
+                        <span class="sub">Link in bio or scan QR code below</span>
+                    </li>
+                    <li>Clubs can arrange to make sandwiches aside from school-wide events</li>
+                    <li>Help fulfill the Amazon Wishlist
+                        <span class="sub">Link in bio</span>
+                    </li>
+                    <li>Donate directly to The Sandwich Project
+                        <span class="sub">Link in bio</span>
+                    </li>
+                </ul>
+                
+                <div class="donation-note">
+                    When donating, note <strong>"CHS"</strong> to give our school credit!
+                </div>
+                
+                <!-- Bottom with QR and Contact -->
+                <div class="bottom-section">
+                    <div class="qr-block">
+                        <img src="brooklynn qr code.png" alt="Scan to sign up">
+                        <div class="qr-label">Scan to Sign Up</div>
+                    </div>
+                    
+                    <div class="info-block">
+                        <div class="contact">
+                            <span>Questions? Contact</span>
+                            <strong>Brooklynn Bowman</strong>
+                        </div>
+                        <div class="groupme">Join the GroupMe to stay informed!<br><span style="font-size: 12px; font-weight: 500; color: #666;">Link in bio</span></div>
+                    </div>
+                </div>
+                
+                <div class="cta">
+                    <div class="cta-text">We look forward to <span>seeing you!</span></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Bottom bar -->
+        <div class="bottom-bar"></div>
+    </div>
+</body>
+</html>
