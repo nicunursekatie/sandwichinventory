@@ -271,6 +271,72 @@
             background: #28a745;
         }
 
+        /* PDF Preview Container */
+        .pdf-preview-container {
+            display: none;
+            margin-top: 15px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 15px;
+        }
+
+        .pdf-preview-container.active {
+            display: block;
+        }
+
+        .pdf-preview {
+            width: 100%;
+            height: 500px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        .pdf-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            flex-wrap: wrap;
+        }
+
+        .pdf-action-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 500;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+        }
+
+        .pdf-action-btn.download {
+            background: #f8f9fa;
+            color: #333;
+            border: 1px solid #e0e0e0;
+        }
+
+        .pdf-action-btn.download:hover {
+            background: #e9ecef;
+        }
+
+        .pdf-action-btn.close {
+            background: #6c757d;
+            color: white;
+        }
+
+        .pdf-action-btn.close:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .pdf-preview {
+                height: 350px;
+            }
+        }
+
         /* Navigation */
         .navigation {
             display: flex;
@@ -1011,12 +1077,20 @@
                         </div>
                         <span class="document-status pending" id="status-deli">Not viewed</span>
                     </div>
-                    <a href="toolkit/20250205-TSP-Deli Sandwich Making 101-Groups (2).pdf"
-                       target="_blank"
-                       class="view-document-btn"
-                       onclick="markViewed('deli')">
+                    <button class="view-document-btn" onclick="togglePdfPreview('deli', 'toolkit/20250205-TSP-Deli Sandwich Making 101-Groups (2).pdf')">
                         📄 View Full Guide
-                    </a>
+                    </button>
+                    <div class="pdf-preview-container" id="preview-deli">
+                        <iframe class="pdf-preview" id="iframe-deli" src="" title="Deli Sandwich Making Guide"></iframe>
+                        <div class="pdf-actions">
+                            <a href="toolkit/20250205-TSP-Deli Sandwich Making 101-Groups (2).pdf" download class="pdf-action-btn download">
+                                ⬇️ Download PDF
+                            </a>
+                            <button class="pdf-action-btn close" onclick="closePdfPreview('deli')">
+                                ✕ Close Preview
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- PB&J Key Takeaways -->
@@ -1046,12 +1120,20 @@
                         </div>
                         <span class="document-status pending" id="status-pbj">Not viewed</span>
                     </div>
-                    <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf"
-                       target="_blank"
-                       class="view-document-btn"
-                       onclick="markViewed('pbj')">
+                    <button class="view-document-btn" onclick="togglePdfPreview('pbj', 'toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf')">
                         📄 View Full Guide
-                    </a>
+                    </button>
+                    <div class="pdf-preview-container" id="preview-pbj">
+                        <iframe class="pdf-preview" id="iframe-pbj" src="" title="PB&J Sandwich Making Guide"></iframe>
+                        <div class="pdf-actions">
+                            <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf" download class="pdf-action-btn download">
+                                ⬇️ Download PDF
+                            </a>
+                            <button class="pdf-action-btn close" onclick="closePdfPreview('pbj')">
+                                ✕ Close Preview
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="navigation">
@@ -1122,12 +1204,20 @@
                         </div>
                         <span class="document-status pending" id="status-safety">Not viewed</span>
                     </div>
-                    <a href="toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf"
-                       target="_blank"
-                       class="view-document-btn"
-                       onclick="markViewed('safety')">
+                    <button class="view-document-btn" onclick="togglePdfPreview('safety', 'toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf')">
                         📄 View Full Guide
-                    </a>
+                    </button>
+                    <div class="pdf-preview-container" id="preview-safety">
+                        <iframe class="pdf-preview" id="iframe-safety" src="" title="Food Safety Guide"></iframe>
+                        <div class="pdf-actions">
+                            <a href="toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf" download class="pdf-action-btn download">
+                                ⬇️ Download PDF
+                            </a>
+                            <button class="pdf-action-btn close" onclick="closePdfPreview('safety')">
+                                ✕ Close Preview
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="navigation">
@@ -1157,12 +1247,20 @@
                         </div>
                         <span class="document-status pending" id="status-deli-labels">Not viewed</span>
                     </div>
-                    <a href="toolkit/Deli labels_1749341916236.pdf"
-                       target="_blank"
-                       class="view-document-btn"
-                       onclick="markViewed('deli-labels')">
+                    <button class="view-document-btn" onclick="togglePdfPreview('deli-labels', 'toolkit/Deli labels_1749341916236.pdf')">
                         📄 View Document
-                    </a>
+                    </button>
+                    <div class="pdf-preview-container" id="preview-deli-labels">
+                        <iframe class="pdf-preview" id="iframe-deli-labels" src="" title="Deli Sandwich Labels"></iframe>
+                        <div class="pdf-actions">
+                            <a href="toolkit/Deli labels_1749341916236.pdf" download class="pdf-action-btn download">
+                                ⬇️ Download PDF
+                            </a>
+                            <button class="pdf-action-btn close" onclick="closePdfPreview('deli-labels')">
+                                ✕ Close Preview
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="document-card" id="doc-pbj-labels">
@@ -1174,12 +1272,20 @@
                         </div>
                         <span class="document-status pending" id="status-pbj-labels">Not viewed</span>
                     </div>
-                    <a href="toolkit/Pbj labels.pdf"
-                       target="_blank"
-                       class="view-document-btn"
-                       onclick="markViewed('pbj-labels')">
+                    <button class="view-document-btn" onclick="togglePdfPreview('pbj-labels', 'toolkit/Pbj labels.pdf')">
                         📄 View Document
-                    </a>
+                    </button>
+                    <div class="pdf-preview-container" id="preview-pbj-labels">
+                        <iframe class="pdf-preview" id="iframe-pbj-labels" src="" title="PB&J Labels"></iframe>
+                        <div class="pdf-actions">
+                            <a href="toolkit/Pbj labels.pdf" download class="pdf-action-btn download">
+                                ⬇️ Download PDF
+                            </a>
+                            <button class="pdf-action-btn close" onclick="closePdfPreview('pbj-labels')">
+                                ✕ Close Preview
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="navigation">
@@ -1441,6 +1547,34 @@
 
             // Check if step requirements are met
             checkStepRequirements();
+        }
+
+        function togglePdfPreview(docId, pdfUrl) {
+            const container = document.getElementById('preview-' + docId);
+            const iframe = document.getElementById('iframe-' + docId);
+
+            if (container.classList.contains('active')) {
+                // Close the preview
+                closePdfPreview(docId);
+            } else {
+                // Open the preview - load PDF into iframe
+                iframe.src = pdfUrl;
+                container.classList.add('active');
+                // Mark as viewed when opened
+                markViewed(docId);
+                // Scroll to show the preview
+                setTimeout(() => {
+                    container.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }, 100);
+            }
+        }
+
+        function closePdfPreview(docId) {
+            const container = document.getElementById('preview-' + docId);
+            const iframe = document.getElementById('iframe-' + docId);
+            container.classList.remove('active');
+            // Clear the iframe src to stop loading
+            iframe.src = '';
         }
 
         function checkStepRequirements() {
