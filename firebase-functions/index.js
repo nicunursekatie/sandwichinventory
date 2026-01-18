@@ -110,6 +110,7 @@ const PDF_URLS = {
   foodSafety: 'https://tsp-group-event-guide.web.app/toolkit/20230525-TSP-Food%2BSafety%2BVolunteers%20(2).pdf',
   deliLabels: 'https://tsp-group-event-guide.web.app/toolkit/Deli%20labels_1749341916236.pdf',
   pbjLabels: 'https://tsp-group-event-guide.web.app/toolkit/Pbj%20labels.pdf',
+  inventoryCalculator: 'https://tsp-group-event-guide.web.app/inventorycalculator.html',
 };
 
 // Assembly graphic URLs
@@ -244,6 +245,15 @@ exports.sendToolkitConfirmationEmail = functions.firestore
     <div class="section">
       <h2>Quick Reference: Assembly Guide</h2>
       ${assemblyGraphicsHtml}
+    </div>
+
+    <div class="section">
+      <h2>🧮 Inventory Calculator</h2>
+      <p>Use our <strong>Inventory Calculator</strong> to plan your shopping list! Enter your sandwich count and get exact quantities for meat, cheese, bread, and supplies.</p>
+      <div class="highlight-box" style="text-align: center; padding: 20px;">
+        <a href="${PDF_URLS.inventoryCalculator}" style="display: inline-block; background: linear-gradient(135deg, #007E8C, #47B3CB); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: 600;">Open Inventory Calculator</a>
+        <p style="margin-top: 10px; color: #666; font-size: 14px;">Bookmark this tool — you'll want to use it when finalizing your order!</p>
+      </div>
     </div>
 
     <div class="section">

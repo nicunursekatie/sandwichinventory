@@ -1041,6 +1041,11 @@
 
                 <div class="step-indicator" data-step="4">
                     <div class="step-number"><span>5</span></div>
+                    <div class="step-label">Calculator</div>
+                </div>
+
+                <div class="step-indicator" data-step="5">
+                    <div class="step-number"><span>6</span></div>
                     <div class="step-label">Confirm</div>
                 </div>
             </div>
@@ -1400,8 +1405,65 @@
                 </div>
             </div>
 
-            <!-- Step 4: Schedule Your Event -->
+            <!-- Step 4: Inventory Calculator -->
             <div class="step-content" data-step="4">
+                <h2 class="step-title">🧮 Inventory Calculator</h2>
+                <p class="step-description">
+                    Before your event, you'll need to purchase ingredients. Our <strong>Inventory Calculator</strong> helps you figure out exactly how much meat, cheese, bread, and supplies to buy based on your sandwich count.
+                </p>
+
+                <div class="key-takeaways" style="border-color: #007E8C; background: linear-gradient(135deg, #e8f5f9 0%, #fff 100%);">
+                    <div class="key-takeaways-header">
+                        <span>📊</span>
+                        <h3>What the Calculator Does</h3>
+                    </div>
+                    <ul>
+                        <li>Enter your <strong>target sandwich count</strong> (e.g., 150 sandwiches)</li>
+                        <li>Select your <strong>sandwich type</strong> (Deli or PB&J)</li>
+                        <li>Get a complete <strong>shopping list</strong> with exact quantities of each ingredient</li>
+                        <li>See <strong>estimated costs</strong> based on typical store prices</li>
+                        <li>Works with both <strong>standard packages</strong> and <strong>custom bulk sizes</strong></li>
+                    </ul>
+                </div>
+
+                <div class="document-card" id="doc-calculator" style="border-color: #007E8C; background: linear-gradient(135deg, #f0f9fa 0%, #fff 100%);">
+                    <div class="document-header">
+                        <span class="document-icon">🧮</span>
+                        <div class="document-info">
+                            <h3>Open the Inventory Calculator</h3>
+                            <p>Plan your shopping list before your event — bookmark this tool to use again later!</p>
+                        </div>
+                        <span class="document-status pending" id="status-calculator">Not opened</span>
+                    </div>
+                    <a href="inventorycalculator.html" target="_blank" class="view-document-btn" onclick="markCalculatorOpened()" style="display: inline-flex;">
+                        🔗 Open Calculator in New Tab
+                    </a>
+                </div>
+
+                <div class="key-takeaways pbj" style="margin-top: 25px;">
+                    <div class="key-takeaways-header">
+                        <span>💡</span>
+                        <h3>Pro Tip</h3>
+                    </div>
+                    <ul>
+                        <li><strong>Bookmark the calculator</strong> — you'll want to use it again when finalizing your order closer to your event date</li>
+                        <li>The link will also be included in your <strong>confirmation email</strong> for easy access</li>
+                        <li>You can skip this step for now if you're not ready to plan quantities yet</li>
+                    </ul>
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-btn back" onclick="prevStep()">
+                        <span>←</span> Back
+                    </button>
+                    <button class="nav-btn next" onclick="nextStep()">
+                        Continue <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 5: Schedule Your Event -->
+            <div class="step-content" data-step="5">
                 <h2 class="step-title">📅 Schedule Your Event</h2>
                 <p class="step-description">
                     Great job! You've reviewed all the essential materials. Now let's get your event scheduled!
@@ -1578,7 +1640,7 @@
 
     <script>
         let currentStep = 0;
-        const totalSteps = 5;
+        const totalSteps = 6;
 
         // Track viewed documents
         const viewedDocs = {
@@ -1586,7 +1648,8 @@
             pbj: false,
             safety: false,
             'deli-labels': false,
-            'pbj-labels': false
+            'pbj-labels': false,
+            calculator: false
         };
 
         function updateProgressBar() {
@@ -1612,7 +1675,7 @@
             updateProgressBar();
 
             // If showing confirmation step, populate the reviewed list
-            if (step === 4) {
+            if (step === 5) {
                 populateReviewedList();
             }
         }
@@ -1696,6 +1759,18 @@
             if (nextBtn3) nextBtn3.disabled = !step3Complete;
         }
 
+        function markCalculatorOpened() {
+            viewedDocs.calculator = true;
+            const card = document.getElementById('doc-calculator');
+            const status = document.getElementById('status-calculator');
+            if (card && status) {
+                card.classList.add('viewed');
+                status.textContent = 'Opened ✓';
+                status.classList.remove('pending');
+                status.classList.add('viewed');
+            }
+        }
+
         function populateReviewedList() {
             const list = document.getElementById('reviewedList');
             const items = [];
@@ -1705,6 +1780,7 @@
             if (viewedDocs.safety) items.push('Food Safety for Volunteers');
             if (viewedDocs['deli-labels']) items.push('Deli Sandwich Labels');
             if (viewedDocs['pbj-labels']) items.push('PB&J Labels');
+            if (viewedDocs.calculator) items.push('Inventory Calculator');
 
             list.innerHTML = items.map(item =>
                 `<li><span class="check">✓</span> ${item}</li>`
