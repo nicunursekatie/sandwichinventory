@@ -458,6 +458,105 @@
             font-weight: 500;
         }
 
+        /* Key Takeaways Box */
+        .key-takeaways {
+            background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+        }
+
+        .key-takeaways.deli {
+            border-color: #007E8C;
+            background: linear-gradient(135deg, #e8f5f9 0%, #fff 100%);
+        }
+
+        .key-takeaways.pbj {
+            border-color: #FBAD3F;
+            background: linear-gradient(135deg, #fef9f0 0%, #fff 100%);
+        }
+
+        .key-takeaways-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .key-takeaways-header span {
+            font-size: 1.8em;
+        }
+
+        .key-takeaways-header h3 {
+            font-size: 1.25em;
+            color: #1a4d66;
+            margin: 0;
+        }
+
+        .key-takeaways ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .key-takeaways li {
+            padding: 10px 0;
+            padding-left: 28px;
+            position: relative;
+            font-size: 1em;
+            color: #333;
+            line-height: 1.5;
+            border-bottom: 1px solid #e8e8e8;
+        }
+
+        .key-takeaways li:last-child {
+            border-bottom: none;
+        }
+
+        .key-takeaways li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            color: #28a745;
+            font-weight: 700;
+        }
+
+        .key-takeaways .highlight {
+            background: rgba(251, 173, 63, 0.2);
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .key-takeaways .assembly-order {
+            background: #fff;
+            border: 2px dashed #007E8C;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .key-takeaways .assembly-order h4 {
+            font-size: 0.95em;
+            color: #666;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .key-takeaways .assembly-order .order {
+            font-size: 1.15em;
+            font-weight: 600;
+            color: #1a4d66;
+        }
+
+        .key-takeaways .assembly-order .order span {
+            color: #007E8C;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header, .progress-container, .main-content {
@@ -592,16 +691,37 @@
             <div class="step-content" data-step="1">
                 <h2 class="step-title">📖 Sandwich Making Guides</h2>
                 <p class="step-description">
-                    Learn the proper techniques for making sandwiches. Please review the guide(s) relevant to your event type.
+                    Learn the proper techniques for making sandwiches. Review the key points below, then view the full guide(s) for your event type.
                     <strong>You must view at least one guide to continue.</strong>
                 </p>
+
+                <!-- Deli Sandwich Key Takeaways -->
+                <div class="key-takeaways deli">
+                    <div class="key-takeaways-header">
+                        <span>🥪</span>
+                        <h3>Deli Sandwich Key Points</h3>
+                    </div>
+                    <ul>
+                        <li>Each sandwich uses <span class="highlight">2 slices of cheese</span> and <span class="highlight">2-3 slices of deli meat</span> (turkey) on white or white wheat bread</li>
+                        <li><strong>No condiments</strong> — sandwiches are made with meat, cheese, and bread only</li>
+                        <li>The specific assembly order protects the bread from moisture and prevents sogginess</li>
+                        <li>After assembly, each sandwich goes into an <strong>individual sandwich baggie</strong></li>
+                        <li>Bagged sandwiches are stacked back inside the <strong>loaf bag the bread came from</strong> for transport</li>
+                    </ul>
+                    <div class="assembly-order">
+                        <h4>Assembly Order (Bottom to Top)</h4>
+                        <div class="order">
+                            🍞 Bread <span>→</span> 🧀 Cheese <span>→</span> 🥩 Meat <span>→</span> 🧀 Cheese <span>→</span> 🍞 Bread
+                        </div>
+                    </div>
+                </div>
 
                 <div class="document-card" id="doc-deli">
                     <div class="document-header">
                         <span class="document-icon">🥪</span>
                         <div class="document-info">
                             <h3>Deli Sandwich Making 101</h3>
-                            <p>Turkey or ham sandwiches with cheese - our most common event type</p>
+                            <p>Complete guide for deli meat sandwiches — our most common event type</p>
                         </div>
                         <span class="document-status pending" id="status-deli">Not viewed</span>
                     </div>
@@ -609,8 +729,29 @@
                        target="_blank"
                        class="view-document-btn"
                        onclick="markViewed('deli')">
-                        📄 View Document
+                        📄 View Full Guide
                     </a>
+                </div>
+
+                <!-- PB&J Key Takeaways -->
+                <div class="key-takeaways pbj" style="margin-top: 35px;">
+                    <div class="key-takeaways-header">
+                        <span>🥜</span>
+                        <h3>PB&J Sandwich Key Points</h3>
+                    </div>
+                    <ul>
+                        <li>Use <span class="highlight">1 tbsp of peanut butter</span> on one slice of bread, <span class="highlight">2 tbsp on the other</span></li>
+                        <li>Add <span class="highlight">1.5 tbsp of jelly</span> on one slice — <strong>not too close to the edges</strong> to prevent mess</li>
+                        <li>Keeping jelly away from edges ensures sandwiches stay neat during transport and eating</li>
+                        <li>After assembly, each sandwich goes into an <strong>individual sandwich baggie</strong></li>
+                        <li>Bagged sandwiches are stacked back inside the <strong>loaf bag the bread came from</strong> for transport</li>
+                    </ul>
+                    <div class="assembly-order" style="border-color: #FBAD3F;">
+                        <h4>Assembly Order</h4>
+                        <div class="order">
+                            🍞 Bread + PB (1 tbsp) <span>→</span> 🍇 Jelly (1.5 tbsp) on top <span>→</span> 🍞 Bread + PB (2 tbsp) on top
+                        </div>
+                    </div>
                 </div>
 
                 <div class="document-card" id="doc-pbj">
@@ -618,7 +759,7 @@
                         <span class="document-icon">🥜</span>
                         <div class="document-info">
                             <h3>PB&J Sandwich Making 101</h3>
-                            <p>Peanut butter and jelly sandwiches - great for nut-friendly events</p>
+                            <p>Complete guide for peanut butter & jelly sandwiches</p>
                         </div>
                         <span class="document-status pending" id="status-pbj">Not viewed</span>
                     </div>
@@ -626,7 +767,7 @@
                        target="_blank"
                        class="view-document-btn"
                        onclick="markViewed('pbj')">
-                        📄 View Document
+                        📄 View Full Guide
                     </a>
                 </div>
 
