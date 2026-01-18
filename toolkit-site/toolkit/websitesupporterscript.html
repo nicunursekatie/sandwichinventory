@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html>
+<head>
+<link href="https://fonts.googleapis.com/css?family=Montserrat:600,400&display=swap" rel="stylesheet">
+<style>
+body {
+    font-family: 'Montserrat', Arial, sans-serif;
+    margin: 0;
+    color: #fff;
+}
+.supporters-section {
+    background: #2E6B89;
+    padding: 60px 20px;
+}
+.supporters-grid {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 40px;
+}
+.category {
+    text-align: left;
+}
+
+.category-icon{
+  width: 96px; 
+  height: 96px; 
+  margin: 0 auto 12px;
+  display: flex; 
+  align-items: center; 
+  justify-content: center;
+}
+.category-icon img{
+  width: 100%; 
+  height: 100%; 
+  object-fit: contain; 
+  display: block;
+  background: transparent !important; 
+  box-shadow: none !important;
+}
+.category h2 {
+    font-size: 1.4em;
+    margin: 0 0 10px 0;
+    font-weight: 600;
+    text-align: center;
+}
+.supporter-count {
+    text-align: center;
+    color: #FBAD3F;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+.toggle-btn {
+    display: block;
+    margin: 0 auto 20px;
+    background: #FBAD3F;
+    color: #fff;
+    border: none;
+    padding: 8px 24px;
+    border-radius: 20px;
+    font-size: 0.9em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.toggle-btn:hover {
+    background: #E89929;
+}
+.supporter-list {
+    max-height: 400px;
+    overflow: hidden;
+    position: relative;
+    transition: max-height 0.4s ease;
+}
+.supporter-list::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(to bottom, transparent, #2E6B89);
+    pointer-events: none;
+    transition: opacity 0.3s;
+}
+.category.expanded .supporter-list::after {
+    opacity: 0;
+}
+.supporter-name {
+    padding: 8px 0;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+    .category-icon{ 
+        width:80px; 
+        height:none; 
+    }
+    .supporters-grid {
+        grid-template-columns: 1fr;
+    }
+    .supporter-list {
+        max-height: 350px;
+    }
+    .supporter-list::after {
+        height: none;
+    }
+}
+</style>
+</head>
+<body>
+<div class="supporters-section">
+    <div class="supporters-grid">
+        <div class="category">
+            <div class="category-icon">
+                <img src="https://images.squarespace-cdn.com/content/644c1a7612e58c4d658841f5/ea9a4c10-ac96-4dc8-bcc1-144724a1e630/Gemini_Generated_Image_qr6swiqr6swiqr6s.png?content-type=image%2Fpng" alt="Companies">
+            </div>
+            <h2>Companies</h2>
+            <div class="supporter-count">235 supporters</div>
+            <button class="toggle-btn">Show all</button>
+            <div class="supporter-list">
+                <div class="supporter-name">Accelecom</div>
+                <div class="supporter-name">Allstate</div>
+                <div class="supporter-name">Alston & Bird</div>
+                <div class="supporter-name">Ashton Woods Homes</div>
+                <div class="supporter-name">AstraZeneca</div>
+                <div class="supporter-name">Automatic Data Processing (ADP)</div>
+                <div class="supporter-name">Allen Lund Company</div>
+                <div class="supporter-name">Allied World Assurance</div>
+                <div class="supporter-name">Allison Worldwide</div>
+                <div class="supporter-name">Amdocs</div>
+                <div class="supporter-name">Anvil Academy</div>
+                <div class="supporter-name">ApolloMD</div>
+                <div class="supporter-name">Arke Systems</div>
+                <div class="supporter-name">Artisan Partners</div>
+                <div class="supporter-name">Assurant</div>
+                <div class="supporter-name">Atlas Collaborative</div>
+                <div class="supporter-name">Avient</div>
+                <div class="supporter-name">AXA</div>
+                <div class="supporter-name">Axis Capital</div>
+                <div class="supporter-name">Balch & Bingham</div>
+                <div class="supporter-name">Balbec Capital</div>
+                <div class="supporter-name">Bank South</div>
+                <div class="supporter-name">Bencher Crew 77</div>
+                <div class="supporter-name">Bennett Thrasher</div>
+                <div class="supporter-name">Berkshire Hathaway</div>
+                <div class="supporter-name">BHHS Georgia Properties</div>
+                <div class="supporter-name">BlackRock</div>
+                <div class="supporter-name">Bloomingdales</div>
+                <div class="supporter-name">BrandSafway</div>
+                <div class="supporter-name">BrkThru Media</div>
+                <div class="supporter-name">Brookfield Properties</div>
+                <div class="supporter-name">Brown Bag Marketing</div>
+                <div class="supporter-name">Burton Energy Group</div>
+                <div class="supporter-name">CA South Construction</div>
+                <div class="supporter-name">Canterbury Court Senior Center</div>
+                <div class="supporter-name">Cargill</div>
+                <div class="supporter-name">Carr, Riggs & Ingram</div>
+                <div class="supporter-name">CentricsIT</div>
+                <div class="supporter-name">Children's Healthcare of Atlanta</div>
+                <div class="supporter-name">CIBC US</div>
+                <div class="supporter-name">CIO Partners</div>
+                <div class="supporter-name">Choice Hotels</div>
+                <div class="supporter-name">Cisco Systems</div>
+                <div class="supporter-name">Clark Construction Group</div>
+                <div class="supporter-name">Community Management Associates</div>
+                <div class="supporter-name">Coca-Cola Company</div>
+                <div class="supporter-name">Code42</div>
+                <div class="supporter-name">Comcast</div>
+                <div class="supporter-name">Compass</div>
+                <div class="supporter-name">Cooper Sky</div>
+                <div class="supporter-name">Corpay</div>
+                <div class="supporter-name">Corporate Reports (CRI)</div>
+                <div class="supporter-name">CoStar Solutions</div>
+                <div class="supporter-name">Cousins Properties</div>
+                <div class="supporter-name">Cowbell Cyber</div>
+                <div class="supporter-name">Cox Automotive</div>
+                <div class="supporter-name">CRH Americas</div>
+                <div class="supporter-name">Crye-Leike Realtors</div>
+                <div class="supporter-name">CWC Office Furnishings</div>
+                <div class="supporter-name">D&Y Staffing</div>
+                <div class="supporter-name">Dalton Agency</div>
+                <div class="supporter-name">Deposco</div>
+                <div class="supporter-name">DHL Group</div>
+                <div class="supporter-name">Dominium</div>
+                <div class="supporter-name">DXC Technology</div>
+                <div class="supporter-name">Eagle Stix Lacrosse</div>
+                <div class="supporter-name">Eagle Telemedicine</div>
+                <div class="supporter-name">Eagles Landing Dancing Center</div>
+                <div class="supporter-name">EarthLink</div>
+                <div class="supporter-name">Elavon</div>
+                <div class="supporter-name">Elemica</div>
+                <div class="supporter-name">Elevance Health</div>
+                <div class="supporter-name">Eli, Inc.</div>
+                <div class="supporter-name">Emory Healthcare – Emory Hospital</div>
+                <div class="supporter-name">Emory Healthcare – Emory Johns Creek Hospital</div>
+                <div class="supporter-name">Emory Healthcare – Emory Saint Joseph's Hospital</div>
+                <div class="supporter-name">Equifax</div>
+                <div class="supporter-name">Ernst & Young</div>
+                <div class="supporter-name">ESO Personnel Management</div>
+                <div class="supporter-name">Evans General Contractor</div>
+                <div class="supporter-name">Exhibitus, Inc.</div>
+                <div class="supporter-name">Extra Mile Tutoring</div>
+                <div class="supporter-name">Fidelity Investments</div>
+                <div class="supporter-name">First Citizens Bank</div>
+                <div class="supporter-name">Fish & Richardson</div>
+                <div class="supporter-name">Fisher Phillips</div>
+                <div class="supporter-name">Fleetcor</div>
+                <div class="supporter-name">Four Seasons Hotels and Resorts</div>
+                <div class="supporter-name">Fracht Forward</div>
+                <div class="supporter-name">Franklin Covey</div>
+                <div class="supporter-name">Franklin Street</div>
+                <div class="supporter-name">Frazier & Deeter</div>
+                <div class="supporter-name">Frederick Swanston</div>
+                <div class="supporter-name">Freese & Nichols</div>
+                <div class="supporter-name">G2 Ocean</div>
+                <div class="supporter-name">Garrard Group</div>
+                <div class="supporter-name">Genuine Parts Company</div>
+                <div class="supporter-name">Georgia Health Policy Center</div>
+                <div class="supporter-name">Georgia Pacific</div>
+                <div class="supporter-name">Georgia Power</div>
+                <div class="supporter-name">Geosyntetec Consultants</div>
+                <div class="supporter-name">Google</div>
+                <div class="supporter-name">Goss RV</div>
+                <div class="supporter-name">Guidehouse</div>
+                <div class="supporter-name">Harry Norman Realtors (Buckhead)</div>
+                <div class="supporter-name">Hartman Simons & Wood</div>
+                <div class="supporter-name">Haskell</div>
+                <div class="supporter-name">Healthcare IT Leaders</div>
+                <div class="supporter-name">Hines Real Estate Investment</div>
+                <div class="supporter-name">Home Depot</div>
+                <div class="supporter-name">Homeowners Financial Group</div>
+                <div class="supporter-name">Hunton Andrew Kurth</div>
+                <div class="supporter-name">IHG Hotels & Resorts</div>
+                <div class="supporter-name">ImpactSearch Partners</div>
+                <div class="supporter-name">Infor (Atlanta)</div>
+                <div class="supporter-name">Inspire Brands</div>
+                <div class="supporter-name">Integrity One Reality</div>
+                <div class="supporter-name">Intuitive Surgical</div>
+                <div class="supporter-name">Intradiem</div>
+                <div class="supporter-name">Jabian Consulting</div>
+                <div class="supporter-name">Jackson & Coker</div>
+                <div class="supporter-name">Jackson Healthcare</div>
+                <div class="supporter-name">JP Morgan</div>
+                <div class="supporter-name">Kahua</div>
+                <div class="supporter-name">Keller Williams Realty First (Atlanta)</div>
+                <div class="supporter-name">KForce</div>
+                <div class="supporter-name">Kids Heart Cardiology</div>
+                <div class="supporter-name">King & Spalding</div>
+                <div class="supporter-name">Koch Global Services</div>
+                <div class="supporter-name">Leapfrog Services</div>
+                <div class="supporter-name">Locum Tenens</div>
+                <div class="supporter-name">Logic Speak</div>
+                <div class="supporter-name">Lotus Marketing</div>
+                <div class="supporter-name">Luckie & Company</div>
+                <div class="supporter-name">Mailchimp</div>
+                <div class="supporter-name">MCIC Vermont</div>
+                <div class="supporter-name">Media Now Interactive</div>
+                <div class="supporter-name">Mercedes-Benz USA</div>
+                <div class="supporter-name">Mercer LLC</div>
+                <div class="supporter-name">MerchantE</div>
+                <div class="supporter-name">Microsoft</div>
+                <div class="supporter-name">Merrill Lynch</div>
+                <div class="supporter-name">Modo Modo Agency</div>
+                <div class="supporter-name">Moore Colson CPA</div>
+                <div class="supporter-name">Morgan Stanley</div>
+                <div class="supporter-name">MountainSeed</div>
+                <div class="supporter-name">Music Authority (Rock Camp)</div>
+                <div class="supporter-name">NCR Atleos</div>
+                <div class="supporter-name">Network 1 Consulting</div>
+                <div class="supporter-name">Newell Brands</div>
+                <div class="supporter-name">Northside Hospital</div>
+                <div class="supporter-name">Ogletree Deakins</div>
+                <div class="supporter-name">Olin Corporation</div>
+                <div class="supporter-name">OpenText</div>
+                <div class="supporter-name">Optomi</div>
+                <div class="supporter-name">PepsiCo</div>
+                <div class="supporter-name">Premier Anesthesia</div>
+                <div class="supporter-name">Price Industries</div>
+                <div class="supporter-name">Prime Revenue</div>
+                <div class="supporter-name">ProCare Therapy</div>
+                <div class="supporter-name">PURE Programs</div>
+                <div class="supporter-name">QGenda</div>
+                <div class="supporter-name">Quinn Residences Buckhead</div>
+                <div class="supporter-name">Rabobank</div>
+                <div class="supporter-name">Randstad</div>
+                <div class="supporter-name">Red Clay Consulting</div>
+                <div class="supporter-name">Raw Cove</div>
+                <div class="supporter-name">Regency Centers</div>
+                <div class="supporter-name">Relation Insurance Services</div>
+                <div class="supporter-name">RELEX Solutions</div>
+                <div class="supporter-name">Reliance Worldwide Corporation</div>
+                <div class="supporter-name">Renaissance Waverly Hotel</div>
+                <div class="supporter-name">Resolutions for Life</div>
+                <div class="supporter-name">RSM US</div>
+                <div class="supporter-name">Ryan Tax Firm</div>
+                <div class="supporter-name">Salesforce</div>
+                <div class="supporter-name">Samsara</div>
+                <div class="supporter-name">Savant Wealth Management</div>
+                <div class="supporter-name">Self-Help Credit Union</div>
+                <div class="supporter-name">Seyfarth Shaw</div>
+                <div class="supporter-name">Siemens Digital Industries</div>
+                <div class="supporter-name">Silverton Mortgage</div>
+                <div class="supporter-name">SiteOne Landscape Supply</div>
+                <div class="supporter-name">SKIM Analytical</div>
+                <div class="supporter-name">Slaalom Consulting</div>
+                <div class="supporter-name">Smith Currie Oles</div>
+                <div class="supporter-name">Solentra Global</div>
+                <div class="supporter-name">Somerby Sandy Springs</div>
+                <div class="supporter-name">Southern Environmental Law Center</div>
+                <div class="supporter-name">Southern Turf Company</div>
+                <div class="supporter-name">St. Regis Hotel</div>
+                <div class="supporter-name">Swan Transportation</div>
+                <div class="supporter-name">Sweet Cheats Bakery</div>
+                <div class="supporter-name">Target</div>
+                <div class="supporter-name">Team Rehabilitation Physical</div>
+                <div class="supporter-name">Telaid Industries</div>
+                <div class="supporter-name">The Big Green Egg</div>
+                <div class="supporter-name">The Hansen Group</div>
+                <div class="supporter-name">The Little Yogis Studio</div>
+                <div class="supporter-name">The Retreat at Sandy Springs</div>
+                <div class="supporter-name">The St. Regis Hotel Atlanta</div>
+                <div class="supporter-name">The Wilbert Group</div>
+                <div class="supporter-name">Thrivent Financial</div>
+                <div class="supporter-name">TPx Communications</div>
+                <div class="supporter-name">TNT Sports NCAA</div>
+                <div class="supporter-name">Trident Trust</div>
+                <div class="supporter-name">Troutman Pepper Locke</div>
+                <div class="supporter-name">UBC Pharmaceuticals</div>
+                <div class="supporter-name">Uber</div>
+                <div class="supporter-name">UpSwell Marketing</div>
+                <div class="supporter-name">US Foods</div>
+                <div class="supporter-name">Vanco Payments</div>
+                <div class="supporter-name">Verizon</div>
+                <div class="supporter-name">Vickery's Bar & Grill</div>
+                <div class="supporter-name">VMware (Broadcom)</div>
+                <div class="supporter-name">Voya Financial</div>
+                <div class="supporter-name">Walker & Dunlop</div>
+                <div class="supporter-name">Ware2Go</div>
+                <div class="supporter-name">Warner Bros. Discovery</div>
+                <div class="supporter-name">Wellstar Health System (Kennestone Hospital)</div>
+                <div class="supporter-name">Wheels, Inc.</div>
+                <div class="supporter-name">WTW (Willis Towers Watson)</div>
+                <div class="supporter-name">Workday LE Industries</div>
+                <div class="supporter-name">WorkingBuildings</div>
+                <div class="supporter-name">World Insurance Association</div>
+                <div class="supporter-name">Worthington Armstrong Venture (WAVE)</div>
+                <div class="supporter-name">Xceleration</div>
+                <div class="supporter-name">Xplor Technologies Atlanta</div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-icon">
+                <img src="https://images.squarespace-cdn.com/content/644c1a7612e58c4d658841f5/cc3fab55-6215-4d39-90ec-252a8653393f/Gemini_Generated_Image_bziqhkbziqhkbziq.png?content-type=image%2Fpng" alt="Schools">
+            </div>
+            <h2>Schools &amp; Universities</h2>
+            <div class="supporter-count">97 supporters</div>
+            <button class="toggle-btn">Show all</button>
+            <div class="supporter-list">
+                <div class="supporter-name">AL Burrus Elementary School</div>
+                <div class="supporter-name">Academies of Creative Education</div>
+                <div class="supporter-name">Acton Academy Marietta</div>
+                <div class="supporter-name">Anvil Academy</div>
+                <div class="supporter-name">Atlanta International School</div>
+                <div class="supporter-name">Atlanta Jewish Academy</div>
+                <div class="supporter-name">Austell Elementary School</div>
+                <div class="supporter-name">Barnwell Elementary School</div>
+                <div class="supporter-name">Blessed Trinity Catholic High School</div>
+                <div class="supporter-name">Campbell High School</div>
+                <div class="supporter-name">Chattahoochee High School</div>
+                <div class="supporter-name">Chattahoochee Technical School</div>
+                <div class="supporter-name">Cherokee Bluff High School</div>
+                <div class="supporter-name">Cherokee Charter Academy</div>
+                <div class="supporter-name">Christ the King School</div>
+                <div class="supporter-name">Collective Learning</div>
+                <div class="supporter-name">Collective Learning Academy</div>
+                <div class="supporter-name">Cornerstone Christian Academy</div>
+                <div class="supporter-name">Cristo Rey Atlanta Jesuit High School</div>
+                <div class="supporter-name">Cumberland Academy of GA</div>
+                <div class="supporter-name">Denmark High School</div>
+                <div class="supporter-name">Duluth High School</div>
+                <div class="supporter-name">Dunwoody High School</div>
+                <div class="supporter-name">Emory University</div>
+                <div class="supporter-name">Fellowship Christian School</div>
+                <div class="supporter-name">Fulton Science Academy</div>
+                <div class="supporter-name">Garden Hills Elementary</div>
+                <div class="supporter-name">Garrison Mill Elementary</div>
+                <div class="supporter-name">Georgia Institute of Technology</div>
+                <div class="supporter-name">Greater Atlanta Christian School</div>
+                <div class="supporter-name">Harbour Oaks Montessori School</div>
+                <div class="supporter-name">Hightower Trail Middle School</div>
+                <div class="supporter-name">Holy Innocents' Episcopal School</div>
+                <div class="supporter-name">Holy Redeemer Catholic School</div>
+                <div class="supporter-name">Immaculate Heart of Mary Catholic School</div>
+                <div class="supporter-name">International Charter Academy of Georgia</div>
+                <div class="supporter-name">Johnson Ferry Christian Academy</div>
+                <div class="supporter-name">Jones Middle School</div>
+                <div class="supporter-name">Kennesaw State University</div>
+                <div class="supporter-name">Kings Ridge Christian School</div>
+                <div class="supporter-name">Lassiter High School</div>
+                <div class="supporter-name">Learnwell Collective School</div>
+                <div class="supporter-name">Livsey Elementary School</div>
+                <div class="supporter-name">Marist School</div>
+                <div class="supporter-name">Mary Lin Elementary School</div>
+                <div class="supporter-name">Midtown High School</div>
+                <div class="supporter-name">Midtown International School</div>
+                <div class="supporter-name">Mill Creek Middle School</div>
+                <div class="supporter-name">Mill Springs Academy</div>
+                <div class="supporter-name">Milton High School</div>
+                <div class="supporter-name">Morningside Elementary School</div>
+                <div class="supporter-name">Mount Bethel Christian Academy</div>
+                <div class="supporter-name">Mount Pisgah Christian School</div>
+                <div class="supporter-name">Mount Vernon School</div>
+                <div class="supporter-name">Norcross High School</div>
+                <div class="supporter-name">North Springs High School</div>
+                <div class="supporter-name">Northview High School</div>
+                <div class="supporter-name">Northwood Elementary</div>
+                <div class="supporter-name">Oakhurst Elementary School</div>
+                <div class="supporter-name">Our Lady of the Assumption Catholic School</div>
+                <div class="supporter-name">Pace Academy</div>
+                <div class="supporter-name">Paideia Junior High School</div>
+                <div class="supporter-name">Paideia School</div>
+                <div class="supporter-name">Paul Duke STEM High School</div>
+                <div class="supporter-name">Pope High School</div>
+                <div class="supporter-name">River Trail Middle School</div>
+                <div class="supporter-name">Riverwatch Middle School</div>
+                <div class="supporter-name">Riverwood International Charter School</div>
+                <div class="supporter-name">Rocky Mount Elementary School</div>
+                <div class="supporter-name">St. Benedict's Episcopal School</div>
+                <div class="supporter-name">St. Francis School</div>
+                <div class="supporter-name">St. Joseph Catholic School</div>
+                <div class="supporter-name">St. Jude the Apostle Catholic School</div>
+                <div class="supporter-name">St. Pius X Catholic High School</div>
+                <div class="supporter-name">Shakerag Elementary</div>
+                <div class="supporter-name">South Gwinnett High School</div>
+                <div class="supporter-name">Springmont School</div>
+                <div class="supporter-name">The Davis Academy</div>
+                <div class="supporter-name">The Epstein School</div>
+                <div class="supporter-name">The Galloway School</div>
+                <div class="supporter-name">The Lovett School</div>
+                <div class="supporter-name">The Museum School</div>
+                <div class="supporter-name">The Notre Dame School</div>
+                <div class="supporter-name">The Premo School</div>
+                <div class="supporter-name">The Swift School</div>
+                <div class="supporter-name">The Weber School</div>
+                <div class="supporter-name">The Wood Acres School</div>
+                <div class="supporter-name">Tritt Elementary School</div>
+                <div class="supporter-name">University of Georgia</div>
+                <div class="supporter-name">Valor Christian Academy</div>
+                <div class="supporter-name">Veritas Classical School</div>
+                <div class="supporter-name">Walton High School</div>
+                <div class="supporter-name">Webb Bridge Middle School</div>
+                <div class="supporter-name">Wesleyan School</div>
+                <div class="supporter-name">Westminster</div>
+                <div class="supporter-name">Wheeler High School</div>
+                <div class="supporter-name">Whitefield Academy</div>
+                <div class="supporter-name">William & Reed Academy</div>
+                <div class="supporter-name">Woodward Academy</div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-icon">
+                <img src="https://images.squarespace-cdn.com/content/644c1a7612e58c4d658841f5/482a1908-9bff-4851-8f7c-55217d25a878/Gemini_Generated_Image_b898vob898vob898.png?content-type=image%2Fpng" alt="Religious">
+            </div>
+            <h2>Religious Congregations</h2>
+            <div class="supporter-count">70 supporters</div>
+            <button class="toggle-btn">Show all</button>
+            <div class="supporter-list">
+                <div class="supporter-name">All Saints Episcopal Church</div>
+                <div class="supporter-name">All Souls Fellowship Church</div>
+                <div class="supporter-name">Alpharetta Methodist Church</div>
+                <div class="supporter-name">Alpharetta Presbyterian Church</div>
+                <div class="supporter-name">Atlanta NE Ismaili Center and Jamakhana</div>
+                <div class="supporter-name">Beth Shalom</div>
+                <div class="supporter-name">Bet Haverim</div>
+                <div class="supporter-name">Blessed Trinity</div>
+                <div class="supporter-name">B'nai Torah</div>
+                <div class="supporter-name">Christ Church of Atlanta</div>
+                <div class="supporter-name">Christ the King Catholic Church</div>
+                <div class="supporter-name">City Church Alpharetta</div>
+                <div class="supporter-name">Congregation Ner Tamid</div>
+                <div class="supporter-name">Congregation Or VeShalom</div>
+                <div class="supporter-name">Congregation Shearith Israel</div>
+                <div class="supporter-name">Cumming First United Methodist Church</div>
+                <div class="supporter-name">Dacula United Methodist Church</div>
+                <div class="supporter-name">Discover Life Church</div>
+                <div class="supporter-name">Dor Tamid Synagogue</div>
+                <div class="supporter-name">Duluth Ismaili Center and Jamakhana</div>
+                <div class="supporter-name">Duluth United Methodist Church</div>
+                <div class="supporter-name">Dunwoody United Methodist Church</div>
+                <div class="supporter-name">Etz Chaim</div>
+                <div class="supporter-name">Faith Lutheran Church</div>
+                <div class="supporter-name">Good Shepherd</div>
+                <div class="supporter-name">Grace Covenant Church of Atlanta</div>
+                <div class="supporter-name">Grace Resurrection Church</div>
+                <div class="supporter-name">Greek Orthodox Cathedral of the Annunciation</div>
+                <div class="supporter-name">Hickory Flat Church</div>
+                <div class="supporter-name">Holy Innocents Episcopal Church</div>
+                <div class="supporter-name">Holy Redeemer Catholic Church</div>
+                <div class="supporter-name">Immaculate Heart of Mary Catholic Church</div>
+                <div class="supporter-name">Ismaili CIVIC</div>
+                <div class="supporter-name">Jain Society of Greater Atlanta</div>
+                <div class="supporter-name">John Paul II Syro-Malabar Catholic Church</div>
+                <div class="supporter-name">Kehillat Chaim</div>
+                <div class="supporter-name">Korean Community Presbyterian Church</div>
+                <div class="supporter-name">The Church of Jesus Christ of Latter-day Saints</div>
+                <div class="supporter-name">Lutheran Church of the Resurrection</div>
+                <div class="supporter-name">Mount Bethel Church</div>
+                <div class="supporter-name">Mount Pisgah Church</div>
+                <div class="supporter-name">Mount Pisgah Christian Church</div>
+                <div class="supporter-name">Mountain West Church</div>
+                <div class="supporter-name">Mt. Zion United Methodist Church</div>
+                <div class="supporter-name">Nett Church</div>
+                <div class="supporter-name">Northminster Presbyterian Church</div>
+                <div class="supporter-name">North Point Community Church</div>
+                <div class="supporter-name">Or Hadash</div>
+                <div class="supporter-name">Our Lady of the Assumption</div>
+                <div class="supporter-name">Prince of Peace Lutheran Church</div>
+                <div class="supporter-name">Roswell Community Church</div>
+                <div class="supporter-name">Roswell Presbyterian Church</div>
+                <div class="supporter-name">Saint Jude the Apostle Catholic Church</div>
+                <div class="supporter-name">Sandy Springs Christian Church</div>
+                <div class="supporter-name">Simpsonwood United Methodist Church</div>
+                <div class="supporter-name">Small Church Group</div>
+                <div class="supporter-name">Snellville Church</div>
+                <div class="supporter-name">St. Andrew Catholic Church</div>
+                <div class="supporter-name">St. Ann's Catholic Church</div>
+                <div class="supporter-name">St. Benedict's</div>
+                <div class="supporter-name">St. Francis Catholic Church</div>
+                <div class="supporter-name">St. James Alpharetta</div>
+                <div class="supporter-name">St. John Paul II Catholic Church of Cumming</div>
+                <div class="supporter-name">St. Joseph Catholic Church</div>
+                <div class="supporter-name">St. Mary's Church</div>
+                <div class="supporter-name">St. Mary's Orthodox Church</div>
+                <div class="supporter-name">St. Paul United Methodist Church</div>
+                <div class="supporter-name">St. Pius X Catholic Church</div>
+                <div class="supporter-name">Temple Beth Tikvah</div>
+                <div class="supporter-name">Temple Kol Emeth</div>
+                <div class="supporter-name">Temple Sinai</div>
+                <div class="supporter-name">World Overcomers Christian Center</div>
+            </div>
+        </div>
+        
+        <div class="category">
+            <div class="category-icon">
+                <img src="https://images.squarespace-cdn.com/content/644c1a7612e58c4d658841f5/00d3cd40-7beb-42c9-98d3-ae3630699293/Gemini_Generated_Image_euhbqdeuhbqdeuhb.png?content-type=image%2Fpng" alt="Community">
+            </div>
+            <h2>Community &amp; Government</h2>
+            <div class="supporter-count">59 supporters</div>
+            <button class="toggle-btn">Show all</button>
+            <div class="supporter-list">
+                <div class="supporter-name">American Heritage Girls</div>
+                <div class="supporter-name">Alpha Delta Kappa (Women's Sorority)</div>
+                <div class="supporter-name">Alpha Phi Omega</div>
+                <div class="supporter-name">Alpharetta Exiles Rugby Team</div>
+                <div class="supporter-name">Altrusa International of North Georgia</div>
+                <div class="supporter-name">Alzheimer's Association</div>
+                <div class="supporter-name">American Heritage Girls</div>
+                <div class="supporter-name">Atlanta Bar Association</div>
+                <div class="supporter-name">Atlanta Lightning Baseball</div>
+                <div class="supporter-name">Bibbs Foundation</div>
+                <div class="supporter-name">Boy Scouts of America</div>
+                <div class="supporter-name">Briarwoods Beach and Tennis Club</div>
+                <div class="supporter-name">Brookhaven Rotary Club</div>
+                <div class="supporter-name">Brooke Farm Women's Club</div>
+                <div class="supporter-name">Buckhead Rotary</div>
+                <div class="supporter-name">Cancer Support Center</div>
+                <div class="supporter-name">Canterbury Court</div>
+                <div class="supporter-name">CDC</div>
+                <div class="supporter-name">Chattahooche HOA Club</div>
+                <div class="supporter-name">Cherokee Indivisible</div>
+                <div class="supporter-name">Chimney Lakes Subdivision</div>
+                <div class="supporter-name">CISV Atlanta</div>
+                <div class="supporter-name">Collective ATL</div>
+                <div class="supporter-name">Compassion in Action Project</div>
+                <div class="supporter-name">Compassionate Atlanta</div>
+                <div class="supporter-name">Connect Moms</div>
+                <div class="supporter-name">Cooper Lake Place Neighborhood</div>
+                <div class="supporter-name">Delta Sigma Theta Sorority, Inc.</div>
+                <div class="supporter-name">Dunwoody Country Club</div>
+                <div class="supporter-name">Dunwoody Women's Club</div>
+                <div class="supporter-name">Eastside Machine Baseball</div>
+                <div class="supporter-name">Emory Alumni Association</div>
+                <div class="supporter-name">Georgia Circle K</div>
+                <div class="supporter-name">Georgia Lions Lighthouse Foundation</div>
+                <div class="supporter-name">Girl Scouts of the USA</div>
+                <div class="supporter-name">Greystone Garden Club</div>
+                <div class="supporter-name">Gwinnett Youth Commission</div>
+                <div class="supporter-name">Hillels of Georgia</div>
+                <div class="supporter-name">Interfaith Atlanta</div>
+                <div class="supporter-name">Ismaili CIVIC</div>
+                <div class="supporter-name">Jack & Jill of America, Inc.</div>
+                <div class="supporter-name">Kappa Kappa Psi – Iota Chapter (Georgia Tech)</div>
+                <div class="supporter-name">Key Club at Parkview</div>
+                <div class="supporter-name">Know Your Worth</div>
+                <div class="supporter-name">Korean-American Community</div>
+                <div class="supporter-name">Lions Clubs International</div>
+                <div class="supporter-name">MJCCA (Marcus Jewish Community Center of Atlanta)</div>
+                <div class="supporter-name">Mocha Moms of North Fulton County</div>
+                <div class="supporter-name">MOMS Club East Marietta</div>
+                <div class="supporter-name">National Charity League</div>
+                <div class="supporter-name">Navigators USA</div>
+                <div class="supporter-name">NCJW (National Council of Jewish Women)</div>
+                <div class="supporter-name">Neighborhood Garden Club</div>
+                <div class="supporter-name">North Fulton Chapter of Delta Sigma Theta Sorority, Inc.</div>
+                <div class="supporter-name">Notre Dame Club of Atlanta</div>
+                <div class="supporter-name">Omega Phi Alpha National Service Sorority – KSU Chapter</div>
+                <div class="supporter-name">Outlaws Travel Baseball</div>
+                <div class="supporter-name">PAWS Community Service Committee</div>
+                <div class="supporter-name">P.E.O. (Philanthropic Educational Organization)</div>
+                <div class="supporter-name">Peachtree Corners Football Club</div>
+                <div class="supporter-name">Phi Sigma Kappa – Georgia Tech</div>
+                <div class="supporter-name">PJ Library</div>
+                <div class="supporter-name">Repair the World</div>
+                <div class="supporter-name">Rotary Club of Dunwoody</div>
+                <div class="supporter-name">Sandy Springs Woman's Club</div>
+                <div class="supporter-name">Shrimad Rajchandra Love and Care (SRLC)</div>
+                <div class="supporter-name">Slow Food Atlanta</div>
+                <div class="supporter-name">South Asian Working Moms (SAWM)</div>
+                <div class="supporter-name">Supper Club</div>
+                <div class="supporter-name">The Links, Incorporated (Georgia)</div>
+                <div class="supporter-name">The Tomodachi Club</div>
+                <div class="supporter-name">Tuxedo Estates Homeowners Association</div>
+                <div class="supporter-name">U.S. EPA Region 4 Public Affairs Office</div>
+                <div class="supporter-name">U9 Soccer Team</div>
+                <div class="supporter-name">Village Mill Neighborhood</div>
+                <div class="supporter-name">Warren Boys and Girls Club</div>
+                <div class="supporter-name">YMSL (Young Men's Service League)</div>
+                <div class="supporter-name">Young Hearts Service League</div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const buttons = document.querySelectorAll('.toggle-btn');
+    buttons.forEach(button => {
+        button.addEventListener('click', function() {
+            const category = this.closest('.category');
+            const supporterList = category.querySelector('.supporter-list');
+            const isExpanded = category.classList.contains('expanded');
+            
+            if (isExpanded) {
+                // Collapsing: set back to 400px
+                supporterList.style.maxHeight = '400px';
+                category.classList.remove('expanded');
+                this.textContent = 'Show all';
+            } else {
+                // Expanding: temporarily remove max-height to measure full content
+                supporterList.style.maxHeight = 'none';
+                // Force a reflow to ensure measurement is accurate
+                void supporterList.offsetHeight;
+                // Get the actual full height
+                const fullHeight = supporterList.scrollHeight;
+                // Set it to the measured height (with a small buffer for safety)
+                supporterList.style.maxHeight = (fullHeight + 10) + 'px';
+                category.classList.add('expanded');
+                this.textContent = 'Show less';
+            }
+        });
+    });
+});
+</script>
+</body>
+</html>

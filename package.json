@@ -11,6 +11,6 @@
   "description": "",
   "dependencies": {
     "@dataconnect/generated": "file:src/dataconnect-generated",
-    "firebase": "^12.6.0"
+    "firebase": "^12.8.0"
   }
 }

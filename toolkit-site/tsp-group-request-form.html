@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Host an Event | The Sandwich Project</title>
+  
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:wght@600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      /* TSP Brand Colors */
+      --color-deep-teal: #236383;
+      --color-golden: #FBAD3F;
+      --color-teal: #007E8C;
+      --color-light-teal: #47B3CB;
+      --color-burgundy: #A31C41;
+      
+      /* Neutrals */
+      --color-cream: #FBF9F7;
+      --color-warm-white: #FFFFFF;
+      --color-charcoal: #2C2C2C;
+      --color-gray: #6B6B6B;
+      --color-light-gray: #E5E5E5;
+      
+      --font-display: 'Fraunces', serif;
+      --font-body: 'DM Sans', sans-serif;
+      --shadow-soft: 0 4px 20px rgba(35, 99, 131, 0.08);
+      --shadow-medium: 0 8px 30px rgba(35, 99, 131, 0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background: var(--color-cream);
+      color: var(--color-charcoal);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* Decorative background */
+    .bg-pattern {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 80%, rgba(251, 173, 63, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(35, 99, 131, 0.08) 0%, transparent 50%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px 24px 60px;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    .logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--color-deep-teal);
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .header h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 5vw, 2.75rem);
+      font-weight: 700;
+      color: var(--color-charcoal);
+      margin-bottom: 12px;
+      letter-spacing: -0.03em;
+    }
+
+    .header p {
+      color: var(--color-gray);
+      font-size: 1.1rem;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    /* Form Card */
+    .form-card {
+      background: var(--color-warm-white);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-medium);
+      padding: 40px;
+      border: 1px solid rgba(232, 228, 224, 0.6);
+    }
+
+    @media (max-width: 600px) {
+      .form-card {
+        padding: 28px 20px;
+      }
+    }
+
+    /* Section Headers */
+    .section {
+      margin-bottom: 32px;
+    }
+
+    .section:last-of-type {
+      margin-bottom: 0;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--color-light-gray);
+    }
+
+    .section-number {
+      width: 32px;
+      height: 32px;
+      background: var(--color-deep-teal);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 0.9rem;
+      flex-shrink: 0;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+    }
+
+    /* Form Fields */
+    .field-group {
+      margin-bottom: 20px;
+    }
+
+    .field-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 500px) {
+      .field-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 6px;
+      color: var(--color-charcoal);
+      font-size: 0.95rem;
+    }
+
+    label .required {
+      color: var(--color-burgundy);
+      margin-left: 2px;
+    }
+
+    label .optional {
+      color: var(--color-gray);
+      font-weight: 400;
+      font-size: 0.85rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"],
+    input[type="date"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 14px 16px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      border: 2px solid var(--color-light-gray);
+      border-radius: var(--radius-sm);
+      background: white;
+      color: var(--color-charcoal);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      outline: none;
+      border-color: var(--color-teal);
+      box-shadow: 0 0 0 4px rgba(0, 126, 140, 0.15);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #A0A0A0;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    select {
+      cursor: pointer;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 44px;
+    }
+
+    /* Checkbox Groups */
+    .checkbox-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .checkbox-item {
+      position: relative;
+    }
+
+    .checkbox-item input {
+      position: absolute;
+      opacity: 0;
+      cursor: pointer;
+    }
+
+    .checkbox-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 16px;
+      background: white;
+      border: 2px solid var(--color-light-gray);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .checkbox-item input:checked + .checkbox-label {
+      background: var(--color-teal);
+      border-color: var(--color-teal);
+      color: white;
+    }
+
+    .checkbox-item input:focus + .checkbox-label {
+      box-shadow: 0 0 0 4px rgba(0, 126, 140, 0.15);
+    }
+
+    .checkbox-label:hover {
+      border-color: var(--color-light-teal);
+    }
+
+    /* Schedule Grid */
+    .field-hint {
+      color: var(--color-gray);
+      font-size: 0.9rem;
+      margin-bottom: 12px;
+      margin-top: -2px;
+    }
+
+    .datetime-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .datetime-row {
+      display: grid;
+      grid-template-columns: 80px 1fr 140px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .option-label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--color-deep-teal);
+    }
+
+    .datetime-row input[type="date"] {
+      padding: 12px 14px;
+    }
+
+    .datetime-row select {
+      padding: 12px 14px;
+      padding-right: 40px;
+    }
+
+    @media (max-width: 500px) {
+      .datetime-row {
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+      }
+      .option-label {
+        grid-column: 1 / -1;
+        padding-bottom: 4px;
+      }
+    }
+
+    /* Submit Button */
+    .submit-section {
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 2px solid var(--color-light-gray);
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 18px 32px;
+      font-family: var(--font-body);
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--color-charcoal);
+      background: var(--color-golden);
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s ease, transform 0.1s ease;
+    }
+
+    .submit-btn:hover {
+      background: #E89D2E;
+    }
+
+    .submit-btn:active {
+      transform: scale(0.98);
+    }
+
+    .submit-btn:disabled {
+      background: var(--color-gray);
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Status Messages */
+    .status-message {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-weight: 500;
+      display: none;
+    }
+
+    .status-message.success {
+      display: block;
+      background: rgba(0, 126, 140, 0.1);
+      color: var(--color-teal);
+      border: 1px solid var(--color-teal);
+    }
+
+    .status-message.error {
+      display: block;
+      background: rgba(163, 28, 65, 0.1);
+      color: var(--color-burgundy);
+      border: 1px solid var(--color-burgundy);
+    }
+
+    /* Success State */
+    .success-card {
+      display: none;
+      text-align: center;
+      padding: 60px 40px;
+    }
+
+    .success-card.show {
+      display: block;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: var(--color-teal);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 24px;
+    }
+
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      color: white;
+    }
+
+    .success-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.75rem;
+      margin-bottom: 12px;
+      color: var(--color-charcoal);
+    }
+
+    .success-card p {
+      color: var(--color-gray);
+      font-size: 1.1rem;
+    }
+
+    /* Form hidden state */
+    form.hidden {
+      display: none;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      border-top-color: white;
+      animation: spin 0.8s ease-in-out infinite;
+      margin-right: 8px;
+      vertical-align: middle;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-pattern"></div>
+  
+  <div class="container">
+    <header class="header">
+      <div class="logo">🥪 The Sandwich Project</div>
+      <h1>Host an Event</h1>
+      <p>Ready to make sandwiches and make a difference? Fill out the form below and we'll be in touch!</p>
+    </header>
+
+    <div class="form-card">
+      <!-- Success Message (hidden by default) -->
+      <div class="success-card" id="successCard">
+        <div class="success-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+          </svg>
+        </div>
+        <h2>We got your request!</h2>
+        <p>Thanks for reaching out. We'll review your preferred call times and confirm which one works within 2-3 business days.</p>
+      </div>
+
+      <!-- Form -->
+      <form id="hostForm">
+        <!-- Section 1: Contact Info -->
+        <div class="section">
+          <div class="section-header">
+            <span class="section-number">1</span>
+            <h2 class="section-title">Contact Info</h2>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="name">Name <span class="required">*</span></label>
+              <input type="text" id="name" name="name" required placeholder="Your full name">
+            </div>
+            <div class="field-group">
+              <label for="email">Email <span class="required">*</span></label>
+              <input type="email" id="email" name="email" required placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="phone">Phone <span class="required">*</span></label>
+              <input type="tel" id="phone" name="phone" required placeholder="(555) 123-4567">
+            </div>
+            <div class="field-group">
+              <label for="organization">Organization <span class="optional">(optional)</span></label>
+              <input type="text" id="organization" name="organization" placeholder="Company, school, group...">
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Event Details -->
+        <div class="section">
+          <div class="section-header">
+            <span class="section-number">2</span>
+            <h2 class="section-title">Event Details</h2>
+          </div>
+
+          <div class="field-row">
+            <div class="field-group">
+              <label for="eventDate">Preferred Date(s) <span class="required">*</span></label>
+              <input type="text" id="eventDate" name="eventDate" required placeholder="e.g., March 15 or flexible">
+            </div>
+            <div class="field-group">
+              <label for="sandwichCount">Est. Sandwiches <span class="required">*</span></label>
+              <select id="sandwichCount" name="sandwichCount" required>
+                <option value="">Select quantity...</option>
+                <option value="50-100">50 - 100</option>
+                <option value="100-200">100 - 200</option>
+                <option value="200-500">200 - 500</option>
+                <option value="500+">500+</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label>Sandwich Type <span class="required">*</span></label>
+            <div class="checkbox-group">
+              <div class="checkbox-item">
+                <input type="checkbox" id="typeDeli" name="sandwichType" value="Deli">
+                <label for="typeDeli" class="checkbox-label">🥪 Deli</label>
+              </div>
+              <div class="checkbox-item">
+                <input type="checkbox" id="typePBJ" name="sandwichType" value="PB&J">
+                <label for="typePBJ" class="checkbox-label">🥜 PB&J</label>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="sandwichNotes">Sandwich type details <span class="optional">(optional)</span></label>
+            <textarea id="sandwichNotes" name="sandwichNotes" rows="2" placeholder="Any preferences on sandwich specifics? Need to ask about making both types?"></textarea>
+          </div>
+
+          <div class="field-group">
+            <label for="location">Event Location / Address <span class="required">*</span></label>
+            <textarea id="location" name="location" required placeholder="Where will the event be held? Include full address if known."></textarea>
+          </div>
+        </div>
+
+        <!-- Section 3: Scheduling -->
+        <div class="section">
+          <div class="section-header">
+            <span class="section-number">3</span>
+            <h2 class="section-title">Scheduling</h2>
+          </div>
+
+          <div class="field-group">
+            <label>When can we call you? <span class="required">*</span></label>
+            <p class="field-hint">Please provide 2-3 options. We'll confirm which one works for us.</p>
+            
+            <div class="datetime-options">
+              <div class="datetime-row">
+                <span class="option-label">Option 1</span>
+                <input type="date" id="date1" name="date1" required>
+                <select id="time1" name="time1" required>
+                  <option value="">Time...</option>
+                  <option value="9:00 AM">9:00 AM</option>
+                  <option value="9:30 AM">9:30 AM</option>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="10:30 AM">10:30 AM</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="11:30 AM">11:30 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="12:30 PM">12:30 PM</option>
+                  <option value="1:00 PM">1:00 PM</option>
+                  <option value="1:30 PM">1:30 PM</option>
+                  <option value="2:00 PM">2:00 PM</option>
+                  <option value="2:30 PM">2:30 PM</option>
+                  <option value="3:00 PM">3:00 PM</option>
+                  <option value="3:30 PM">3:30 PM</option>
+                  <option value="4:00 PM">4:00 PM</option>
+                  <option value="4:30 PM">4:30 PM</option>
+                  <option value="5:00 PM">5:00 PM</option>
+                </select>
+              </div>
+              
+              <div class="datetime-row">
+                <span class="option-label">Option 2</span>
+                <input type="date" id="date2" name="date2">
+                <select id="time2" name="time2">
+                  <option value="">Time...</option>
+                  <option value="9:00 AM">9:00 AM</option>
+                  <option value="9:30 AM">9:30 AM</option>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="10:30 AM">10:30 AM</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="11:30 AM">11:30 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="12:30 PM">12:30 PM</option>
+                  <option value="1:00 PM">1:00 PM</option>
+                  <option value="1:30 PM">1:30 PM</option>
+                  <option value="2:00 PM">2:00 PM</option>
+                  <option value="2:30 PM">2:30 PM</option>
+                  <option value="3:00 PM">3:00 PM</option>
+                  <option value="3:30 PM">3:30 PM</option>
+                  <option value="4:00 PM">4:00 PM</option>
+                  <option value="4:30 PM">4:30 PM</option>
+                  <option value="5:00 PM">5:00 PM</option>
+                </select>
+              </div>
+              
+              <div class="datetime-row">
+                <span class="option-label">Option 3</span>
+                <input type="date" id="date3" name="date3">
+                <select id="time3" name="time3">
+                  <option value="">Time...</option>
+                  <option value="9:00 AM">9:00 AM</option>
+                  <option value="9:30 AM">9:30 AM</option>
+                  <option value="10:00 AM">10:00 AM</option>
+                  <option value="10:30 AM">10:30 AM</option>
+                  <option value="11:00 AM">11:00 AM</option>
+                  <option value="11:30 AM">11:30 AM</option>
+                  <option value="12:00 PM">12:00 PM</option>
+                  <option value="12:30 PM">12:30 PM</option>
+                  <option value="1:00 PM">1:00 PM</option>
+                  <option value="1:30 PM">1:30 PM</option>
+                  <option value="2:00 PM">2:00 PM</option>
+                  <option value="2:30 PM">2:30 PM</option>
+                  <option value="3:00 PM">3:00 PM</option>
+                  <option value="3:30 PM">3:30 PM</option>
+                  <option value="4:00 PM">4:00 PM</option>
+                  <option value="4:30 PM">4:30 PM</option>
+                  <option value="5:00 PM">5:00 PM</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="notes">Questions or Notes <span class="optional">(optional)</span></label>
+            <textarea id="notes" name="notes" placeholder="Anything else we should know?"></textarea>
+          </div>
+        </div>
+
+        <!-- Submit -->
+        <div class="submit-section">
+          <button type="submit" class="submit-btn" id="submitBtn">Submit Request</button>
+          <div class="status-message" id="statusMessage"></div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    const firebaseConfig = {
+      apiKey: "AIzaSyAT4XsQUE4ljDO11lDL8iygf1IayRnzeY8",
+      authDomain: "tsp-group-event-guide.firebaseapp.com",
+      projectId: "tsp-group-event-guide",
+      storageBucket: "tsp-group-event-guide.firebasestorage.app",
+      messagingSenderId: "934097743660",
+      appId: "1:934097743660:web:2d751d1596b44c82b4c689",
+      measurementId: "G-30QL51VD1H"
+    };
+
+    // Import Firebase (using CDN modules)
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+    import { getFirestore, collection, addDoc, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Set minimum date to today for all date pickers
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('date1').min = today;
+    document.getElementById('date2').min = today;
+    document.getElementById('date3').min = today;
+
+    // Form handling
+    const form = document.getElementById('hostForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const statusMessage = document.getElementById('statusMessage');
+    const successCard = document.getElementById('successCard');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      // Validate at least one sandwich type is selected
+      const sandwichTypes = document.querySelectorAll('input[name="sandwichType"]:checked');
+      if (sandwichTypes.length === 0) {
+        showStatus('Please select at least one sandwich type.', 'error');
+        return;
+      }
+
+      // Disable button and show loading
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span>Submitting...';
+      statusMessage.className = 'status-message';
+      statusMessage.style.display = 'none';
+
+      try {
+        // Collect form data
+        const formData = {
+          // Contact Info
+          name: document.getElementById('name').value.trim(),
+          email: document.getElementById('email').value.trim(),
+          phone: document.getElementById('phone').value.trim(),
+          organization: document.getElementById('organization').value.trim() || null,
+          
+          // Event Details
+          eventDate: document.getElementById('eventDate').value.trim(),
+          sandwichCount: document.getElementById('sandwichCount').value,
+          sandwichTypes: Array.from(sandwichTypes).map(cb => cb.value),
+          sandwichNotes: document.getElementById('sandwichNotes').value.trim() || null,
+          location: document.getElementById('location').value.trim(),
+          
+          // Scheduling - collect date/time options
+          callOptions: [
+            { date: document.getElementById('date1').value, time: document.getElementById('time1').value },
+            { date: document.getElementById('date2').value, time: document.getElementById('time2').value },
+            { date: document.getElementById('date3').value, time: document.getElementById('time3').value }
+          ].filter(opt => opt.date && opt.time), // Only include complete options
+          notes: document.getElementById('notes').value.trim() || null,
+          
+          // Metadata
+          submittedAt: serverTimestamp(),
+          status: 'new'
+        };
+
+        // Save to Firestore
+        const docRef = await addDoc(collection(db, 'groupRequests'), formData);
+        console.log('Document written with ID:', docRef.id);
+
+        // Show success
+        form.classList.add('hidden');
+        successCard.classList.add('show');
+        
+      } catch (error) {
+        console.error('Error adding document:', error);
+        showStatus('Something went wrong. Please try again or email us directly.', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = 'Submit Request';
+      }
+    });
+
+    function showStatus(message, type) {
+      statusMessage.textContent = message;
+      statusMessage.className = `status-message ${type}`;
+    }
+  </script>
+</body>
+</html>
