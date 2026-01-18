@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Event Request - Planning Toolkit | The Sandwich Project</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px 15px 0 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+
+        .logo-container {
+            margin-bottom: 15px;
+        }
+
+        .logo-container img {
+            max-width: 250px;
+            height: auto;
+        }
+
+        .header h1 {
+            color: #1a4d66;
+            font-size: 2em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            color: #4a5568;
+            font-size: 1.1em;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            background: white;
+            padding: 25px 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin-bottom: 10px;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: #e0e0e0;
+            z-index: 1;
+        }
+
+        .progress-bar {
+            position: absolute;
+            top: 20px;
+            left: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #007E8C, #47B3CB);
+            z-index: 2;
+            transition: width 0.4s ease;
+        }
+
+        .step-indicator {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 3;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            color: #666;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .step-indicator.active .step-number {
+            background: linear-gradient(135deg, #007E8C, #47B3CB);
+            color: white;
+        }
+
+        .step-indicator.completed .step-number {
+            background: #28a745;
+            color: white;
+        }
+
+        .step-indicator.completed .step-number::after {
+            content: '✓';
+        }
+
+        .step-indicator.completed .step-number span {
+            display: none;
+        }
+
+        .step-label {
+            font-size: 0.85em;
+            color: #666;
+            text-align: center;
+            font-weight: 500;
+            max-width: 100px;
+        }
+
+        .step-indicator.active .step-label {
+            color: #007E8C;
+            font-weight: 600;
+        }
+
+        .step-indicator.completed .step-label {
+            color: #28a745;
+        }
+
+        /* Main Content */
+        .main-content {
+            background: white;
+            padding: 40px;
+            border-radius: 0 0 15px 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            min-height: 400px;
+        }
+
+        .step-content {
+            display: none;
+        }
+
+        .step-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-size: 1.6em;
+            color: #1a4d66;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .step-description {
+            color: #4a5568;
+            font-size: 1.05em;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        /* Document Card */
+        .document-card {
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .document-card.viewed {
+            border-color: #28a745;
+            background: #f0fff4;
+        }
+
+        .document-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .document-icon {
+            font-size: 2.5em;
+        }
+
+        .document-info h3 {
+            color: #1a4d66;
+            font-size: 1.3em;
+            margin-bottom: 5px;
+        }
+
+        .document-info p {
+            color: #4a5568;
+            font-size: 0.95em;
+        }
+
+        .document-status {
+            margin-left: auto;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+        }
+
+        .document-status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .document-status.viewed {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .view-document-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .view-document-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(35, 99, 131, 0.4);
+        }
+
+        .document-card.viewed .view-document-btn {
+            background: #28a745;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .nav-btn {
+            padding: 14px 32px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .nav-btn.back {
+            background: #f0f0f0;
+            color: #4a5568;
+        }
+
+        .nav-btn.back:hover:not(:disabled) {
+            background: #e0e0e0;
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(135deg, #FBAD3F 0%, #F39C12 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(251, 173, 63, 0.4);
+        }
+
+        .nav-btn.next:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(251, 173, 63, 0.5);
+        }
+
+        .nav-btn.next:disabled {
+            background: #ccc;
+            box-shadow: none;
+        }
+
+        /* Confirmation Step */
+        .confirmation-box {
+            background: linear-gradient(135deg, #e8f5f9 0%, #fff 100%);
+            border: 2px solid #47B3CB;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 25px;
+        }
+
+        .confirmation-box h3 {
+            color: #1a4d66;
+            font-size: 1.3em;
+            margin-bottom: 15px;
+        }
+
+        .checklist {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .checklist li {
+            padding: 12px 0;
+            border-bottom: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.05em;
+            color: #333;
+        }
+
+        .checklist li:last-child {
+            border-bottom: none;
+        }
+
+        .checklist li .check {
+            color: #28a745;
+            font-size: 1.2em;
+        }
+
+        .agreement-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 20px;
+            background: #fff;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .agreement-checkbox:hover {
+            border-color: #007E8C;
+        }
+
+        .agreement-checkbox.checked {
+            border-color: #28a745;
+            background: #f0fff4;
+        }
+
+        .agreement-checkbox input {
+            width: 22px;
+            height: 22px;
+            margin-top: 2px;
+            accent-color: #28a745;
+        }
+
+        .agreement-checkbox label {
+            font-size: 1.05em;
+            color: #333;
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 18px 40px;
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
+            margin-top: 25px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(40, 167, 69, 0.5);
+        }
+
+        .submit-btn:disabled {
+            background: #ccc;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* Welcome Step */
+        .welcome-icon {
+            font-size: 4em;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .welcome-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .welcome-feature {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+        }
+
+        .welcome-feature span:first-child {
+            font-size: 1.5em;
+        }
+
+        .welcome-feature span:last-child {
+            font-size: 1em;
+            color: #333;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header, .progress-container, .main-content {
+                padding: 25px 20px;
+            }
+
+            .header h1 {
+                font-size: 1.6em;
+            }
+
+            .step-label {
+                font-size: 0.75em;
+                max-width: 60px;
+            }
+
+            .step-number {
+                width: 36px;
+                height: 36px;
+                font-size: 0.95em;
+            }
+
+            .document-header {
+                flex-wrap: wrap;
+            }
+
+            .document-status {
+                margin-left: 0;
+                margin-top: 10px;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-btn.back {
+                order: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo">
+            </div>
+            <h1>Event Planning Toolkit</h1>
+            <p>Review our materials to prepare for your sandwich-making event</p>
+        </div>
+
+        <div class="progress-container">
+            <div class="progress-steps">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+
+                <div class="step-indicator active" data-step="0">
+                    <div class="step-number"><span>1</span></div>
+                    <div class="step-label">Welcome</div>
+                </div>
+
+                <div class="step-indicator" data-step="1">
+                    <div class="step-number"><span>2</span></div>
+                    <div class="step-label">Sandwich Guide</div>
+                </div>
+
+                <div class="step-indicator" data-step="2">
+                    <div class="step-number"><span>3</span></div>
+                    <div class="step-label">Food Safety</div>
+                </div>
+
+                <div class="step-indicator" data-step="3">
+                    <div class="step-number"><span>4</span></div>
+                    <div class="step-label">Labels & Lists</div>
+                </div>
+
+                <div class="step-indicator" data-step="4">
+                    <div class="step-number"><span>5</span></div>
+                    <div class="step-label">Confirm</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <!-- Step 0: Welcome -->
+            <div class="step-content active" data-step="0">
+                <div class="welcome-icon">👋</div>
+                <h2 class="step-title">Welcome to Your Event Planning Journey!</h2>
+                <p class="step-description">
+                    Thank you for your interest in hosting a sandwich-making event with The Sandwich Project!
+                    Before we schedule your event, we'll walk you through our essential planning materials
+                    to ensure your event runs smoothly and safely.
+                </p>
+
+                <div class="welcome-features">
+                    <div class="welcome-feature">
+                        <span>📚</span>
+                        <span>Review key documents</span>
+                    </div>
+                    <div class="welcome-feature">
+                        <span>🥪</span>
+                        <span>Learn sandwich prep</span>
+                    </div>
+                    <div class="welcome-feature">
+                        <span>🛡️</span>
+                        <span>Understand food safety</span>
+                    </div>
+                    <div class="welcome-feature">
+                        <span>📅</span>
+                        <span>Schedule your event</span>
+                    </div>
+                </div>
+
+                <p class="step-description" style="margin-bottom: 0;">
+                    <strong>This will take about 10-15 minutes.</strong> At the end, you'll confirm you've reviewed the materials
+                    and can schedule a call with our team to finalize your event date.
+                </p>
+
+                <div class="navigation">
+                    <div></div>
+                    <button class="nav-btn next" onclick="nextStep()">
+                        Get Started <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 1: Sandwich Making Guides -->
+            <div class="step-content" data-step="1">
+                <h2 class="step-title">📖 Sandwich Making Guides</h2>
+                <p class="step-description">
+                    Learn the proper techniques for making sandwiches. Please review the guide(s) relevant to your event type.
+                    <strong>You must view at least one guide to continue.</strong>
+                </p>
+
+                <div class="document-card" id="doc-deli">
+                    <div class="document-header">
+                        <span class="document-icon">🥪</span>
+                        <div class="document-info">
+                            <h3>Deli Sandwich Making 101</h3>
+                            <p>Turkey or ham sandwiches with cheese - our most common event type</p>
+                        </div>
+                        <span class="document-status pending" id="status-deli">Not viewed</span>
+                    </div>
+                    <a href="toolkit/20250205-TSP-Deli Sandwich Making 101-Groups (2).pdf"
+                       target="_blank"
+                       class="view-document-btn"
+                       onclick="markViewed('deli')">
+                        📄 View Document
+                    </a>
+                </div>
+
+                <div class="document-card" id="doc-pbj">
+                    <div class="document-header">
+                        <span class="document-icon">🥜</span>
+                        <div class="document-info">
+                            <h3>PB&J Sandwich Making 101</h3>
+                            <p>Peanut butter and jelly sandwiches - great for nut-friendly events</p>
+                        </div>
+                        <span class="document-status pending" id="status-pbj">Not viewed</span>
+                    </div>
+                    <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf"
+                       target="_blank"
+                       class="view-document-btn"
+                       onclick="markViewed('pbj')">
+                        📄 View Document
+                    </a>
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-btn back" onclick="prevStep()">
+                        <span>←</span> Back
+                    </button>
+                    <button class="nav-btn next" id="next-step-1" onclick="nextStep()" disabled>
+                        Continue <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 2: Food Safety -->
+            <div class="step-content" data-step="2">
+                <h2 class="step-title">🛡️ Food Safety Requirements</h2>
+                <p class="step-description">
+                    Food safety is critical when preparing food for donation. This guide covers essential practices
+                    to keep both volunteers and recipients safe. <strong>You must view this document to continue.</strong>
+                </p>
+
+                <div class="document-card" id="doc-safety">
+                    <div class="document-header">
+                        <span class="document-icon">🛡️</span>
+                        <div class="document-info">
+                            <h3>Food Safety for Volunteers</h3>
+                            <p>Temperature rules, sanitation, the two-hour rule, and safe delivery procedures</p>
+                        </div>
+                        <span class="document-status pending" id="status-safety">Not viewed</span>
+                    </div>
+                    <a href="toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf"
+                       target="_blank"
+                       class="view-document-btn"
+                       onclick="markViewed('safety')">
+                        📄 View Document
+                    </a>
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-btn back" onclick="prevStep()">
+                        <span>←</span> Back
+                    </button>
+                    <button class="nav-btn next" id="next-step-2" onclick="nextStep()" disabled>
+                        Continue <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 3: Labels & Inventory -->
+            <div class="step-content" data-step="3">
+                <h2 class="step-title">📋 Labels & Inventory Lists</h2>
+                <p class="step-description">
+                    These resources help you track your supplies and properly label your sandwiches.
+                    <strong>Please view each document before continuing.</strong>
+                </p>
+
+                <div class="document-card" id="doc-inventory">
+                    <div class="document-header">
+                        <span class="document-icon">📊</span>
+                        <div class="document-info">
+                            <h3>Sandwich Inventory List</h3>
+                            <p>Track ingredients and supplies needed for your event</p>
+                        </div>
+                        <span class="document-status pending" id="status-inventory">Not viewed</span>
+                    </div>
+                    <a href="toolkit/TSP Sandwich Inventory List for 3 ozs.xlsx - Sheet1.pdf"
+                       target="_blank"
+                       class="view-document-btn"
+                       onclick="markViewed('inventory')">
+                        📄 View Document
+                    </a>
+                </div>
+
+                <div class="document-card" id="doc-deli-labels">
+                    <div class="document-header">
+                        <span class="document-icon">🏷️</span>
+                        <div class="document-info">
+                            <h3>Deli Sandwich Labels</h3>
+                            <p>Printable labels for tracking deli sandwiches</p>
+                        </div>
+                        <span class="document-status pending" id="status-deli-labels">Not viewed</span>
+                    </div>
+                    <a href="toolkit/Deli labels_1749341916236.pdf"
+                       target="_blank"
+                       class="view-document-btn"
+                       onclick="markViewed('deli-labels')">
+                        📄 View Document
+                    </a>
+                </div>
+
+                <div class="document-card" id="doc-pbj-labels">
+                    <div class="document-header">
+                        <span class="document-icon">🏷️</span>
+                        <div class="document-info">
+                            <h3>PB&J Labels</h3>
+                            <p>Printable labels with allergen warnings for PB&J sandwiches</p>
+                        </div>
+                        <span class="document-status pending" id="status-pbj-labels">Not viewed</span>
+                    </div>
+                    <a href="toolkit/Pbj labels.pdf"
+                       target="_blank"
+                       class="view-document-btn"
+                       onclick="markViewed('pbj-labels')">
+                        📄 View Document
+                    </a>
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-btn back" onclick="prevStep()">
+                        <span>←</span> Back
+                    </button>
+                    <button class="nav-btn next" id="next-step-3" onclick="nextStep()" disabled>
+                        Continue <span>→</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Step 4: Confirmation -->
+            <div class="step-content" data-step="4">
+                <h2 class="step-title">✅ Ready to Schedule Your Event</h2>
+                <p class="step-description">
+                    Great job! You've reviewed all the essential materials. Here's a summary of what you've learned:
+                </p>
+
+                <div class="confirmation-box">
+                    <h3>Documents Reviewed:</h3>
+                    <ul class="checklist" id="reviewedList">
+                        <!-- Populated by JavaScript -->
+                    </ul>
+                </div>
+
+                <div class="agreement-checkbox" id="agreementBox" onclick="toggleAgreement()">
+                    <input type="checkbox" id="agreementCheck">
+                    <label for="agreementCheck">
+                        I confirm that I have reviewed the planning materials and understand the food safety requirements.
+                        I am ready to schedule a call with The Sandwich Project team to finalize my event date.
+                    </label>
+                </div>
+
+                <button class="submit-btn" id="submitBtn" onclick="submitForm()" disabled>
+                    📅 Schedule Your Planning Call
+                </button>
+
+                <div class="navigation" style="border-top: none; padding-top: 15px;">
+                    <button class="nav-btn back" onclick="prevStep()">
+                        <span>←</span> Back
+                    </button>
+                    <div></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentStep = 0;
+        const totalSteps = 5;
+
+        // Track viewed documents
+        const viewedDocs = {
+            deli: false,
+            pbj: false,
+            safety: false,
+            inventory: false,
+            'deli-labels': false,
+            'pbj-labels': false
+        };
+
+        function updateProgressBar() {
+            const progress = (currentStep / (totalSteps - 1)) * 100;
+            document.getElementById('progressBar').style.width = progress + '%';
+
+            // Update step indicators
+            document.querySelectorAll('.step-indicator').forEach((indicator, index) => {
+                indicator.classList.remove('active', 'completed');
+                if (index < currentStep) {
+                    indicator.classList.add('completed');
+                } else if (index === currentStep) {
+                    indicator.classList.add('active');
+                }
+            });
+        }
+
+        function showStep(step) {
+            document.querySelectorAll('.step-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.querySelector(`.step-content[data-step="${step}"]`).classList.add('active');
+            updateProgressBar();
+
+            // If showing confirmation step, populate the reviewed list
+            if (step === 4) {
+                populateReviewedList();
+            }
+        }
+
+        function nextStep() {
+            if (currentStep < totalSteps - 1) {
+                currentStep++;
+                showStep(currentStep);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function prevStep() {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+
+        function markViewed(docId) {
+            viewedDocs[docId] = true;
+
+            // Update UI
+            const card = document.getElementById('doc-' + docId);
+            const status = document.getElementById('status-' + docId);
+
+            if (card && status) {
+                card.classList.add('viewed');
+                status.textContent = 'Viewed ✓';
+                status.classList.remove('pending');
+                status.classList.add('viewed');
+            }
+
+            // Check if step requirements are met
+            checkStepRequirements();
+        }
+
+        function checkStepRequirements() {
+            // Step 1: Need at least one sandwich guide
+            const step1Complete = viewedDocs.deli || viewedDocs.pbj;
+            const nextBtn1 = document.getElementById('next-step-1');
+            if (nextBtn1) nextBtn1.disabled = !step1Complete;
+
+            // Step 2: Need food safety
+            const step2Complete = viewedDocs.safety;
+            const nextBtn2 = document.getElementById('next-step-2');
+            if (nextBtn2) nextBtn2.disabled = !step2Complete;
+
+            // Step 3: Need all labels and inventory
+            const step3Complete = viewedDocs.inventory && viewedDocs['deli-labels'] && viewedDocs['pbj-labels'];
+            const nextBtn3 = document.getElementById('next-step-3');
+            if (nextBtn3) nextBtn3.disabled = !step3Complete;
+        }
+
+        function populateReviewedList() {
+            const list = document.getElementById('reviewedList');
+            const items = [];
+
+            if (viewedDocs.deli) items.push('Deli Sandwich Making 101');
+            if (viewedDocs.pbj) items.push('PB&J Sandwich Making 101');
+            if (viewedDocs.safety) items.push('Food Safety for Volunteers');
+            if (viewedDocs.inventory) items.push('Sandwich Inventory List');
+            if (viewedDocs['deli-labels']) items.push('Deli Sandwich Labels');
+            if (viewedDocs['pbj-labels']) items.push('PB&J Labels');
+
+            list.innerHTML = items.map(item =>
+                `<li><span class="check">✓</span> ${item}</li>`
+            ).join('');
+        }
+
+        function toggleAgreement() {
+            const checkbox = document.getElementById('agreementCheck');
+            const box = document.getElementById('agreementBox');
+            const submitBtn = document.getElementById('submitBtn');
+
+            checkbox.checked = !checkbox.checked;
+            box.classList.toggle('checked', checkbox.checked);
+            submitBtn.disabled = !checkbox.checked;
+        }
+
+        function submitForm() {
+            // Replace this URL with your actual Google Form URL
+            const googleFormUrl = 'https://forms.google.com/your-form-url-here';
+
+            // You could also pass parameters to pre-fill the form
+            // const params = new URLSearchParams({
+            //     'entry.123456': 'Value'
+            // });
+            // window.location.href = googleFormUrl + '?' + params.toString();
+
+            window.location.href = googleFormUrl;
+        }
+
+        // Initialize
+        updateProgressBar();
+    </script>
+</body>
+</html>
