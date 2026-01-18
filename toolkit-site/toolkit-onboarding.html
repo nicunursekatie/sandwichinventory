@@ -283,32 +283,57 @@
             display: block;
         }
 
+        .pdf-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1a4d66;
+            color: white;
+            padding: 12px 20px;
+            margin-left: calc(-50vw + 50%);
+            width: 100vw;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .pdf-toolbar-title {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .pdf-toolbar-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
         .pdf-preview {
             width: 100vw;
-            height: 90vh;
-            min-height: 800px;
+            height: 85vh;
+            min-height: 700px;
             margin-left: calc(-50vw + 50%);
             border: none;
-            border-top: 2px solid #007E8C;
-            border-bottom: 2px solid #007E8C;
             background: #fff;
         }
 
         .pdf-actions {
             display: flex;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 15px;
             flex-wrap: wrap;
+            padding-top: 15px;
+            border-top: 1px solid #e0e0e0;
         }
 
         .pdf-action-btn {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            padding: 8px 16px;
+            padding: 10px 20px;
             border-radius: 6px;
-            font-size: 0.9em;
-            font-weight: 500;
+            font-size: 0.95em;
+            font-weight: 600;
             text-decoration: none;
             cursor: pointer;
             border: none;
@@ -326,12 +351,35 @@
         }
 
         .pdf-action-btn.close {
-            background: #6c757d;
+            background: #A31C41;
             color: white;
+            font-size: 1rem;
+            padding: 10px 24px;
         }
 
         .pdf-action-btn.close:hover {
-            background: #5a6268;
+            background: #8a1736;
+        }
+
+        .pdf-toolbar .pdf-action-btn.close {
+            background: white;
+            color: #1a4d66;
+            padding: 8px 16px;
+        }
+
+        .pdf-toolbar .pdf-action-btn.close:hover {
+            background: #f0f0f0;
+        }
+
+        .pdf-toolbar .pdf-action-btn.download {
+            background: rgba(255,255,255,0.15);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+        }
+
+        .pdf-toolbar .pdf-action-btn.download:hover {
+            background: rgba(255,255,255,0.25);
         }
 
         @media (max-width: 768px) {
@@ -1080,13 +1128,24 @@
                         📄 View Full Guide
                     </button>
                     <div class="pdf-preview-container" id="preview-deli">
+                        <div class="pdf-toolbar">
+                            <span class="pdf-toolbar-title">Deli Sandwich Making 101</span>
+                            <div class="pdf-toolbar-actions">
+                                <a href="toolkit/20250205-TSP-Deli Sandwich Making 101-Groups (2).pdf" download class="pdf-action-btn download">
+                                    Download PDF
+                                </a>
+                                <button class="pdf-action-btn close" onclick="closePdfPreview('deli')">
+                                    Close Preview
+                                </button>
+                            </div>
+                        </div>
                         <iframe class="pdf-preview" id="iframe-deli" src="" title="Deli Sandwich Making Guide"></iframe>
                         <div class="pdf-actions">
                             <a href="toolkit/20250205-TSP-Deli Sandwich Making 101-Groups (2).pdf" download class="pdf-action-btn download">
-                                ⬇️ Download PDF
+                                Download PDF
                             </a>
                             <button class="pdf-action-btn close" onclick="closePdfPreview('deli')">
-                                ✕ Close Preview
+                                Close Preview
                             </button>
                         </div>
                     </div>
@@ -1123,13 +1182,24 @@
                         📄 View Full Guide
                     </button>
                     <div class="pdf-preview-container" id="preview-pbj">
+                        <div class="pdf-toolbar">
+                            <span class="pdf-toolbar-title">PB&J Sandwich Making 101</span>
+                            <div class="pdf-toolbar-actions">
+                                <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf" download class="pdf-action-btn download">
+                                    Download PDF
+                                </a>
+                                <button class="pdf-action-btn close" onclick="closePdfPreview('pbj')">
+                                    Close Preview
+                                </button>
+                            </div>
+                        </div>
                         <iframe class="pdf-preview" id="iframe-pbj" src="" title="PB&J Sandwich Making Guide"></iframe>
                         <div class="pdf-actions">
                             <a href="toolkit/20250205-TSP-PBJ Sandwich Making 101-Groups (1).pdf" download class="pdf-action-btn download">
-                                ⬇️ Download PDF
+                                Download PDF
                             </a>
                             <button class="pdf-action-btn close" onclick="closePdfPreview('pbj')">
-                                ✕ Close Preview
+                                Close Preview
                             </button>
                         </div>
                     </div>
@@ -1207,13 +1277,24 @@
                         📄 View Full Guide
                     </button>
                     <div class="pdf-preview-container" id="preview-safety">
+                        <div class="pdf-toolbar">
+                            <span class="pdf-toolbar-title">Food Safety for Volunteers</span>
+                            <div class="pdf-toolbar-actions">
+                                <a href="toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf" download class="pdf-action-btn download">
+                                    Download PDF
+                                </a>
+                                <button class="pdf-action-btn close" onclick="closePdfPreview('safety')">
+                                    Close Preview
+                                </button>
+                            </div>
+                        </div>
                         <iframe class="pdf-preview" id="iframe-safety" src="" title="Food Safety Guide"></iframe>
                         <div class="pdf-actions">
                             <a href="toolkit/20230525-TSP-Food+Safety+Volunteers (2).pdf" download class="pdf-action-btn download">
-                                ⬇️ Download PDF
+                                Download PDF
                             </a>
                             <button class="pdf-action-btn close" onclick="closePdfPreview('safety')">
-                                ✕ Close Preview
+                                Close Preview
                             </button>
                         </div>
                     </div>
@@ -1250,13 +1331,24 @@
                         📄 View Document
                     </button>
                     <div class="pdf-preview-container" id="preview-deli-labels">
+                        <div class="pdf-toolbar">
+                            <span class="pdf-toolbar-title">Deli Sandwich Labels</span>
+                            <div class="pdf-toolbar-actions">
+                                <a href="toolkit/Deli labels_1749341916236.pdf" download class="pdf-action-btn download">
+                                    Download PDF
+                                </a>
+                                <button class="pdf-action-btn close" onclick="closePdfPreview('deli-labels')">
+                                    Close Preview
+                                </button>
+                            </div>
+                        </div>
                         <iframe class="pdf-preview" id="iframe-deli-labels" src="" title="Deli Sandwich Labels"></iframe>
                         <div class="pdf-actions">
                             <a href="toolkit/Deli labels_1749341916236.pdf" download class="pdf-action-btn download">
-                                ⬇️ Download PDF
+                                Download PDF
                             </a>
                             <button class="pdf-action-btn close" onclick="closePdfPreview('deli-labels')">
-                                ✕ Close Preview
+                                Close Preview
                             </button>
                         </div>
                     </div>
@@ -1275,13 +1367,24 @@
                         📄 View Document
                     </button>
                     <div class="pdf-preview-container" id="preview-pbj-labels">
+                        <div class="pdf-toolbar">
+                            <span class="pdf-toolbar-title">PB&J Labels</span>
+                            <div class="pdf-toolbar-actions">
+                                <a href="toolkit/Pbj labels.pdf" download class="pdf-action-btn download">
+                                    Download PDF
+                                </a>
+                                <button class="pdf-action-btn close" onclick="closePdfPreview('pbj-labels')">
+                                    Close Preview
+                                </button>
+                            </div>
+                        </div>
                         <iframe class="pdf-preview" id="iframe-pbj-labels" src="" title="PB&J Labels"></iframe>
                         <div class="pdf-actions">
                             <a href="toolkit/Pbj labels.pdf" download class="pdf-action-btn download">
-                                ⬇️ Download PDF
+                                Download PDF
                             </a>
                             <button class="pdf-action-btn close" onclick="closePdfPreview('pbj-labels')">
-                                ✕ Close Preview
+                                Close Preview
                             </button>
                         </div>
                     </div>
