@@ -112,6 +112,13 @@ const PDF_URLS = {
   pbjLabels: 'https://tsp-group-event-guide.web.app/toolkit/Pbj%20labels.pdf',
 };
 
+// Assembly graphic URLs
+const GRAPHIC_URLS = {
+  deliAssembly: 'https://tsp-group-event-guide.web.app/images/correct%20deli%20assembly.png',
+  whyCheese: 'https://tsp-group-event-guide.web.app/images/why%20cheese%20on%20the%20bottom.png',
+  pbjAssembly: 'https://tsp-group-event-guide.web.app/images/PBJ%20%26%20ASSEMBLY%20PEANUT%20BUTTER%20ON%20BOTH%20SIDES%2C%20JELLY%20ON%20ONE%20(1).png',
+};
+
 // Helper to format date for display
 function formatDate(dateStr) {
   if (!dateStr) return '';
@@ -155,6 +162,28 @@ exports.sendToolkitConfirmationEmail = functions.firestore
       resourcesHtml += `<li><a href="${PDF_URLS.pbjLabels}">PB&J Labels</a> (print before your event)</li>`;
     }
     resourcesHtml += '</ul>';
+
+    // Build assembly graphics section based on sandwich type
+    let assemblyGraphicsHtml = '';
+    if (hasDeli) {
+      assemblyGraphicsHtml += `
+      <div style="margin-bottom: 25px;">
+        <h3 style="color: #005596; font-size: 16px; margin-bottom: 15px;">Deli Sandwich Assembly</h3>
+        <div style="text-align: center;">
+          <img src="${GRAPHIC_URLS.deliAssembly}" alt="Deli Sandwich Assembly" style="max-width: 250px; margin: 10px; border-radius: 8px;">
+          <img src="${GRAPHIC_URLS.whyCheese}" alt="Why cheese on the bottom" style="max-width: 250px; margin: 10px; border-radius: 8px;">
+        </div>
+      </div>`;
+    }
+    if (hasPbj) {
+      assemblyGraphicsHtml += `
+      <div style="margin-bottom: 25px;">
+        <h3 style="color: #005596; font-size: 16px; margin-bottom: 15px;">PB&J Assembly</h3>
+        <div style="text-align: center;">
+          <img src="${GRAPHIC_URLS.pbjAssembly}" alt="PB&J Assembly Instructions" style="max-width: 350px; margin: 10px auto; display: block; border-radius: 8px;">
+        </div>
+      </div>`;
+    }
 
     // Build the call options list
     let callOptionsHtml = '';
@@ -210,6 +239,11 @@ exports.sendToolkitConfirmationEmail = functions.firestore
       <p>You've requested a planning call at one of these times:</p>
       ${callOptionsHtml}
       <p style="margin-top: 10px;"><strong>We'll confirm which time works within 2-3 business days.</strong></p>
+    </div>
+
+    <div class="section">
+      <h2>Quick Reference: Assembly Guide</h2>
+      ${assemblyGraphicsHtml}
     </div>
 
     <div class="section">

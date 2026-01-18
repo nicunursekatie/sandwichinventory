@@ -557,6 +557,44 @@
             color: #007E8C;
         }
 
+        /* Assembly Graphics */
+        .assembly-graphics {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .assembly-graphic {
+            flex: 1;
+            min-width: 200px;
+            max-width: 280px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .assembly-graphic img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .assembly-graphic-single {
+            max-width: 350px;
+            margin: 20px auto 0;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .assembly-graphic-single img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
         /* Embedded Form Styles */
         .embedded-form {
             margin-top: 25px;
@@ -954,10 +992,12 @@
                         <li>After assembly, each sandwich goes into an <strong>individual sandwich baggie</strong></li>
                         <li>Bagged sandwiches are stacked back inside the <strong>loaf bag the bread came from</strong> for transport</li>
                     </ul>
-                    <div class="assembly-order">
-                        <h4>Assembly Order (Bottom to Top)</h4>
-                        <div class="order">
-                            🍞 Bread <span>→</span> 🧀 Cheese <span>→</span> 🥩 Meat <span>→</span> 🧀 Cheese <span>→</span> 🍞 Bread
+                    <div class="assembly-graphics">
+                        <div class="assembly-graphic">
+                            <img src="images/correct deli assembly.png" alt="Deli Sandwich Assembly - Bread, Cheese, Meat, Cheese, Bread">
+                        </div>
+                        <div class="assembly-graphic">
+                            <img src="images/why cheese on the bottom.png" alt="Why we put cheese on the bottom - acts as moisture barrier">
                         </div>
                     </div>
                 </div>
@@ -992,11 +1032,8 @@
                         <li>After assembly, each sandwich goes into an <strong>individual sandwich baggie</strong></li>
                         <li>Bagged sandwiches are stacked back inside the <strong>loaf bag the bread came from</strong> for transport</li>
                     </ul>
-                    <div class="assembly-order" style="border-color: #FBAD3F;">
-                        <h4>Assembly Order</h4>
-                        <div class="order">
-                            🍞 Bread + PB (1 tbsp) <span>→</span> 🍇 Jelly (1.5 tbsp) on top <span>→</span> 🍞 Bread + PB (2 tbsp) on top
-                        </div>
+                    <div class="assembly-graphic-single">
+                        <img src="images/PBJ & ASSEMBLY PEANUT BUTTER ON BOTH SIDES, JELLY ON ONE (1).png" alt="PB&J Assembly - Peanut butter on both sides, jelly on one">
                     </div>
                 </div>
 
