@@ -15,3 +15,20 @@ node_modules/
 # Build artifacts
 dist/
 build/
+
+# Environment variables and API keys
+.env
+.env.local
+.env.*.local
+*.env
+api/.env
+api/.env.local
+
+# API keys and secrets (extra safety)
+*secret*
+*key*
+*api-key*
+
+# API key instructions (contains actual key - keep local only)
+api/API_KEY_INSTRUCTIONS.md
+.vercel
