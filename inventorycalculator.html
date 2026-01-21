@@ -631,13 +631,32 @@
             
             .calc-form {
                 grid-template-columns: 1fr;
-                gap: 25px;
+                gap: 20px;
             }
             
             .calc-input-group input, .calc-input-group select {
                 padding: 16px 20px;
                 font-size: 1.1em;
             }
+            
+            .calc-input-group label {
+                font-size: 1em;
+            }
+            
+            .calc-button {
+                width: 100%;
+                padding: 16px 24px;
+                font-size: 1.1em;
+            }
+            
+            .section {
+                padding: 20px;
+            }
+            
+            .shopping-calculator h3 {
+                font-size: 1.2em;
+            }
+        }
             
             .calc-input-group label {
                 font-size: 1.1em;
@@ -818,6 +837,61 @@
 
             .nav-link {
                 width: 100%;
+            }
+        }
+
+        /* Extra small mobile screens (portrait phones) */
+        @media (max-width: 480px) {
+            .container {
+                padding: 12px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .section {
+                padding: 16px;
+            }
+
+            .section h2 {
+                font-size: 1.5em;
+            }
+
+            .calc-input-group label {
+                font-size: 1em;
+            }
+
+            .calc-input-group input,
+            .calc-input-group select {
+                padding: 14px 16px;
+                font-size: 1em;
+            }
+
+            .calc-button {
+                padding: 14px 20px;
+                font-size: 1em;
+            }
+
+            .recipe-card {
+                padding: 18px;
+            }
+
+            .product-title {
+                font-size: 1em;
+                line-height: 1.2;
+            }
+
+            .product-price {
+                font-size: 1.3em;
+            }
+
+            .price-note {
+                font-size: 0.95em;
             }
         }
     </style>
@@ -1172,10 +1246,11 @@
         transition: transform 0.2s;
         cursor: pointer;
         position: relative;
-        overflow: hidden;
+        overflow: visible;
         display: flex;
         flex-direction: column;
         gap: 3px;
+        min-height: 150px;
     }
     
     .price-card:hover {
@@ -1277,24 +1352,33 @@
     /* Mobile responsive */
     @media (max-width: 768px) {
         .price-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 12px;
+            grid-template-columns: 1fr;
+            gap: 16px;
         }
         
         .price-card {
-            padding: 15px;
+            padding: 16px;
+            min-height: auto;
         }
         
         .product-title {
-            font-size: 1em;
+            font-size: 1.1em;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+        
+        .product-size {
+            font-size: 0.95em;
+            word-wrap: break-word;
         }
         
         .product-price {
-            font-size: 1.3em;
+            font-size: 1.4em;
         }
         
         .price-note {
-            font-size: 1em;
+            font-size: 1.05em;
+            word-wrap: break-word;
         }
         
         .cheese-guide {
