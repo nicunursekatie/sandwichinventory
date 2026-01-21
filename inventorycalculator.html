@@ -219,6 +219,7 @@
             color: white;
             margin-bottom: 20px;
             box-shadow: 0 15px 40px rgba(0,126,140,0.3);
+            overflow-x: hidden;
         }
         
         .calc-form {
@@ -262,6 +263,8 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            width: 100%;
+            min-width: 0;
         }
         
         .calc-input-group label {
@@ -285,6 +288,9 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
             border: 2px solid transparent;
+            width: 100%;
+            box-sizing: border-box;
+            min-width: 0;
         }
         
         .calc-input-group input:focus, .calc-input-group select:focus {
@@ -653,6 +659,10 @@
                 padding: 20px;
             }
             
+            .shopping-calculator {
+                padding: 20px;
+            }
+            
             .shopping-calculator h3 {
                 font-size: 1.2em;
             }
@@ -845,6 +855,10 @@
             }
 
             .section {
+                padding: 16px;
+            }
+            
+            .shopping-calculator {
                 padding: 16px;
             }
 
