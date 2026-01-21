@@ -12,6 +12,10 @@
       {
         "src": "calculate-sandwich-order.js",
         "use": "@vercel/node"
+      },
+      {
+        "src": "live-prices.js",
+        "use": "@vercel/node"
       }
     ],
     "routes": [
@@ -38,6 +42,14 @@
       {
         "src": "/calculate-sandwich-order",
         "dest": "/calculate-sandwich-order.js"
+      },
+      {
+        "src": "/api/live-prices",
+        "dest": "/live-prices.js"
+      },
+      {
+        "src": "/live-prices",
+        "dest": "/live-prices.js"
       }
     ]
   }
