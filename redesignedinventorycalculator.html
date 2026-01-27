@@ -2895,10 +2895,16 @@
                             <span>Include spreading spatulas in calculation</span>
                         </label>
                         <div id="spatulaQuantitySection" style="display: none; margin-top: 10px;">
+                            <div style="text-align: center; margin-bottom: 12px;">
+                                <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer">
+                                    <img src="pb spreaders.png" alt="4-Piece Silicone Jar Spatula Set - Long handle for reaching bottom of jars" style="max-width: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer;">
+                                </a>
+                            </div>
                             <label for="spatulaPackCount" style="font-size: 0.95em;">How many 4-packs do you need?</label>
                             <input type="number" id="spatulaPackCount" min="1" value="1" placeholder="1" style="margin-top: 5px;">
                             <div style="font-size: 0.85em; color: rgba(255,255,255,0.85); margin-top: 8px; padding: 10px; background: rgba(251,173,63,0.2); border-radius: 8px;">
-                                <strong>💡 Tip:</strong> You need 2 spatulas per group/table making sandwiches — one for peanut butter and one for jelly. Each pack contains 4 spatulas ($7.99/pack).
+                                <strong>💡 Tip:</strong> You need 2 spatulas per group/table making sandwiches — one for peanut butter and one for jelly. Each pack contains 4 spatulas ($5.99/pack).<br>
+                                <strong>📦 Overnight shipping available on Amazon!</strong>
                             </div>
                         </div>
                     </div>
@@ -6000,7 +6006,7 @@
 
             // Spatula calculation
             const includeSpatulas = document.getElementById('includeSpatulas').checked;
-            const spatulaPackPrice = 7.99;
+            const spatulaPackPrice = 5.99;
             const spatulasPerPack = 4;
             const spatulaPackCount = includeSpatulas ? Math.max(1, parseInt(document.getElementById('spatulaPackCount').value) || 1) : 0;
             const spatulaCost = spatulaPackCount * spatulaPackPrice;
@@ -6049,7 +6055,7 @@
                         <div class="number">${spatulaPackCount}</div>
                         <div class="description">${spatulasPerPack}-pack(s) (${spatulaPackCount * spatulasPerPack} spatulas total)</div>
                         <div style="margin-top: 10px; font-size: 0.9em;">$${spatulaCost.toFixed(2)}</div>
-                        <a href="https://www.amazon.com/dp/B07QKKKW1D" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #FF9900; color: #111; font-weight: 600; text-decoration: none; border-radius: 6px; font-size: 0.85em;">Order on Amazon</a>
+                        <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #FF9900; color: #111; font-weight: 600; text-decoration: none; border-radius: 6px; font-size: 0.85em;">Order on Amazon</a>
                     </div>
                     ` : ''}
                 </div>
