@@ -1009,11 +1009,6 @@
                                 <option value="land-o-lakes-american">🇺🇸 Land O'Lakes American (24 slices, $6.49)</option>
                                 <option value="boars-head-american">🇺🇸 Boar's Head American (24 slices, $8.99) Premium</option>
                             </optgroup>
-                            <optgroup label="🧀 Other Deli Cheese">
-                                <option value="adams-reserve">🧀 Adams Reserve (44 slices, $7.70)</option>
-                                <option value="finlandia">🧀 Finlandia Variety (40 slices, $9.69)</option>
-                                <option value="arla-havarti">🧀 Arla Havarti (32 slices, $9.69)</option>
-                            </optgroup>
                         </select>
                     </div>
                     
@@ -1478,32 +1473,32 @@
         </details>
     </div>
     
-    <!-- Cheese Section -->
+    <!-- American Cheese Section -->
     <div class="price-category">
-        <div class="category-label">CHEESE</div>
+        <div class="category-label">AMERICAN CHEESE (Deli Style)</div>
         <div class="price-grid">
             <div class="price-card card-cheese">
-                <div class="product-emoji">🧀</div>
-                <div class="product-title">Adams Reserve</div>
-                <div class="product-size">44 slices</div>
-                <div class="product-price">$7.70</div>
-                <div class="price-note">~$0.18/slice</div>
+                <div class="product-emoji">🇺🇸</div>
+                <div class="product-title">Great Value</div>
+                <div class="product-size">24 slices</div>
+                <div class="product-price">$3.98</div>
+                <div class="price-note">⭐ Budget pick</div>
             </div>
-            
+
             <div class="price-card card-cheese">
-                <div class="product-emoji">🧀</div>
-                <div class="product-title">Finlandia</div>
-                <div class="product-size">40 slices</div>
-                <div class="product-price">$9.69</div>
-                <div class="price-note">~$0.24/slice</div>
+                <div class="product-emoji">🇺🇸</div>
+                <div class="product-title">Kraft Deli Deluxe</div>
+                <div class="product-size">24 slices</div>
+                <div class="product-price">$5.99</div>
+                <div class="price-note">~$0.25/slice</div>
             </div>
-            
+
             <div class="price-card card-cheese">
-                <div class="product-emoji">🧀</div>
-                <div class="product-title">Arla Havarti</div>
-                <div class="product-size">32 slices</div>
-                <div class="product-price">$9.69</div>
-                <div class="price-note">~$0.30/slice</div>
+                <div class="product-emoji">🇺🇸</div>
+                <div class="product-title">Land O'Lakes</div>
+                <div class="product-size">24 slices</div>
+                <div class="product-price">$6.49</div>
+                <div class="price-note">~$0.27/slice</div>
             </div>
         </div>
     </div>
@@ -1541,7 +1536,7 @@
     <div class="cheese-guide">
         <div class="cheese-do">
             <strong>✅ Right Cheese</strong>
-            Regular sliced cheese: cheddar, swiss, provolone
+            Deli-style sliced American cheese (NOT individually wrapped)
         </div>
         <div class="cheese-dont">
             <strong>❌ Wrong Cheese</strong>
@@ -1825,22 +1820,6 @@
                     cheesePerPackage = 24;
                     cheesePrice = 8.99;
                     cheeseDescription = '24 slices each';
-                    break;
-                // Other Deli Cheese options
-                case 'adams-reserve':
-                    cheesePerPackage = 44;
-                    cheesePrice = 7.70;
-                    cheeseDescription = '44 slices each';
-                    break;
-                case 'finlandia':
-                    cheesePerPackage = 40;
-                    cheesePrice = 9.69;
-                    cheeseDescription = '40 slices each';
-                    break;
-                case 'arla-havarti':
-                    cheesePerPackage = 32;
-                    cheesePrice = 9.69;
-                    cheeseDescription = '32 slices each';
                     break;
                 default:
                     cheesePerPackage = 24;
@@ -2164,16 +2143,6 @@
                 case 'boars-head-american':
                     cheeseShoppingDescription = 'Boar\'s Head American Cheese slices (24 slices per package)';
                     break;
-                // Other Deli Cheese options
-                case 'adams-reserve':
-                    cheeseShoppingDescription = 'Adams Reserve Cheese slices (44 slices per package)';
-                    break;
-                case 'finlandia':
-                    cheeseShoppingDescription = 'Finlandia Variety Cheese slices (40 slices per package)';
-                    break;
-                case 'arla-havarti':
-                    cheeseShoppingDescription = 'Arla Havarti Cheese slices (32 slices per package)';
-                    break;
                 default:
                     cheeseShoppingDescription = 'Cheese slices';
             }
@@ -2287,19 +2256,6 @@
                 case 'boars-head-american':
                     cheesePerPackage = 24;
                     cheesePrice = 8.99;
-                    break;
-                // Other Deli Cheese options
-                case 'adams-reserve':
-                    cheesePerPackage = 44;
-                    cheesePrice = 7.70;
-                    break;
-                case 'finlandia':
-                    cheesePerPackage = 40;
-                    cheesePrice = 9.69;
-                    break;
-                case 'arla-havarti':
-                    cheesePerPackage = 32;
-                    cheesePrice = 9.69;
                     break;
                 default:
                     cheesePerPackage = 24;
@@ -2730,10 +2686,6 @@
                 <tr><td>Kraft Deli Deluxe American</td><td>$5.99</td><td>24 slices</td></tr>
                 <tr><td>Land O'Lakes American</td><td>$6.49</td><td>24 slices</td></tr>
                 <tr><td>Boar's Head American</td><td>$8.99</td><td>24 slices (Premium)</td></tr>
-                <tr><td colspan="3" style="background: #fff3e0; font-weight: 600;">🧀 Other Deli Cheese</td></tr>
-                <tr><td>Adams Reserve Cheese</td><td>$7.70</td><td>44 slices</td></tr>
-                <tr><td>Finlandia Swiss Cheese</td><td>$9.69</td><td>40 slices</td></tr>
-                <tr><td>Arla Havarti Cheese</td><td>$9.69</td><td>32 slices</td></tr>
                 <tr><td>Nature's Own Double Loaf</td><td>$3.99–$4.99</td><td>20 sandwiches</td></tr>
                 <tr><td>Sunbeam Double Loaf</td><td>$5.39</td><td>26 sandwiches</td></tr>
                 <tr><td>Sunbeam Single Loaf</td><td>$2.70</td><td>13 sandwiches</td></tr>
