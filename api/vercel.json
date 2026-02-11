@@ -1,66 +1,30 @@
 {
     "version": 2,
-    "headers": [
-      {
-        "source": "/(.*)",
-        "headers": [
-          { "key": "Access-Control-Allow-Origin", "value": "*" },
-          { "key": "Access-Control-Allow-Methods", "value": "GET, POST, OPTIONS" },
-          { "key": "Access-Control-Allow-Headers", "value": "Content-Type" }
-        ]
-      }
-    ],
     "builds": [
-      {
-        "src": "parse-package.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "validate-calculation.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "calculate-sandwich-order.js",
-        "use": "@vercel/node"
-      },
-      {
-        "src": "live-prices.js",
-        "use": "@vercel/node"
-      }
+      { "src": "parse-package.js", "use": "@vercel/node" },
+      { "src": "validate-calculation.js", "use": "@vercel/node" },
+      { "src": "calculate-sandwich-order.js", "use": "@vercel/node" },
+      { "src": "live-prices.js", "use": "@vercel/node" }
     ],
     "routes": [
       {
-        "src": "/api/parse-package",
-        "dest": "/parse-package.js"
+        "src": "/(.*)",
+        "methods": ["OPTIONS"],
+        "headers": {
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+          "Access-Control-Allow-Headers": "Content-Type"
+        },
+        "status": 204
       },
-      {
-        "src": "/parse-package",
-        "dest": "/parse-package.js"
-      },
-      {
-        "src": "/api/validate-calculation",
-        "dest": "/validate-calculation.js"
-      },
-      {
-        "src": "/validate-calculation",
-        "dest": "/validate-calculation.js"
-      },
-      {
-        "src": "/api/calculate-sandwich-order",
-        "dest": "/calculate-sandwich-order.js"
-      },
-      {
-        "src": "/calculate-sandwich-order",
-        "dest": "/calculate-sandwich-order.js"
-      },
-      {
-        "src": "/api/live-prices",
-        "dest": "/live-prices.js"
-      },
-      {
-        "src": "/live-prices",
-        "dest": "/live-prices.js"
-      }
+      { "src": "/api/parse-package", "dest": "/parse-package.js" },
+      { "src": "/parse-package", "dest": "/parse-package.js" },
+      { "src": "/api/validate-calculation", "dest": "/validate-calculation.js" },
+      { "src": "/validate-calculation", "dest": "/validate-calculation.js" },
+      { "src": "/api/calculate-sandwich-order", "dest": "/calculate-sandwich-order.js" },
+      { "src": "/calculate-sandwich-order", "dest": "/calculate-sandwich-order.js" },
+      { "src": "/api/live-prices", "dest": "/live-prices.js" },
+      { "src": "/live-prices", "dest": "/live-prices.js" }
     ]
   }
   
