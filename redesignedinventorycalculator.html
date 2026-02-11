@@ -2885,16 +2885,16 @@
 
                     <!-- Spatula Option -->
                     <div class="calc-input-group" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 10px;">
-                        <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; margin-bottom: 10px;">
-                            <input type="checkbox" id="includeSpatulas" onchange="toggleSpatulaQuantity()" style="width: 20px; height: 20px; cursor: pointer;">
-                            <span>Include spreading spatulas in calculation</span>
-                        </label>
+                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
+                            <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer">
+                                <img src="pb spreaders.png" alt="4-Piece Silicone Jar Spatula Set - Long handle for reaching bottom of jars" style="max-width: 120px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer;">
+                            </a>
+                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
+                                <input type="checkbox" id="includeSpatulas" onchange="toggleSpatulaQuantity()" style="width: 20px; height: 20px; cursor: pointer;">
+                                <span>Include spreading spatulas in calculation</span>
+                            </label>
+                        </div>
                         <div id="spatulaQuantitySection" style="display: none; margin-top: 10px;">
-                            <div style="text-align: center; margin-bottom: 12px;">
-                                <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer">
-                                    <img src="pb spreaders.png" alt="4-Piece Silicone Jar Spatula Set - Long handle for reaching bottom of jars" style="max-width: 200px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer;">
-                                </a>
-                            </div>
                             <label for="spatulaPackCount" style="font-size: 0.95em;">How many 4-packs do you need?</label>
                             <input type="number" id="spatulaPackCount" min="1" value="1" placeholder="1" style="margin-top: 5px;">
                             <div style="font-size: 0.85em; color: rgba(255,255,255,0.85); margin-top: 8px; padding: 10px; background: rgba(251,173,63,0.2); border-radius: 8px;">
