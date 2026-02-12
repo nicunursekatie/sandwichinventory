@@ -53,6 +53,87 @@ const RECIPE = {
 };
 
 /**
+ * Find optimal sandwich quantities that align with package sizes to minimize waste.
+ * The ingredient with the largest per-package increment "wins" — making smaller
+ * increments would leave partial packages of the larger ingredient unused.
+ */
+function getOptimalQuantities(target, packagingSizes) {
+    // packagingSizes: array of { name, sandwichesPerPkg }
+    // Find the LCM-like optimal increment
+    // The largest package size drives the increment
+    const sizes = packagingSizes.map(p => p.sandwichesPerPkg).filter(s => s > 0);
+    if (sizes.length === 0) return [];
+
+    // Sort descending — largest package drives the base increment
+    const sorted = [...sizes].sort((a, b) => b - a);
+    const baseIncrement = sorted[0]; // largest package size
+
+    // Find multiples of the base increment near the target
+    const suggestions = [];
+    const lowerMultiple = Math.floor(target / baseIncrement) * baseIncrement;
+    const upperMultiple = lowerMultiple + baseIncrement;
+
+    // Check candidates: one below, one above, and if there's a sweet spot
+    // where ALL ingredients align, prefer that
+    const candidates = new Set();
+
+    // Add multiples of the largest increment near the target
+    if (lowerMultiple > 0) candidates.add(lowerMultiple);
+    candidates.add(upperMultiple);
+
+    // Also check if there's an LCM of the two largest sizes nearby
+    if (sizes.length >= 2) {
+        const lcm = lcmOf(sorted[0], sorted[1]);
+        const lowerLcm = Math.floor(target / lcm) * lcm;
+        const upperLcm = lowerLcm + lcm;
+        if (lowerLcm > 0) candidates.add(lowerLcm);
+        candidates.add(upperLcm);
+    }
+
+    // Score each candidate
+    for (const count of candidates) {
+        if (count <= 0 || count > target * 2) continue;
+
+        let totalWaste = 0;
+        const wasteDetails = [];
+        for (const pkg of packagingSizes) {
+            const pkgsNeeded = Math.ceil(count / pkg.sandwichesPerPkg);
+            const capacity = pkgsNeeded * pkg.sandwichesPerPkg;
+            const waste = capacity - count;
+            totalWaste += waste;
+            wasteDetails.push({
+                ingredient: pkg.name,
+                packages: pkgsNeeded,
+                waste: waste
+            });
+        }
+
+        suggestions.push({
+            quantity: count,
+            totalWaste,
+            wasteDetails,
+            diff: count - target,
+            isZeroWaste: totalWaste === 0
+        });
+    }
+
+    // Sort: zero-waste first, then by closeness to target
+    suggestions.sort((a, b) => {
+        if (a.isZeroWaste && !b.isZeroWaste) return -1;
+        if (!a.isZeroWaste && b.isZeroWaste) return 1;
+        return Math.abs(a.diff) - Math.abs(b.diff);
+    });
+
+    // Return top 2-3 unique suggestions, skip if same as target
+    return suggestions
+        .filter(s => s.quantity !== target)
+        .slice(0, 3);
+}
+
+function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
+function lcmOf(a, b) { return (a * b) / gcd(a, b); }
+
+/**
  * Calculate sandwich order with LLM-powered insights
  */
 async function calculateWithLLM(inputs) {
@@ -105,6 +186,13 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
     const sandwichesPerCheesePkg = Math.floor(cheese.slices / cheeseSlicesPerSandwich);
     const sandwichesPerBreadPkg = bread.sandwiches || 10;
 
+    // Get optimal quantity suggestions based on package sizes
+    const packagingSizes = [
+        { name: 'meat', sandwichesPerPkg: sandwichesPerMeatPkg },
+        { name: 'cheese', sandwichesPerPkg: sandwichesPerCheesePkg },
+        { name: 'bread', sandwichesPerPkg: sandwichesPerBreadPkg }
+    ];
+
     if (mode === 'sandwiches') {
         const targetSandwiches = parseInt(targetValue);
 
@@ -129,6 +217,8 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
         const extraCheeseSlices = (cheesePackages * cheese.slices) - (targetSandwiches * cheeseSlicesPerSandwich);
         const extraBreadSandwiches = (breadPackages * sandwichesPerBreadPkg) - targetSandwiches;
 
+        const suggestedQuantities = getOptimalQuantities(targetSandwiches, packagingSizes);
+
         return {
             mode: 'sandwiches',
             targetSandwiches,
@@ -147,7 +237,13 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
                 meatCost: meatPackages * meat.price,
                 cheeseCost: cheesePackages * cheese.price,
                 breadCost: breadPackages * bread.price
-            }
+            },
+            packaging: {
+                sandwichesPerMeatPkg,
+                sandwichesPerCheesePkg,
+                sandwichesPerBreadPkg
+            },
+            suggestedQuantities
         };
     } else {
         // Budget mode - find max sandwiches within budget
@@ -176,6 +272,8 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
             }
         } while (totalCost > budget && maxSandwiches > 0);
 
+        const suggestedQuantities = getOptimalQuantities(maxSandwiches, packagingSizes);
+
         return {
             mode: 'budget',
             budget,
@@ -190,7 +288,13 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
                 meatCost: meatPackages * meat.price,
                 cheeseCost: cheesePackages * cheese.price,
                 breadCost: breadPackages * bread.price
-            }
+            },
+            packaging: {
+                sandwichesPerMeatPkg,
+                sandwichesPerCheesePkg,
+                sandwichesPerBreadPkg
+            },
+            suggestedQuantities
         };
     }
 }
@@ -202,6 +306,12 @@ function calculatePBJOrder(mode, targetValue, peanutButter, jelly, bread) {
     const sandwichesPerPBJar = peanutButter?.servings || RECIPE.pbj.pbServingsPerJar;
     const sandwichesPerJellyJar = jelly?.servings || RECIPE.pbj.jellyServingsPerJar;
     const sandwichesPerBreadPkg = bread?.sandwiches || 10;
+
+    const packagingSizes = [
+        { name: 'peanut butter', sandwichesPerPkg: sandwichesPerPBJar },
+        { name: 'jelly', sandwichesPerPkg: sandwichesPerJellyJar },
+        { name: 'bread', sandwichesPerPkg: sandwichesPerBreadPkg }
+    ];
 
     if (mode === 'sandwiches') {
         const targetSandwiches = parseInt(targetValue);
@@ -215,6 +325,8 @@ function calculatePBJOrder(mode, targetValue, peanutButter, jelly, bread) {
         const breadCost = breadPackages * (bread?.price || 2.00);
         const totalCost = pbCost + jellyCost + breadCost;
 
+        const suggestedQuantities = getOptimalQuantities(targetSandwiches, packagingSizes);
+
         return {
             mode: 'sandwiches',
             targetSandwiches,
@@ -227,7 +339,13 @@ function calculatePBJOrder(mode, targetValue, peanutButter, jelly, bread) {
                 peanutButterCost: pbCost,
                 jellyCost,
                 breadCost
-            }
+            },
+            packaging: {
+                sandwichesPerPBJar,
+                sandwichesPerJellyJar,
+                sandwichesPerBreadPkg
+            },
+            suggestedQuantities
         };
     } else {
         // Budget mode for PB&J
@@ -246,6 +364,8 @@ function calculatePBJOrder(mode, targetValue, peanutButter, jelly, bread) {
                           (jellyJars * (jelly?.price || 2.50)) +
                           (breadPackages * (bread?.price || 2.00));
 
+        const suggestedQuantities = getOptimalQuantities(maxSandwiches, packagingSizes);
+
         return {
             mode: 'budget',
             budget,
@@ -255,7 +375,13 @@ function calculatePBJOrder(mode, targetValue, peanutButter, jelly, bread) {
             breadPackages,
             totalCost,
             costPerSandwich: maxSandwiches > 0 ? totalCost / maxSandwiches : 0,
-            remainingBudget: budget - totalCost
+            remainingBudget: budget - totalCost,
+            packaging: {
+                sandwichesPerPBJar,
+                sandwichesPerJellyJar,
+                sandwichesPerBreadPkg
+            },
+            suggestedQuantities
         };
     }
 }
@@ -285,6 +411,14 @@ BENCHMARKS:
 - Good PB&J cost: $0.40-$0.70 each
 - One volunteer makes ~20-30 sandwiches/hour
 - Always round up packages (can't buy partial packages)
+
+PACKAGING OPTIMIZATION (IMPORTANT):
+- Suggest quantities that use full packages to minimize waste
+- The ingredient with the LARGEST sandwiches-per-package drives the ideal increment
+- Example: if meat makes 20 sandwiches/pkg and cheese makes 12/pkg, the LCM or a multiple of the larger package is ideal
+- If a nearby quantity uses full packages of ALL ingredients with zero waste, strongly recommend it
+- Single bread loaves make 10-12 sandwiches, double loaves make 20-24
+- Always explain WHY a suggested quantity is better (e.g., "uses exactly 5 full packages of meat and 4 full packages of cheese with nothing left over")
 
 Return JSON in this exact format:
 {
@@ -325,7 +459,15 @@ ${calculations.extras ? `
 - Extra bread capacity: ${calculations.extras.breadSandwiches} sandwiches
 ` : ''}
 
-Provide helpful insights for this order.`;
+PACKAGE SIZES:
+${calculations.packaging ? Object.entries(calculations.packaging).map(([k, v]) => `- ${k}: ${v} sandwiches per package`).join('\n') : 'Not available'}
+
+${calculations.suggestedQuantities && calculations.suggestedQuantities.length > 0 ? `
+SUGGESTED OPTIMAL QUANTITIES (to minimize waste):
+${calculations.suggestedQuantities.map(s => `- ${s.quantity} sandwiches: ${s.isZeroWaste ? 'ZERO WASTE - uses full packages of everything!' : `${s.totalWaste} leftover sandwich-equivalents of waste`} (${s.diff > 0 ? '+' : ''}${s.diff} from target)`).join('\n')}
+` : ''}
+
+Provide helpful insights. If any suggested quantities are close to the target and reduce waste, STRONGLY recommend them in your recommendations. Explain which package sizes drive the suggestion.`;
 
     try {
         const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -374,6 +516,7 @@ Provide helpful insights for this order.`;
             wasteReduction: insights.wasteReduction || null,
             shoppingTip: insights.shoppingTip || null,
             volunteerEstimate: insights.volunteerEstimate || null,
+            suggestedQuantities: calculations.suggestedQuantities || [],
             poweredByAI: true
         };
     } catch (error) {
@@ -403,6 +546,22 @@ function getDefaultInsights(inputs, calculations) {
         warnings.push('Large order - consider splitting into multiple shopping trips');
     }
 
+    const recommendations = [];
+
+    // Add packaging-optimized quantity suggestions
+    if (calculations.suggestedQuantities && calculations.suggestedQuantities.length > 0) {
+        const best = calculations.suggestedQuantities[0];
+        if (best.isZeroWaste) {
+            recommendations.push(
+                `Consider making ${best.quantity} instead of ${totalSandwiches} — this uses full packages of all ingredients with zero waste (${best.diff > 0 ? '+' : ''}${best.diff} sandwiches)`
+            );
+        } else if (best.totalWaste < (calculations.extras ? calculations.extras.meatSlices + calculations.extras.cheeseSlices + calculations.extras.breadSandwiches : 999)) {
+            recommendations.push(
+                `Making ${best.quantity} sandwiches would reduce ingredient waste (${best.diff > 0 ? '+' : ''}${best.diff} from your target)`
+            );
+        }
+    }
+
     const volunteerHours = Math.ceil(totalSandwiches / 25);
     const volunteerEstimate = totalSandwiches > 50
         ? `${Math.ceil(totalSandwiches / 75)}-${Math.ceil(totalSandwiches / 50)} volunteers for 1.5-2 hours`
@@ -413,12 +572,13 @@ function getDefaultInsights(inputs, calculations) {
         summary: `Order for ${totalSandwiches} ${inputs.sandwichType === 'deli' ? 'deli' : 'PB&J'} sandwiches at $${costPerSandwich.toFixed(2)} each`,
         costAssessment,
         warnings,
-        recommendations: [],
+        recommendations,
         wasteReduction: calculations.extras?.breadSandwiches > 5
             ? `You have capacity for ${calculations.extras.breadSandwiches} extra sandwiches - consider making them to reduce waste!`
             : null,
         shoppingTip: 'Check store apps for digital coupons before shopping',
         volunteerEstimate,
+        suggestedQuantities: calculations.suggestedQuantities || [],
         poweredByAI: false
     };
 }
