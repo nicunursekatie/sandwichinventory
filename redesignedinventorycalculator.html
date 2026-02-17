@@ -2766,9 +2766,12 @@
                                 <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="breadSelection" onchange="handleBreadSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose from suggested packages (optional)</option>
-                                <option value="natures-own-double">Nature's Own Double Loaf (20 sandwiches, $4.49)</option>
-                                <option value="sunbeam-single">Sunbeam Single Loaf (10 sandwiches, $2.70)</option>
-                                <option value="sunbeam-double">Sunbeam Double Loaf (20 sandwiches, $5.39)</option>
+                                <option value="great-value-white">Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
+                                <option value="kroger-white">Kroger White Sandwich (20 oz, ~11 sandwiches, $1.00–$1.99)</option>
+                                <option value="wonder-classic">Wonder Bread Classic White (20 oz, ~10 sandwiches, $2.47–$4.79)</option>
+                                <option value="wonder-giant">Wonder Bread Giant White (24 oz, ~11 sandwiches, $3.99–$5.29)</option>
+                                <option value="sara-lee-butter">Sara Lee Butter Bread (20 oz, ~10 sandwiches, $2.98–$3.29)</option>
+                                <option value="sara-lee-classic">Sara Lee Classic White (20 oz, ~10 sandwiches, $3.48–$4.49)</option>
                                 <option value="custom">Enter custom package →</option>
                         </select>
                             <div id="breadCustomEntry" style="display: none;">
@@ -2880,6 +2883,19 @@
                             <option value="welchs-squeeze-18">🍇 Welch's Squeeze Jelly 18 oz (~34 tbsp) - $3.83</option>
                         </select>
                         <span style="font-size: 0.9em; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 500;">⚠️ Use JELLY only - no jam, preserves, or fruit spread!</span>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Bread type</label>
+                        <select id="pbjBreadType">
+                            <option value="">Choose your bread</option>
+                            <option value="great-value-white">🍞 Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
+                            <option value="kroger-white">🍞 Kroger White Sandwich (20 oz, ~11 sandwiches, $1.00–$1.99)</option>
+                            <option value="wonder-classic">🍞 Wonder Bread Classic White (20 oz, ~10 sandwiches, $2.47–$4.79)</option>
+                            <option value="wonder-giant">🍞 Wonder Bread Giant White (24 oz, ~11 sandwiches, $3.99–$5.29)</option>
+                            <option value="sara-lee-butter">🍞 Sara Lee Butter Bread (20 oz, ~10 sandwiches, $2.98–$3.29)</option>
+                            <option value="sara-lee-classic">🍞 Sara Lee Classic White (20 oz, ~10 sandwiches, $3.48–$4.49)</option>
+                        </select>
                     </div>
 
                     <!-- Spatula Option -->
@@ -3422,13 +3438,6 @@
                 <div class="price-note">~$0.35–$0.45/sandwich</div>
             </div>
 
-            <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
-                <div class="product-title">Nature's Own Honey Wheat</div>
-                <div class="product-size">20 oz • ~10 sandwiches</div>
-                <div class="product-price">$3.76–$4.29</div>
-                <div class="price-note">~$0.38–$0.43/sandwich</div>
-            </div>
         </div>
     </div>
 
@@ -4050,9 +4059,12 @@
                 'kroger-american': { slices: 24, price: 4.29, name: 'Kroger Deli American' }
             },
             bread: {
-                'natures-own-double': { sandwiches: 20, price: 4.49, name: "Nature's Own Double Loaf" },
-                'sunbeam-single': { sandwiches: 10, price: 2.70, name: 'Sunbeam Single Loaf' },
-                'sunbeam-double': { sandwiches: 20, price: 5.39, name: 'Sunbeam Double Loaf' }
+                'great-value-white': { sandwiches: 11, price: 1.48, name: 'Great Value White' },
+                'kroger-white': { sandwiches: 11, price: 1.50, name: 'Kroger White Sandwich' },
+                'wonder-classic': { sandwiches: 10, price: 3.63, name: 'Wonder Bread Classic White' },
+                'wonder-giant': { sandwiches: 11, price: 4.64, name: 'Wonder Bread Giant White' },
+                'sara-lee-butter': { sandwiches: 10, price: 3.14, name: 'Sara Lee Butter Bread' },
+                'sara-lee-classic': { sandwiches: 10, price: 3.99, name: 'Sara Lee Classic White' }
             }
         };
 
@@ -4282,7 +4294,12 @@
                             { name: 'Great Value American cheese slices Walmart', category: 'cheese', key: 'great-value-american' },
                             { name: 'Kroger Deli American cheese slices', category: 'cheese', key: 'kroger-american' },
                             // Bread
-                            { name: 'Natures Own bread double loaf', category: 'bread', key: 'natures-own-double' }
+                            { name: 'Great Value White bread loaf', category: 'bread', key: 'great-value-white' },
+                            { name: 'Kroger White Sandwich bread loaf', category: 'bread', key: 'kroger-white' },
+                            { name: 'Wonder Bread Classic White loaf', category: 'bread', key: 'wonder-classic' },
+                            { name: 'Wonder Bread Giant White loaf', category: 'bread', key: 'wonder-giant' },
+                            { name: 'Sara Lee Butter Bread loaf', category: 'bread', key: 'sara-lee-butter' },
+                            { name: 'Sara Lee Classic White bread loaf', category: 'bread', key: 'sara-lee-classic' }
                         ]
                     })
                 });
@@ -5113,11 +5130,12 @@
                 return cheeseData[value] || null;
             } else if (type === 'bread') {
                 const breadData = {
-                    'natures-own-double': { sandwiches: 20, price: 4.49 },
-                    'sunbeam-double': { sandwiches: 26, price: 5.39 },
-                    'sunbeam-single': { sandwiches: 13, price: 2.70 },
-                    'other-double': { sandwiches: 20, price: 5.39 },
-                    'other-single': { sandwiches: 10, price: 2.70 }
+                    'great-value-white': { sandwiches: 11, price: 1.48 },
+                    'kroger-white': { sandwiches: 11, price: 1.50 },
+                    'wonder-classic': { sandwiches: 10, price: 3.63 },
+                    'wonder-giant': { sandwiches: 11, price: 4.64 },
+                    'sara-lee-butter': { sandwiches: 10, price: 3.14 },
+                    'sara-lee-classic': { sandwiches: 10, price: 3.99 }
                 };
                 return breadData[value] || null;
             }
@@ -5259,35 +5277,40 @@
             }
             let breadSandwichesPerPackage, breadDescription, breadPrice;
             switch(breadType) {
-                case 'natures-own-double':
-                    breadSandwichesPerPackage = 20;
-                    breadDescription = 'double loaves (20 sandwiches each)';
-                    breadPrice = 4.49;
+                case 'great-value-white':
+                    breadSandwichesPerPackage = 11;
+                    breadDescription = 'loaves (~11 sandwiches each)';
+                    breadPrice = 1.48;
                     break;
-                case 'sunbeam-double':
-                    breadSandwichesPerPackage = 26;
-                    breadDescription = 'double loaves (26 sandwiches each)';
-                    breadPrice = 5.39;
+                case 'kroger-white':
+                    breadSandwichesPerPackage = 11;
+                    breadDescription = 'loaves (~11 sandwiches each)';
+                    breadPrice = 1.50;
                     break;
-                case 'sunbeam-single':
-                    breadSandwichesPerPackage = 13;
-                    breadDescription = 'single loaves (13 sandwiches each)';
-                    breadPrice = 2.70;
-                    break;
-                case 'other-double':
-                    breadSandwichesPerPackage = 20;
-                    breadDescription = 'double loaves (20 sandwiches each)';
-                    breadPrice = 5.39;
-                    break;
-                case 'other-single':
+                case 'wonder-classic':
                     breadSandwichesPerPackage = 10;
-                    breadDescription = 'single loaves (10 sandwiches each)';
-                    breadPrice = 2.70;
+                    breadDescription = 'loaves (~10 sandwiches each)';
+                    breadPrice = 3.63;
+                    break;
+                case 'wonder-giant':
+                    breadSandwichesPerPackage = 11;
+                    breadDescription = 'loaves (~11 sandwiches each)';
+                    breadPrice = 4.64;
+                    break;
+                case 'sara-lee-butter':
+                    breadSandwichesPerPackage = 10;
+                    breadDescription = 'loaves (~10 sandwiches each)';
+                    breadPrice = 3.14;
+                    break;
+                case 'sara-lee-classic':
+                    breadSandwichesPerPackage = 10;
+                    breadDescription = 'loaves (~10 sandwiches each)';
+                    breadPrice = 3.99;
                     break;
                 default:
-                    breadSandwichesPerPackage = 20;
-                    breadDescription = 'packages';
-                    breadPrice = 5.39;
+                    breadSandwichesPerPackage = 11;
+                    breadDescription = 'loaves';
+                    breadPrice = 1.48;
             }
 
             // Validation for ingredient selections
@@ -5791,29 +5814,33 @@
             
             let breadSandwichesPerPackage, breadPrice;
             switch(breadType.value) {
-                case 'natures-own-double':
-                    breadSandwichesPerPackage = 20;
-                    breadPrice = 4.49;
+                case 'great-value-white':
+                    breadSandwichesPerPackage = 11;
+                    breadPrice = 1.48;
                     break;
-                case 'sunbeam-double':
-                    breadSandwichesPerPackage = 26;
-                    breadPrice = 5.39;
+                case 'kroger-white':
+                    breadSandwichesPerPackage = 11;
+                    breadPrice = 1.50;
                     break;
-                case 'sunbeam-single':
-                    breadSandwichesPerPackage = 13;
-                    breadPrice = 2.70;
-                    break;
-                case 'other-double':
-                    breadSandwichesPerPackage = 20;
-                    breadPrice = 5.39;
-                    break;
-                case 'other-single':
+                case 'wonder-classic':
                     breadSandwichesPerPackage = 10;
-                    breadPrice = 2.70;
+                    breadPrice = 3.63;
+                    break;
+                case 'wonder-giant':
+                    breadSandwichesPerPackage = 11;
+                    breadPrice = 4.64;
+                    break;
+                case 'sara-lee-butter':
+                    breadSandwichesPerPackage = 10;
+                    breadPrice = 3.14;
+                    break;
+                case 'sara-lee-classic':
+                    breadSandwichesPerPackage = 10;
+                    breadPrice = 3.99;
                     break;
                 default:
-                    breadSandwichesPerPackage = 20;
-                    breadPrice = 5.39;
+                    breadSandwichesPerPackage = 11;
+                    breadPrice = 1.48;
             }
             
             // Calculate packages based on SLICES (fixes over-ordering bug)
@@ -5984,10 +6011,46 @@
             const pbPerSandwich = 3; // 3 tbsp per sandwich
             const jellyPerSandwich = 1.5; // 1.5 tbsp per sandwich
             const breadSlicesPerSandwich = 2;
-            const usableBreadSlicesPerLoaf = 20;
             const bagsPerBox = 480;
-            const breadPrice = 2.70;
             const bagBoxPrice = 7.99;
+
+            // Bread selection
+            const pbjBreadType = document.getElementById('pbjBreadType').value;
+            let usableBreadSlicesPerLoaf, breadPrice;
+            switch(pbjBreadType) {
+                case 'great-value-white':
+                    usableBreadSlicesPerLoaf = 22;
+                    breadPrice = 1.48;
+                    break;
+                case 'kroger-white':
+                    usableBreadSlicesPerLoaf = 22;
+                    breadPrice = 1.50;
+                    break;
+                case 'wonder-classic':
+                    usableBreadSlicesPerLoaf = 20;
+                    breadPrice = 3.63;
+                    break;
+                case 'wonder-giant':
+                    usableBreadSlicesPerLoaf = 22;
+                    breadPrice = 4.64;
+                    break;
+                case 'sara-lee-butter':
+                    usableBreadSlicesPerLoaf = 20;
+                    breadPrice = 3.14;
+                    break;
+                case 'sara-lee-classic':
+                    usableBreadSlicesPerLoaf = 20;
+                    breadPrice = 3.99;
+                    break;
+                default:
+                    usableBreadSlicesPerLoaf = 22;
+                    breadPrice = 1.48;
+            }
+
+            if (!pbjBreadType) {
+                alert('Please select a bread type');
+                return;
+            }
 
             // Get peanut butter info
             const pbInfo = getPBInfo(pbType);

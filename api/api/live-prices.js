@@ -37,10 +37,12 @@ const FALLBACK_PRICES = {
     'arla-havarti': { price: 9.69, source: 'fallback' },
 
     // Bread
-    'natures-own': { price: 3.28, source: 'fallback' },
-    'natures-own-double': { price: 5.98, source: 'fallback' },
-    'wonder-bread': { price: 2.98, source: 'fallback' },
-    'store-brand': { price: 1.50, source: 'fallback' },
+    'great-value-white': { price: 1.48, source: 'fallback' },
+    'kroger-white': { price: 1.50, source: 'fallback' },
+    'wonder-classic': { price: 3.63, source: 'fallback' },
+    'wonder-giant': { price: 4.64, source: 'fallback' },
+    'sara-lee-butter': { price: 3.14, source: 'fallback' },
+    'sara-lee-classic': { price: 3.99, source: 'fallback' },
 
     // PB&J
     'jif-peanut-butter': { price: 3.50, source: 'fallback' },
