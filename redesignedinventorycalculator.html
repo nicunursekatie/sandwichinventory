@@ -2733,7 +2733,6 @@
                             <select id="cheeseSelection" onchange="handleCheeseSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose from suggested packages (optional)</option>
                                 <optgroup label="🧀 American Cheese (Deli Style)">
-                                    <option value="kraft-deli-deluxe">Kraft Deli Deluxe American (24 slices, $5.99)</option>
                                     <option value="boars-head-american">Boar's Head American (24 slices, $8.99)</option>
                                     <option value="land-o-lakes-american">Land O'Lakes American (24 slices, $6.49)</option>
                                     <option value="sargento-american">Sargento Sliced American (22 slices, $4.99)</option>
@@ -3348,14 +3347,6 @@
                 <div class="product-size">22 slices</div>
                 <div class="product-price">$4.99</div>
                 <div class="price-note">~$0.23/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Kraft Deli Deluxe</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$5.99</div>
-                <div class="price-note">~$0.25/slice</div>
             </div>
 
             <div class="price-card card-cheese">
@@ -4004,7 +3995,6 @@
             },
             cheese: {
                 // American cheese options
-                'kraft-deli-deluxe': { slices: 24, price: 5.99, name: 'Kraft Deli Deluxe American' },
                 'boars-head-american': { slices: 24, price: 8.99, name: "Boar's Head American" },
                 'land-o-lakes-american': { slices: 24, price: 6.49, name: "Land O'Lakes American" },
                 'sargento-american': { slices: 22, price: 4.99, name: 'Sargento Sliced American' },
@@ -4238,7 +4228,6 @@
                             { name: 'Kirkland Turkey deli meat 2 pack', category: 'meat', key: 'kirkland-turkey' },
                             { name: 'Kirkland Ham deli meat 2 pack', category: 'meat', key: 'kirkland-ham' },
                             // American Cheeses
-                            { name: 'Kraft Deli Deluxe American cheese slices', category: 'cheese', key: 'kraft-deli-deluxe' },
                             { name: 'Boars Head American cheese slices deli', category: 'cheese', key: 'boars-head-american' },
                             { name: 'Land O Lakes American cheese slices', category: 'cheese', key: 'land-o-lakes-american' },
                             { name: 'Sargento American cheese slices', category: 'cheese', key: 'sargento-american' },
@@ -5070,7 +5059,6 @@
                     'great-value-american': { slices: 24, price: 3.98 },
                     'kroger-american': { slices: 24, price: 4.29 },
                     'sargento-american': { slices: 22, price: 4.99 },
-                    'kraft-deli-deluxe': { slices: 24, price: 5.99 },
                     'land-o-lakes-american': { slices: 24, price: 6.49 },
                     'boars-head-american': { slices: 24, price: 8.99 }
                 };
@@ -5206,11 +5194,6 @@
                     cheesePrice = 4.99;
                     cheeseDescription = '22 slices each';
                     break;
-                case 'kraft-deli-deluxe':
-                    cheesePerPackage = 24;
-                    cheesePrice = 5.99;
-                    cheeseDescription = '24 slices each';
-                    break;
                 case 'land-o-lakes-american':
                     cheesePerPackage = 24;
                     cheesePrice = 6.49;
@@ -5223,7 +5206,7 @@
                     break;
                 default:
                     cheesePerPackage = 24;
-                    cheesePrice = 5.99;
+                    cheesePrice = 3.98;
                     cheeseDescription = '24 slices each';
             }
             let breadSandwichesPerPackage, breadDescription, breadPrice;
@@ -5571,9 +5554,6 @@
                 case 'sargento-american':
                     cheeseShoppingDescription = 'Sargento Sliced American Cheese (22 slices per package)';
                     break;
-                case 'kraft-deli-deluxe':
-                    cheeseShoppingDescription = 'Kraft Deli Deluxe American Cheese slices (24 slices per package)';
-                    break;
                 case 'land-o-lakes-american':
                     cheeseShoppingDescription = 'Land O\'Lakes American Cheese slices (24 slices per package)';
                     break;
@@ -5748,10 +5728,6 @@
                     cheesePerPackage = 22;
                     cheesePrice = 4.99;
                     break;
-                case 'kraft-deli-deluxe':
-                    cheesePerPackage = 24;
-                    cheesePrice = 5.99;
-                    break;
                 case 'land-o-lakes-american':
                     cheesePerPackage = 24;
                     cheesePrice = 6.49;
@@ -5762,7 +5738,7 @@
                     break;
                 default:
                     cheesePerPackage = 24;
-                    cheesePrice = 5.99;
+                    cheesePrice = 3.98;
             }
             
             let breadSandwichesPerPackage, breadPrice;

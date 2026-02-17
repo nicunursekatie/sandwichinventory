@@ -25,7 +25,6 @@ const FALLBACK_PRICES = {
     'oscar-mayer-chicken-rotisserie': { price: 7.99, source: 'fallback' },
 
     // American Cheeses
-    'kraft-deli-deluxe': { price: 5.99, source: 'fallback' },
     'boars-head-american': { price: 8.99, source: 'fallback' },
     'land-o-lakes-american': { price: 6.49, source: 'fallback' },
     'sargento-american': { price: 4.99, source: 'fallback' },
