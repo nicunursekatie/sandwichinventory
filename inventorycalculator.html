@@ -959,12 +959,12 @@
                     <div class="calc-input-group" id="sandwichCountGroup">
                         <label for="sandwichCount">Number of sandwiches</label>
                         <input type="number" id="sandwichCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of sandwiches you want to make.</span>
+                        <span style="font-size: 0.98em; color: rgba(255,255,255,0.9); margin-top: 2px;">Enter the number of sandwiches you want to make.</span>
                     </div>
                     <div class="calc-input-group" id="budgetGroup" style="display: none;">
                         <label for="budgetAmount">Budget ($)</label>
                         <input type="number" id="budgetAmount" min="1" max="10000" placeholder="Enter your budget (e.g., 200)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the total amount you want to spend.</span>
+                        <span style="font-size: 0.98em; color: rgba(255,255,255,0.9); margin-top: 2px;">Enter the total amount you want to spend.</span>
                     </div>
 
                     <div class="calc-input-group">
@@ -1071,12 +1071,12 @@
                     <div class="calc-input-group" id="pbjCountGroup">
                         <label for="pbjCount">Number of PB&J sandwiches</label>
                         <input type="number" id="pbjCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
+                        <span style="font-size: 0.98em; color: rgba(255,255,255,0.9); margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
                     </div>
                     <div class="calc-input-group" id="pbjBudgetGroup" style="display: none;">
                         <label for="pbjBudgetAmount">Budget ($)</label>
                         <input type="number" id="pbjBudgetAmount" min="1" max="10000" placeholder="Enter your budget (e.g., 100)">
-                        <span style="font-size: 0.98em; color: #236383; margin-top: 2px;">Enter the total amount you want to spend on PB&J supplies.</span>
+                        <span style="font-size: 0.98em; color: rgba(255,255,255,0.9); margin-top: 2px;">Enter the total amount you want to spend on PB&J supplies.</span>
                     </div>
 
                     <div class="calc-input-group">
@@ -1097,7 +1097,7 @@
                             <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz (~38 tbsp) - $3.59</option>
                             <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz (~34 tbsp) - $3.83</option>
                         </select>
-                        <span style="font-size: 0.95em; color: #236383; margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
+                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
                     </div>
 
                     <!-- Spatula Option -->
@@ -1330,6 +1330,7 @@
         font-size: 1.1em;
         font-weight: 600;
         background: rgba(255,255,255,0.25);
+        color: #1a1a2e;
         padding: 4px 10px;
         border-radius: 6px;
         margin-top: 4px;
@@ -2641,32 +2642,32 @@
                         <h4>Peanut Butter</h4>
                         <div class="number">${pbJarsNeeded}</div>
                         <div class="description">${pbDescription}<br>(~${pbTbspPerJar} tbsp each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">$${pbCost.toFixed(2)}</div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${pbCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
                         <h4>Jelly</h4>
                         <div class="number">${jellyJarsNeeded}</div>
                         <div class="description">${jellyDescription}<br>(~${jellyTbspPerJar} tbsp each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">$${jellyCost.toFixed(2)}</div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${jellyCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
                         <h4>Bread Loaves</h4>
                         <div class="number">${breadLoavesNeeded}</div>
                         <div class="description">single loaves<br>(${usableBreadSlicesPerLoaf} usable slices each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">$${breadCost.toFixed(2)}</div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${breadCost.toFixed(2)}</div>
                     </div>
                     <div class="result-item">
                         <h4>Sandwich Bags</h4>
                         <div class="number">${bagBoxesNeeded}</div>
                         <div class="description">${bagsPerBox} count boxes</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">$${bagCost.toFixed(2)}</div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${bagCost.toFixed(2)}</div>
                     </div>
                     ${includeSpatulas ? `
                     <div class="result-item" style="background: linear-gradient(135deg, rgba(251,173,63,0.3) 0%, rgba(163,28,65,0.2) 100%);">
                         <h4>Spreading Spatulas</h4>
                         <div class="number">${spatulaPackCount}</div>
                         <div class="description">${spatulasPerPack}-pack(s) (${spatulaPackCount * spatulasPerPack} spatulas total)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em;">$${spatulaCost.toFixed(2)}</div>
+                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${spatulaCost.toFixed(2)}</div>
                         <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #FF9900; color: #111; font-weight: 600; text-decoration: none; border-radius: 6px; font-size: 0.85em;">Order on Amazon</a>
                     </div>
                     ` : ''}
