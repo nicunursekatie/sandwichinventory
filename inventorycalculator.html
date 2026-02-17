@@ -979,12 +979,12 @@
                         <label>Meat type</label>
                         <select id="meatType">
                             <option value="">Choose your meat</option>
-                            <optgroup label="⭐ Best Value Options">
+                            <optgroup label="Popular Options">
                                 <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89) - $0.21/slice</option>
                                 <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $3.50) - $0.19/slice</option>
                                 <option value="publix-turkey">🦃 Publix Turkey Breast, Thin Sliced (16 oz / 32 slices, $7.07) - $0.22/slice</option>
                                 <option value="kroger-turkey-thin">🦃 Kroger Turkey Thin Sliced (9 oz / 18 slices, $3.99) - $0.22/slice</option>
-                                <option value="kroger-turkey-family">🦃 Kroger Turkey Family Size (1 lb / 30-32 slices, $4.39) - $0.14/slice ⭐ BEST!</option>
+                                <option value="kroger-turkey-family">🦃 Kroger Turkey Family Size (1 lb / 30-32 slices, $4.39) - $0.14/slice</option>
                             </optgroup>
                             <optgroup label="More Options">
                                 <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices, $13.99) - $0.35/slice</option>
@@ -1002,11 +1002,11 @@
                         <select id="cheeseType">
                             <option value="">Choose your cheese</option>
                             <optgroup label="🇺🇸 American Cheese (Deli Style)">
-                                <option value="great-value-american">🇺🇸 Great Value American - Walmart (24 slices, $3.98) ⭐ Budget</option>
+                                <option value="great-value-american">🇺🇸 Great Value American - Walmart (24 slices, $3.98)</option>
                                 <option value="kroger-american">🇺🇸 Kroger Deli American (24 slices, $4.29)</option>
                                 <option value="sargento-american">🇺🇸 Sargento Sliced American (22 slices, $4.99)</option>
                                 <option value="land-o-lakes-american">🇺🇸 Land O'Lakes American (24 slices, $6.49)</option>
-                                <option value="boars-head-american">🇺🇸 Boar's Head American (24 slices, $8.99) Premium</option>
+                                <option value="boars-head-american">🇺🇸 Boar's Head American (24 slices, $8.99)</option>
                             </optgroup>
                         </select>
                     </div>
@@ -1419,14 +1419,14 @@
     
     <!-- Meat Section -->
     <div class="price-category">
-        <div class="category-label">MEAT - Best Value Options</div>
+        <div class="category-label">MEAT</div>
         <div class="price-grid">
-            <div class="price-card card-meat" style="border: 2px solid #FBAD3F;">
+            <div class="price-card card-meat">
                 <div class="product-emoji">🦃</div>
-                <div class="product-title">Kroger Turkey Family Size ⭐</div>
+                <div class="product-title">Kroger Turkey Family Size</div>
                 <div class="product-size">1 lb • 30-32 slices</div>
                 <div class="product-price">$4.39</div>
-                <div class="price-note">~$0.14/slice • BEST VALUE!</div>
+                <div class="price-note">~$0.14/slice</div>
             </div>
             
             <div class="price-card card-meat">
@@ -1503,7 +1503,7 @@
                 <div class="product-title">Great Value</div>
                 <div class="product-size">24 slices</div>
                 <div class="product-price">$3.98</div>
-                <div class="price-note">⭐ Budget pick</div>
+                <div class="price-note">~$0.17/slice</div>
             </div>
 
             <div class="price-card card-cheese">
@@ -1562,41 +1562,46 @@
         <!-- Move Quick Reference section below calculator -->
         <div class="section">
             <h2>🎯 Quick Reference: Popular Quantities</h2>
+            <p style="color: #64748b; font-size: 0.95em; margin-bottom: 16px;">Quantities based on common package sizes (~24 slices cheese, ~30-32 slices meat). Use the calculator above for exact costs with your chosen brands.</p>
             <div class="quick-ref">
                 <div class="ref-card">
-                    <div style="font-size: 2.5em; margin-bottom: 15px;">🏢</div>
-                    <h3>100</h3>
-                    <div class="serves">👥 Serves 50-75 people</div>
+                    <div style="font-size: 2.5em; margin-bottom: 15px;">🏠</div>
+                    <h3>40</h3>
+                    <div class="serves">👥 Serves 20-30 people</div>
                     <div class="cost-display">
-                        <div class="cost-item">🦃 Turkey: $190</div>
-                        <div class="cost-item">🐷 Ham: $147</div>
+                        <div class="cost-item">~4-5 meat packages</div>
+                        <div class="cost-item">~4 cheese packages</div>
+                        <div class="cost-item">~2 bread loaves</div>
+                    </div>
+                </div>
+                <div class="ref-card">
+                    <div style="font-size: 2.5em; margin-bottom: 15px;">🏢</div>
+                    <h3>80</h3>
+                    <div class="serves">👥 Serves 40-60 people</div>
+                    <div class="cost-display">
+                        <div class="cost-item">~8-10 meat packages</div>
+                        <div class="cost-item">~7 cheese packages</div>
+                        <div class="cost-item">~4 bread loaves</div>
                     </div>
                 </div>
                 <div class="ref-card">
                     <div style="font-size: 2.5em; margin-bottom: 15px;">🏫</div>
-                    <h3>200</h3>
-                    <div class="serves">👥 Serves 100-150 people</div>
+                    <h3>120</h3>
+                    <div class="serves">👥 Serves 60-90 people</div>
                     <div class="cost-display">
-                        <div class="cost-item">🦃 Turkey: $358</div>
-                        <div class="cost-item">🐷 Ham: $276</div>
+                        <div class="cost-item">~12-15 meat packages</div>
+                        <div class="cost-item">~10 cheese packages</div>
+                        <div class="cost-item">~6 bread loaves</div>
                     </div>
                 </div>
                 <div class="ref-card">
                     <div style="font-size: 2.5em; margin-bottom: 15px;">🎪</div>
-                    <h3>500</h3>
-                    <div class="serves">👥 Serves 250-375 people</div>
+                    <h3>200</h3>
+                    <div class="serves">👥 Serves 100-150 people</div>
                     <div class="cost-display">
-                        <div class="cost-item">🦃 Turkey: $852</div>
-                        <div class="cost-item">🐷 Ham: $665</div>
-                    </div>
-                </div>
-                <div class="ref-card">
-                    <div style="font-size: 2.5em; margin-bottom: 15px;">🎡</div>
-                    <h3>1000</h3>
-                    <div class="serves">👥 Serves 500-750 people</div>
-                    <div class="cost-display">
-                        <div class="cost-item">🦃 Turkey: $1,696</div>
-                        <div class="cost-item">🐷 Ham: $1,312</div>
+                        <div class="cost-item">~20-25 meat packages</div>
+                        <div class="cost-item">~17 cheese packages</div>
+                        <div class="cost-item">~10 bread loaves</div>
                     </div>
                 </div>
             </div>
@@ -2706,11 +2711,11 @@
                 <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced</td><td>$3.99</td><td>9 oz / 18 slices</td></tr>
                 <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size</td><td>$4.39</td><td>1 lb / 30-32 slices</td></tr>
                 <tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">🇺🇸 American Cheese (Deli Style)</td></tr>
-                <tr><td>Great Value American (Walmart)</td><td>$3.98</td><td>24 slices ⭐ Budget</td></tr>
+                <tr><td>Great Value American (Walmart)</td><td>$3.98</td><td>24 slices</td></tr>
                 <tr><td>Kroger Deli American</td><td>$4.29</td><td>24 slices</td></tr>
                 <tr><td>Sargento Sliced American</td><td>$4.99</td><td>22 slices</td></tr>
                 <tr><td>Land O'Lakes American</td><td>$6.49</td><td>24 slices</td></tr>
-                <tr><td>Boar's Head American</td><td>$8.99</td><td>24 slices (Premium)</td></tr>
+                <tr><td>Boar's Head American</td><td>$8.99</td><td>24 slices</td></tr>
                 <tr><td>Nature's Own Double Loaf</td><td>$3.99–$4.99</td><td>20 sandwiches</td></tr>
                 <tr><td>Sunbeam Double Loaf</td><td>$5.39</td><td>26 sandwiches</td></tr>
                 <tr><td>Sunbeam Single Loaf</td><td>$2.70</td><td>13 sandwiches</td></tr>
