@@ -5688,7 +5688,7 @@
                     </div>
                 </div>
                 <ul class="shopping-receipt">
-                    <li class="section-label">Full Shopping List</li>
+                    <li class="section-label">Meat</li>
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
@@ -5697,6 +5697,7 @@
                         </div>
                         <div class="item-price">$${meatCost.toFixed(2)}</div>
                     </li>
+                    <li class="section-label">Cheese</li>
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
@@ -5705,6 +5706,7 @@
                         </div>
                         <div class="item-price">$${cheeseCost.toFixed(2)}</div>
                     </li>
+                    <li class="section-label">Bread</li>
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
@@ -5721,7 +5723,19 @@
                         </div>
                         <div class="item-price">$${bagCost.toFixed(2)}</div>
                     </li>
-                    <li class="section-label">Supplies</li>
+                </ul>
+                <div class="receipt-total">
+                    <span>Estimated Ingredient Total</span>
+                    <span>$${totalCost.toFixed(2)}</span>
+                </div>
+                <div class="per-sandwich-cost">
+                    ≈ $${costPerSandwich} per sandwich
+                </div>
+                <div class="pricing-note">
+                    Includes meat, cheese, bread, and sandwich bags only. Supplies listed below are not included in this estimate. All prices are estimates based on recent retail pricing and may vary by store and location. Bread prices use the midpoint of the listed price range.
+                </div>
+                <ul class="shopping-receipt">
+                    <li class="section-label">Supplies (not included in total)</li>
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
@@ -5761,16 +5775,6 @@
                         </div>
                     </li>
                 </ul>
-                <div class="receipt-total">
-                    <span>Estimated Total</span>
-                    <span>$${totalCost.toFixed(2)}</span>
-                </div>
-                <div class="per-sandwich-cost">
-                    ≈ $${costPerSandwich} per sandwich
-                </div>
-                <div class="pricing-note">
-                    All prices are estimates based on recent retail pricing and may vary by store and location. Bread prices use the midpoint of the listed price range. Verify prices at your store before purchasing.
-                </div>
             `;
             document.getElementById('calcResult').style.display = 'block';
             document.getElementById('exportButton').style.display = 'block';
@@ -6262,7 +6266,7 @@
                     </div>
                 </div>
                 <ul class="shopping-receipt">
-                    <li class="section-label">Full Shopping List</li>
+                    <li class="section-label">Peanut Butter</li>
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
@@ -6271,6 +6275,7 @@
                         </div>
                         <div class="item-price">$${pbCost.toFixed(2)}</div>
                     </li>
+                    <li class="section-label">Jelly</li>
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
@@ -6279,6 +6284,7 @@
                         </div>
                         <div class="item-price">$${jellyCost.toFixed(2)}</div>
                     </li>
+                    <li class="section-label">Bread</li>
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
@@ -6305,7 +6311,19 @@
                         <div class="item-price">$${spatulaCost.toFixed(2)}</div>
                     </li>
                     ` : ''}
-                    <li class="section-label">Supplies</li>
+                </ul>
+                <div class="receipt-total">
+                    <span>Estimated Ingredient Total</span>
+                    <span>$${actualTotalCost.toFixed(2)}</span>
+                </div>
+                <div class="per-sandwich-cost">
+                    ≈ $${costPerSandwichPBJ} per sandwich
+                </div>
+                <div class="pricing-note">
+                    Includes peanut butter, jelly, bread, and sandwich bags only. Supplies listed below are not included in this estimate. All prices are estimates based on recent retail pricing and may vary by store and location. Bread prices use the midpoint of the listed price range.
+                </div>
+                <ul class="shopping-receipt">
+                    <li class="section-label">Supplies (not included in total)</li>
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
@@ -6320,16 +6338,6 @@
                         </div>
                     </li>
                 </ul>
-                <div class="receipt-total">
-                    <span>Estimated Total</span>
-                    <span>$${actualTotalCost.toFixed(2)}</span>
-                </div>
-                <div class="per-sandwich-cost">
-                    ≈ $${costPerSandwichPBJ} per sandwich
-                </div>
-                <div class="pricing-note">
-                    All prices are estimates based on recent retail pricing and may vary by store and location. Bread prices use the midpoint of the listed price range. Verify prices at your store before purchasing.
-                </div>
             `;
 
             document.getElementById('pbjResult').style.display = 'block';
