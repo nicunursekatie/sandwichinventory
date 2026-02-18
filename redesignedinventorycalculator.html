@@ -650,6 +650,16 @@
             color: rgba(255,255,255,0.7);
         }
 
+        .pricing-note {
+            text-align: center;
+            margin-top: 16px;
+            padding: 12px 16px;
+            font-size: 0.82em;
+            color: rgba(255,255,255,0.5);
+            line-height: 1.5;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
         /* Legacy shopping list (hidden, replaced by receipt) */
         .shopping-list {
             display: none;
@@ -3162,7 +3172,7 @@
                         </div>
                     </div>
                     <div class="assembly-tip">
-                        <strong>Pro Tip:</strong> Spread peanut butter on both slices first - it creates a barrier that keeps the jelly from making the bread soggy!
+                        <strong>Assembly Tip:</strong> Spread peanut butter on both slices first — it creates a barrier that keeps the jelly from making the bread soggy!
                     </div>
                     <div class="recipe-downloads">
                         <a href="toolkit/20250205-TSP- PBJ Making 101 (1).pdf" target="_blank" class="download-btn">
@@ -3768,12 +3778,12 @@
             <h2>💡 Planning Tips</h2>
             <div class="tips-grid">
                 <div class="tip-card">
-                    <h3>⏱️ Timing Guidelines</h3>
+                    <h3>⏱️ Timing Guidelines (+20 min for setup/cleanup)</h3>
                     <ul>
-                        <li>Small (50-100): 45-90 minutes</li>
-                        <li>Medium (200-300): 2-3 hours</li>
-                        <li>Large (500+): 4-8 hours</li>
-                        <li>Add 20 min for setup/cleanup</li>
+                        <li>Small (50–100 sandwiches, 3–5 adults): 45–90 minutes</li>
+                        <li>Medium (200–300 sandwiches, 5–8 adults): 1.5–2.5 hours</li>
+                        <li>Large (500+ sandwiches, 10–20 adults): 2–4 hours</li>
+                        <li>Solo/pair events: plan ~25 sandwiches per adult per hour</li>
                     </ul>
                 </div>
                 
@@ -5733,19 +5743,16 @@
                         <div class="pkg-label">Meat</div>
                         <div class="pkg-count">${meatPackages}</div>
                         <div class="pkg-product">${meatName}</div>
-                        <div class="pkg-price">$${meatCost.toFixed(2)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Cheese</div>
                         <div class="pkg-count">${cheesePackages}</div>
                         <div class="pkg-product">${cheeseName}</div>
-                        <div class="pkg-price">$${cheeseCost.toFixed(2)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Bread</div>
                         <div class="pkg-count">${breadPackages}</div>
                         <div class="pkg-product">${breadName}</div>
-                        <div class="pkg-price">$${breadCost.toFixed(2)}</div>
                     </div>
                 </div>
                 <ul class="shopping-receipt">
@@ -5828,6 +5835,9 @@
                 </div>
                 <div class="per-sandwich-cost">
                     ≈ $${costPerSandwich} per sandwich
+                </div>
+                <div class="pricing-note">
+                    All prices are estimates based on recent retail pricing and may vary by store and location. Bread prices use the midpoint of the listed price range. Verify prices at your store before purchasing.
                 </div>
             `;
             document.getElementById('calcResult').style.display = 'block';
@@ -6306,19 +6316,16 @@
                         <div class="pkg-label">Peanut Butter</div>
                         <div class="pkg-count">${pbJarsNeeded}</div>
                         <div class="pkg-product">${pbInfo.description}</div>
-                        <div class="pkg-price">$${pbCost.toFixed(2)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Jelly</div>
                         <div class="pkg-count">${jellyJarsNeeded}</div>
                         <div class="pkg-product">${jellyInfo.description}</div>
-                        <div class="pkg-price">$${jellyCost.toFixed(2)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Bread</div>
                         <div class="pkg-count">${breadLoavesNeeded}</div>
                         <div class="pkg-product">${pbjBreadName}</div>
-                        <div class="pkg-price">$${breadCost.toFixed(2)}</div>
                     </div>
                 </div>
                 <ul class="shopping-receipt">
@@ -6386,6 +6393,9 @@
                 </div>
                 <div class="per-sandwich-cost">
                     ≈ $${costPerSandwichPBJ} per sandwich
+                </div>
+                <div class="pricing-note">
+                    All prices are estimates based on recent retail pricing and may vary by store and location. Bread prices use the midpoint of the listed price range. Verify prices at your store before purchasing.
                 </div>
             `;
 
