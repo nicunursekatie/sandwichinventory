@@ -424,77 +424,140 @@
         }
         
         .calc-result {
-            background: rgba(255,255,255,0.25);
-            padding: 25px;
-            border-radius: 12px;
+            background: rgba(255,255,255,0.12);
+            padding: 30px;
+            border-radius: 16px;
             margin-top: 25px;
             display: none;
-            border: 1px solid rgba(255,255,255,0.3);
-        }
-        
-        .result-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 20px;
-            margin-top: 15px;
-        }
-        
-        .result-item {
-            background: rgba(255,255,255,0.15);
-            padding: 25px;
-            border-radius: 12px;
-            text-align: center;
             border: 1px solid rgba(255,255,255,0.2);
         }
-        
-        .result-item h4 {
-            color: #FBAD3F;
-            margin-bottom: 15px;
-            font-size: 1.2em;
+
+        .result-summary {
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .result-summary h3 {
+            color: #fff;
+            font-size: 1.3em;
             font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
-        
-        .result-item .number {
-            font-size: 3em;
+
+        .result-summary .total-sandwiches {
+            font-size: 2.4em;
             font-weight: 700;
-            margin-bottom: 12px;
-            display: block;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            color: #fff;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        
-        .result-item .description {
-            font-size: 1.2em;
-            font-weight: 500;
+
+        .result-summary .total-cost {
+            font-size: 1.3em;
+            color: rgba(255,255,255,0.9);
+            margin-top: 4px;
+        }
+
+        .shopping-receipt {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .shopping-receipt li {
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            padding: 14px 16px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+
+        .shopping-receipt li:last-child {
+            border-bottom: none;
+        }
+
+        .shopping-receipt input[type="checkbox"] {
+            margin-top: 4px;
+            transform: scale(1.3);
+            flex-shrink: 0;
+            accent-color: #007E8C;
+        }
+
+        .shopping-receipt .item-details {
+            flex: 1;
+        }
+
+        .shopping-receipt .item-name {
+            font-weight: 600;
+        }
+
+        .shopping-receipt .item-meta {
+            font-size: 0.88em;
+            color: rgba(255,255,255,0.7);
+            margin-top: 2px;
+        }
+
+        .shopping-receipt .item-price {
+            font-weight: 600;
+            white-space: nowrap;
             color: rgba(255,255,255,0.95);
-            line-height: 1.4;
         }
-        
-        .shopping-list {
-            background: #f8f9fa;
-            padding: 25px;
+
+        .shopping-receipt .section-label {
+            padding: 10px 16px 4px 16px;
+            font-size: 0.8em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: rgba(255,255,255,0.5);
+            border-bottom: none;
+        }
+
+        .receipt-total {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+            margin-top: 8px;
+            background: rgba(255,255,255,0.1);
             border-radius: 10px;
-            border-left: 5px solid #FBAD3F;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #fff;
         }
-        
+
+        .per-sandwich-cost {
+            text-align: center;
+            margin-top: 12px;
+            font-size: 0.95em;
+            color: rgba(255,255,255,0.7);
+        }
+
+        /* Legacy shopping list (hidden, replaced by receipt) */
+        .shopping-list {
+            display: none;
+        }
+
         .shopping-list h3 {
             color: #A31C41;
             margin-bottom: 15px;
         }
-        
+
         .checklist {
             list-style: none;
         }
-        
+
         .checklist li {
             padding: 10px 0;
             border-bottom: 1px solid #dee2e6;
             display: flex;
             align-items: center;
         }
-        
+
         .checklist input[type="checkbox"] {
             margin-right: 15px;
             transform: scale(1.2);
@@ -679,17 +742,17 @@
                 font-size: 1.7em;
             }
             
-            .result-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
+            .shopping-receipt li {
+                padding: 12px 10px;
+                font-size: 0.95em;
             }
-            
-            .result-item .number {
-                font-size: 2.5em;
+
+            .result-summary .total-sandwiches {
+                font-size: 2em;
             }
-            
-            .result-item .description {
-                font-size: 1.1em;
+
+            .receipt-total {
+                font-size: 1.05em;
             }
         }
         .shopping-calculator .plan-mode-label,
@@ -1810,9 +1873,15 @@
         function calculateNeeds() {
             const bySandwiches = document.getElementById('planBySandwiches').checked;
             let sandwichCount;
-            const meatType = document.getElementById('meatType').value;
-            const cheeseType = document.getElementById('cheeseType').value;
-            const breadType = document.getElementById('breadType').value;
+            const meatSelect = document.getElementById('meatType');
+            const cheeseSelect = document.getElementById('cheeseType');
+            const breadSelect = document.getElementById('breadType');
+            const meatType = meatSelect.value;
+            const cheeseType = cheeseSelect.value;
+            const breadType = breadSelect.value;
+            const meatName = meatSelect.options[meatSelect.selectedIndex].text;
+            const cheeseName = cheeseSelect.options[cheeseSelect.selectedIndex].text;
+            const breadName = breadSelect.options[breadSelect.selectedIndex].text;
             const meatAmount = parseInt(document.getElementById('meatAmount').value);
 
             // Ingredient constants
@@ -2043,21 +2112,23 @@
                 cheeseCost = cheesePackages * cheesePrice;
                 breadCost = breadPackages * breadPrice;
                 bagCost = bagPackages * bagPrice;
-                totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
+                totalCost = Math.round((meatCost + cheeseCost + breadCost + bagCost) * 100) / 100;
             } else {
                 // For sandwich count mode, use normal calculation
                 meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
                 cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
                 breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
                 bagPackages = Math.ceil(sandwichCount / 480);
-                
+
                 meatCost = meatPackages * meatPrice;
                 cheeseCost = cheesePackages * cheesePrice;
                 breadCost = breadPackages * breadPrice;
                 bagCost = bagPackages * bagPrice;
-                totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
+                totalCost = Math.round((meatCost + cheeseCost + breadCost + bagCost) * 100) / 100;
             }
             const coolersNeeded = Math.ceil(sandwichCount / 100);
+            const estimatedLoaves = Math.ceil(sandwichCount / 20);
+            const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4);
 
             // Calculate excess ingredients
             const meatNeeded = sandwichCount * meatPerSandwich;
@@ -2108,7 +2179,7 @@
                             <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
                             <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
                             <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong> | 
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> | 
                                 Remaining budget: <strong>$${remaining}</strong> (${savingsPercent}% under budget)
                             </p>
                             <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
@@ -2123,7 +2194,7 @@
                             <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
                             <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
                             <p style="color: #BF360C; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost}</strong> | 
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> | 
                                 Only <strong>$${remaining}</strong> remaining (${savingsPercent}% under budget)
                             </p>
                             <p style="color: #E65100; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
@@ -2138,7 +2209,7 @@
                             <div style="font-size: 2em; margin-bottom: 12px;">🎯</div>
                             <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Perfect Budget Match!</h4>
                             <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
-                                <strong>${totalSandwichesPossible} sandwiches</strong> for exactly <strong>$${totalCost}</strong> | 
+                                <strong>${totalSandwichesPossible} sandwiches</strong> for exactly <strong>$${totalCost.toFixed(2)}</strong> | 
                                 Uses your entire $${budget} budget
                             </p>
                             <p style="color: #2E7D32; font-size: 1em; margin: 12px 0 0 0; font-weight: 400;">
@@ -2152,108 +2223,99 @@
             
             // No longer showing excess ingredient details to maintain trust and professionalism
 
+            const costPerSandwich = (totalCost / sandwichCount).toFixed(2);
+
             document.getElementById('calcResult').innerHTML = `
                 ${budgetStatusMessage}
-                <div class="result-grid">
-                    <div class="result-item">
-                        <h4>Meat Packages</h4>
-                        <div class="number">${meatPackages}</div>
-                        <div class="description">${meatDescription}</div>
-                    </div>
-                    <div class="result-item">
-                        <h4>Cheese Packages</h4>
-                        <div class="number">${cheesePackages}</div>
-                        <div class="description">${cheeseDescription}</div>
-                    </div>
-                    <div class="result-item">
-                        <h4>Bread Packages</h4>
-                        <div class="number">${breadPackages}</div>
-                        <div class="description">${breadDescription}</div>
-                    </div>
-                    <div class="result-item">
-                        <h4>Total Cost</h4>
-                        <div class="number">$${totalCost}</div>
-                        <div class="description">estimated retail pricing</div>
-                    </div>
+                <div class="result-summary">
+                    <h3>Your Shopping List</h3>
+                    <div class="total-sandwiches">${sandwichCount} Sandwiches</div>
+                    <div class="total-cost">Estimated total: $${totalCost.toFixed(2)}</div>
+                </div>
+                <ul class="shopping-receipt">
+                    <li class="section-label">Ingredients</li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${meatPackages} × ${meatName}</div>
+                            <div class="item-meta">${meatDescription}</div>
+                        </div>
+                        <div class="item-price">$${meatCost.toFixed(2)}</div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${cheesePackages} × ${cheeseName}</div>
+                            <div class="item-meta">${cheeseDescription}</div>
+                        </div>
+                        <div class="item-price">$${cheeseCost.toFixed(2)}</div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${breadPackages} × ${breadName}</div>
+                            <div class="item-meta">${breadDescription}</div>
+                        </div>
+                        <div class="item-price">$${breadCost.toFixed(2)}</div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${bagPackages} × Zip-lock sandwich bags</div>
+                            <div class="item-meta">480 count boxes</div>
+                        </div>
+                        <div class="item-price">$${bagCost.toFixed(2)}</div>
+                    </li>
+                    <li class="section-label">Supplies</li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${icePacksNeeded} × Ice packs</div>
+                            <div class="item-meta">Enough to touch every loaf</div>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">Food-safe disposable gloves</div>
+                            <div class="item-meta">Multiple boxes</div>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">Hair ties/nets and beard nets</div>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">Hand soap</div>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">Paper towels for cleanup</div>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">Disinfecting wipes for surfaces</div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="receipt-total">
+                    <span>Estimated Total</span>
+                    <span>$${totalCost.toFixed(2)}</span>
+                </div>
+                <div class="per-sandwich-cost">
+                    ≈ $${costPerSandwich} per sandwich
                 </div>
             `;
 
-            // Generate dynamic shopping checklist
-            let meatShoppingDescription;
-            switch(meatType) {
-                case 'turkey':
-                    meatShoppingDescription = 'Kirkland Turkey 2-packs (40 slices)';
-                    break;
-                case 'ham':
-                    meatShoppingDescription = 'Kirkland Ham 2-packs (48 slices)';
-                    break;
-                case 'publix-turkey':
-                    meatShoppingDescription = 'Publix Turkey Breast, Roasted, Thin Sliced (16 oz / 32 slices)';
-                    break;
-                case 'land-o-frost-turkey':
-                    meatShoppingDescription = 'Land O\'Frost Premium Oven Roasted Turkey Breast (16 oz / 32 slices)';
-                    break;
-                case 'hillshire-turkey':
-                    meatShoppingDescription = 'Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast (9 oz / 18 slices)';
-                    break;
-                case 'kroger-turkey-regular':
-                    meatShoppingDescription = 'Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced (8 oz / 11-12 slices)';
-                    break;
-                case 'kroger-turkey-thin':
-                    meatShoppingDescription = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced (9 oz / 18 slices)';
-                    break;
-                case 'kroger-chicken-thin':
-                    meatShoppingDescription = 'Kroger® Chicken Breast Deli Thin Sliced (9 oz / 18 slices)';
-                    break;
-                case 'kroger-turkey-family':
-                    meatShoppingDescription = 'Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size (1 lb / 30-32 slices)';
-                    break;
-                case 'oscar-mayer-chicken-blackened':
-                    meatShoppingDescription = 'Oscar Mayer Deli Fresh Blackened Chicken Breast Thin Sliced Lunchmeat (8 oz / 11-12 slices)';
-                    break;
-                case 'oscar-mayer-chicken-rotisserie':
-                    meatShoppingDescription = 'Oscar Mayer Deli Fresh Rotisserie Seasoned Chicken Breast Thin Sliced Lunchmeat (16 oz / 32 slices)';
-                    break;
-                default:
-                    meatShoppingDescription = 'Meat packages';
-            }
-            let cheeseShoppingDescription;
-            switch(cheeseType) {
-                // American Cheese options
-                case 'great-value-american':
-                    cheeseShoppingDescription = 'Great Value American Cheese slices (24 slices per package)';
-                    break;
-                case 'kroger-american':
-                    cheeseShoppingDescription = 'Kroger Deli American Cheese slices (24 slices per package)';
-                    break;
-                case 'sargento-american':
-                    cheeseShoppingDescription = 'Sargento Sliced American Cheese (22 slices per package)';
-                    break;
-                case 'land-o-lakes-american':
-                    cheeseShoppingDescription = 'Land O\'Lakes American Cheese slices (24 slices per package)';
-                    break;
-                case 'boars-head-american':
-                    cheeseShoppingDescription = 'Boar\'s Head American Cheese slices (24 slices per package)';
-                    break;
-                default:
-                    cheeseShoppingDescription = 'Cheese slices';
-            }
-            const estimatedLoaves = Math.ceil(sandwichCount / 20);
-            const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4);
-            document.getElementById('shoppingChecklist').innerHTML = `
-                <li><input type="checkbox"> ${meatPackages} × ${meatShoppingDescription}</li>
-                <li><input type="checkbox"> ${cheesePackages} × ${cheeseShoppingDescription}</li>
-                <li><input type="checkbox"> ${breadPackages} × Bread ${breadDescription}</li>
-                <li><input type="checkbox"> ${bagPackages} × Zip-lock sandwich bags (480 count)</li>
-                <li><input type="checkbox"> ${icePacksNeeded} × Ice packs (enough to touch every loaf)</li>
-                <li><input type="checkbox"> Food-safe disposable gloves (multiple boxes)</li>
-                <li><input type="checkbox"> Hair ties/nets and beard nets</li>
-                <li><input type="checkbox"> Hand soap</li>
-                <li><input type="checkbox"> Paper towels for cleanup</li>
-                <li><input type="checkbox"> Disinfecting wipes for surfaces</li>
-            `;
             document.getElementById('calcResult').style.display = 'block';
-            document.getElementById('shoppingList').style.display = 'block';
             document.getElementById('exportButton').style.display = 'block';
         }
         
@@ -2392,7 +2454,7 @@
             const cheeseCost = cheesePackages * cheesePrice;
             const breadCost = breadPackages * breadPrice;
             const bagCost = Math.ceil(sandwichCount / 480) * bagPrice;
-            const totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
+            const totalCost = Math.round((meatCost + cheeseCost + breadCost + bagCost) * 100) / 100;
             const coolersNeeded = Math.ceil(sandwichCount / 100);
             
             // Create printable content
@@ -2423,7 +2485,7 @@
                             </div>
                             <div>
                                 <p style="font-size: 18px; font-weight: bold; color: #236383;">
-                                    Total estimated cost: $${totalCost}
+                                    Total estimated cost: $${totalCost.toFixed(2)}
                                 </p>
                             </div>
                         </div>
@@ -2579,7 +2641,9 @@
             }
 
             // Bread selection
-            const pbjBreadType = document.getElementById('pbjBreadType').value;
+            const pbjBreadSelect = document.getElementById('pbjBreadType');
+            const pbjBreadType = pbjBreadSelect.value;
+            const pbjBreadName = pbjBreadSelect.options[pbjBreadSelect.selectedIndex].text;
             let usableBreadSlicesPerLoaf, breadPrice;
             switch(pbjBreadType) {
                 case 'great-value-white':
@@ -2756,51 +2820,81 @@
                 }
             }
 
+            const costPerSandwich = (totalCost / pbjCount).toFixed(2);
+
             // Display results
             document.getElementById('pbjResult').innerHTML = `
                 ${budgetStatusMessage}
-                <div class="result-grid">
-                    <div class="result-item">
-                        <h4>Peanut Butter</h4>
-                        <div class="number">${pbJarsNeeded}</div>
-                        <div class="description">${pbDescription}<br>(~${pbTbspPerJar} tbsp each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${pbCost.toFixed(2)}</div>
-                    </div>
-                    <div class="result-item">
-                        <h4>Jelly</h4>
-                        <div class="number">${jellyJarsNeeded}</div>
-                        <div class="description">${jellyDescription}<br>(~${jellyTbspPerJar} tbsp each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${jellyCost.toFixed(2)}</div>
-                    </div>
-                    <div class="result-item">
-                        <h4>Bread Loaves</h4>
-                        <div class="number">${breadLoavesNeeded}</div>
-                        <div class="description">single loaves<br>(${usableBreadSlicesPerLoaf} usable slices each)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${breadCost.toFixed(2)}</div>
-                    </div>
-                    <div class="result-item">
-                        <h4>Sandwich Bags</h4>
-                        <div class="number">${bagBoxesNeeded}</div>
-                        <div class="description">${bagsPerBox} count boxes</div>
-                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${bagCost.toFixed(2)}</div>
-                    </div>
-                    ${includeSpatulas ? `
-                    <div class="result-item" style="background: linear-gradient(135deg, rgba(251,173,63,0.3) 0%, rgba(163,28,65,0.2) 100%);">
-                        <h4>Spreading Spatulas</h4>
-                        <div class="number">${spatulaPackCount}</div>
-                        <div class="description">${spatulasPerPack}-pack(s) (${spatulaPackCount * spatulasPerPack} spatulas total)</div>
-                        <div style="margin-top: 10px; font-size: 0.9em; color: rgba(255,255,255,0.95);">$${spatulaCost.toFixed(2)}</div>
-                        <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer" style="display: inline-block; margin-top: 10px; padding: 8px 16px; background: #FF9900; color: #111; font-weight: 600; text-decoration: none; border-radius: 6px; font-size: 0.85em;">Order on Amazon</a>
-                    </div>
-                    ` : ''}
+                <div class="result-summary">
+                    <h3>Your PB&J Shopping List</h3>
+                    <div class="total-sandwiches">${pbjCount} PB&J Sandwiches</div>
+                    <div class="total-cost">Estimated total: $${totalCost.toFixed(2)}</div>
                 </div>
-                <div style="margin-top: 25px; padding: 20px; background: rgba(251,173,63,0.2); border-radius: 12px; text-align: center;">
-                    <h4 style="color: #fff; font-size: 1.4em; margin-bottom: 10px;">${isBudgetMode ? 'You Can Make' : 'Total Estimated Cost'}</h4>
-                    <div style="font-size: 3em; font-weight: 700; color: #fff;">${isBudgetMode ? pbjCount + ' PB&J Sandwiches' : '$' + totalCost.toFixed(2)}</div>
-                    <div style="color: rgba(255,255,255,0.9); font-size: 1.1em; margin-top: 8px;">
-                        ${isBudgetMode ? 'Total cost: $' + totalCost.toFixed(2) : 'for ' + pbjCount + ' PB&J sandwiches'}<br>
-                        (≈ $${(totalCost / pbjCount).toFixed(2)} per sandwich)
-                    </div>
+                <ul class="shopping-receipt">
+                    <li class="section-label">Ingredients</li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${pbJarsNeeded} × ${pbDescription}</div>
+                            <div class="item-meta">~${pbTbspPerJar} tbsp per jar</div>
+                        </div>
+                        <div class="item-price">$${pbCost.toFixed(2)}</div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${jellyJarsNeeded} × ${jellyDescription}</div>
+                            <div class="item-meta">~${jellyTbspPerJar} tbsp per jar</div>
+                        </div>
+                        <div class="item-price">$${jellyCost.toFixed(2)}</div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${breadLoavesNeeded} × ${pbjBreadName}</div>
+                            <div class="item-meta">${usableBreadSlicesPerLoaf} usable slices per loaf</div>
+                        </div>
+                        <div class="item-price">$${breadCost.toFixed(2)}</div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${bagBoxesNeeded} × Zip-lock sandwich bags</div>
+                            <div class="item-meta">${bagsPerBox} count boxes</div>
+                        </div>
+                        <div class="item-price">$${bagCost.toFixed(2)}</div>
+                    </li>
+                    ${includeSpatulas ? `
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">${spatulaPackCount} × Spreading Spatula ${spatulasPerPack}-pack</div>
+                            <div class="item-meta">${spatulaPackCount * spatulasPerPack} spatulas total — <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer" style="color: #FF9900; font-weight: 600; text-decoration: underline;">Order on Amazon</a></div>
+                        </div>
+                        <div class="item-price">$${spatulaCost.toFixed(2)}</div>
+                    </li>
+                    ` : ''}
+                    <li class="section-label">Supplies</li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">Food-safe disposable gloves</div>
+                            <div class="item-meta">Multiple boxes</div>
+                        </div>
+                    </li>
+                    <li>
+                        <input type="checkbox">
+                        <div class="item-details">
+                            <div class="item-name">Paper towels for cleanup</div>
+                        </div>
+                    </li>
+                </ul>
+                <div class="receipt-total">
+                    <span>Estimated Total</span>
+                    <span>$${totalCost.toFixed(2)}</span>
+                </div>
+                <div class="per-sandwich-cost">
+                    ≈ $${costPerSandwich} per sandwich
                 </div>
             `;
 
