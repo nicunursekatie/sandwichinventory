@@ -491,11 +491,11 @@
         }
 
         .package-tile .pkg-product {
-            font-size: 0.82em;
-            color: rgba(255,255,255,0.85);
-            margin-top: 4px;
+            font-size: 1.05em;
+            color: rgba(255,255,255,0.9);
+            margin-top: 6px;
             line-height: 1.3;
-            font-weight: 500;
+            font-weight: 600;
         }
 
         .package-tile .pkg-price {
@@ -1928,6 +1928,11 @@
     </div>
     
     <script>
+        // Clean product names for grid display (strip emoji, parenthetical details, per-slice pricing)
+        function cleanName(name) {
+            return name.replace(/^[^\w]*/, '').replace(/\s*\(.*$/, '').replace(/\s*-\s*\$[\d.]+\/slice$/, '').trim();
+        }
+
         function calculateNeeds() {
             const bySandwiches = document.getElementById('planBySandwiches').checked;
             let sandwichCount;
@@ -1940,6 +1945,9 @@
             const meatName = meatSelect.options[meatSelect.selectedIndex].text;
             const cheeseName = cheeseSelect.options[cheeseSelect.selectedIndex].text;
             const breadName = breadSelect.options[breadSelect.selectedIndex].text;
+            const meatGridName = cleanName(meatName);
+            const cheeseGridName = cleanName(cheeseName);
+            const breadGridName = cleanName(breadName);
             const meatAmount = parseInt(document.getElementById('meatAmount').value);
 
             // Ingredient constants
@@ -2294,17 +2302,17 @@
                     <div class="package-tile">
                         <div class="pkg-label">Meat</div>
                         <div class="pkg-count">${meatPackages}</div>
-                        <div class="pkg-product">${meatName}</div>
+                        <div class="pkg-product">${meatGridName}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Cheese</div>
                         <div class="pkg-count">${cheesePackages}</div>
-                        <div class="pkg-product">${cheeseName}</div>
+                        <div class="pkg-product">${cheeseGridName}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Bread</div>
                         <div class="pkg-count">${breadPackages}</div>
-                        <div class="pkg-product">${breadName}</div>
+                        <div class="pkg-product">${breadGridName}</div>
                     </div>
                 </div>
                 <ul class="shopping-receipt">
@@ -2722,6 +2730,7 @@
             const pbjBreadSelect = document.getElementById('pbjBreadType');
             const pbjBreadType = pbjBreadSelect.value;
             const pbjBreadName = pbjBreadSelect.options[pbjBreadSelect.selectedIndex].text;
+            const pbjBreadGridName = cleanName(pbjBreadName);
             let usableBreadSlicesPerLoaf, breadPrice;
             switch(pbjBreadType) {
                 case 'great-value-white':
@@ -2922,7 +2931,7 @@
                     <div class="package-tile">
                         <div class="pkg-label">Bread</div>
                         <div class="pkg-count">${breadLoavesNeeded}</div>
-                        <div class="pkg-product">${pbjBreadName}</div>
+                        <div class="pkg-product">${pbjBreadGridName}</div>
                     </div>
                 </div>
                 <ul class="shopping-receipt">
