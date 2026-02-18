@@ -769,56 +769,126 @@
             line-height: 16px;
         }
 
-        .tip-card li.danger-rule {
-            background: rgba(255, 180, 50, 0.2);
-            border: 1px solid rgba(255, 180, 50, 0.5);
+        /* Food Safety Timeline */
+        .safety-timeline {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+
+        .safety-timeline::before {
+            content: '';
+            position: absolute;
+            left: 32px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #007E8C, #236383, #A31C41, #FBAD3F);
+            border-radius: 2px;
+        }
+
+        .safety-phase {
+            display: flex;
+            gap: 24px;
+            padding: 0 0 8px 0;
+            position: relative;
+        }
+
+        .phase-marker {
+            flex-shrink: 0;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            z-index: 1;
+            box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+        }
+
+        .phase-body {
+            flex: 1;
+            padding: 8px 0 24px 0;
+        }
+
+        .phase-label {
+            font-size: 0.8em;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 4px;
+        }
+
+        .phase-title {
+            font-size: 1.35em;
+            font-weight: 700;
+            color: #1a1a1a;
+            margin-bottom: 12px;
+        }
+
+        .phase-rules {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .phase-rules li {
+            padding: 8px 14px;
             border-radius: 8px;
-            padding: 8px 8px 8px 32px;
-            margin: 6px -4px;
-            font-weight: 600;
+            font-size: 0.95em;
+            font-weight: 500;
+            line-height: 1.4;
         }
 
-        .tip-card li.danger-rule:before {
-            content: "⚠️";
-            background: none;
-            width: auto;
-            height: auto;
-            font-size: 14px;
-            line-height: 1;
-            top: 9px;
-            left: 8px;
+        /* Phase color themes */
+        .phase-prep .phase-marker { background: linear-gradient(135deg, #007E8C, #47B3CB); }
+        .phase-prep .phase-label { color: #007E8C; }
+        .phase-prep .phase-rules li { background: #e8f6f8; color: #0a5e6a; border: 1px solid #b8e4ec; }
+
+        .phase-make .phase-marker { background: linear-gradient(135deg, #236383, #2d7fa0); }
+        .phase-make .phase-label { color: #236383; }
+        .phase-make .phase-rules li { background: #e6f0f7; color: #1a4d66; border: 1px solid #b3d4e8; }
+
+        .phase-pack .phase-marker { background: linear-gradient(135deg, #6b4c8a, #8b6aae); }
+        .phase-pack .phase-label { color: #6b4c8a; }
+        .phase-pack .phase-rules li { background: #f0eaf5; color: #4a3462; border: 1px solid #d4c4e3; }
+
+        .phase-transport .phase-marker { background: linear-gradient(135deg, #2d6a4f, #40916c); }
+        .phase-transport .phase-label { color: #2d6a4f; }
+        .phase-transport .phase-rules li { background: #e8f5ee; color: #1b4332; border: 1px solid #b7dfc8; }
+
+        /* Danger rules */
+        .phase-rules li.danger {
+            background: linear-gradient(135deg, #fef2e4, #fde8d0);
+            border: 2px solid #e8880c;
+            color: #92400e;
+            font-weight: 700;
         }
 
-        .safety-banner {
+        /* Critical callout banner */
+        .safety-callout {
             background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
             color: #fff;
             padding: 22px 28px;
-            border-radius: 10px;
+            border-radius: 12px;
             text-align: center;
             font-weight: 700;
             font-size: 1.1em;
-            margin: 20px 0;
+            margin: 28px 0 0 0;
             border: 2px solid #b45309;
             box-shadow: 0 2px 12px rgba(217, 119, 6, 0.3);
         }
-        
-        .safety-banner > div {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            text-align: left;
-        }
-        
-        @media (max-width: 900px) {
-            .safety-banner > div {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-        
-        @media (max-width: 500px) {
-            .safety-banner > div {
-                grid-template-columns: 1fr;
-            }
+
+        @media (max-width: 600px) {
+            .safety-timeline::before { left: 24px; }
+            .phase-marker { width: 48px; height: 48px; font-size: 22px; }
+            .safety-phase { gap: 16px; }
+            .phase-rules { flex-direction: column; }
         }
         
         .recipe-card {
@@ -3695,59 +3765,78 @@
             <h2>🛡️ Food Safety Requirements</h2>
             <p style="color: #555; font-size: 1.1em; margin-bottom: 20px; line-height: 1.5;">Follow these requirements at every event — our recipients include children, elderly, and immunocompromised individuals.</p>
             <div id="food-safety-content">
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <h3>🧤 Personal Hygiene</h3>
-                    <ul>
-                        <li><strong>Wash hands</strong> with soap & warm water</li>
-                        <li><strong>Wear disposable gloves</strong></li>
-                        <li><strong>Change gloves</strong> after touching non-food items</li>
-                        <li><strong>Tie back long hair</strong> or wear a net</li>
-                        <li><strong>Beard nets</strong> if applicable</li>
-                        <li><strong>Clean & cover</strong> all prep surfaces</li>
-                    </ul>
+            <div class="safety-timeline">
+
+                <!-- Phase 1: Before You Start -->
+                <div class="safety-phase phase-prep">
+                    <div class="phase-marker">🧤</div>
+                    <div class="phase-body">
+                        <div class="phase-label">Phase 1</div>
+                        <div class="phase-title">Before You Start</div>
+                        <ul class="phase-rules">
+                            <li><strong>Wash hands</strong> with soap & warm water</li>
+                            <li><strong>Gloves on</strong> — required at all times</li>
+                            <li><strong>Hair tied back</strong> or netted; beard nets if applicable</li>
+                            <li><strong>Clean & cover</strong> all prep surfaces</li>
+                            <li><strong>Pre-packaged meat only</strong> (no deli counter)</li>
+                            <li><strong>Check dates:</strong> expires 10+ days out</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="tip-card">
-                    <h3>❄️ Temperature Control</h3>
-                    <ul>
-                        <li><strong>Keep ingredients</strong> at 40°F or below</li>
-                        <li class="danger-rule"><strong>Never</strong> leave ingredients at 80°F+</li>
-                        <li><strong>One meat package</strong> out of fridge at a time</li>
-                        <li><strong>Return finished loaves</strong> to fridge immediately</li>
-                        <li class="danger-rule"><strong>Never</strong> put warm sandwiches in coolers</li>
-                    </ul>
+                <!-- Phase 2: While Making -->
+                <div class="safety-phase phase-make">
+                    <div class="phase-marker">🥪</div>
+                    <div class="phase-body">
+                        <div class="phase-label">Phase 2</div>
+                        <div class="phase-title">While Making Sandwiches</div>
+                        <ul class="phase-rules">
+                            <li><strong>Keep ingredients</strong> at 40°F or below</li>
+                            <li class="danger">⚠️ <strong>Never</strong> leave ingredients at 80°F+</li>
+                            <li><strong>One meat package</strong> out of fridge at a time</li>
+                            <li><strong>Change gloves</strong> after touching non-food items</li>
+                            <li><strong>Return finished loaves</strong> to fridge immediately</li>
+                            <li><strong>Keep nut products</strong> away from deli area</li>
+                            <li><strong>When in doubt,</strong> throw it out!</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="tip-card">
-                    <h3>📦 Ingredient Standards</h3>
-                    <ul>
-                        <li><strong>Family quality</strong> — feed others what you'd feed yours</li>
-                        <li><strong>Pre-packaged meat only</strong> (no deli counter)</li>
-                        <li><strong>Expires 10+ days</strong> after purchase</li>
-                        <li><strong>Keep nut products</strong> away from deli area</li>
-                        <li><strong>When in doubt,</strong> throw it out!</li>
-                    </ul>
+                <!-- Phase 3: Packing Up -->
+                <div class="safety-phase phase-pack">
+                    <div class="phase-marker">📦</div>
+                    <div class="phase-body">
+                        <div class="phase-label">Phase 3</div>
+                        <div class="phase-title">Packing Up</div>
+                        <ul class="phase-rules">
+                            <li><strong>Freeze 20–30 min</strong> before packing into coolers</li>
+                            <li class="danger">⚠️ <strong>Never</strong> put warm sandwiches in coolers</li>
+                            <li><strong>Coolers must be cool</strong> first (not hot from garage)</li>
+                            <li><strong>Ice packs</strong> touching every loaf</li>
+                            <li><strong>Pack tight</strong> — fill completely, no air gaps</li>
+                            <li><strong>~100 sandwiches</strong> per large cooler</li>
+                        </ul>
+                    </div>
                 </div>
 
-                <div class="tip-card">
-                    <h3>🚚 Storage & Transport</h3>
-                    <ul>
-                        <li><strong>Plan 2–3 hours</strong> for ingredient storage</li>
-                        <li><strong>Freeze 20–30 min</strong> before packing</li>
-                        <li><strong>Ice packs</strong> touching every loaf</li>
-                        <li><strong>~100 sandwiches</strong> per large cooler</li>
-                        <li><strong>Coolers must be cool</strong> (not hot from garage)</li>
-                        <li><strong>Pack tight</strong> — no air gaps</li>
-                        <li class="danger-rule"><strong>Never</strong> put warm sandwiches in coolers</li>
-                        <li><strong>Don't reopen</strong> — coolers heat up fast</li>
-                        <li><strong>Transport directly</strong> to host locations</li>
-                    </ul>
+                <!-- Phase 4: Transport & Delivery -->
+                <div class="safety-phase phase-transport">
+                    <div class="phase-marker">🚚</div>
+                    <div class="phase-body">
+                        <div class="phase-label">Phase 4</div>
+                        <div class="phase-title">Transport & Delivery</div>
+                        <ul class="phase-rules">
+                            <li><strong>Don't reopen</strong> — coolers heat up fast</li>
+                            <li><strong>Go direct</strong> — straight to host locations</li>
+                            <li><strong>Family quality:</strong> feed others what you'd feed yours</li>
+                        </ul>
+                    </div>
                 </div>
+
             </div>
 
-            <div class="safety-banner" style="margin-top: 30px;">
-                ⚠️ REMEMBER: Recipients may be children, elderly, or immunocompromised. Food safety protects our most vulnerable community members.
+            <div class="safety-callout">
+                ⚠️ REMEMBER: Our recipients include children, elderly, and immunocompromised individuals. Every rule above exists to protect them.
             </div>
 
             <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #fffbe8 0%, #fef3e2 100%); border: 2px solid #f4a261; border-radius: 12px;">
