@@ -2950,12 +2950,12 @@
                             <option value="kroger-turkey-family" data-type="turkey" style="display: none;">Kroger Turkey Family Size (16 oz) - $4.39</option>
                             <option value="kroger-turkey-thin" data-type="turkey" style="display: none;">Kroger Turkey Thin Sliced (9 oz) - $3.99</option>
                             <option value="publix-turkey" data-type="turkey" style="display: none;">Publix Turkey Breast (16 oz) - $7.07</option>
-                            <option value="kirkland-turkey" data-type="turkey" style="display: none;">Kirkland Turkey (2 lb) - $13.99</option>
+                            <option value="kirkland-turkey" data-type="turkey" style="display: none;">Kirkland Turkey (2-pack, ~32 oz total) - $13.99</option>
                             <option value="land-o-frost-turkey" data-type="turkey" style="display: none;">Land O'Frost Turkey (16 oz) - $9.53</option>
                             <option value="hillshire-turkey" data-type="turkey" style="display: none;">Hillshire Farm Turkey (9 oz) - $6.07</option>
                             <option value="oscar-mayer-turkey" data-type="turkey" style="display: none;">Oscar Mayer Turkey (2 lb) - $9.97 (Sam's Club)</option>
                             <!-- Ham options (hidden until ham tab selected) -->
-                            <option value="kirkland-ham" data-type="ham" style="display: none;">Kirkland Ham (2 lb, 48 slices) - $9.89</option>
+                            <option value="kirkland-ham" data-type="ham" style="display: none;">Kirkland Ham (2-pack, 96 slices total) - $9.89</option>
                             <option value="kroger-ham" data-type="ham" style="display: none;">Kroger Ham (16 oz) - $4.99</option>
                             <option value="hillshire-ham" data-type="ham" style="display: none;">Hillshire Farm Ham (9 oz) - $5.49</option>
                             <!-- Chicken options (hidden until chicken tab selected) -->
@@ -4251,7 +4251,7 @@
                 'hillshire-turkey': { weightOz: 9, price: 6.07, name: 'Hillshire Farm Turkey', type: 'turkey' },
                 'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: 'Oscar Mayer Turkey (Sam\'s Club)', type: 'turkey' },
                 // Ham options
-                'kirkland-ham': { slices: 48, price: 9.89, name: 'Kirkland Ham', type: 'ham' },
+                'kirkland-ham': { slices: 96, price: 9.89, name: 'Kirkland Ham', type: 'ham' }, // 2-pack, 48 slices each = 96 total
                 'kroger-ham': { weightOz: 16, price: 4.99, name: 'Kroger Ham', type: 'ham' },
                 'hillshire-ham': { weightOz: 9, price: 5.49, name: 'Hillshire Farm Ham', type: 'ham' },
                 // Chicken options
@@ -5387,18 +5387,16 @@
             let meatPerPackage, meatPrice, meatDescription, meatPackageWeightOz;
             switch(meatType) {
                 case 'turkey':
-                    meatPerPackage = 40;
+                    meatPerPackage = 80; // 2-pack, 40 slices each = 80 total
                     meatPrice = 13.99;
-                    meatDescription = '2-packs (40 slices each)';
-                    // Estimate: 40 slices at ~0.5 oz per slice = 20 oz per package, but it's a 2-pack so 40 oz total
-                    meatPackageWeightOz = 40; // 2-pack, estimate 20 oz per pack
+                    meatDescription = '2-packs (40 slices each, 80 total)';
+                    meatPackageWeightOz = 40; // 2-pack, estimate 20 oz per pack = 40 oz total
                     break;
                 case 'ham':
-                    meatPerPackage = 48;
+                    meatPerPackage = 96; // 2-pack, 48 slices each = 96 total
                     meatPrice = 9.89;
-                    meatDescription = '2-packs (48 slices each)';
-                    // Estimate: 48 slices at ~0.5 oz per slice = 24 oz per package, but it's a 2-pack so 48 oz total
-                    meatPackageWeightOz = 48; // 2-pack, estimate 24 oz per pack
+                    meatDescription = '2-packs (48 slices each, 96 total)';
+                    meatPackageWeightOz = 48; // 2-pack, estimate 24 oz per pack = 48 oz total
                     break;
                 case 'publix-turkey':
                     meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
@@ -5956,14 +5954,14 @@
             let meatPerPackage, meatPrice, meatPackageWeightOz;
             switch(meatType.value) {
                 case 'turkey':
-                    meatPerPackage = 40;
+                    meatPerPackage = 80; // 2-pack, 40 slices each = 80 total
                     meatPrice = 13.99;
-                    meatPackageWeightOz = 40; // 2-pack, estimate 20 oz per pack
+                    meatPackageWeightOz = 40; // 2-pack, estimate 20 oz per pack = 40 oz total
                     break;
                 case 'ham':
-                    meatPerPackage = 48;
+                    meatPerPackage = 96; // 2-pack, 48 slices each = 96 total
                     meatPrice = 9.89;
-                    meatPackageWeightOz = 48; // 2-pack, estimate 24 oz per pack
+                    meatPackageWeightOz = 48; // 2-pack, estimate 24 oz per pack = 48 oz total
                     break;
                 case 'publix-turkey':
                     meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)

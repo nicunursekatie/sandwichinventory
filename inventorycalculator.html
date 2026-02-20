@@ -1105,14 +1105,14 @@
                         <select id="meatType">
                             <option value="">Choose your meat</option>
                             <optgroup label="Popular Options">
-                                <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices, $9.89) - $0.21/slice</option>
+                                <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices each / 96 total, $9.89) - $0.10/slice</option>
                                 <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $3.50) - $0.19/slice</option>
                                 <option value="publix-turkey">🦃 Publix Turkey Breast, Thin Sliced (16 oz / 32 slices, $7.07) - $0.22/slice</option>
                                 <option value="kroger-turkey-thin">🦃 Kroger Turkey Thin Sliced (9 oz / 18 slices, $3.99) - $0.22/slice</option>
                                 <option value="kroger-turkey-family">🦃 Kroger Turkey Family Size (1 lb / 30-32 slices, $4.39) - $0.14/slice</option>
                             </optgroup>
                             <optgroup label="More Options">
-                                <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices, $13.99) - $0.35/slice</option>
+                                <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices each / 80 total, $13.99) - $0.17/slice</option>
                                 <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin (9 oz / 18 slices, $6.07) - $0.34/slice</option>
                                 <option value="land-o-frost-turkey">🦃 Land O'Frost Premium (16 oz / 32 slices, $9.53) - $0.30/slice</option>
                                 <option value="kroger-turkey-regular">🦃 Kroger Private Selection® (8 oz / 11-12 slices, $6.49) - $0.56/slice</option>
@@ -1958,14 +1958,14 @@
             let meatPerPackage, meatPrice, meatDescription;
             switch(meatType) {
                 case 'turkey':
-                    meatPerPackage = 40;
+                    meatPerPackage = 80; // 2-pack, 40 slices each = 80 total
                     meatPrice = 13.99;
-                    meatDescription = '2-packs (40 slices each)';
+                    meatDescription = '2-packs (40 slices each, 80 total)';
                     break;
                 case 'ham':
-                    meatPerPackage = 48;
+                    meatPerPackage = 96; // 2-pack, 48 slices each = 96 total
                     meatPrice = 9.89;
-                    meatDescription = '2-packs (48 slices each)';
+                    meatDescription = '2-packs (48 slices each, 96 total)';
                     break;
                 case 'publix-turkey':
                     meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
@@ -2426,11 +2426,11 @@
             let meatPerPackage, meatPrice;
             switch(meatType.value) {
                 case 'turkey':
-                    meatPerPackage = 40;
+                    meatPerPackage = 80; // 2-pack, 40 slices each = 80 total
                     meatPrice = 13.99;
                     break;
                 case 'ham':
-                    meatPerPackage = 48;
+                    meatPerPackage = 96; // 2-pack, 48 slices each = 96 total
                     meatPrice = 9.89;
                     break;
                 case 'publix-turkey':
