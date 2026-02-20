@@ -1093,11 +1093,13 @@
                     </div>
 
                     <div class="calc-input-group">
-                        <label>Meat amount per sandwich</label>
+                        <label>Meat amount per sandwich (oz)</label>
                         <select id="meatAmount">
-                            <option value="2">2 slices of meat</option>
-                            <option value="3" selected>3 slices of meat (standard sandwich)</option>
+                            <option value="2">2 oz of meat (lighter serving)</option>
+                            <option value="2.5" selected>2.5 oz of meat (standard sandwich)</option>
+                            <option value="3">3 oz of meat (generous serving)</option>
                         </select>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 4px;">TSP standard is 2.5 oz per sandwich (~3 thin slices or ~2 thicker slices).</span>
                     </div>
 
                     <div class="calc-input-group">
@@ -1948,72 +1950,72 @@
             const meatGridName = cleanName(meatName);
             const cheeseGridName = cleanName(cheeseName);
             const breadGridName = cleanName(breadName);
-            const meatAmount = parseInt(document.getElementById('meatAmount').value);
+            const meatAmount = parseFloat(document.getElementById('meatAmount').value);
 
-            // Ingredient constants
-            const meatPerSandwich = meatAmount; // 2 or 3 slices per sandwich (user selected)
+            // Ingredient constants (oz-based for accurate package calculation)
+            const meatOzPerSandwich = meatAmount; // 2, 2.5, or 3 oz per sandwich (user selected)
             const cheesePerSandwich = 2; // 2 slices per sandwich
 
-            // Package sizes and prices
-            let meatPerPackage, meatPrice, meatDescription;
+            // Package sizes and prices (meatPackageWeightOz = total oz in one purchase unit)
+            let meatPackageWeightOz, meatPrice, meatDescription;
             switch(meatType) {
                 case 'turkey':
-                    meatPerPackage = 40;
+                    meatPackageWeightOz = 40; // 2-pack (~20 oz per pack)
                     meatPrice = 13.99;
-                    meatDescription = '2-packs (40 slices each)';
+                    meatDescription = '2-packs (~40 oz total)';
                     break;
                 case 'ham':
-                    meatPerPackage = 48;
+                    meatPackageWeightOz = 48; // 2-pack (~24 oz per pack)
                     meatPrice = 9.89;
-                    meatDescription = '2-packs (48 slices each)';
+                    meatDescription = '2-packs (~48 oz total)';
                     break;
                 case 'publix-turkey':
-                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 16; // 16 oz package
                     meatPrice = 7.07;
-                    meatDescription = '16 oz packages (32 slices)';
+                    meatDescription = '16 oz packages';
                     break;
                 case 'land-o-frost-turkey':
-                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 16; // 16 oz package
                     meatPrice = 9.53;
-                    meatDescription = '16 oz packages (32 slices)';
+                    meatDescription = '16 oz packages';
                     break;
                 case 'hillshire-turkey':
-                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 9; // 9 oz package
                     meatPrice = 6.07;
-                    meatDescription = '9 oz packages (18 slices)';
+                    meatDescription = '9 oz packages';
                     break;
                 case 'kroger-turkey-regular':
-                    meatPerPackage = 11.5; // 8 oz = 11-12 slices average (0.7 oz per slice)
+                    meatPackageWeightOz = 8; // 8 oz package
                     meatPrice = 6.49;
-                    meatDescription = '8 oz packages (11-12 slices)';
+                    meatDescription = '8 oz packages';
                     break;
                 case 'kroger-turkey-thin':
-                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 9; // 9 oz package
                     meatPrice = 3.99;
-                    meatDescription = '9 oz packages (18 slices)';
+                    meatDescription = '9 oz packages';
                     break;
                 case 'kroger-chicken-thin':
-                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 9; // 9 oz package
                     meatPrice = 3.50;
-                    meatDescription = '9 oz packages (18 slices)';
+                    meatDescription = '9 oz packages';
                     break;
                 case 'kroger-turkey-family':
-                    meatPerPackage = 31; // 16 oz (1 lb) = 30-32 slices average (0.5 oz per slice)
+                    meatPackageWeightOz = 16; // 1 lb = 16 oz package
                     meatPrice = 4.39;
-                    meatDescription = '1 lb packages (30-32 slices)';
+                    meatDescription = '1 lb (16 oz) packages';
                     break;
                 case 'oscar-mayer-chicken-blackened':
-                    meatPerPackage = 11.5; // 8 oz = 11-12 slices average (0.7 oz per slice)
+                    meatPackageWeightOz = 8; // 8 oz package
                     meatPrice = 4.49;
-                    meatDescription = '8 oz packages (11-12 slices)';
+                    meatDescription = '8 oz packages';
                     break;
                 case 'oscar-mayer-chicken-rotisserie':
-                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 16; // 16 oz package
                     meatPrice = 7.99;
-                    meatDescription = '16 oz packages (32 slices)';
+                    meatDescription = '16 oz packages';
                     break;
                 default:
-                    meatPerPackage = 40;
+                    meatPackageWeightOz = 40;
                     meatPrice = 13.99;
                     meatDescription = 'packages';
             }
@@ -2117,7 +2119,7 @@
                 }
                 // Estimate max sandwiches for this budget
                 // Cost per sandwich = (meat + cheese + bread + bag) per sandwich
-                const meatCostPerSandwich = meatPrice / (meatPerPackage / meatPerSandwich);
+                const meatCostPerSandwich = meatPrice / (meatPackageWeightOz / meatOzPerSandwich);
                 const cheeseCostPerSandwich = cheesePrice / (cheesePerPackage / cheesePerSandwich);
                 const breadCostPerSandwich = breadPrice / breadSandwichesPerPackage;
                 const bagCostPerSandwich = bagPrice / 480;
@@ -2131,7 +2133,7 @@
             }
 
 
-            // Calculate packages needed
+            // Calculate packages needed (oz-based for accurate meat package calculation)
             let meatPackages, cheesePackages, breadPackages, bagPackages;
             let meatCost, cheeseCost, breadCost, bagCost, totalCost;
             
@@ -2147,7 +2149,7 @@
                 while (low <= high) {
                     let mid = Math.floor((low + high) / 2);
                     
-                    meatPackages = Math.ceil((mid * meatPerSandwich) / meatPerPackage);
+                    meatPackages = Math.ceil((mid * meatOzPerSandwich) / meatPackageWeightOz);
                     cheesePackages = Math.ceil((mid * cheesePerSandwich) / cheesePerPackage);
                     breadPackages = Math.ceil(mid / breadSandwichesPerPackage);
                     bagPackages = Math.ceil(mid / 480);
@@ -2169,7 +2171,7 @@
                 sandwichCount = bestSandwichCount;
                 
                 // Recalculate final costs with the adjusted count
-                meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
+                meatPackages = Math.ceil((sandwichCount * meatOzPerSandwich) / meatPackageWeightOz);
                 cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
                 breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
                 bagPackages = Math.ceil(sandwichCount / 480);
@@ -2180,8 +2182,8 @@
                 bagCost = bagPackages * bagPrice;
                 totalCost = Math.round((meatCost + cheeseCost + breadCost + bagCost) * 100) / 100;
             } else {
-                // For sandwich count mode, use normal calculation
-                meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
+                // For sandwich count mode, use oz-based calculation
+                meatPackages = Math.ceil((sandwichCount * meatOzPerSandwich) / meatPackageWeightOz);
                 cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
                 breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
                 bagPackages = Math.ceil(sandwichCount / 480);
@@ -2196,12 +2198,12 @@
             const estimatedLoaves = Math.ceil(sandwichCount / 20);
             const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4);
 
-            // Calculate excess ingredients
-            const meatNeeded = sandwichCount * meatPerSandwich;
+            // Calculate excess ingredients (oz-based for meat)
+            const meatNeeded = sandwichCount * meatOzPerSandwich;
             const cheeseNeeded = sandwichCount * cheesePerSandwich;
             const breadNeeded = sandwichCount;
             
-            const meatProvided = meatPackages * meatPerPackage;
+            const meatProvided = meatPackages * meatPackageWeightOz;
             const cheeseProvided = cheesePackages * cheesePerPackage;
             const breadProvided = breadPackages * breadSandwichesPerPackage;
             
@@ -2210,7 +2212,7 @@
             const cheeseExcess = cheeseProvided - cheeseNeeded;
             const breadExcess = breadProvided - breadNeeded;
             
-            const possibleExtraFromMeat = Math.floor(meatExcess / meatPerSandwich);
+            const possibleExtraFromMeat = Math.floor(meatExcess / meatOzPerSandwich);
             const possibleExtraFromCheese = Math.floor(cheeseExcess / cheesePerSandwich);
             const possibleExtraFromBread = Math.floor(breadExcess / 2); // 2 slices bread per sandwich
             
@@ -2421,56 +2423,56 @@
             const breadText = breadType.options[breadType.selectedIndex].text;
             
             // Calculate the results (same logic as in calculateNeeds)
-            const meatPerSandwich = 3; // 3 slices per sandwich (standard portion)
+            const meatOzPerSandwich = parseFloat(document.getElementById('meatAmount').value) || 2.5;
             const cheesePerSandwich = 2;
-            let meatPerPackage, meatPrice;
+            let meatPackageWeightOz, meatPrice;
             switch(meatType.value) {
                 case 'turkey':
-                    meatPerPackage = 40;
+                    meatPackageWeightOz = 40;
                     meatPrice = 13.99;
                     break;
                 case 'ham':
-                    meatPerPackage = 48;
+                    meatPackageWeightOz = 48;
                     meatPrice = 9.89;
                     break;
                 case 'publix-turkey':
-                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 16;
                     meatPrice = 7.07;
                     break;
                 case 'land-o-frost-turkey':
-                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 16;
                     meatPrice = 9.53;
                     break;
                 case 'hillshire-turkey':
-                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 9;
                     meatPrice = 6.07;
                     break;
                 case 'kroger-turkey-regular':
-                    meatPerPackage = 11.5; // 8 oz = 11-12 slices average (0.7 oz per slice)
+                    meatPackageWeightOz = 8;
                     meatPrice = 6.49;
                     break;
                 case 'kroger-turkey-thin':
-                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 9;
                     meatPrice = 3.99;
                     break;
                 case 'kroger-chicken-thin':
-                    meatPerPackage = 18; // 9 oz = 18 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 9;
                     meatPrice = 3.50;
                     break;
                 case 'kroger-turkey-family':
-                    meatPerPackage = 31; // 16 oz (1 lb) = 30-32 slices average (0.5 oz per slice)
+                    meatPackageWeightOz = 16;
                     meatPrice = 4.39;
                     break;
                 case 'oscar-mayer-chicken-blackened':
-                    meatPerPackage = 11.5; // 8 oz = 11-12 slices average (0.7 oz per slice)
+                    meatPackageWeightOz = 8;
                     meatPrice = 4.49;
                     break;
                 case 'oscar-mayer-chicken-rotisserie':
-                    meatPerPackage = 32; // 16 oz = 32 slices (0.5 oz per slice)
+                    meatPackageWeightOz = 16;
                     meatPrice = 7.99;
                     break;
                 default:
-                    meatPerPackage = 40;
+                    meatPackageWeightOz = 40;
                     meatPrice = 13.99;
             }
             
@@ -2533,7 +2535,7 @@
                     breadPrice = 1.48;
             }
             
-            const meatPackages = Math.ceil((sandwichCount * meatPerSandwich) / meatPerPackage);
+            const meatPackages = Math.ceil((sandwichCount * meatOzPerSandwich) / meatPackageWeightOz);
             const cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
             const breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
             
