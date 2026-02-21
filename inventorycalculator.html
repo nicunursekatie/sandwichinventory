@@ -1095,8 +1095,8 @@
                     <div class="calc-input-group">
                         <label>Meat per sandwich (oz)</label>
                         <select id="meatAmount">
-                            <option value="2" selected>2 oz of meat per sandwich (standard)</option>
-                            <option value="3">3 oz of meat per sandwich (generous)</option>
+                            <option value="2" selected>2 oz of meat per sandwich</option>
+                            <option value="3">3 oz of meat per sandwich</option>
                         </select>
                     </div>
 
@@ -2195,31 +2195,25 @@
             const estimatedLoaves = Math.ceil(sandwichCount / 20);
             const icePacksNeeded = Math.max(estimatedLoaves, coolersNeeded * 4);
 
-            // Calculate excess ingredients (in oz for meat, slices for cheese)
-            const meatOzNeeded = sandwichCount * meatOzPerSandwich;
-            const cheeseNeeded = sandwichCount * cheesePerSandwich;
-            const breadNeeded = sandwichCount;
+            // In budget mode, packages round up so you can often make more sandwiches
+            // than the binary search target. Ensure all ingredients cover the same count.
+            if (!bySandwiches) {
+                const meatCapacity = Math.floor((meatPackages * meatWeightOz) / meatOzPerSandwich);
+                const cheeseCapacity = Math.floor((cheesePackages * cheesePerPackage) / cheesePerSandwich);
+                const breadCapacity = breadPackages * breadSandwichesPerPackage;
+                const actualCapacity = Math.min(meatCapacity, cheeseCapacity, breadCapacity);
 
-            const meatOzProvided = meatPackages * meatWeightOz;
-            const cheeseProvided = cheesePackages * cheesePerPackage;
-            const breadProvided = breadPackages * breadSandwichesPerPackage;
-
-            // Calculate actual possible extra sandwiches (limited by the scarcest ingredient)
-            const meatExcess = meatOzProvided - meatOzNeeded;
-            const cheeseExcess = cheeseProvided - cheeseNeeded;
-            const breadExcess = breadProvided - breadNeeded;
-
-            const possibleExtraFromMeat = Math.floor(meatExcess / meatOzPerSandwich);
-            const possibleExtraFromCheese = Math.floor(cheeseExcess / cheesePerSandwich);
-            const possibleExtraFromBread = Math.floor(breadExcess / 2); // 2 slices bread per sandwich
-            
-            const actualExtraSandwiches = Math.min(possibleExtraFromMeat, possibleExtraFromCheese, possibleExtraFromBread);
-            
-            // For budget mode, update the total sandwich count to include extra sandwiches
-            let totalSandwichesPossible = sandwichCount;
-            if (!bySandwiches && actualExtraSandwiches > 0) {
-                totalSandwichesPossible = sandwichCount + actualExtraSandwiches;
+                if (actualCapacity > sandwichCount) {
+                    sandwichCount = actualCapacity;
+                    cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
+                    breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
+                    cheeseCost = cheesePackages * cheesePrice;
+                    breadCost = breadPackages * breadPrice;
+                    totalCost = Math.round((meatCost + cheeseCost + breadCost + bagCost) * 100) / 100;
+                }
             }
+
+            let totalSandwichesPossible = sandwichCount;
 
             // Create the result grid with budget status
             let budgetStatusMessage = '';
