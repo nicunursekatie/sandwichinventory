@@ -3,6 +3,7 @@
  *
  * This endpoint receives calculator inputs and returns:
  * - Validated calculations with sanity checks
+ * - Math verification against frontend-computed quantities
  * - Smart recommendations for better value
  * - Waste minimization suggestions
  * - Budget optimization tips
@@ -11,77 +12,76 @@
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-// Product database with current pricing
+// Product database — synced with frontend packageData in redesignedinventorycalculator.html
 const PRODUCT_DATABASE = {
     meat: {
-        'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: "Oscar Mayer Turkey (Sam's Club)", type: 'turkey', store: "Sam's Club" },
+        // Turkey options
         'kroger-turkey-family': { weightOz: 16, price: 4.39, name: 'Kroger Turkey Family Size', type: 'turkey', store: 'Kroger' },
         'kroger-turkey-thin': { weightOz: 9, price: 3.99, name: 'Kroger Turkey Thin Sliced', type: 'turkey', store: 'Kroger' },
         'publix-turkey': { weightOz: 16, price: 7.07, name: 'Publix Turkey Breast', type: 'turkey', store: 'Publix' },
         'kirkland-turkey': { weightOz: 32, price: 13.99, name: 'Kirkland Turkey', type: 'turkey', store: "Sam's Club/Costco" },
         'land-o-frost-turkey': { weightOz: 16, price: 9.53, name: "Land O'Frost Turkey", type: 'turkey', store: 'Various' },
         'hillshire-turkey': { weightOz: 9, price: 6.07, name: 'Hillshire Farm Turkey', type: 'turkey', store: 'Various' },
-        'kirkland-ham': { slices: 48, price: 9.89, name: 'Kirkland Ham', type: 'ham', store: "Sam's Club/Costco" },
+        'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: "Oscar Mayer Turkey (Sam's Club)", type: 'turkey', store: "Sam's Club" },
+        // Ham options
+        'kirkland-ham': { slices: 96, price: 9.89, name: 'Kirkland Ham (2-pack)', type: 'ham', store: "Sam's Club/Costco" },
         'kroger-ham': { weightOz: 16, price: 4.99, name: 'Kroger Ham', type: 'ham', store: 'Kroger' },
         'hillshire-ham': { weightOz: 9, price: 5.49, name: 'Hillshire Farm Ham', type: 'ham', store: 'Various' },
+        // Chicken options
         'kroger-chicken-thin': { weightOz: 9, price: 3.50, name: 'Kroger Chicken Thin', type: 'chicken', store: 'Kroger' },
         'oscar-mayer-chicken-rotisserie': { weightOz: 16, price: 7.99, name: 'Oscar Mayer Rotisserie Chicken', type: 'chicken', store: 'Various' },
+        'oscar-mayer-chicken-blackened': { weightOz: 8, price: 4.49, name: 'Oscar Mayer Blackened Chicken', type: 'chicken', store: 'Various' },
     },
     cheese: {
-        'adams-reserve': { slices: 44, price: 7.70, name: 'Adams Reserve', store: 'Various' },
-        'finlandia': { slices: 40, price: 9.69, name: 'Finlandia Variety', store: 'Various' },
-        'arla-havarti': { slices: 32, price: 9.69, name: 'Arla Havarti', store: 'Various' },
+        'boars-head-american': { slices: 24, price: 8.99, name: "Boar's Head American", store: 'Various' },
+        'land-o-lakes-american': { slices: 24, price: 6.49, name: "Land O'Lakes American", store: 'Various' },
+        'sargento-american': { slices: 22, price: 4.99, name: 'Sargento Sliced American', store: 'Various' },
+        'great-value-american': { slices: 24, price: 3.98, name: 'Great Value American (Walmart)', store: 'Walmart' },
+        'kroger-american': { slices: 24, price: 4.29, name: 'Kroger Deli American', store: 'Kroger' },
     },
     bread: {
-        'natures-own': { sandwiches: 10, price: 3.28, name: "Nature's Own Butter Bread", store: 'Various' },
-        'wonder-bread': { sandwiches: 10, price: 2.98, name: 'Wonder Bread', store: 'Various' },
-        'store-brand': { sandwiches: 10, price: 1.50, name: 'Store Brand White Bread', store: 'Various' },
+        'great-value-white': { sandwiches: 11, price: 1.48, name: 'Great Value White', store: 'Walmart' },
+        'kroger-white': { sandwiches: 11, price: 1.50, name: 'Kroger White Sandwich', store: 'Kroger' },
+        'wonder-classic': { sandwiches: 10, price: 3.63, name: 'Wonder Bread Classic White', store: 'Various' },
+        'wonder-giant': { sandwiches: 11, price: 4.64, name: 'Wonder Bread Giant White', store: 'Various' },
+        'sara-lee-butter': { sandwiches: 10, price: 3.14, name: 'Sara Lee Butter Bread', store: 'Various' },
+        'sara-lee-classic': { sandwiches: 10, price: 3.99, name: 'Sara Lee Classic White', store: 'Various' },
     }
 };
 
-// Standard recipe constants
+// Standard recipe constants — synced with frontend defaults
 const RECIPE = {
     deli: {
-        meatSlicesPerSandwich: 3,
-        cheeseSlicesPerSandwich: 2,
-        avgMeatSliceWeightOz: 0.75, // ~0.75 oz per slice for deli meat
+        meatOzPerSandwich: 2.5,         // matches frontend default input
+        cheeseSlicesPerSandwich: 2,      // matches frontend
+        meatSlicesPerSandwich: 3,        // fallback for slice-based meat
+        avgMeatSliceWeightOz: 0.75,     // fallback for slice-based meat
     },
     pbj: {
-        pbServingsPerJar: 25, // ~25 sandwiches per 16oz jar
-        jellyServingsPerJar: 30, // ~30 sandwiches per 18oz jar
+        pbTbspPerSandwich: 3,            // matches frontend
+        jellyTbspPerSandwich: 1.5,       // matches frontend
+        pbServingsPerJar: 25,
+        jellyServingsPerJar: 30,
     }
 };
 
 /**
  * Find optimal sandwich quantities that align with package sizes to minimize waste.
- * The ingredient with the largest per-package increment "wins" — making smaller
- * increments would leave partial packages of the larger ingredient unused.
  */
 function getOptimalQuantities(target, packagingSizes) {
-    // packagingSizes: array of { name, sandwichesPerPkg }
-    // Find the LCM-like optimal increment
-    // The largest package size drives the increment
     const sizes = packagingSizes.map(p => p.sandwichesPerPkg).filter(s => s > 0);
     if (sizes.length === 0) return [];
 
-    // Sort descending — largest package drives the base increment
     const sorted = [...sizes].sort((a, b) => b - a);
-    const baseIncrement = sorted[0]; // largest package size
+    const baseIncrement = sorted[0];
 
-    // Find multiples of the base increment near the target
-    const suggestions = [];
     const lowerMultiple = Math.floor(target / baseIncrement) * baseIncrement;
     const upperMultiple = lowerMultiple + baseIncrement;
 
-    // Check candidates: one below, one above, and if there's a sweet spot
-    // where ALL ingredients align, prefer that
     const candidates = new Set();
-
-    // Add multiples of the largest increment near the target
     if (lowerMultiple > 0) candidates.add(lowerMultiple);
     candidates.add(upperMultiple);
 
-    // Also check if there's an LCM of the two largest sizes nearby
     if (sizes.length >= 2) {
         const lcm = lcmOf(sorted[0], sorted[1]);
         const lowerLcm = Math.floor(target / lcm) * lcm;
@@ -90,7 +90,7 @@ function getOptimalQuantities(target, packagingSizes) {
         candidates.add(upperLcm);
     }
 
-    // Score each candidate
+    const suggestions = [];
     for (const count of candidates) {
         if (count <= 0 || count > target * 2) continue;
 
@@ -117,14 +117,12 @@ function getOptimalQuantities(target, packagingSizes) {
         });
     }
 
-    // Sort: zero-waste first, then by closeness to target
     suggestions.sort((a, b) => {
         if (a.isZeroWaste && !b.isZeroWaste) return -1;
         if (!a.isZeroWaste && b.isZeroWaste) return 1;
         return Math.abs(a.diff) - Math.abs(b.diff);
     });
 
-    // Return top 2-3 unique suggestions, skip if same as target
     return suggestions
         .filter(s => s.quantity !== target)
         .slice(0, 3);
@@ -134,18 +132,218 @@ function gcd(a, b) { return b === 0 ? a : gcd(b, a % b); }
 function lcmOf(a, b) { return (a * b) / gcd(a, b); }
 
 /**
- * Calculate sandwich order with LLM-powered insights
+ * Verify frontend's computed quantities against independent backend math.
+ * Returns a verification object with pass/fail status and specific discrepancies.
+ */
+function verifyFrontendMath(inputs) {
+    const fe = inputs.frontendResults;
+    if (!fe) {
+        return { status: 'skipped', reason: 'No frontend results provided for verification' };
+    }
+
+    const checks = [];
+    const totalSandwiches = fe.totalSandwiches;
+
+    if (!totalSandwiches || totalSandwiches <= 0) {
+        return { status: 'skipped', reason: 'Invalid sandwich count' };
+    }
+
+    if (inputs.sandwichType === 'deli') {
+        const md = fe.mathDetails || {};
+        const rawQuantities = fe.quantities || {};
+
+        // Extract counts and costs — frontend sends { meat: { count, cost }, ... }
+        const meatCount = typeof rawQuantities.meat === 'object' ? rawQuantities.meat.count : rawQuantities.meat;
+        const cheeseCount = typeof rawQuantities.cheese === 'object' ? rawQuantities.cheese.count : rawQuantities.cheese;
+        const breadCount = typeof rawQuantities.bread === 'object' ? rawQuantities.bread.count : rawQuantities.bread;
+        const meatCost = typeof rawQuantities.meat === 'object' ? rawQuantities.meat.cost : rawQuantities.meatCost;
+        const cheeseCost = typeof rawQuantities.cheese === 'object' ? rawQuantities.cheese.cost : rawQuantities.cheeseCost;
+        const breadCost = typeof rawQuantities.bread === 'object' ? rawQuantities.bread.cost : rawQuantities.breadCost;
+        const bagCost = typeof rawQuantities.bags === 'object' ? rawQuantities.bags.cost : (rawQuantities.bagCost || 0);
+
+        // Check 1: Verify meat packages
+        if (md.meatSandwichesPerPkg && meatCount != null) {
+            const expected = Math.ceil(totalSandwiches / md.meatSandwichesPerPkg);
+            checks.push({
+                check: 'meatPackages',
+                label: 'Meat packages',
+                frontendValue: meatCount,
+                expectedValue: expected,
+                pass: meatCount === expected,
+                formula: `ceil(${totalSandwiches} sandwiches / ${md.meatSandwichesPerPkg.toFixed(2)} per pkg) = ${expected}`
+            });
+        }
+
+        // Check 2: Verify cheese packages
+        if (md.cheeseSandwichesPerPkg && cheeseCount != null) {
+            const expected = Math.ceil(totalSandwiches / md.cheeseSandwichesPerPkg);
+            checks.push({
+                check: 'cheesePackages',
+                label: 'Cheese packages',
+                frontendValue: cheeseCount,
+                expectedValue: expected,
+                pass: cheeseCount === expected,
+                formula: `ceil(${totalSandwiches} sandwiches / ${md.cheeseSandwichesPerPkg} per pkg) = ${expected}`
+            });
+        }
+
+        // Check 3: Verify bread packages
+        if (md.breadSandwichesPerPkg && breadCount != null) {
+            const expected = Math.ceil(totalSandwiches / md.breadSandwichesPerPkg);
+            checks.push({
+                check: 'breadPackages',
+                label: 'Bread packages',
+                frontendValue: breadCount,
+                expectedValue: expected,
+                pass: breadCount === expected,
+                formula: `ceil(${totalSandwiches} sandwiches / ${md.breadSandwichesPerPkg} per pkg) = ${expected}`
+            });
+        }
+
+        // Check 4: Cost per sandwich is reasonable
+        if (fe.costPerSandwich != null) {
+            const reasonable = fe.costPerSandwich >= 0.50 && fe.costPerSandwich <= 5.00;
+            checks.push({
+                check: 'costPerSandwich',
+                label: 'Cost per sandwich reasonable',
+                frontendValue: fe.costPerSandwich,
+                pass: reasonable,
+                formula: `$${fe.costPerSandwich.toFixed(2)} should be between $0.50 and $5.00`
+            });
+        }
+
+        // Check 5: Total cost = sum of item costs
+        if (meatCost != null && cheeseCost != null && breadCost != null) {
+            const summed = meatCost + cheeseCost + breadCost + (bagCost || 0);
+            const diff = Math.abs(fe.totalCost - summed);
+            checks.push({
+                check: 'costConsistency',
+                label: 'Total cost matches item sum',
+                frontendValue: Math.round(fe.totalCost * 100) / 100,
+                expectedValue: Math.round(summed * 100) / 100,
+                pass: diff < 0.02 * totalSandwiches, // allow small rounding per sandwich
+                formula: `$${meatCost.toFixed(2)} + $${cheeseCost.toFixed(2)} + $${breadCost.toFixed(2)} + $${(bagCost || 0).toFixed(2)} = $${summed.toFixed(2)}`
+            });
+        }
+
+        // Check 6: Meat packages cover the target
+        if (md.meatSandwichesPerPkg && meatCount != null) {
+            const covers = Math.floor(meatCount * md.meatSandwichesPerPkg);
+            checks.push({
+                check: 'meatCoverage',
+                label: 'Meat covers target',
+                frontendValue: covers,
+                expectedValue: totalSandwiches,
+                pass: covers >= totalSandwiches,
+                formula: `${meatCount} pkgs × ${md.meatSandwichesPerPkg.toFixed(2)} = ${covers} sandwiches (need ${totalSandwiches})`
+            });
+        }
+
+        // Check 7: Cheese packages cover the target
+        if (md.cheeseSandwichesPerPkg && cheeseCount != null) {
+            const covers = cheeseCount * md.cheeseSandwichesPerPkg;
+            checks.push({
+                check: 'cheeseCoverage',
+                label: 'Cheese covers target',
+                frontendValue: covers,
+                expectedValue: totalSandwiches,
+                pass: covers >= totalSandwiches,
+                formula: `${cheeseCount} pkgs × ${md.cheeseSandwichesPerPkg} = ${covers} sandwiches (need ${totalSandwiches})`
+            });
+        }
+
+    } else if (inputs.sandwichType === 'pbj') {
+        const md = fe.mathDetails || {};
+        const quantities = fe.quantities || {};
+
+        // Check PB jars
+        if (md.pbTbspPerJar && md.pbTbspPerSandwich && quantities.pbJars != null) {
+            const servingsPerJar = Math.floor(md.pbTbspPerJar / md.pbTbspPerSandwich);
+            const expected = Math.ceil(totalSandwiches / servingsPerJar);
+            checks.push({
+                check: 'pbJars',
+                label: 'Peanut butter jars',
+                frontendValue: quantities.pbJars,
+                expectedValue: expected,
+                pass: quantities.pbJars === expected,
+                formula: `ceil(${totalSandwiches} / ${servingsPerJar} per jar) = ${expected}`
+            });
+        }
+
+        // Check jelly jars
+        if (md.jellyTbspPerJar && md.jellyTbspPerSandwich && quantities.jellyJars != null) {
+            const servingsPerJar = Math.floor(md.jellyTbspPerJar / md.jellyTbspPerSandwich);
+            const expected = Math.ceil(totalSandwiches / servingsPerJar);
+            checks.push({
+                check: 'jellyJars',
+                label: 'Jelly jars',
+                frontendValue: quantities.jellyJars,
+                expectedValue: expected,
+                pass: quantities.jellyJars === expected,
+                formula: `ceil(${totalSandwiches} / ${servingsPerJar} per jar) = ${expected}`
+            });
+        }
+
+        // Check bread loaves
+        if (md.usableBreadSlicesPerLoaf && md.breadSlicesPerSandwich && quantities.breadLoaves != null) {
+            const sandwichesPerLoaf = Math.floor(md.usableBreadSlicesPerLoaf / md.breadSlicesPerSandwich);
+            const expected = Math.ceil(totalSandwiches / sandwichesPerLoaf);
+            checks.push({
+                check: 'breadLoaves',
+                label: 'Bread loaves',
+                frontendValue: quantities.breadLoaves,
+                expectedValue: expected,
+                pass: quantities.breadLoaves === expected,
+                formula: `ceil(${totalSandwiches} / ${sandwichesPerLoaf} per loaf) = ${expected}`
+            });
+        }
+
+        // Check cost is reasonable for PBJ
+        if (fe.costPerSandwich != null) {
+            const reasonable = fe.costPerSandwich >= 0.20 && fe.costPerSandwich <= 2.00;
+            checks.push({
+                check: 'costPerSandwich',
+                label: 'Cost per sandwich reasonable',
+                frontendValue: fe.costPerSandwich,
+                pass: reasonable,
+                formula: `$${fe.costPerSandwich.toFixed(2)} should be between $0.20 and $2.00`
+            });
+        }
+    }
+
+    const failedChecks = checks.filter(c => !c.pass);
+
+    return {
+        status: failedChecks.length === 0 ? 'pass' : 'fail',
+        totalChecks: checks.length,
+        passedChecks: checks.length - failedChecks.length,
+        failedChecks: failedChecks.length,
+        checks: checks,
+        discrepancies: failedChecks.map(c => ({
+            check: c.check,
+            label: c.label,
+            message: c.expectedValue != null
+                ? `Expected ${c.expectedValue}, got ${c.frontendValue}`
+                : c.formula,
+            frontendValue: c.frontendValue,
+            expectedValue: c.expectedValue
+        }))
+    };
+}
+
+/**
+ * Calculate sandwich order with LLM-powered insights and math verification
  */
 async function calculateWithLLM(inputs) {
     const {
-        mode, // 'sandwiches' or 'budget'
-        targetValue, // sandwich count or budget amount
-        sandwichType, // 'deli' or 'pbj'
-        meat, // { id, weightOz, price, slices } or custom
-        cheese, // { id, slices, price } or custom
-        bread, // { id, sandwiches, price } or custom
-        peanutButter, // for PB&J
-        jelly, // for PB&J
+        mode,
+        targetValue,
+        sandwichType,
+        meat,
+        cheese,
+        bread,
+        peanutButter,
+        jelly,
     } = inputs;
 
     // Perform basic calculations first
@@ -156,39 +354,43 @@ async function calculateWithLLM(inputs) {
         calculations = calculatePBJOrder(mode, targetValue, peanutButter, jelly, bread);
     }
 
-    // Now get LLM insights
-    const llmInsights = await getLLMInsights(inputs, calculations);
+    // Verify frontend math if frontend results were provided
+    const verification = verifyFrontendMath(inputs);
+
+    // Get LLM insights (pass verification so LLM can reference it)
+    const llmInsights = await getLLMInsights(inputs, calculations, verification);
 
     return {
         success: true,
         calculations,
         insights: llmInsights,
+        verification: verification,
         timestamp: new Date().toISOString()
     };
 }
 
 /**
- * Calculate deli sandwich order
+ * Calculate deli sandwich order — uses oz-based math to match frontend
  */
 function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
-    const meatSlicesPerSandwich = RECIPE.deli.meatSlicesPerSandwich;
+    // Use meatOzPerSandwich from frontend if provided, else use RECIPE default
+    const meatOzPerSandwich = meat?.meatOzPerSandwich || RECIPE.deli.meatOzPerSandwich;
     const cheeseSlicesPerSandwich = RECIPE.deli.cheeseSlicesPerSandwich;
 
-    // Calculate slices per meat package
-    let meatSlicesPerPkg;
-    if (meat.slices) {
-        meatSlicesPerPkg = meat.slices;
-    } else if (meat.weightOz) {
-        meatSlicesPerPkg = Math.floor(meat.weightOz / RECIPE.deli.avgMeatSliceWeightOz);
+    // Calculate sandwiches per meat package — oz-based (matching frontend)
+    let sandwichesPerMeatPkg;
+    if (meat.weightOz) {
+        // NO Math.floor — match frontend's exact division
+        sandwichesPerMeatPkg = meat.weightOz / meatOzPerSandwich;
+    } else if (meat.slices) {
+        sandwichesPerMeatPkg = meat.slices / RECIPE.deli.meatSlicesPerSandwich;
     }
 
-    const sandwichesPerMeatPkg = Math.floor(meatSlicesPerPkg / meatSlicesPerSandwich);
     const sandwichesPerCheesePkg = Math.floor(cheese.slices / cheeseSlicesPerSandwich);
     const sandwichesPerBreadPkg = bread.sandwiches || 10;
 
-    // Get optimal quantity suggestions based on package sizes
     const packagingSizes = [
-        { name: 'meat', sandwichesPerPkg: sandwichesPerMeatPkg },
+        { name: 'meat', sandwichesPerPkg: Math.floor(sandwichesPerMeatPkg) },
         { name: 'cheese', sandwichesPerPkg: sandwichesPerCheesePkg },
         { name: 'bread', sandwichesPerPkg: sandwichesPerBreadPkg }
     ];
@@ -206,15 +408,11 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
 
         const costPerSandwich = totalCost / targetSandwiches;
 
-        // Calculate actual sandwiches possible (limited by smallest ingredient)
         const maxFromMeat = meatPackages * sandwichesPerMeatPkg;
         const maxFromCheese = cheesePackages * sandwichesPerCheesePkg;
         const maxFromBread = breadPackages * sandwichesPerBreadPkg;
-        const actualMax = Math.min(maxFromMeat, maxFromCheese, maxFromBread);
+        const actualMax = Math.min(Math.floor(maxFromMeat), maxFromCheese, maxFromBread);
 
-        // Calculate waste/extras
-        const extraMeatSlices = (meatPackages * meatSlicesPerPkg) - (targetSandwiches * meatSlicesPerSandwich);
-        const extraCheeseSlices = (cheesePackages * cheese.slices) - (targetSandwiches * cheeseSlicesPerSandwich);
         const extraBreadSandwiches = (breadPackages * sandwichesPerBreadPkg) - targetSandwiches;
 
         const suggestedQuantities = getOptimalQuantities(targetSandwiches, packagingSizes);
@@ -229,8 +427,6 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
             costPerSandwich,
             actualMaxSandwiches: actualMax,
             extras: {
-                meatSlices: extraMeatSlices,
-                cheeseSlices: extraCheeseSlices,
                 breadSandwiches: extraBreadSandwiches
             },
             breakdown: {
@@ -239,26 +435,23 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
                 breadCost: breadPackages * bread.price
             },
             packaging: {
-                sandwichesPerMeatPkg,
+                sandwichesPerMeatPkg: Math.floor(sandwichesPerMeatPkg),
                 sandwichesPerCheesePkg,
                 sandwichesPerBreadPkg
             },
             suggestedQuantities
         };
     } else {
-        // Budget mode - find max sandwiches within budget
+        // Budget mode
         const budget = parseFloat(targetValue);
 
-        // Cost per sandwich from each ingredient
         const meatCostPerSandwich = meat.price / sandwichesPerMeatPkg;
         const cheeseCostPerSandwich = cheese.price / sandwichesPerCheesePkg;
         const breadCostPerSandwich = bread.price / sandwichesPerBreadPkg;
         const totalCostPerSandwich = meatCostPerSandwich + cheeseCostPerSandwich + breadCostPerSandwich;
 
-        // Estimate max sandwiches
         let maxSandwiches = Math.floor(budget / totalCostPerSandwich);
 
-        // Refine by checking actual package costs
         let meatPackages, cheesePackages, breadPackages, totalCost;
         do {
             meatPackages = Math.ceil(maxSandwiches / sandwichesPerMeatPkg);
@@ -290,7 +483,7 @@ function calculateDeliOrder(mode, targetValue, meat, cheese, bread) {
                 breadCost: breadPackages * bread.price
             },
             packaging: {
-                sandwichesPerMeatPkg,
+                sandwichesPerMeatPkg: Math.floor(sandwichesPerMeatPkg),
                 sandwichesPerCheesePkg,
                 sandwichesPerBreadPkg
             },
@@ -348,7 +541,6 @@ function calculatePBJOrder(mode, targetValue, peanutButter, jelly, bread) {
             suggestedQuantities
         };
     } else {
-        // Budget mode for PB&J
         const budget = parseFloat(targetValue);
         const costPerSandwich = ((peanutButter?.price || 3.50) / sandwichesPerPBJar) +
                                 ((jelly?.price || 2.50) / sandwichesPerJellyJar) +
@@ -389,9 +581,9 @@ function calculatePBJOrder(mode, targetValue, peanutButter, jelly, bread) {
 /**
  * Get LLM-powered insights and recommendations
  */
-async function getLLMInsights(inputs, calculations) {
+async function getLLMInsights(inputs, calculations, verification) {
     if (!OPENAI_API_KEY) {
-        return getDefaultInsights(inputs, calculations);
+        return getDefaultInsights(inputs, calculations, verification);
     }
 
     const systemPrompt = `You are a helpful assistant for The Sandwich Project, a nonprofit that coordinates groups making sandwiches for people in need.
@@ -418,11 +610,18 @@ PACKAGING OPTIMIZATION (IMPORTANT):
 - Example: if meat makes 20 sandwiches/pkg and cheese makes 12/pkg, the LCM or a multiple of the larger package is ideal
 - If a nearby quantity uses full packages of ALL ingredients with zero waste, strongly recommend it
 - Single bread loaves make 10-12 sandwiches, double loaves make 20-24
-- Always explain WHY a suggested quantity is better (e.g., "uses exactly 5 full packages of meat and 4 full packages of cheese with nothing left over")
+- Always explain WHY a suggested quantity is better
+
+MATH VERIFICATION:
+You will receive a "verification" section showing automated math checks.
+- If all checks passed, briefly confirm the math is correct in your summary.
+- If any checks FAILED, your "isValid" MUST be false, and you MUST include the discrepancies in your warnings. Be specific: mention exact numbers that don't match and which ingredient is affected.
+- Even if checks pass, do a quick sanity check: does the cost per sandwich seem reasonable? Do the package counts make sense for the number of sandwiches?
 
 Return JSON in this exact format:
 {
   "isValid": true/false,
+  "mathCheckSummary": "All 7 checks passed" or "2 of 7 checks failed: cheese packages insufficient",
   "summary": "One clear sentence about the order",
   "costAssessment": "great" | "good" | "fair" | "high",
   "warnings": ["warning if any issues"],
@@ -431,6 +630,17 @@ Return JSON in this exact format:
   "shoppingTip": "one helpful shopping tip",
   "volunteerEstimate": "X-Y volunteers for Z hours"
 }`;
+
+    // Build verification section for the prompt
+    let verificationSection = '';
+    if (verification && verification.status !== 'skipped') {
+        verificationSection = `
+MATH VERIFICATION (automated):
+Status: ${verification.status.toUpperCase()} (${verification.passedChecks}/${verification.totalChecks} checks passed)
+${verification.checks.map(c => `- ${c.label}: ${c.pass ? 'PASS' : 'FAIL'} — ${c.formula}`).join('\n')}
+${verification.discrepancies.length > 0 ? '\nDISCREPANCIES:\n' + verification.discrepancies.map(d => `- ${d.label}: ${d.message}`).join('\n') : ''}
+`;
+    }
 
     const userPrompt = `Review this sandwich order calculation:
 
@@ -454,8 +664,6 @@ RESULTS:
 - Total cost: $${calculations.totalCost?.toFixed(2)}
 - Cost per sandwich: $${calculations.costPerSandwich?.toFixed(2)}
 ${calculations.extras ? `
-- Extra meat slices: ${calculations.extras.meatSlices}
-- Extra cheese slices: ${calculations.extras.cheeseSlices}
 - Extra bread capacity: ${calculations.extras.breadSandwiches} sandwiches
 ` : ''}
 
@@ -466,7 +674,7 @@ ${calculations.suggestedQuantities && calculations.suggestedQuantities.length > 
 SUGGESTED OPTIMAL QUANTITIES (to minimize waste):
 ${calculations.suggestedQuantities.map(s => `- ${s.quantity} sandwiches: ${s.isZeroWaste ? 'ZERO WASTE - uses full packages of everything!' : `${s.totalWaste} leftover sandwich-equivalents of waste`} (${s.diff > 0 ? '+' : ''}${s.diff} from target)`).join('\n')}
 ` : ''}
-
+${verificationSection}
 Provide helpful insights. If any suggested quantities are close to the target and reduce waste, STRONGLY recommend them in your recommendations. Explain which package sizes drive the suggestion.`;
 
     try {
@@ -489,7 +697,7 @@ Provide helpful insights. If any suggested quantities are close to the target an
 
         if (!response.ok) {
             console.error('OpenAI API error:', response.status);
-            return getDefaultInsights(inputs, calculations);
+            return getDefaultInsights(inputs, calculations, verification);
         }
 
         const data = await response.json();
@@ -503,12 +711,18 @@ Provide helpful insights. If any suggested quantities are close to the target an
             if (jsonMatch) {
                 insights = JSON.parse(jsonMatch[0]);
             } else {
-                return getDefaultInsights(inputs, calculations);
+                return getDefaultInsights(inputs, calculations, verification);
             }
+        }
+
+        // If verification failed but LLM said valid, override
+        if (verification && verification.status === 'fail') {
+            insights.isValid = false;
         }
 
         return {
             isValid: insights.isValid ?? true,
+            mathCheckSummary: insights.mathCheckSummary || null,
             summary: insights.summary || 'Calculation complete',
             costAssessment: insights.costAssessment || 'good',
             warnings: insights.warnings || [],
@@ -521,14 +735,14 @@ Provide helpful insights. If any suggested quantities are close to the target an
         };
     } catch (error) {
         console.error('Error getting LLM insights:', error);
-        return getDefaultInsights(inputs, calculations);
+        return getDefaultInsights(inputs, calculations, verification);
     }
 }
 
 /**
  * Fallback insights when LLM is unavailable
  */
-function getDefaultInsights(inputs, calculations) {
+function getDefaultInsights(inputs, calculations, verification) {
     const totalSandwiches = calculations.targetSandwiches || calculations.maxSandwiches;
     const costPerSandwich = calculations.costPerSandwich;
 
@@ -542,33 +756,47 @@ function getDefaultInsights(inputs, calculations) {
     }
 
     const warnings = [];
+    let isValid = true;
+    let mathCheckSummary = null;
+
+    // Incorporate verification results
+    if (verification && verification.status !== 'skipped') {
+        mathCheckSummary = `${verification.passedChecks}/${verification.totalChecks} math checks passed`;
+        if (verification.failedChecks > 0) {
+            isValid = false;
+            mathCheckSummary += ': ' + verification.discrepancies.map(d => d.label).join(', ') + ' failed';
+            verification.discrepancies.forEach(d => {
+                warnings.push(`Math check failed — ${d.label}: ${d.message}`);
+            });
+        }
+    }
+
     if (totalSandwiches > 300) {
         warnings.push('Large order - consider splitting into multiple shopping trips');
     }
 
     const recommendations = [];
 
-    // Add packaging-optimized quantity suggestions
     if (calculations.suggestedQuantities && calculations.suggestedQuantities.length > 0) {
         const best = calculations.suggestedQuantities[0];
         if (best.isZeroWaste) {
             recommendations.push(
                 `Consider making ${best.quantity} instead of ${totalSandwiches} — this uses full packages of all ingredients with zero waste (${best.diff > 0 ? '+' : ''}${best.diff} sandwiches)`
             );
-        } else if (best.totalWaste < (calculations.extras ? calculations.extras.meatSlices + calculations.extras.cheeseSlices + calculations.extras.breadSandwiches : 999)) {
+        } else if (best.totalWaste < (calculations.extras ? calculations.extras.breadSandwiches : 999)) {
             recommendations.push(
                 `Making ${best.quantity} sandwiches would reduce ingredient waste (${best.diff > 0 ? '+' : ''}${best.diff} from your target)`
             );
         }
     }
 
-    const volunteerHours = Math.ceil(totalSandwiches / 25);
     const volunteerEstimate = totalSandwiches > 50
         ? `${Math.ceil(totalSandwiches / 75)}-${Math.ceil(totalSandwiches / 50)} volunteers for 1.5-2 hours`
         : '2-3 volunteers for about 1 hour';
 
     return {
-        isValid: true,
+        isValid,
+        mathCheckSummary,
         summary: `Order for ${totalSandwiches} ${inputs.sandwichType === 'deli' ? 'deli' : 'PB&J'} sandwiches at $${costPerSandwich.toFixed(2)} each`,
         costAssessment,
         warnings,
@@ -626,5 +854,6 @@ if (typeof exports !== 'undefined') {
     exports.calculateWithLLM = calculateWithLLM;
     exports.calculateDeliOrder = calculateDeliOrder;
     exports.calculatePBJOrder = calculatePBJOrder;
+    exports.verifyFrontendMath = verifyFrontendMath;
     exports.PRODUCT_DATABASE = PRODUCT_DATABASE;
 }

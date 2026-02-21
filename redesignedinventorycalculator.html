@@ -1163,6 +1163,35 @@
             border: 2px solid rgba(251, 173, 63, 0.4);
         }
 
+        .llm-validation.error {
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.2) 0%, rgba(220, 38, 38, 0.15) 100%);
+            border: 2px solid rgba(239, 68, 68, 0.4);
+        }
+        .llm-validation.error .llm-status-icon { color: #ef4444; }
+
+        .math-check-summary {
+            margin-top: 10px;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 500;
+        }
+        .math-check-summary.pass {
+            background: rgba(34, 197, 94, 0.15);
+            border-left: 3px solid #22c55e;
+            color: #bbf7d0;
+        }
+        .math-check-summary.fail {
+            background: rgba(239, 68, 68, 0.15);
+            border-left: 3px solid #ef4444;
+            color: #fecaca;
+        }
+        .math-check-item {
+            font-size: 0.85em;
+            padding: 2px 0;
+            color: rgba(255,255,255,0.85);
+        }
+
         .llm-validation-header {
             display: flex;
             align-items: center;
@@ -4927,7 +4956,7 @@
             validationContainer.innerHTML = `
                 <div class="llm-validation loading">
                     <span class="spinner"></span>
-                    <span>Getting smart insights for your order...</span>
+                    <span>Verifying your order math and getting smart insights...</span>
                 </div>
             `;
             validationContainer.style.display = 'block';
@@ -4937,6 +4966,14 @@
                 const isBudgetMode = result.mode === 'budget';
                 const totalSandwiches = isBudgetMode ? result.maxSandwiches : result.targetSandwiches;
                 const totalCost = isBudgetMode ? result.actualCost : result.totalCost;
+                const meatOzPerSandwich = parseFloat(document.getElementById('meatOzPerSandwich').value) || 2.5;
+
+                // Compute per-package sandwich counts (matching calculateQuantities math)
+                const meatSandwichesPerPkg = meatPkg.weightOz
+                    ? meatPkg.weightOz / meatOzPerSandwich
+                    : meatPkg.slices / 3;
+                const cheeseSandwichesPerPkg = cheesePkg.slices / 2;
+                const breadSandwichesPerPkg = breadPkg.sandwiches;
 
                 const response = await fetch(CALCULATE_API_ENDPOINT, {
                     method: 'POST',
@@ -4945,9 +4982,22 @@
                         mode: isBudgetMode ? 'budget' : 'sandwiches',
                         targetValue: isBudgetMode ? result.budget : totalSandwiches,
                         sandwichType: 'deli',
-                        meat: meatPkg,
+                        meat: { ...meatPkg, meatOzPerSandwich },
                         cheese: cheesePkg,
-                        bread: breadPkg
+                        bread: breadPkg,
+                        frontendResults: {
+                            totalSandwiches: totalSandwiches,
+                            totalCost: totalCost,
+                            costPerSandwich: result.costPerSandwich,
+                            quantities: result.quantities,
+                            mathDetails: {
+                                meatOzPerSandwich: meatOzPerSandwich,
+                                cheeseSlicesPerSandwich: 2,
+                                meatSandwichesPerPkg: meatSandwichesPerPkg,
+                                cheeseSandwichesPerPkg: cheeseSandwichesPerPkg,
+                                breadSandwichesPerPkg: breadSandwichesPerPkg
+                            }
+                        }
                     })
                 });
 
@@ -4956,31 +5006,53 @@
                 const apiResult = await response.json();
 
                 if (apiResult.success && apiResult.insights) {
-                    displayLLMInsights(apiResult.insights);
+                    displayLLMInsights(apiResult.insights, apiResult.verification);
                 } else {
-                    // Silently fail - don't show error for insights
                     validationContainer.style.display = 'none';
                 }
             } catch (error) {
                 console.error('LLM insights error:', error);
-                // Silently fail - the calculation still works, insights are optional
                 validationContainer.style.display = 'none';
             }
         }
 
-        // Display LLM-powered insights
-        function displayLLMInsights(insights) {
+        // Display LLM-powered insights with optional math verification
+        function displayLLMInsights(insights, verification) {
             const container = document.getElementById('llmValidation');
             if (!container) return;
 
-            // Determine status class based on cost assessment
+            // Determine status class based on BOTH cost assessment AND math validity
             let statusClass = 'valid';
             let statusIcon = '✓';
-            if (insights.costAssessment === 'high') {
+
+            if (insights.isValid === false || (verification && verification.status === 'fail')) {
+                statusClass = 'error';
+                statusIcon = '✗';
+            } else if (insights.costAssessment === 'high') {
                 statusClass = 'warning';
                 statusIcon = '⚠';
             } else if (insights.costAssessment === 'great') {
                 statusIcon = '🌟';
+            }
+
+            // Build math check HTML
+            let mathCheckHtml = '';
+            if (verification && verification.status !== 'skipped') {
+                const summaryClass = verification.status === 'pass' ? 'pass' : 'fail';
+                const summaryIcon = verification.status === 'pass' ? '✅' : '⚠️';
+                mathCheckHtml = `
+                    <div class="math-check-summary ${summaryClass}">
+                        <strong>${summaryIcon} Math Check:</strong> ${verification.passedChecks}/${verification.totalChecks} checks passed
+                        ${insights.mathCheckSummary ? ` — ${insights.mathCheckSummary}` : ''}
+                        ${verification.failedChecks > 0 ? `
+                            <div style="margin-top: 6px;">
+                                ${verification.discrepancies.map(d =>
+                                    `<div class="math-check-item">❌ ${d.label}: expected ${d.expectedValue}, got ${d.frontendValue}</div>`
+                                ).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
             }
 
             // Build warnings HTML
@@ -5050,6 +5122,7 @@
                         <span class="llm-message">${insights.summary}</span>
                         <span style="margin-left: auto; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; background: ${costBadge.bg}; color: ${costBadge.text};">${costBadge.label}</span>
                     </div>
+                    ${mathCheckHtml}
                     ${warningsHtml}
                     ${wasteHtml}
                     ${recommendationsHtml}
@@ -6434,6 +6507,11 @@
                     pbJars: pbJarsNeeded,
                     jellyJars: jellyJarsNeeded,
                     breadLoaves: breadLoavesNeeded
+                },
+                breadDetails: {
+                    usableBreadSlicesPerLoaf: usableBreadSlicesPerLoaf,
+                    breadPrice: breadPrice,
+                    breadName: pbjBreadName
                 }
             });
         }
@@ -6447,12 +6525,17 @@
             validationContainer.innerHTML = `
                 <div class="llm-validation loading">
                     <span class="spinner"></span>
-                    <span>Getting smart insights for your PB&J order...</span>
+                    <span>Verifying your PB&J order math and getting smart insights...</span>
                 </div>
             `;
             validationContainer.style.display = 'block';
 
             try {
+                const pbServings = Math.floor(pbjResult.pbInfo.tbspPerJar / 3);
+                const jellyServings = Math.floor(pbjResult.jellyInfo.tbspPerJar / 1.5);
+                const bd = pbjResult.breadDetails || {};
+                const sandwichesPerLoaf = Math.floor((bd.usableBreadSlicesPerLoaf || 20) / 2);
+
                 const response = await fetch(CALCULATE_API_ENDPOINT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -6462,18 +6545,32 @@
                         sandwichType: 'pbj',
                         peanutButter: {
                             price: pbjResult.pbInfo.price,
-                            servings: Math.floor(pbjResult.pbInfo.tbspPerJar / 3), // 3 tbsp per sandwich
+                            servings: pbServings,
                             name: pbjResult.pbInfo.description
                         },
                         jelly: {
                             price: pbjResult.jellyInfo.price,
-                            servings: Math.floor(pbjResult.jellyInfo.tbspPerJar / 1.5), // 1.5 tbsp per sandwich
+                            servings: jellyServings,
                             name: pbjResult.jellyInfo.description
                         },
                         bread: {
-                            sandwiches: 10,
-                            price: 2.70,
-                            name: 'Bread'
+                            sandwiches: sandwichesPerLoaf,
+                            price: bd.breadPrice || 1.48,
+                            name: bd.breadName || 'Bread'
+                        },
+                        frontendResults: {
+                            totalSandwiches: pbjResult.pbjCount,
+                            totalCost: pbjResult.totalCost,
+                            costPerSandwich: pbjResult.costPerSandwich,
+                            quantities: pbjResult.quantities,
+                            mathDetails: {
+                                pbTbspPerSandwich: 3,
+                                jellyTbspPerSandwich: 1.5,
+                                pbTbspPerJar: pbjResult.pbInfo.tbspPerJar,
+                                jellyTbspPerJar: pbjResult.jellyInfo.tbspPerJar,
+                                usableBreadSlicesPerLoaf: bd.usableBreadSlicesPerLoaf || 20,
+                                breadSlicesPerSandwich: 2
+                            }
                         }
                     })
                 });
@@ -6483,7 +6580,7 @@
                 const apiResult = await response.json();
 
                 if (apiResult.success && apiResult.insights) {
-                    displayPBJLLMInsights(apiResult.insights);
+                    displayPBJLLMInsights(apiResult.insights, apiResult.verification);
                 } else {
                     validationContainer.style.display = 'none';
                 }
@@ -6494,18 +6591,42 @@
         }
 
         // Display LLM insights for PB&J
-        function displayPBJLLMInsights(insights) {
+        function displayPBJLLMInsights(insights, verification) {
             const container = document.getElementById('pbjLlmValidation');
             if (!container) return;
 
-            // Use the same display function but target PB&J container
+            // Determine status class based on BOTH cost assessment AND math validity
             let statusClass = 'valid';
             let statusIcon = '✓';
-            if (insights.costAssessment === 'high') {
+
+            if (insights.isValid === false || (verification && verification.status === 'fail')) {
+                statusClass = 'error';
+                statusIcon = '✗';
+            } else if (insights.costAssessment === 'high') {
                 statusClass = 'warning';
                 statusIcon = '⚠';
             } else if (insights.costAssessment === 'great') {
                 statusIcon = '🌟';
+            }
+
+            // Build math check HTML
+            let mathCheckHtml = '';
+            if (verification && verification.status !== 'skipped') {
+                const summaryClass = verification.status === 'pass' ? 'pass' : 'fail';
+                const summaryIcon = verification.status === 'pass' ? '✅' : '⚠️';
+                mathCheckHtml = `
+                    <div class="math-check-summary ${summaryClass}">
+                        <strong>${summaryIcon} Math Check:</strong> ${verification.passedChecks}/${verification.totalChecks} checks passed
+                        ${insights.mathCheckSummary ? ` — ${insights.mathCheckSummary}` : ''}
+                        ${verification.failedChecks > 0 ? `
+                            <div style="margin-top: 6px;">
+                                ${verification.discrepancies.map(d =>
+                                    `<div class="math-check-item">❌ ${d.label}: expected ${d.expectedValue}, got ${d.frontendValue}</div>`
+                                ).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
             }
 
             let warningsHtml = '';
@@ -6560,6 +6681,7 @@
                         <span class="llm-message">${insights.summary}</span>
                         <span style="margin-left: auto; padding: 4px 12px; border-radius: 12px; font-size: 0.85em; font-weight: 600; background: ${costBadge.bg}; color: ${costBadge.text};">${costBadge.label}</span>
                     </div>
+                    ${mathCheckHtml}
                     ${warningsHtml}
                     ${recommendationsHtml}
                     ${shoppingHtml}

@@ -2155,8 +2155,8 @@
                     cheeseCost = cheesePackages * cheesePrice;
                     breadCost = breadPackages * breadPrice;
                     bagCost = bagPackages * bagPrice;
-                    totalCost = Math.round(meatCost + cheeseCost + breadCost + bagCost);
-                    
+                    totalCost = Math.round((meatCost + cheeseCost + breadCost + bagCost) * 100) / 100;
+
                     if (totalCost <= budget) {
                         bestSandwichCount = mid;
                         low = mid + 1;
