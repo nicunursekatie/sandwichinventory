@@ -2899,6 +2899,12 @@
         <div class="section" id="calculator">
             <h2 id="calculator-heading">🧮 Sandwich Calculator</h2>
 
+            <div style="background: rgba(255,255,255,0.92); border-left: 4px solid #FBAD3F; border-radius: 8px; padding: 16px 20px; margin-bottom: 20px; font-size: 0.95em; color: #334155; line-height: 1.6;">
+                <p style="margin: 0 0 8px 0; font-weight: 600; color: #1a4d66;">Please use at least 2 oz of meat on every sandwich.</p>
+                <p style="margin: 0 0 8px 0;">Your package label often says how many ounces or grams are in each serving size.</p>
+                <p style="margin: 0;">You can select <strong>Custom</strong> below to enter those specifics from your packaging if your brand isn't in this calculator already.</p>
+            </div>
+
             <!-- Sandwich Type Toggle -->
             <div class="sandwich-type-toggle" role="tablist" aria-label="Sandwich type">
                 <button class="sandwich-type-btn active" role="tab" aria-selected="true" aria-controls="deli-calculator-panel" id="deli-tab" onclick="switchSandwichType('deli')">
@@ -2948,10 +2954,6 @@
                 <div id="livePriceStatusMain" style="display: none; padding: 12px; margin-bottom: 15px; border-radius: 8px; text-align: center; font-size: 0.9em;"></div>
                     
                 <div class="calc-form">
-                    <div style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 12px 14px; margin-bottom: 16px; font-size: 0.9em; line-height: 1.5; color: rgba(255,255,255,0.9);">
-                        Please use at least <strong>2 oz of meat</strong> on every sandwich. Your package label often says how many ounces or grams are in each serving size. You can select <strong>"Custom"</strong> in the meat section to enter those specifics from your packaging if your brand isn't in this calculator already.
-                    </div>
-
                     <!-- Target Input (sandwiches or budget) -->
                     <div class="calc-input-group" id="targetInputGroup">
                         <label for="targetValue" id="targetLabel">How many sandwiches do you need?</label>
