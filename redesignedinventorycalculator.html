@@ -3003,7 +3003,13 @@
                                 <span style="font-size: 0.9em; color: rgba(255,255,255,0.8);">or enter manually:</span>
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                                <input type="number" id="meatWeightOz" placeholder="Weight (oz)" step="0.1" min="1" oninput="validateInputs()" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
+                                <div style="display: flex; gap: 6px;">
+                                    <input type="number" id="meatWeightOz" placeholder="Weight (oz)" step="0.1" min="1" oninput="validateInputs()" style="flex: 1; padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
+                                    <select id="meatWeightUnit" onchange="updateMeatWeightPlaceholder()" style="padding: 10px 6px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); font-weight: 600; cursor: pointer;">
+                                        <option value="oz" selected>oz</option>
+                                        <option value="g">g</option>
+                                    </select>
+                                </div>
                                 <input type="number" id="meatPrice" placeholder="Price ($)" step="0.01" min="0" oninput="validateInputs()" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
                             </div>
                         </div>
@@ -3580,198 +3586,8 @@
     </div>
     <div id="livePriceStatus" style="display: none; padding: 15px; margin-bottom: 20px; border-radius: 10px; text-align: center;"></div>
 
-    <!-- Meat Section -->
-    <div class="price-category">
-        <div class="category-label">MEAT</div>
-        <div class="price-grid">
-            <div class="price-card card-meat">
-                <div class="product-emoji">🦃</div>
-                <div class="product-title">Kroger Turkey Family Size</div>
-                <div class="product-size">1 lb • 30-32 slices</div>
-                <div class="product-price">$4.39</div>
-                <div class="price-note">~$0.14/slice</div>
-            </div>
-
-            <div class="price-card card-meat">
-                <div class="product-emoji">🐷</div>
-                <div class="product-title">Kirkland Ham</div>
-                <div class="product-size">2-pack • 48 slices</div>
-                <div class="product-price">$9.89</div>
-                <div class="price-note">~$0.21/slice</div>
-            </div>
-
-            <div class="price-card card-meat">
-                <div class="product-emoji">🦃</div>
-                <div class="product-title">Publix Turkey Breast</div>
-                <div class="product-size">16 oz • 32 slices</div>
-                <div class="product-price">$7.07</div>
-                <div class="price-note">~$0.22/slice</div>
-            </div>
-
-            <div class="price-card card-meat">
-                <div class="product-emoji">🦃</div>
-                <div class="product-title">Kroger Turkey Thin Sliced</div>
-                <div class="product-size">9 oz • 18 slices</div>
-                <div class="product-price">$3.99</div>
-                <div class="price-note">~$0.22/slice</div>
-            </div>
-        </div>
-
-        <details style="margin-top: 20px;">
-            <summary style="cursor: pointer; font-weight: 600; color: #1a4d66; font-size: 1.1em; padding: 12px; background: rgba(251,173,63,0.15); border-radius: 8px; margin-bottom: 15px;">
-                ➕ Show More Meat Options
-            </summary>
-            <div class="price-grid" style="margin-top: 15px;">
-                <div class="price-card card-meat">
-                    <div class="product-emoji">🦃</div>
-                    <div class="product-title">Land O'Frost Premium</div>
-                    <div class="product-size">16 oz • 32 slices</div>
-                    <div class="product-price">$9.53</div>
-                    <div class="price-note">~$0.30/slice</div>
-                </div>
-
-                <div class="price-card card-meat">
-                    <div class="product-emoji">🦃</div>
-                    <div class="product-title">Hillshire Farm Ultra Thin</div>
-                    <div class="product-size">9 oz • 18 slices</div>
-                    <div class="product-price">$6.07</div>
-                    <div class="price-note">~$0.34/slice</div>
-                </div>
-
-                <div class="price-card card-meat">
-                    <div class="product-emoji">🦃</div>
-                    <div class="product-title">Kirkland Turkey</div>
-                    <div class="product-size">2-pack • 40 slices</div>
-                    <div class="product-price">$13.99</div>
-                    <div class="price-note">~$0.35/slice</div>
-                </div>
-
-                <div class="price-card card-meat">
-                    <div class="product-emoji">🦃</div>
-                    <div class="product-title">Kroger Private Selection®</div>
-                    <div class="product-size">8 oz • 11-12 slices</div>
-                    <div class="product-price">$6.49</div>
-                    <div class="price-note">~$0.56/slice</div>
-                </div>
-            </div>
-        </details>
-    </div>
-
-    <!-- Cheese Section -->
-    <div class="price-category">
-        <div class="category-label">AMERICAN CHEESE (Deli Style)</div>
-        <div class="price-grid">
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Great Value American</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$3.98</div>
-                <div class="price-note">~$0.17/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Kroger Deli American</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$4.29</div>
-                <div class="price-note">~$0.18/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Sargento American</div>
-                <div class="product-size">22 slices</div>
-                <div class="product-price">$4.99</div>
-                <div class="price-note">~$0.23/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Land O'Lakes American</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$6.49</div>
-                <div class="price-note">~$0.27/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Boar's Head American</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$8.99</div>
-                <div class="price-note">~$0.37/slice</div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Bread Section -->
-    <div class="price-category">
-        <div class="category-label">BREAD</div>
-        <div class="price-grid">
-            <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
-                <div class="product-title">Great Value White</div>
-                <div class="product-size">20 oz • ~11 sandwiches</div>
-                <div class="product-price">$1.48</div>
-                <div class="price-note">~$0.13/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
-                <div class="product-title">Kroger White Sandwich</div>
-                <div class="product-size">20 oz • ~11 sandwiches</div>
-                <div class="product-price">~$1.50</div>
-                <div class="price-note">~$0.14/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
-                <div class="product-title">Wonder Bread Classic White</div>
-                <div class="product-size">20 oz • ~10 sandwiches</div>
-                <div class="product-price">~$3.63</div>
-                <div class="price-note">~$0.36/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
-                <div class="product-title">Wonder Bread Giant White</div>
-                <div class="product-size">24 oz • ~11 sandwiches</div>
-                <div class="product-price">~$4.64</div>
-                <div class="price-note">~$0.42/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
-                <div class="product-title">Sara Lee Butter Bread</div>
-                <div class="product-size">20 oz • ~10 sandwiches</div>
-                <div class="product-price">~$3.14</div>
-                <div class="price-note">~$0.31/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
-                <div class="product-title">Sara Lee Classic White</div>
-                <div class="product-size">20 oz • ~10 sandwiches</div>
-                <div class="product-price">~$3.99</div>
-                <div class="price-note">~$0.40/sandwich</div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Supplies Section -->
-    <div class="price-category">
-        <div class="category-label">SUPPLIES</div>
-        <div class="price-grid">
-            <div class="price-card card-supplies">
-                <div class="product-emoji">📦</div>
-                <div class="product-title">Sandwich Bags</div>
-                <div class="product-size">480 count</div>
-                <div class="product-price">$7.99</div>
-                <div class="price-note">~$0.02/bag</div>
-            </div>
-        </div>
-    </div>
+    <!-- Auto-generated from packageData -->
+    <div id="pricing-cards-container"></div>
 
     <div class="cheese-guide">
         <div class="cheese-do">
@@ -4230,6 +4046,9 @@
 
         // Initialize mode card selection on page load
         document.addEventListener('DOMContentLoaded', function() {
+            // Generate pricing cards from packageData
+            renderPricingCards();
+
             // Set initial selected state on mode cards
             updateModeCardSelection();
 
@@ -4627,16 +4446,100 @@
         }
 
         // Update price display cards with new prices
+        function renderPricingCards() {
+            const container = document.getElementById('pricing-cards-container');
+            if (!container) return;
+
+            const typeEmoji = { turkey: '🦃', ham: '🐷', chicken: '🐔' };
+
+            // Build meat cards sorted by price per oz
+            const meatEntries = Object.entries(packageData.meat).map(([key, pkg]) => {
+                const ozPerSandwich = 2.5;
+                const perOz = pkg.weightOz ? (pkg.price / pkg.weightOz) : null;
+                const perSandwich = pkg.weightOz
+                    ? (pkg.price / (pkg.weightOz / ozPerSandwich))
+                    : (pkg.price / (pkg.slices / 3));
+                const sizeText = pkg.weightOz ? `${pkg.weightOz} oz` : `${pkg.slices} slices`;
+                return { key, pkg, perSandwich, perOz, sizeText, emoji: typeEmoji[pkg.type] || '🥩' };
+            }).sort((a, b) => a.perSandwich - b.perSandwich);
+
+            const meatCards = meatEntries.map(m =>
+                `<div class="price-card card-meat">
+                    <div class="product-emoji">${m.emoji}</div>
+                    <div class="product-title">${m.pkg.name}</div>
+                    <div class="product-size">${m.sizeText}</div>
+                    <div class="product-price">$${m.pkg.price.toFixed(2)}</div>
+                    <div class="price-note">~$${m.perSandwich.toFixed(2)}/sandwich</div>
+                </div>`
+            ).join('');
+
+            // Build cheese cards sorted by price per slice
+            const cheeseEntries = Object.entries(packageData.cheese).map(([key, pkg]) => {
+                const perSlice = pkg.price / pkg.slices;
+                return { key, pkg, perSlice };
+            }).sort((a, b) => a.perSlice - b.perSlice);
+
+            const cheeseCards = cheeseEntries.map(c =>
+                `<div class="price-card card-cheese">
+                    <div class="product-emoji">🧀</div>
+                    <div class="product-title">${c.pkg.name}</div>
+                    <div class="product-size">${c.pkg.slices} slices</div>
+                    <div class="product-price">$${c.pkg.price.toFixed(2)}</div>
+                    <div class="price-note">~$${c.perSlice.toFixed(2)}/slice</div>
+                </div>`
+            ).join('');
+
+            // Build bread cards sorted by price per sandwich
+            const breadEntries = Object.entries(packageData.bread).map(([key, pkg]) => {
+                const perSandwich = pkg.price / pkg.sandwiches;
+                return { key, pkg, perSandwich };
+            }).sort((a, b) => a.perSandwich - b.perSandwich);
+
+            const breadCards = breadEntries.map(b =>
+                `<div class="price-card card-bread">
+                    <div class="product-emoji">🍞</div>
+                    <div class="product-title">${b.pkg.name}</div>
+                    <div class="product-size">~${b.pkg.sandwiches} sandwiches</div>
+                    <div class="product-price">$${b.pkg.price.toFixed(2)}</div>
+                    <div class="price-note">~$${b.perSandwich.toFixed(2)}/sandwich</div>
+                </div>`
+            ).join('');
+
+            container.innerHTML = `
+                <div class="price-category">
+                    <div class="category-label">MEAT</div>
+                    <div class="price-grid">${meatCards}</div>
+                </div>
+                <div class="price-category">
+                    <div class="category-label">AMERICAN CHEESE (Deli Style)</div>
+                    <div class="price-grid">${cheeseCards}</div>
+                </div>
+                <div class="price-category">
+                    <div class="category-label">BREAD</div>
+                    <div class="price-grid">${breadCards}</div>
+                </div>
+                <div class="price-category">
+                    <div class="category-label">SUPPLIES</div>
+                    <div class="price-grid">
+                        <div class="price-card card-supplies">
+                            <div class="product-emoji">📦</div>
+                            <div class="product-title">Sandwich Bags</div>
+                            <div class="product-size">480 count</div>
+                            <div class="product-price">$7.99</div>
+                            <div class="price-note">~$0.02/bag</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
         function updatePriceDisplays(prices) {
-            // This function updates the visible price cards in the UI
-            // For each price received, find and update the corresponding card
+            // Update the dropdown options
             for (const [key, priceInfo] of Object.entries(prices)) {
                 if (priceInfo.price) {
-                    // Update the dropdown options
                     const selects = document.querySelectorAll('select option');
                     selects.forEach(option => {
                         if (option.value === key) {
-                            // Parse and update the price in the option text
                             const currentText = option.textContent;
                             const priceMatch = currentText.match(/\$[\d.]+/);
                             if (priceMatch) {
@@ -4646,6 +4549,8 @@
                     });
                 }
             }
+            // Re-render pricing cards from updated packageData
+            renderPricingCards();
         }
         const API_ENDPOINT = API_BASE + '/api/parse-package';
 
@@ -4687,6 +4592,8 @@
                     // Populate fields based on extracted data
                     if (data.weight_oz !== null) {
                         document.getElementById('meatWeightOz').value = data.weight_oz;
+                        document.getElementById('meatWeightUnit').value = 'oz';
+                        updateMeatWeightPlaceholder();
                     }
                     if (data.price_usd !== null) {
                         document.getElementById('meatPrice').value = data.price_usd;
@@ -5135,12 +5042,22 @@
         }
 
         // Modular helper functions
+        function updateMeatWeightPlaceholder() {
+            const unit = document.getElementById('meatWeightUnit').value;
+            const input = document.getElementById('meatWeightOz');
+            input.placeholder = unit === 'g' ? 'Weight (g)' : 'Weight (oz)';
+        }
+
         function getMeatPackageInfo() {
             if (selectedPackages.meat) {
                 return selectedPackages.meat;
             }
-            const weightOz = parseFloat(document.getElementById('meatWeightOz').value);
+            let weightOz = parseFloat(document.getElementById('meatWeightOz').value);
             const price = parseFloat(document.getElementById('meatPrice').value);
+            const unit = document.getElementById('meatWeightUnit').value;
+            if (unit === 'g' && weightOz) {
+                weightOz = Math.round((weightOz / 28.3495) * 10) / 10;
+            }
             if (weightOz && price) {
                 return { weightOz: weightOz, price: price, name: 'Custom Meat' };
             }

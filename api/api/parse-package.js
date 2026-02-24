@@ -35,7 +35,7 @@ async function extractPackageInfo(text, ingredientType) {
     const systemPrompt = `You are a helpful assistant that extracts structured information from product descriptions for a sandwich planning calculator.
 
 Extract the following information from the product description:
-- For MEAT: weight in ounces (weight_oz) and price in USD (price_usd). If weight is given in pounds, convert to ounces (1 lb = 16 oz).
+- For MEAT: weight in ounces (weight_oz) and price in USD (price_usd). If weight is given in pounds, convert to ounces (1 lb = 16 oz). If weight is given in grams, convert to ounces (1 oz = 28.3495 g). Round to 1 decimal place.
 - For CHEESE: number of slices (slices) and price in USD (price_usd).
 - For BREAD: number of sandwiches per package (sandwiches_per_package) and price in USD (price_usd). A standard loaf typically makes 10 sandwiches (20 slices minus 2 heels).
 

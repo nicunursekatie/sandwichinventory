@@ -1102,7 +1102,7 @@
 
                     <div class="calc-input-group">
                         <label>Meat type</label>
-                        <select id="meatType">
+                        <select id="meatType" onchange="handleMeatTypeChange()">
                             <option value="">Choose your meat</option>
                             <optgroup label="Popular Options">
                                 <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices each / 96 total, $9.89) - $0.10/slice</option>
@@ -1119,7 +1119,20 @@
                                 <option value="oscar-mayer-chicken-blackened">🐔 Oscar Mayer Blackened Chicken (8 oz / 11-12 slices, $4.49) - $0.39/slice</option>
                                 <option value="oscar-mayer-chicken-rotisserie">🐔 Oscar Mayer Rotisserie Chicken (16 oz / 32 slices, $7.99) - $0.25/slice</option>
                             </optgroup>
+                            <optgroup label="Custom">
+                                <option value="custom">✏️ Enter custom meat package...</option>
+                            </optgroup>
                         </select>
+                        <div id="meatCustomEntry" style="display: none; margin-top: 10px;">
+                            <div style="display: flex; gap: 8px; margin-bottom: 8px;">
+                                <input type="number" id="customMeatWeight" placeholder="Weight (oz)" step="0.1" min="1" style="flex: 1; padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
+                                <select id="customMeatUnit" onchange="updateCustomMeatPlaceholder()" style="padding: 10px 6px; border-radius: 6px; border: 1px solid #ddd; font-weight: 600; cursor: pointer;">
+                                    <option value="oz" selected>oz</option>
+                                    <option value="g">g</option>
+                                </select>
+                            </div>
+                            <input type="number" id="customMeatPrice" placeholder="Price ($)" step="0.01" min="0" style="width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ddd;">
+                        </div>
                     </div>
                     
                     <div class="calc-input-group">
@@ -1933,6 +1946,26 @@
             return name.replace(/^[^\w]*/, '').replace(/\s*\(.*$/, '').replace(/\s*-\s*\$[\d.]+\/slice$/, '').trim();
         }
 
+        function handleMeatTypeChange() {
+            const meatType = document.getElementById('meatType').value;
+            const customEntry = document.getElementById('meatCustomEntry');
+            customEntry.style.display = meatType === 'custom' ? 'block' : 'none';
+        }
+
+        function updateCustomMeatPlaceholder() {
+            const unit = document.getElementById('customMeatUnit').value;
+            document.getElementById('customMeatWeight').placeholder = unit === 'g' ? 'Weight (g)' : 'Weight (oz)';
+        }
+
+        function getCustomMeatWeightOz() {
+            let weight = parseFloat(document.getElementById('customMeatWeight').value);
+            const unit = document.getElementById('customMeatUnit').value;
+            if (unit === 'g' && weight) {
+                weight = Math.round((weight / 28.3495) * 10) / 10;
+            }
+            return weight;
+        }
+
         function calculateNeeds() {
             const bySandwiches = document.getElementById('planBySandwiches').checked;
             let sandwichCount;
@@ -1942,10 +1975,10 @@
             const meatType = meatSelect.value;
             const cheeseType = cheeseSelect.value;
             const breadType = breadSelect.value;
-            const meatName = meatSelect.options[meatSelect.selectedIndex].text;
+            const meatName = meatType === 'custom' ? 'Custom Meat' : meatSelect.options[meatSelect.selectedIndex].text;
             const cheeseName = cheeseSelect.options[cheeseSelect.selectedIndex].text;
             const breadName = breadSelect.options[breadSelect.selectedIndex].text;
-            const meatGridName = cleanName(meatName);
+            const meatGridName = meatType === 'custom' ? 'Custom Meat' : cleanName(meatName);
             const cheeseGridName = cleanName(cheeseName);
             const breadGridName = cleanName(breadName);
             const meatOzPerSandwich = parseFloat(document.getElementById('meatAmount').value);
@@ -2010,6 +2043,15 @@
                     meatWeightOz = 16;
                     meatPrice = 7.99;
                     meatDescription = '16 oz packages';
+                    break;
+                case 'custom':
+                    meatWeightOz = getCustomMeatWeightOz();
+                    meatPrice = parseFloat(document.getElementById('customMeatPrice').value);
+                    if (!meatWeightOz || !meatPrice) {
+                        alert('Please enter both weight and price for your custom meat package');
+                        return;
+                    }
+                    meatDescription = meatWeightOz + ' oz packages (custom)';
                     break;
                 default:
                     meatWeightOz = 40;
@@ -2409,7 +2451,7 @@
             const cheeseType = document.getElementById('cheeseType');
             const breadType = document.getElementById('breadType');
             
-            const meatText = meatType.options[meatType.selectedIndex].text;
+            const meatText = meatType.value === 'custom' ? 'Custom Meat' : meatType.options[meatType.selectedIndex].text;
             const cheeseText = cheeseType.options[cheeseType.selectedIndex].text;
             const breadText = breadType.options[breadType.selectedIndex].text;
             
@@ -2462,11 +2504,15 @@
                     meatWeightOz = 32;
                     meatPrice = 7.99;
                     break;
+                case 'custom':
+                    meatWeightOz = getCustomMeatWeightOz();
+                    meatPrice = parseFloat(document.getElementById('customMeatPrice').value) || 0;
+                    break;
                 default:
                     meatWeightOz = 80;
                     meatPrice = 13.99;
             }
-            
+
             let cheesePerPackage, cheesePrice;
             switch(cheeseType.value) {
                 // American Cheese options
