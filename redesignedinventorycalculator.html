@@ -2959,7 +2959,7 @@
                     <div class="calc-input-group">
                         <label>Meat</label>
                         <div style="background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.25); border-radius: 8px; padding: 12px 14px; margin-bottom: 12px; font-size: 0.9em; line-height: 1.5; color: rgba(255,255,255,0.9);">
-                            We want at least <strong>2 oz of meat</strong> on every sandwich. Check your package label for the serving size — it tells you how many ounces per serving. Select <strong>"Custom"</strong> below to enter your specific package's weight and price, then adjust <strong>"Meat per sandwich"</strong> in advanced settings to match your package's serving size.
+                            Please use at least <strong>2 oz of meat</strong> on every sandwich. Your package label often says how many ounces or grams are in each serving size. You can select <strong>"Custom"</strong> below to enter those specifics from your packaging if your brand isn't in this calculator already.
                         </div>
 
                         <!-- Meat Type Tabs -->
@@ -3023,8 +3023,25 @@
                                 <strong>Selected:</strong> <span id="meatInfoText">-</span>
                             </div>
                         </div>
+
+                        <!-- Meat amount per sandwich -->
+                        <div style="margin-top: 12px;">
+                            <label style="font-size: 0.9em; color: rgba(255,255,255,0.9); margin-bottom: 6px; display: block;">Meat per sandwich</label>
+                            <div style="display: flex; gap: 8px;">
+                                <button type="button" class="meat-amount-btn" data-oz="2" onclick="selectMeatAmount(2)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                    2 oz
+                                </button>
+                                <button type="button" class="meat-amount-btn selected" data-oz="2.5" onclick="selectMeatAmount(2.5)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #FBAD3F; background: rgba(251,173,63,0.3); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                    2.5 oz
+                                </button>
+                                <button type="button" class="meat-amount-btn" data-oz="3" onclick="selectMeatAmount(3)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                    3 oz
+                                </button>
+                            </div>
+                            <input type="hidden" id="meatOzPerSandwich" value="2.5">
+                        </div>
                     </div>
-            
+
                     <!-- Cheese Selection -->
                         <div class="calc-input-group">
                         <label for="cheeseSelection">Cheese</label>
@@ -3096,11 +3113,6 @@
                     <details style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
                         <summary style="cursor: pointer; font-weight: 600; color: rgba(255,255,255,0.95); font-size: 1em; margin-bottom: 10px;">⚙️ Advanced Options & Custom Package Settings</summary>
                         <div style="padding-top: 15px; display: flex; flex-direction: column; gap: 15px;">
-                                <div class="calc-input-group">
-                                <label for="meatOzPerSandwich">Meat per sandwich (oz)</label>
-                                <input type="number" id="meatOzPerSandwich" value="2.5" min="2" max="3" step="0.1" style="max-width: 200px;">
-                                <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 4px;">Default: 2.5 oz (adjust if using thicker/thinner slices or non-standard items)</span>
-                                </div>
                                 <div class="calc-input-group">
                                 <label for="breadUsableSlices">Bread usable slices per loaf</label>
                                 <input type="number" id="breadUsableSlices" value="20" min="10" max="26" style="max-width: 200px;">
@@ -4247,6 +4259,16 @@
 
             validateInputs();
             announceToScreenReader(`Showing ${type} options`);
+        }
+
+        function selectMeatAmount(oz) {
+            document.getElementById('meatOzPerSandwich').value = oz;
+            document.querySelectorAll('.meat-amount-btn').forEach(btn => {
+                const isSelected = parseFloat(btn.dataset.oz) === oz;
+                btn.style.border = isSelected ? '2px solid #FBAD3F' : '2px solid rgba(255,255,255,0.3)';
+                btn.style.background = isSelected ? 'rgba(251,173,63,0.3)' : 'rgba(255,255,255,0.15)';
+                btn.classList.toggle('selected', isSelected);
+            });
         }
 
         // Handle meat selection
