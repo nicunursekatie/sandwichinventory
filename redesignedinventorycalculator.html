@@ -4392,8 +4392,9 @@
             if (!container) return;
 
             const typeEmoji = { turkey: '🦃', ham: '🐷', chicken: '🐔' };
+            const typeLabel = { turkey: 'Turkey', ham: 'Ham', chicken: 'Chicken' };
 
-            // Build meat cards sorted by price per oz
+            // Build meat cards grouped by type, sorted by price per sandwich within each group
             const meatEntries = Object.entries(packageData.meat).map(([key, pkg]) => {
                 const ozPerSandwich = 2.5;
                 const perOz = pkg.weightOz ? (pkg.price / pkg.weightOz) : null;
@@ -4401,18 +4402,33 @@
                     ? (pkg.price / (pkg.weightOz / ozPerSandwich))
                     : (pkg.price / (pkg.slices / 3));
                 const sizeText = pkg.weightOz ? `${pkg.weightOz} oz` : `${pkg.slices} slices`;
-                return { key, pkg, perSandwich, perOz, sizeText, emoji: typeEmoji[pkg.type] || '🥩' };
-            }).sort((a, b) => a.perSandwich - b.perSandwich);
+                return { key, pkg, perSandwich, perOz, sizeText, emoji: typeEmoji[pkg.type] || '🥩', type: pkg.type };
+            });
 
-            const meatCards = meatEntries.map(m =>
-                `<div class="price-card card-meat">
-                    <div class="product-emoji">${m.emoji}</div>
-                    <div class="product-title">${m.pkg.name}</div>
-                    <div class="product-size">${m.sizeText}</div>
-                    <div class="product-price">$${m.pkg.price.toFixed(2)}</div>
-                    <div class="price-note">~$${m.perSandwich.toFixed(2)}/sandwich</div>
-                </div>`
-            ).join('');
+            // Group by type
+            const meatByType = {};
+            ['turkey', 'ham', 'chicken'].forEach(type => {
+                meatByType[type] = meatEntries
+                    .filter(m => m.type === type)
+                    .sort((a, b) => a.perSandwich - b.perSandwich);
+            });
+
+            const meatCards = ['turkey', 'ham', 'chicken'].map(type => {
+                if (!meatByType[type] || meatByType[type].length === 0) return '';
+                const cards = meatByType[type].map(m =>
+                    `<div class="price-card card-meat">
+                        <div class="product-emoji">${m.emoji}</div>
+                        <div class="product-title">${m.pkg.name}</div>
+                        <div class="product-size">${m.sizeText}</div>
+                        <div class="product-price">$${m.pkg.price.toFixed(2)}</div>
+                        <div class="price-note">~$${m.perSandwich.toFixed(2)}/sandwich</div>
+                    </div>`
+                ).join('');
+                return `<div style="margin-bottom: 12px;">
+                    <div style="font-size: 0.9em; font-weight: 600; color: #236383; margin-bottom: 8px; padding-left: 4px;">${typeEmoji[type]} ${typeLabel[type]}</div>
+                    <div class="price-grid">${cards}</div>
+                </div>`;
+            }).join('');
 
             // Build cheese cards sorted by price per slice
             const cheeseEntries = Object.entries(packageData.cheese).map(([key, pkg]) => {
@@ -4449,7 +4465,7 @@
             container.innerHTML = `
                 <div class="price-category">
                     <div class="category-label">MEAT</div>
-                    <div class="price-grid">${meatCards}</div>
+                    ${meatCards}
                 </div>
                 <div class="price-category">
                     <div class="category-label">AMERICAN CHEESE (Deli Style)</div>
