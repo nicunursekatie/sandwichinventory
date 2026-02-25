@@ -114,7 +114,7 @@ async function getKrogerToken() {
     if (!response.ok) {
         const errorText = await response.text();
         console.error('Kroger token error:', response.status, errorText);
-        throw new Error(`Kroger auth failed: ${response.status}`);
+        throw new Error(`Kroger auth failed: ${response.status} - ${errorText.substring(0, 200)}`);
     }
 
     const data = await response.json();
