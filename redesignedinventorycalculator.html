@@ -2861,7 +2861,7 @@
                     <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18); margin: 0;" id="calculatorTitle">Enter Your Sandwich Details</h3>
                     <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
                         <button onclick="fetchLivePrices()" id="refreshPricesBtnMain" style="padding: 8px 14px; background: linear-gradient(135deg, #FBAD3F, #f59e0b); color: #333; border: none; border-radius: 20px; font-weight: 600; cursor: pointer; font-size: 0.85em; transition: all 0.3s ease; box-shadow: 0 2px 8px rgba(0,0,0,0.15);" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
-                            🔄 Update Prices with AI
+                            🔄 Update Prices from Kroger
                         </button>
                         <a href="#pricing-info" style="font-size: 0.9em; color: rgba(255,255,255,0.9); text-decoration: underline; padding: 6px 12px; background: rgba(255,255,255,0.15); border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)';" onmouseout="this.style.background='rgba(255,255,255,0.15)';">📊 View Pricing Info</a>
                     </div>
@@ -4267,12 +4267,12 @@
             if (statusDivMain) {
                 statusDivMain.style.display = 'block';
                 statusDivMain.style.background = 'rgba(251, 173, 63, 0.2)';
-                statusDivMain.innerHTML = '<div style="color: #92400e;">🔍 Using AI to search for current grocery prices... This may take a moment.</div>';
+                statusDivMain.innerHTML = '<div style="color: #92400e;">🔍 Fetching current prices from Kroger...</div>';
             }
             if (statusDivPricing) {
                 statusDivPricing.style.display = 'block';
                 statusDivPricing.style.background = 'rgba(0, 126, 140, 0.1)';
-                statusDivPricing.innerHTML = '<div style="color: #007E8C;">🔍 Using AI to search for current grocery prices... This may take a moment.</div>';
+                statusDivPricing.innerHTML = '<div style="color: #007E8C;">🔍 Fetching current prices from Kroger...</div>';
             }
 
             try {
@@ -4325,20 +4325,21 @@
 
                 if (result.success && result.prices) {
                     // Update the packageData with new prices, track what was updated
-                    let liveCount = 0;
-                    let storedCount = 0;
-                    const totalProducts = Object.keys(result.prices).length;
+                    let krogerCount = 0;
+                    let tspCount = 0;
                     for (const [key, priceInfo] of Object.entries(result.prices)) {
-                        if (priceInfo.price && priceInfo.confidence > 0.6) {
-                            // Find and update the price in packageData
+                        if (priceInfo.price) {
+                            // Update price in packageData
                             for (const category of ['meat', 'cheese', 'bread']) {
                                 if (packageData[category] && packageData[category][key]) {
                                     packageData[category][key].price = priceInfo.price;
-                                    liveCount++;
+                                    if (priceInfo.source === 'Kroger API') {
+                                        krogerCount++;
+                                    } else {
+                                        tspCount++;
+                                    }
                                 }
                             }
-                        } else {
-                            storedCount++;
                         }
                     }
 
@@ -4346,21 +4347,21 @@
                     const now = new Date();
                     const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
                     if (updateStatus) {
-                        updateStatus.innerHTML = `✅ Prices updated at ${timeStr} • <span style="font-size: 0.85em;">${liveCount} live, ${storedCount} using TSP stored prices</span>`;
+                        updateStatus.innerHTML = `✅ Updated at ${timeStr} • <span style="font-size: 0.85em;">${krogerCount} from Kroger, ${tspCount} TSP stored</span>`;
                     }
 
-                    const storedNote = storedCount > 0
+                    const tspNote = tspCount > 0
                         ? `<div style="color: #64748b; font-size: 0.85em; margin-top: 4px;">
-                            ${storedCount} product${storedCount > 1 ? 's' : ''} using prices maintained by the TSP team.
+                            ${tspCount} product${tspCount > 1 ? 's' : ''} not available at Kroger — using prices maintained by TSP team.
                           </div>`
                         : '';
 
                     const successMsg = `
-                        <div style="color: #166534; font-weight: 600;">✅ Live prices fetched successfully!</div>
+                        <div style="color: #166534; font-weight: 600;">✅ Prices updated from Kroger!</div>
                         <div style="color: #555; font-size: 0.9em; margin-top: 5px;">
-                            ${liveCount} product${liveCount !== 1 ? 's' : ''} updated with live prices. Prices may vary by location.
+                            ${krogerCount} product${krogerCount !== 1 ? 's' : ''} updated with real Kroger prices. Prices may vary by location.
                         </div>
-                        ${storedNote}
+                        ${tspNote}
                     `;
 
                     if (statusDivMain) {
@@ -4397,7 +4398,7 @@
                 // Reset both buttons
                 if (btnMain) {
                     btnMain.disabled = false;
-                    btnMain.innerHTML = '🔄 Update Prices with AI';
+                    btnMain.innerHTML = '🔄 Update Prices from Kroger';
                 }
                 if (btnPricing) {
                     btnPricing.disabled = false;
@@ -4511,20 +4512,20 @@
         }
 
         function updatePriceDisplays(prices) {
-            // Update the dropdown options and mark which were live-fetched
+            // Update the dropdown options and mark source (Kroger vs TSP)
             for (const [key, priceInfo] of Object.entries(prices)) {
                 if (priceInfo.price) {
-                    const isLive = priceInfo.confidence > 0.6;
+                    const isKroger = priceInfo.source === 'Kroger API';
                     const selects = document.querySelectorAll('select option');
                     selects.forEach(option => {
                         if (option.value === key) {
-                            // Remove any existing live/stored markers
-                            let text = option.textContent.replace(/ ✓ Live$/, '').replace(/ \(TSP price\)$/, '');
+                            // Remove any existing source markers
+                            let text = option.textContent.replace(/ ✓ Kroger$/, '').replace(/ ✓ Live$/, '').replace(/ \(TSP price\)$/, '');
                             const priceMatch = text.match(/\$[\d.]+/);
                             if (priceMatch) {
                                 text = text.replace(priceMatch[0], '$' + priceInfo.price.toFixed(2));
                             }
-                            option.textContent = text + (isLive ? ' ✓ Live' : ' (TSP price)');
+                            option.textContent = text + (isKroger ? ' ✓ Kroger' : ' (TSP price)');
                         }
                     });
                 }
