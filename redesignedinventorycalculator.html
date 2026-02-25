@@ -4372,14 +4372,8 @@
                         statusDivPricing.innerHTML = successMsg;
                     }
 
-                    // Update displayed price cards (refresh the UI)
+                    // Update displayed price cards and dropdowns (refresh the UI)
                     updatePriceDisplays(result.prices);
-
-                    // Hide status after 8 seconds
-                    setTimeout(() => {
-                        if (statusDivMain) statusDivMain.style.display = 'none';
-                        if (statusDivPricing) statusDivPricing.style.display = 'none';
-                    }, 8000);
                 } else {
                     throw new Error(result.error || 'Failed to fetch live prices');
                 }
@@ -4517,17 +4511,20 @@
         }
 
         function updatePriceDisplays(prices) {
-            // Update the dropdown options
+            // Update the dropdown options and mark which were live-fetched
             for (const [key, priceInfo] of Object.entries(prices)) {
                 if (priceInfo.price) {
+                    const isLive = priceInfo.confidence > 0.6;
                     const selects = document.querySelectorAll('select option');
                     selects.forEach(option => {
                         if (option.value === key) {
-                            const currentText = option.textContent;
-                            const priceMatch = currentText.match(/\$[\d.]+/);
+                            // Remove any existing live/stored markers
+                            let text = option.textContent.replace(/ ✓ Live$/, '').replace(/ \(TSP price\)$/, '');
+                            const priceMatch = text.match(/\$[\d.]+/);
                             if (priceMatch) {
-                                option.textContent = currentText.replace(priceMatch[0], '$' + priceInfo.price.toFixed(2));
+                                text = text.replace(priceMatch[0], '$' + priceInfo.price.toFixed(2));
                             }
+                            option.textContent = text + (isLive ? ' ✓ Live' : ' (TSP price)');
                         }
                     });
                 }
