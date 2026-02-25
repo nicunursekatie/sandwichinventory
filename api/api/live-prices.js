@@ -123,13 +123,17 @@ async function getKrogerToken() {
     return cachedToken;
 }
 
+// Default Kroger store location for pricing (can be overridden per request)
+const DEFAULT_LOCATION_ID = '01400943';
+
 /**
  * Search for a product on the Kroger API and return its price
  */
-async function searchKrogerProduct(token, productInfo) {
+async function searchKrogerProduct(token, productInfo, locationId) {
     const params = new URLSearchParams({
         'filter.term': productInfo.term,
-        'filter.limit': '5'
+        'filter.limit': '5',
+        'filter.locationId': locationId || DEFAULT_LOCATION_ID
     });
 
     const response = await fetch(`https://api.kroger.com/v1/products?${params}`, {
@@ -190,7 +194,7 @@ async function searchKrogerProduct(token, productInfo) {
  * Look up prices for all products — Kroger API for Kroger-available products,
  * TSP stored prices for everything else
  */
-async function searchLivePrices(products) {
+async function searchLivePrices(products, locationId) {
     const prices = {};
     let krogerToken = null;
     let krogerAvailable = false;
@@ -239,7 +243,7 @@ async function searchLivePrices(products) {
             const results = await Promise.all(
                 batch.map(async ({ key, productInfo }) => {
                     try {
-                        const result = await searchKrogerProduct(krogerToken, productInfo);
+                        const result = await searchKrogerProduct(krogerToken, productInfo, locationId);
                         return { key, result };
                     } catch (error) {
                         console.error(`Kroger search failed for ${key}:`, error.message);
@@ -327,7 +331,7 @@ module.exports = async (req, res) => {
             }
         }
 
-        const { products } = body;
+        const { products, locationId } = body;
 
         if (!products || !Array.isArray(products) || products.length === 0) {
             res.status(400).json({
@@ -340,8 +344,8 @@ module.exports = async (req, res) => {
         // Limit the number of products to search (prevent abuse)
         const limitedProducts = products.slice(0, 30);
 
-        // Search for live prices
-        const prices = await searchLivePrices(limitedProducts);
+        // Search for live prices (locationId is optional — defaults to a central US Kroger)
+        const prices = await searchLivePrices(limitedProducts, locationId);
 
         res.status(200).json({
             success: true,
