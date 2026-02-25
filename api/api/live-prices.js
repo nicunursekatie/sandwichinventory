@@ -106,13 +106,13 @@ Return the prices in the JSON format specified. Focus on getting the most accura
                 'Authorization': `Bearer ${OPENAI_API_KEY}`
             },
             body: JSON.stringify({
-                model: 'gpt-4',
+                model: 'gpt-4o',
                 messages: [
                     { role: 'system', content: systemPrompt },
                     { role: 'user', content: userPrompt }
                 ],
                 temperature: 0.2,
-                max_tokens: 1500
+                max_tokens: 3000
             })
         });
 
