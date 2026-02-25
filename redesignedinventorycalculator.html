@@ -4283,13 +4283,26 @@
                     },
                     body: JSON.stringify({
                         products: [
-                            // Meats
-                            { name: 'Kroger Turkey Family Size deli meat 1 lb', category: 'meat', key: 'kroger-turkey-family' },
-                            { name: 'Kirkland Turkey deli meat 2 pack', category: 'meat', key: 'kirkland-turkey' },
-                            { name: 'Kirkland Ham deli meat 2 pack', category: 'meat', key: 'kirkland-ham' },
+                            // Turkey
+                            { name: 'Kroger Turkey Family Size deli meat 16 oz', category: 'meat', key: 'kroger-turkey-family' },
+                            { name: 'Kroger Turkey Thin Sliced deli meat 9 oz', category: 'meat', key: 'kroger-turkey-thin' },
+                            { name: 'Publix Turkey Breast deli meat 16 oz', category: 'meat', key: 'publix-turkey' },
+                            { name: 'Kirkland Signature Turkey Breast deli meat Costco 2 lb', category: 'meat', key: 'kirkland-turkey' },
+                            { name: "Land O'Frost Premium Turkey Breast deli meat 16 oz", category: 'meat', key: 'land-o-frost-turkey' },
+                            { name: 'Hillshire Farm Ultra Thin Turkey Breast deli meat 9 oz', category: 'meat', key: 'hillshire-turkey' },
+                            { name: "Oscar Mayer Turkey Breast deli meat Sam's Club 2 lb", category: 'meat', key: 'oscar-mayer-turkey' },
+                            // Ham
+                            { name: 'Kirkland Signature Ham deli meat Costco 2-pack', category: 'meat', key: 'kirkland-ham' },
+                            { name: 'Kroger Ham deli meat 16 oz', category: 'meat', key: 'kroger-ham' },
+                            { name: 'Hillshire Farm Ultra Thin Ham deli meat 9 oz', category: 'meat', key: 'hillshire-ham' },
+                            // Chicken
+                            { name: 'Kroger Chicken Breast Thin Sliced deli meat 9 oz', category: 'meat', key: 'kroger-chicken-thin' },
+                            { name: 'Kroger Deli Style Oven Roasted Chicken Breast 16 oz', category: 'meat', key: 'kroger-chicken-deli' },
+                            { name: 'Oscar Mayer Deli Fresh Rotisserie Chicken Breast 16 oz', category: 'meat', key: 'oscar-mayer-chicken-rotisserie' },
+                            { name: 'Oscar Mayer Blackened Chicken Breast deli meat 8 oz', category: 'meat', key: 'oscar-mayer-chicken-blackened' },
                             // American Cheeses
-                            { name: 'Boars Head American cheese slices deli', category: 'cheese', key: 'boars-head-american' },
-                            { name: 'Land O Lakes American cheese slices', category: 'cheese', key: 'land-o-lakes-american' },
+                            { name: "Boar's Head American cheese slices deli", category: 'cheese', key: 'boars-head-american' },
+                            { name: "Land O'Lakes American cheese slices", category: 'cheese', key: 'land-o-lakes-american' },
                             { name: 'Sargento American cheese slices', category: 'cheese', key: 'sargento-american' },
                             { name: 'Great Value American cheese slices Walmart', category: 'cheese', key: 'great-value-american' },
                             { name: 'Kroger Deli American cheese slices', category: 'cheese', key: 'kroger-american' },
@@ -4311,17 +4324,21 @@
                 const result = await response.json();
 
                 if (result.success && result.prices) {
-                    // Update the packageData with new prices
-                    let updatedCount = 0;
+                    // Update the packageData with new prices, track what was updated
+                    let liveCount = 0;
+                    let storedCount = 0;
+                    const totalProducts = Object.keys(result.prices).length;
                     for (const [key, priceInfo] of Object.entries(result.prices)) {
                         if (priceInfo.price && priceInfo.confidence > 0.6) {
                             // Find and update the price in packageData
                             for (const category of ['meat', 'cheese', 'bread']) {
                                 if (packageData[category] && packageData[category][key]) {
                                     packageData[category][key].price = priceInfo.price;
-                                    updatedCount++;
+                                    liveCount++;
                                 }
                             }
+                        } else {
+                            storedCount++;
                         }
                     }
 
@@ -4329,14 +4346,21 @@
                     const now = new Date();
                     const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
                     if (updateStatus) {
-                        updateStatus.innerHTML = `✅ Prices updated at ${timeStr} • <span style="font-size: 0.85em;">${updatedCount} products refreshed</span>`;
+                        updateStatus.innerHTML = `✅ Prices updated at ${timeStr} • <span style="font-size: 0.85em;">${liveCount} live, ${storedCount} using TSP stored prices</span>`;
                     }
+
+                    const storedNote = storedCount > 0
+                        ? `<div style="color: #64748b; font-size: 0.85em; margin-top: 4px;">
+                            ${storedCount} product${storedCount > 1 ? 's' : ''} using prices maintained by the TSP team.
+                          </div>`
+                        : '';
 
                     const successMsg = `
                         <div style="color: #166534; font-weight: 600;">✅ Live prices fetched successfully!</div>
                         <div style="color: #555; font-size: 0.9em; margin-top: 5px;">
-                            Updated ${updatedCount} product prices. Prices may vary by location.
+                            ${liveCount} product${liveCount !== 1 ? 's' : ''} updated with live prices. Prices may vary by location.
                         </div>
+                        ${storedNote}
                     `;
 
                     if (statusDivMain) {
