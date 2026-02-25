@@ -2819,30 +2819,16 @@
             transition: transform var(--transition-fast);
         }
 
-        .resource-accordion.open .resource-accordion-chevron {
-            transform: rotate(180deg);
-        }
-
+        /* Accordion content always visible - no collapse/expand */
         .resource-accordion-content {
-            display: none;
+            display: block;
             padding: var(--space-lg);
             border-top: 1px solid var(--color-border);
         }
 
-        .resource-accordion.open .resource-accordion-content {
-            display: block;
-            animation: slideDown 0.25s ease-out;
-        }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        /* Hide chevron since sections are always open */
+        .resource-accordion-chevron {
+            display: none;
         }
 
         /* Shopping notes - compact version for below calculator */
@@ -2899,7 +2885,23 @@
         <div class="section" id="calculator">
             <h2 id="calculator-heading">🧮 Sandwich Calculator</h2>
 
+            <!-- Intro: What This Tool Does -->
+            <div style="background: linear-gradient(135deg, rgba(71,179,203,0.08), rgba(35,99,131,0.08)); border: 2px solid rgba(71,179,203,0.25); border-radius: 14px; padding: 22px 26px; margin-bottom: 28px;">
+                <p style="color: #1a4d66; font-size: 1.15em; font-weight: 600; margin: 0 0 10px 0;">What is this?</p>
+                <p style="color: #334155; font-size: 1.05em; line-height: 1.6; margin: 0 0 12px 0;">
+                    This calculator helps you plan a sandwich-making event for <strong>The Sandwich Project</strong>.
+                    It figures out exactly how much food to buy and what it will cost — so you don't overbuy or run short.
+                </p>
+                <p style="color: #1a4d66; font-size: 1.05em; font-weight: 600; margin: 0 0 8px 0;">How to use it (3 simple steps):</p>
+                <div style="color: #334155; font-size: 1.02em; line-height: 1.7;">
+                    <p style="margin: 0 0 6px 0;"><strong>Step 1:</strong> Pick your sandwich type below — <strong>Deli Meat</strong> or <strong>PB&J</strong>.</p>
+                    <p style="margin: 0 0 6px 0;"><strong>Step 2:</strong> Tell us either how many sandwiches you want to make, <em>or</em> how much money you have to spend.</p>
+                    <p style="margin: 0;"><strong>Step 3:</strong> Choose your brands and options, then hit <strong>"Calculate"</strong> — we'll show you a full shopping list with quantities and costs.</p>
+                </div>
+            </div>
+
             <!-- Sandwich Type Toggle -->
+            <p style="color: #1a4d66; font-weight: 600; font-size: 1.1em; margin-bottom: 10px;">Step 1: What type of sandwich are you making?</p>
             <div class="sandwich-type-toggle" role="tablist" aria-label="Sandwich type">
                 <button class="sandwich-type-btn active" role="tab" aria-selected="true" aria-controls="deli-calculator-panel" id="deli-tab" onclick="switchSandwichType('deli')">
                     <span class="btn-icon" aria-hidden="true">🥪</span>
@@ -2913,7 +2915,8 @@
 
             <!-- Deli Calculator Panel -->
             <div id="deli-calculator-panel" role="tabpanel" aria-labelledby="deli-tab">
-            <p style="color: #64748b; margin-bottom: 25px; font-size: 1.1em;">Calculate costs or quantities for your sandwich project.</p>
+
+            <p style="color: #1a4d66; font-weight: 600; font-size: 1.1em; margin-bottom: 10px;">Step 2: How do you want to plan — by sandwich count or by budget?</p>
 
             <!-- Mode Selection -->
             <fieldset class="mode-selection-container" style="background: rgba(255,255,255,0.95); border: 2px solid #47B3CB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
@@ -2934,6 +2937,8 @@
                     </label>
                 </div>
             </fieldset>
+
+            <p style="color: #1a4d66; font-weight: 600; font-size: 1.1em; margin-bottom: 10px;">Step 3: Enter your details and calculate</p>
 
             <div class="shopping-calculator" id="calculatorForm">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
@@ -2964,6 +2969,7 @@
                     <!-- Meat Selection -->
                     <div class="calc-input-group">
                         <label>Meat</label>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">Pick the type of deli meat below, then choose a brand from the dropdown.</span>
 
                         <!-- Meat Type Tabs -->
                         <div class="meat-type-tabs" role="tablist" aria-label="Select meat type">
@@ -3030,6 +3036,7 @@
                         <!-- Meat amount per sandwich -->
                         <div style="margin-top: 12px;">
                             <label style="font-size: 0.9em; color: rgba(255,255,255,0.9); margin-bottom: 6px; display: block;">Meat per sandwich</label>
+                            <span style="font-size: 0.85em; color: rgba(255,255,255,0.7); margin-bottom: 6px; display: block;">TSP recommends 2.5 oz per sandwich (selected by default). Adjust if needed.</span>
                             <div style="display: flex; gap: 8px;">
                                 <button type="button" class="meat-amount-btn" data-oz="2" onclick="selectMeatAmount(2)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
                                     2 oz
@@ -3048,6 +3055,7 @@
                     <!-- Cheese Selection -->
                         <div class="calc-input-group">
                         <label for="cheeseSelection">Cheese</label>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">We calculate 2 slices of cheese per sandwich. Cheese is optional — skip it if you prefer!</span>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="cheeseSelection" onchange="handleCheeseSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose from suggested packages (optional)</option>
@@ -3082,6 +3090,7 @@
                     <!-- Bread Selection -->
                     <div class="calc-input-group">
                         <label for="breadSelection">Bread</label>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">Each loaf makes about 10–11 sandwiches (using 2 slices per sandwich).</span>
                                 <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="breadSelection" onchange="handleBreadSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose from suggested packages (optional)</option>
@@ -3146,6 +3155,8 @@
             <!-- PB&J Calculator Panel (hidden by default) -->
             <div id="pbj-calculator-panel" role="tabpanel" aria-labelledby="pbj-tab" style="display: none;">
 
+            <p style="color: #1a4d66; font-weight: 600; font-size: 1.1em; margin-bottom: 10px;">Step 2: How do you want to plan — by sandwich count or by budget?</p>
+
             <!-- Mode Selection for PB&J -->
             <fieldset class="mode-selection-container" style="background: rgba(255,255,255,0.95); border: 2px solid #47B3CB; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
                 <legend class="sr-only">What do you want to calculate?</legend>
@@ -3166,6 +3177,8 @@
                 </div>
             </fieldset>
 
+            <p style="color: #1a4d66; font-weight: 600; font-size: 1.1em; margin-bottom: 10px;">Step 3: Enter your details and calculate</p>
+
             <div class="shopping-calculator" id="pbjCalculatorForm">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18); margin: 0;" id="pbjCalculatorTitle">Enter Your PB&J Details</h3>
@@ -3180,6 +3193,7 @@
 
                     <div class="calc-input-group">
                         <label>Peanut butter type</label>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">We use 3 tablespoons of peanut butter per sandwich.</span>
                         <select id="pbType">
                             <option value="jif-40">🥜 Jif Creamy 40 oz (~75 tbsp) - $7.99</option>
                             <option value="skippy-40">🥜 Skippy Creamy 40 oz (~75 tbsp) - $7.99</option>
@@ -3190,6 +3204,7 @@
 
                     <div class="calc-input-group">
                         <label>Jelly type</label>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">We use 1.5 tablespoons of jelly per sandwich.</span>
                         <select id="jellyType">
                             <option value="smuckers-32">🍇 Smucker's Grape Jelly 32 oz (~60 tbsp) - $4.99</option>
                             <option value="welchs-30">🍇 Welch's Grape Jelly 30 oz (~56 tbsp) - $3.59</option>
@@ -3201,6 +3216,7 @@
 
                     <div class="calc-input-group">
                         <label>Bread type</label>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">Each loaf makes about 10–11 sandwiches (using 2 slices per sandwich).</span>
                         <select id="pbjBreadType">
                             <option value="">Choose your bread</option>
                             <option value="great-value-white">🍞 Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
@@ -3387,16 +3403,15 @@
                 </div>
             </div>
 
-            <!-- Pricing Information Accordion -->
+            <!-- Pricing Information Section (always visible) -->
             <div class="resource-accordion" id="pricing-accordion">
-                <button class="resource-accordion-header" onclick="toggleAccordion(this)" aria-expanded="false" aria-controls="pricing-content">
+                <div class="resource-accordion-header" aria-expanded="true">
                     <span class="resource-accordion-title">
                         <span class="accordion-icon" aria-hidden="true">📊</span>
                         Pricing Information
                         <span style="font-size: 0.75em; font-weight: 400; color: var(--color-text-muted);">(Updated 9/17/2025)</span>
                     </span>
-                    <span class="resource-accordion-chevron" aria-hidden="true">▼</span>
-                </button>
+                </div>
                 <div class="resource-accordion-content" id="pricing-content">
 
             <!-- Pricing cards - clean, no wild gradients -->
@@ -3753,15 +3768,14 @@
                 </div>
             </div>
 
-            <!-- Quick Reference Accordion -->
+            <!-- Quick Reference Section (always visible) -->
             <div class="resource-accordion" id="quick-ref-accordion">
-                <button class="resource-accordion-header" onclick="toggleAccordion(this)" aria-expanded="false" aria-controls="quick-ref-content">
+                <div class="resource-accordion-header" aria-expanded="true">
                     <span class="resource-accordion-title">
                         <span class="accordion-icon" aria-hidden="true">🎯</span>
                         Quick Reference: Popular Quantities
                     </span>
-                    <span class="resource-accordion-chevron" aria-hidden="true">▼</span>
-                </button>
+                </div>
                 <div class="resource-accordion-content" id="quick-ref-content">
                     <p style="color: #64748b; font-size: 0.95em; margin-bottom: 16px;">Quantities based on common package sizes (~24 slices cheese, ~30-32 slices meat). Use the calculator above for exact costs with your chosen brands.</p>
                     <div class="quick-ref">
@@ -4053,29 +4067,6 @@
             announceToScreenReader(`Switched to ${type === 'deli' ? 'Deli Meat' : 'Peanut Butter & Jelly'} calculator`);
         }
 
-        /**
-         * Toggle resource accordion sections
-         * @param {HTMLElement} header - The accordion header element
-         */
-        function toggleAccordion(header) {
-            const accordion = header.closest('.resource-accordion');
-            const isOpen = accordion.classList.contains('open');
-
-            // Close all other accordions (optional - remove for multi-open behavior)
-            // document.querySelectorAll('.resource-accordion.open').forEach(acc => {
-            //     if (acc !== accordion) acc.classList.remove('open');
-            // });
-
-            // Toggle current accordion
-            accordion.classList.toggle('open');
-
-            // Update ARIA
-            header.setAttribute('aria-expanded', !isOpen);
-
-            // Announce for screen readers
-            const title = header.querySelector('.resource-accordion-title').textContent.trim();
-            announceToScreenReader(`${title} section ${isOpen ? 'collapsed' : 'expanded'}`);
-        }
 
         // Toggle spatula quantity input visibility
         function toggleSpatulaQuantity() {
