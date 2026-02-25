@@ -21,7 +21,7 @@ const FALLBACK_PRICES = {
     'hillshire-turkey': { price: 6.07, source: 'fallback' },
     'kroger-ham': { price: 4.99, source: 'fallback' },
     'hillshire-ham': { price: 5.49, source: 'fallback' },
-    'kroger-chicken-thin': { price: 3.50, source: 'fallback' },
+    'kroger-chicken-thin': { price: 4.99, source: 'fallback' },
     'kroger-chicken-deli': { price: 4.99, source: 'fallback' },
     'oscar-mayer-chicken-rotisserie': { price: 7.99, source: 'fallback' },
 
