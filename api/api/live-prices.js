@@ -24,7 +24,7 @@ const KROGER_PRODUCT_MAP = {
     'hillshire-ham': { term: 'Hillshire Farm Ultra Thin Ham 9 oz' },
     // Chicken
     'kroger-chicken-thin': { term: 'Kroger Chicken Breast Deli Thin Sliced 9 oz', upc: '0001111097725' },
-    'kroger-chicken-deli': { term: 'Kroger Deli Style Oven Roasted Chicken Breast 16 oz' },
+    'kroger-chicken-deli': { term: 'Kroger Deli Style Oven Roasted Chicken Breast 16 oz', upc: '0001111097420' },
     'oscar-mayer-chicken-rotisserie': { term: 'Oscar Mayer Rotisserie Chicken Breast 16 oz' },
     'oscar-mayer-chicken-blackened': { term: 'Oscar Mayer Blackened Chicken 8 oz' },
     // Cheese
@@ -42,7 +42,12 @@ const KROGER_PRODUCT_MAP = {
 
 // Walmart Affiliate API product mappings (UPC and item IDs)
 const WALMART_PRODUCT_MAP = {
+    // Deli Meats
+    'great-value-turkey-9oz': { itemId: '10315853', term: 'Great Value Oven Roasted Turkey Breast 9 oz' },
+    'great-value-chicken-9oz': { itemId: '22027287', term: 'Great Value Rotisserie Chicken Lunchmeat 9 oz' },
+    // Cheese
     'great-value-american': { upc: '078742353258', itemId: '10452424', term: 'Great Value Deluxe American Cheese 24 slices 16 oz' },
+    // Bread
     'great-value-white': { upc: '078742036380', itemId: '10315752', term: 'Great Value White Sandwich Bread 20 oz' },
 };
 
@@ -64,10 +69,12 @@ const FALLBACK_PRICES = {
     'publix-turkey': { price: 7.07, source: 'TSP stored' },
     'land-o-frost-turkey': { price: 9.53, source: 'TSP stored' },
     'hillshire-turkey': { price: 6.07, source: 'TSP stored' },
+    'great-value-turkey-9oz': { price: 3.48, source: 'TSP stored' },
     'kroger-ham': { price: 4.99, source: 'TSP stored' },
     'hillshire-ham': { price: 5.49, source: 'TSP stored' },
     'kroger-chicken-thin': { price: 4.99, source: 'TSP stored' },
     'kroger-chicken-deli': { price: 4.99, source: 'TSP stored' },
+    'great-value-chicken-9oz': { price: 3.48, source: 'TSP stored' },
     'oscar-mayer-chicken-rotisserie': { price: 7.99, source: 'TSP stored' },
     'oscar-mayer-chicken-blackened': { price: 4.49, source: 'TSP stored' },
 
