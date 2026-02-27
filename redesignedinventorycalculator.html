@@ -985,6 +985,41 @@
             padding: 10px;
         }
 
+        /* Store selector tabs */
+        .store-selector-tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+        }
+
+        .store-selector-tab {
+            flex: 1;
+            min-width: 120px;
+            padding: 10px 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            background: rgba(255,255,255,0.15);
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .store-selector-tab:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.5);
+        }
+
+        .store-selector-tab.active {
+            background: rgba(255,255,255,0.95);
+            color: #236383;
+            border-color: #47B3CB;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
         /* Meat type tabs */
         .meat-type-tabs {
             display: flex;
@@ -2881,7 +2916,31 @@
                         <input type="number" id="targetValue" min="1" max="5000" placeholder="e.g., 100" oninput="validateInputs()">
                         <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;" id="targetHint">We'll calculate the cost and shopping list for you</span>
                     </div>
-                    
+
+                    <!-- Store Selector -->
+                    <div class="calc-input-group">
+                        <label>Where are you shopping?</label>
+                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 8px;">Filter products by store to see what's available</span>
+
+                        <div class="store-selector-tabs">
+                            <button type="button" class="store-selector-tab active" data-store="all" onclick="selectStore('all')">
+                                Show All
+                            </button>
+                            <button type="button" class="store-selector-tab" data-store="kroger" onclick="selectStore('kroger')">
+                                🛒 Kroger
+                            </button>
+                            <button type="button" class="store-selector-tab" data-store="walmart" onclick="selectStore('walmart')">
+                                🏪 Walmart
+                            </button>
+                            <button type="button" class="store-selector-tab" data-store="costco" onclick="selectStore('costco')">
+                                📦 Costco
+                            </button>
+                            <button type="button" class="store-selector-tab" data-store="other" onclick="selectStore('other')">
+                                🏬 Other
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Meat Selection -->
                     <div class="calc-input-group">
                         <label>Meat</label>
@@ -2904,22 +2963,24 @@
                         <select id="meatSelection" onchange="handleMeatSelection()">
                             <option value="">First select a meat type above</option>
                             <!-- Turkey options (hidden until turkey tab selected) -->
-                            <option value="kroger-turkey-family" data-type="turkey" style="display: none;">Kroger Turkey Family Size (16 oz) - $4.39</option>
-                            <option value="kroger-turkey-thin" data-type="turkey" style="display: none;">Kroger Turkey Thin Sliced (9 oz) - $3.99</option>
-                            <option value="publix-turkey" data-type="turkey" style="display: none;">Publix Turkey Breast (16 oz) - $7.07</option>
-                            <option value="kirkland-turkey" data-type="turkey" style="display: none;">Kirkland Turkey (2-pack, ~32 oz total) - $13.99</option>
-                            <option value="land-o-frost-turkey" data-type="turkey" style="display: none;">Land O'Frost Turkey (16 oz) - $9.53</option>
-                            <option value="hillshire-turkey" data-type="turkey" style="display: none;">Hillshire Farm Turkey (9 oz) - $6.07</option>
-                            <option value="oscar-mayer-turkey" data-type="turkey" style="display: none;">Oscar Mayer Turkey (2 lb) - $9.97</option>
+                            <option value="kroger-turkey-family" data-type="turkey" data-store="kroger" style="display: none;">Kroger Turkey Family Size (16 oz) - $4.39</option>
+                            <option value="kroger-turkey-thin" data-type="turkey" data-store="kroger" style="display: none;">Kroger Turkey Thin Sliced (9 oz) - $3.99</option>
+                            <option value="publix-turkey" data-type="turkey" data-store="other" style="display: none;">Publix Turkey Breast (16 oz) - $7.07</option>
+                            <option value="kirkland-turkey" data-type="turkey" data-store="costco" style="display: none;">Kirkland Turkey (2-pack, ~32 oz total) - $13.99</option>
+                            <option value="land-o-frost-turkey" data-type="turkey" data-store="kroger other" style="display: none;">Land O'Frost Turkey (16 oz) - $9.53</option>
+                            <option value="hillshire-turkey" data-type="turkey" data-store="kroger walmart other" style="display: none;">Hillshire Farm Turkey (9 oz) - $6.07</option>
+                            <option value="oscar-mayer-turkey" data-type="turkey" data-store="kroger walmart other" style="display: none;">Oscar Mayer Turkey (2 lb) - $9.97</option>
+                            <option value="great-value-turkey-9oz" data-type="turkey" data-store="walmart" style="display: none;">Great Value Oven Roasted Turkey (9 oz) - $3.48</option>
                             <!-- Ham options (hidden until ham tab selected) -->
-                            <option value="kirkland-ham" data-type="ham" style="display: none;">Kirkland Ham (2-pack, 96 slices total) - $9.89</option>
-                            <option value="kroger-ham" data-type="ham" style="display: none;">Kroger Ham (16 oz) - $4.99</option>
-                            <option value="hillshire-ham" data-type="ham" style="display: none;">Hillshire Farm Ham (9 oz) - $5.49</option>
+                            <option value="kirkland-ham" data-type="ham" data-store="costco" style="display: none;">Kirkland Ham (2-pack, 96 slices total) - $9.89</option>
+                            <option value="kroger-ham" data-type="ham" data-store="kroger" style="display: none;">Kroger Ham (16 oz) - $4.99</option>
+                            <option value="hillshire-ham" data-type="ham" data-store="kroger walmart other" style="display: none;">Hillshire Farm Ham (9 oz) - $5.49</option>
                             <!-- Chicken options (hidden until chicken tab selected) -->
-                            <option value="kroger-chicken-thin" data-type="chicken" style="display: none;">Kroger Chicken Thin (9 oz) - $4.99</option>
-                            <option value="kroger-chicken-deli" data-type="chicken" style="display: none;">Kroger Deli Style Chicken (16 oz) - $4.99</option>
-                            <option value="oscar-mayer-chicken-rotisserie" data-type="chicken" style="display: none;">Oscar Mayer Rotisserie Chicken (16 oz) - $7.99</option>
-                            <option value="oscar-mayer-chicken-blackened" data-type="chicken" style="display: none;">Oscar Mayer Blackened Chicken (8 oz) - $4.49</option>
+                            <option value="kroger-chicken-thin" data-type="chicken" data-store="kroger" style="display: none;">Kroger Chicken Thin (9 oz) - $4.99</option>
+                            <option value="kroger-chicken-deli" data-type="chicken" data-store="kroger" style="display: none;">Kroger Deli Style Chicken (16 oz) - $4.99</option>
+                            <option value="oscar-mayer-chicken-rotisserie" data-type="chicken" data-store="kroger walmart other" style="display: none;">Oscar Mayer Rotisserie Chicken (16 oz) - $7.99</option>
+                            <option value="oscar-mayer-chicken-blackened" data-type="chicken" data-store="kroger walmart other" style="display: none;">Oscar Mayer Blackened Chicken (8 oz) - $4.49</option>
+                            <option value="great-value-chicken-9oz" data-type="chicken" data-store="walmart" style="display: none;">Great Value Rotisserie Chicken (9 oz) - $3.48</option>
                             <!-- Custom option (hidden until meat type selected) -->
                             <option value="custom" style="display: none;">Enter custom package →</option>
                         </select>
@@ -2977,11 +3038,11 @@
                             <select id="cheeseSelection" onchange="handleCheeseSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose from suggested packages (optional)</option>
                                 <optgroup label="🧀 American Cheese (Deli Style)">
-                                    <option value="boars-head-american">Boar's Head American (24 slices, $8.99)</option>
-                                    <option value="land-o-lakes-american">Land O'Lakes American (24 slices, $6.49)</option>
-                                    <option value="sargento-american">Sargento Sliced American (22 slices, $4.99)</option>
-                                    <option value="great-value-american">Great Value American - Walmart (24 slices, $3.98)</option>
-                                    <option value="kroger-american">Kroger Deli American (24 slices, $4.29)</option>
+                                    <option value="boars-head-american" data-store="other">Boar's Head American (24 slices, $8.99)</option>
+                                    <option value="land-o-lakes-american" data-store="kroger walmart other">Land O'Lakes American (24 slices, $6.49)</option>
+                                    <option value="sargento-american" data-store="kroger walmart other">Sargento Sliced American (22 slices, $4.99)</option>
+                                    <option value="great-value-american" data-store="walmart">Great Value American - Walmart (24 slices, $3.98)</option>
+                                    <option value="kroger-american" data-store="kroger">Kroger Deli American (24 slices, $4.29)</option>
                                 </optgroup>
                                 <option value="custom">Enter custom package →</option>
                             </select>
@@ -3011,12 +3072,12 @@
                                 <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="breadSelection" onchange="handleBreadSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose from suggested packages (optional)</option>
-                                <option value="great-value-white">Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
-                                <option value="kroger-white">Kroger White Sandwich (20 oz, ~11 sandwiches, ~$1.50)</option>
-                                <option value="wonder-classic">Wonder Bread Classic White (20 oz, ~10 sandwiches, ~$3.63)</option>
-                                <option value="wonder-giant">Wonder Bread Giant White (24 oz, ~11 sandwiches, ~$4.64)</option>
-                                <option value="sara-lee-butter">Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
-                                <option value="sara-lee-classic">Sara Lee Classic White (20 oz, ~10 sandwiches, ~$3.99)</option>
+                                <option value="great-value-white" data-store="walmart">Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
+                                <option value="kroger-white" data-store="kroger">Kroger White Sandwich (20 oz, ~11 sandwiches, ~$1.50)</option>
+                                <option value="wonder-classic" data-store="kroger walmart other">Wonder Bread Classic White (20 oz, ~10 sandwiches, ~$3.63)</option>
+                                <option value="wonder-giant" data-store="kroger walmart other">Wonder Bread Giant White (24 oz, ~11 sandwiches, ~$4.64)</option>
+                                <option value="sara-lee-butter" data-store="kroger walmart other">Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
+                                <option value="sara-lee-classic" data-store="kroger walmart other">Sara Lee Classic White (20 oz, ~10 sandwiches, ~$3.99)</option>
                                 <option value="custom">Enter custom package →</option>
                         </select>
                             <div id="breadCustomEntry" style="display: none;">
@@ -3136,12 +3197,12 @@
                         <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">Each loaf makes about 10–11 sandwiches (using 2 slices per sandwich).</span>
                         <select id="pbjBreadType">
                             <option value="">Choose your bread</option>
-                            <option value="great-value-white">🍞 Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
-                            <option value="kroger-white">🍞 Kroger White Sandwich (20 oz, ~11 sandwiches, ~$1.50)</option>
-                            <option value="wonder-classic">🍞 Wonder Bread Classic White (20 oz, ~10 sandwiches, ~$3.63)</option>
-                            <option value="wonder-giant">🍞 Wonder Bread Giant White (24 oz, ~11 sandwiches, ~$4.64)</option>
-                            <option value="sara-lee-butter">🍞 Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
-                            <option value="sara-lee-classic">🍞 Sara Lee Classic White (20 oz, ~10 sandwiches, ~$3.99)</option>
+                            <option value="great-value-white" data-store="walmart">🍞 Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
+                            <option value="kroger-white" data-store="kroger">🍞 Kroger White Sandwich (20 oz, ~11 sandwiches, ~$1.50)</option>
+                            <option value="wonder-classic" data-store="kroger walmart other">🍞 Wonder Bread Classic White (20 oz, ~10 sandwiches, ~$3.63)</option>
+                            <option value="wonder-giant" data-store="kroger walmart other">🍞 Wonder Bread Giant White (24 oz, ~11 sandwiches, ~$4.64)</option>
+                            <option value="sara-lee-butter" data-store="kroger walmart other">🍞 Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
+                            <option value="sara-lee-classic" data-store="kroger walmart other">🍞 Sara Lee Classic White (20 oz, ~10 sandwiches, ~$3.99)</option>
                         </select>
                     </div>
 
@@ -4030,6 +4091,7 @@
                 'land-o-frost-turkey': { weightOz: 16, price: 9.53, name: "Land O'Frost Turkey", type: 'turkey' },
                 'hillshire-turkey': { weightOz: 9, price: 6.07, name: 'Hillshire Farm Turkey', type: 'turkey' },
                 'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: 'Oscar Mayer Turkey', type: 'turkey' },
+                'great-value-turkey-9oz': { weightOz: 9, price: 3.48, name: 'Great Value Oven Roasted Turkey', type: 'turkey' },
                 // Ham options
                 'kirkland-ham': { slices: 96, price: 9.89, name: 'Kirkland Ham', type: 'ham' }, // 2-pack, 48 slices each = 96 total
                 'kroger-ham': { weightOz: 16, price: 4.99, name: 'Kroger Ham', type: 'ham' },
@@ -4038,7 +4100,8 @@
                 'kroger-chicken-thin': { weightOz: 9, price: 4.99, name: 'Kroger Chicken Thin', type: 'chicken' },
                 'kroger-chicken-deli': { weightOz: 16, price: 4.99, name: 'Kroger Deli Style Chicken', type: 'chicken' },
                 'oscar-mayer-chicken-rotisserie': { weightOz: 16, price: 7.99, name: 'Oscar Mayer Rotisserie Chicken', type: 'chicken' },
-                'oscar-mayer-chicken-blackened': { weightOz: 8, price: 4.49, name: 'Oscar Mayer Blackened Chicken', type: 'chicken' }
+                'oscar-mayer-chicken-blackened': { weightOz: 8, price: 4.49, name: 'Oscar Mayer Blackened Chicken', type: 'chicken' },
+                'great-value-chicken-9oz': { weightOz: 9, price: 3.48, name: 'Great Value Rotisserie Chicken', type: 'chicken' }
             },
             cheese: {
                 // American cheese options
@@ -4114,6 +4177,43 @@
         let currentMeatType = null;
 
         // Select meat type (Turkey/Ham/Chicken tabs)
+        // Store selector state
+        let currentStore = 'all';
+
+        function selectStore(store) {
+            currentStore = store;
+
+            // Update tab active states
+            document.querySelectorAll('.store-selector-tab').forEach(tab => {
+                const isActive = tab.dataset.store === store;
+                tab.classList.toggle('active', isActive);
+            });
+
+            // Filter all product options across meat, cheese, and bread
+            const selects = ['meatSelection', 'cheeseSelection', 'breadSelection', 'pbjBreadType'];
+
+            selects.forEach(selectId => {
+                const select = document.getElementById(selectId);
+                if (!select) return;
+
+                const options = select.querySelectorAll('option[data-store]');
+                options.forEach(option => {
+                    const optionStores = option.dataset.store.split(' ');
+                    const shouldShow = store === 'all' || optionStores.includes(store);
+
+                    // Also check if meat type filter is active for meatSelection
+                    if (selectId === 'meatSelection' && currentMeatType) {
+                        const matchesMeatType = option.dataset.type === currentMeatType;
+                        option.style.display = (shouldShow && matchesMeatType) ? '' : 'none';
+                    } else {
+                        option.style.display = shouldShow ? '' : 'none';
+                    }
+                });
+            });
+
+            validateInputs();
+        }
+
         function selectMeatType(type) {
             currentMeatType = type;
 
@@ -4124,13 +4224,22 @@
                 tab.setAttribute('aria-selected', isActive);
             });
 
-            // Filter dropdown options by type
+            // Filter dropdown options by type and store
             const select = document.getElementById('meatSelection');
             const options = select.querySelectorAll('option[data-type]');
 
             options.forEach(option => {
                 const optionType = option.dataset.type;
-                option.style.display = (optionType === type) ? '' : 'none';
+                const matchesType = (optionType === type);
+
+                // Also check store filter
+                let matchesStore = true;
+                if (currentStore !== 'all' && option.dataset.store) {
+                    const optionStores = option.dataset.store.split(' ');
+                    matchesStore = optionStores.includes(currentStore);
+                }
+
+                option.style.display = (matchesType && matchesStore) ? '' : 'none';
             });
 
             // Show custom option when a meat type is selected
@@ -4291,6 +4400,7 @@
                             { name: "Land O'Frost Premium Turkey Breast deli meat 16 oz", category: 'meat', key: 'land-o-frost-turkey' },
                             { name: 'Hillshire Farm Ultra Thin Turkey Breast deli meat 9 oz', category: 'meat', key: 'hillshire-turkey' },
                             { name: "Oscar Mayer Turkey Breast deli meat 2 lb", category: 'meat', key: 'oscar-mayer-turkey' },
+                            { name: 'Great Value Oven Roasted Turkey Breast 9 oz', category: 'meat', key: 'great-value-turkey-9oz' },
                             // Ham
                             { name: 'Kirkland Signature Ham deli meat Costco 2-pack', category: 'meat', key: 'kirkland-ham' },
                             { name: 'Kroger Ham deli meat 16 oz', category: 'meat', key: 'kroger-ham' },
@@ -4300,6 +4410,7 @@
                             { name: 'Kroger Deli Style Oven Roasted Chicken Breast 16 oz', category: 'meat', key: 'kroger-chicken-deli' },
                             { name: 'Oscar Mayer Deli Fresh Rotisserie Chicken Breast 16 oz', category: 'meat', key: 'oscar-mayer-chicken-rotisserie' },
                             { name: 'Oscar Mayer Blackened Chicken Breast deli meat 8 oz', category: 'meat', key: 'oscar-mayer-chicken-blackened' },
+                            { name: 'Great Value Rotisserie Chicken Lunchmeat 9 oz', category: 'meat', key: 'great-value-chicken-9oz' },
                             // American Cheeses
                             { name: "Boar's Head American cheese slices deli", category: 'cheese', key: 'boars-head-american' },
                             { name: "Land O'Lakes American cheese slices", category: 'cheese', key: 'land-o-lakes-american' },
