@@ -1,13 +1,14 @@
 /**
- * Live Prices API - Kroger API + TSP Stored Prices
+ * Live Prices API - Kroger API + Walmart Affiliate API + TSP Stored Prices
  *
- * Uses the Kroger Product API for real-time prices on products
- * available at Kroger. Falls back to TSP-maintained prices for
- * products not available through Kroger (Costco/Kirkland, Publix, etc.).
+ * Uses the Kroger Product API for real-time prices on Kroger products,
+ * the Walmart Affiliate API for Great Value products,
+ * and falls back to TSP-maintained prices for everything else.
  */
 
 const KROGER_CLIENT_ID = process.env.KROGER_CLIENT_ID;
 const KROGER_CLIENT_SECRET = process.env.KROGER_CLIENT_SECRET;
+const WALMART_CONSUMER_ID = process.env.WALMART_CONSUMER_ID;
 
 // Kroger UPC/search terms for each product key
 // These help the Kroger API find the exact right product
@@ -39,13 +40,17 @@ const KROGER_PRODUCT_MAP = {
     'sara-lee-classic': { term: 'Sara Lee Classic White Bread' },
 };
 
-// Products NOT available at Kroger — always use TSP stored prices
+// Walmart Affiliate API product mappings (UPC and item IDs)
+const WALMART_PRODUCT_MAP = {
+    'great-value-american': { upc: '078742353258', itemId: '10452424', term: 'Great Value Deluxe American Cheese 24 slices 16 oz' },
+    'great-value-white': { upc: '078742036380', itemId: '10315752', term: 'Great Value White Sandwich Bread 20 oz' },
+};
+
+// Products NOT available at Kroger or Walmart — always use TSP stored prices
 const NON_KROGER_PRODUCTS = new Set([
     'kirkland-turkey',
     'kirkland-ham',
     'publix-turkey',
-    'great-value-american',  // Walmart brand
-    'great-value-white',     // Walmart brand
 ]);
 
 // Fallback prices if Kroger API fails (last known good prices maintained by TSP)
@@ -191,8 +196,77 @@ async function searchKrogerProduct(token, productInfo, locationId) {
 }
 
 /**
+ * Search for a product on the Walmart Affiliate API and return its price
+ */
+async function searchWalmartProduct(productInfo) {
+    if (!WALMART_CONSUMER_ID) {
+        return null;
+    }
+
+    const headers = {
+        'WM_CONSUMER.ID': WALMART_CONSUMER_ID,
+        'WM_SEC.KEY_VERSION': '1',
+        'Accept': 'application/json'
+    };
+
+    // Try item lookup by ID first (most reliable)
+    if (productInfo.itemId) {
+        try {
+            const response = await fetch(
+                `https://developer.api.walmart.com/api-proxy/service/affil/product/v2/items/${productInfo.itemId}`,
+                { headers }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.salePrice) {
+                    return {
+                        price: data.salePrice,
+                        regularPrice: data.msrp || data.salePrice,
+                        name: data.name,
+                        itemId: data.itemId
+                    };
+                }
+            }
+        } catch (error) {
+            console.error('Walmart item lookup failed:', error.message);
+        }
+    }
+
+    // Fallback: try UPC lookup
+    if (productInfo.upc) {
+        try {
+            const response = await fetch(
+                `https://developer.api.walmart.com/api-proxy/service/affil/product/v2/items?upc=${productInfo.upc}`,
+                { headers }
+            );
+
+            if (response.ok) {
+                const data = await response.json();
+                // UPC lookup returns an object with items array
+                const items = data.items || [data];
+                for (const item of items) {
+                    if (item && item.salePrice) {
+                        return {
+                            price: item.salePrice,
+                            regularPrice: item.msrp || item.salePrice,
+                            name: item.name,
+                            itemId: item.itemId
+                        };
+                    }
+                }
+            }
+        } catch (error) {
+            console.error('Walmart UPC lookup failed:', error.message);
+        }
+    }
+
+    return null;
+}
+
+/**
  * Look up prices for all products — Kroger API for Kroger-available products,
- * TSP stored prices for everything else
+ * Walmart API for Walmart products, TSP stored prices for everything else
  */
 async function searchLivePrices(products, locationId) {
     const prices = {};
@@ -211,11 +285,12 @@ async function searchLivePrices(products, locationId) {
 
     // Process each product
     const krogerSearches = [];
+    const walmartSearches = [];
 
     for (const product of products) {
         const key = product.key;
 
-        // Non-Kroger products always use TSP stored prices
+        // Non-Kroger/non-Walmart products always use TSP stored prices
         if (NON_KROGER_PRODUCTS.has(key)) {
             prices[key] = {
                 ...(FALLBACK_PRICES[key] || { price: 5.00, source: 'TSP stored' }),
@@ -223,6 +298,12 @@ async function searchLivePrices(products, locationId) {
                 source: 'TSP stored',
                 notes: 'Price maintained by TSP team'
             };
+            continue;
+        }
+
+        // Walmart products go to Walmart API
+        if (WALMART_PRODUCT_MAP[key]) {
+            walmartSearches.push({ key, productInfo: WALMART_PRODUCT_MAP[key] });
             continue;
         }
 
@@ -267,6 +348,45 @@ async function searchLivePrices(products, locationId) {
                     prices[key] = getFallbackPrice(key);
                 }
             }
+        }
+    }
+
+    // Run Walmart searches in parallel
+    if (walmartSearches.length > 0 && WALMART_CONSUMER_ID) {
+        const walmartResults = await Promise.all(
+            walmartSearches.map(async ({ key, productInfo }) => {
+                try {
+                    const result = await searchWalmartProduct(productInfo);
+                    return { key, result };
+                } catch (error) {
+                    console.error(`Walmart search failed for ${key}:`, error.message);
+                    return { key, result: null };
+                }
+            })
+        );
+
+        for (const { key, result } of walmartResults) {
+            if (result && result.price) {
+                prices[key] = {
+                    price: parseFloat(result.price.toFixed(2)),
+                    confidence: 0.95,
+                    source: 'Walmart API',
+                    notes: `${result.name} — Walmart.com`
+                };
+            } else {
+                // Walmart API failed — use fallback
+                prices[key] = getFallbackPrice(key);
+            }
+        }
+    } else if (walmartSearches.length > 0) {
+        // No Walmart API key — use TSP stored prices for Walmart products
+        for (const { key } of walmartSearches) {
+            prices[key] = {
+                ...(FALLBACK_PRICES[key] || { price: 5.00, source: 'TSP stored' }),
+                confidence: 0.8,
+                source: 'TSP stored',
+                notes: 'Price maintained by TSP team (Walmart API not configured)'
+            };
         }
     }
 
