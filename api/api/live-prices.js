@@ -206,11 +206,11 @@ async function searchKrogerProduct(token, productInfo, locationId) {
 /**
  * Generate Walmart API authentication signature
  */
-function generateWalmartSignature(consumerId, privateKey, requestUrl, timestamp) {
+function generateWalmartSignature(consumerId, privateKey, requestPath, timestamp) {
     const crypto = require('crypto');
 
-    // Create the string to sign
-    const stringToSign = consumerId + '\n' + requestUrl + '\n' + 'GET' + '\n' + timestamp + '\n';
+    // Create the string to sign (use path only, not full URL)
+    const stringToSign = consumerId + '\n' + requestPath + '\n' + 'GET' + '\n' + timestamp + '\n';
 
     // Generate HMAC-SHA256 signature
     const signature = crypto
@@ -226,9 +226,11 @@ function generateWalmartSignature(consumerId, privateKey, requestUrl, timestamp)
  */
 async function searchWalmartProduct(productInfo) {
     if (!WALMART_CONSUMER_ID || !WALMART_PRIVATE_KEY) {
+        console.log('Walmart API credentials not configured');
         return null;
     }
 
+    console.log(`Searching Walmart for: ${productInfo.term}`);
     const timestamp = Date.now().toString();
     const correlationId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
@@ -243,8 +245,9 @@ async function searchWalmartProduct(productInfo) {
     // Try item lookup by ID first (most reliable)
     if (productInfo.itemId) {
         try {
-            const requestUrl = `https://developer.api.walmart.com/api-proxy/service/affil/product/v2/items/${productInfo.itemId}`;
-            const signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, requestUrl, timestamp);
+            const requestPath = `/api-proxy/service/affil/product/v2/items/${productInfo.itemId}`;
+            const requestUrl = `https://developer.api.walmart.com${requestPath}`;
+            const signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, requestPath, timestamp);
 
             const headers = {
                 ...baseHeaders,
@@ -263,6 +266,8 @@ async function searchWalmartProduct(productInfo) {
                         itemId: data.itemId
                     };
                 }
+            } else {
+                console.error(`Walmart item lookup failed: ${response.status} - ${await response.text()}`);
             }
         } catch (error) {
             console.error('Walmart item lookup failed:', error.message);
@@ -272,8 +277,9 @@ async function searchWalmartProduct(productInfo) {
     // Fallback: try UPC lookup
     if (productInfo.upc) {
         try {
-            const requestUrl = `https://developer.api.walmart.com/api-proxy/service/affil/product/v2/items?upc=${productInfo.upc}`;
-            const signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, requestUrl, timestamp);
+            const requestPath = `/api-proxy/service/affil/product/v2/items?upc=${productInfo.upc}`;
+            const requestUrl = `https://developer.api.walmart.com${requestPath}`;
+            const signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, requestPath, timestamp);
 
             const headers = {
                 ...baseHeaders,
