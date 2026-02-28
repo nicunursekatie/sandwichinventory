@@ -232,13 +232,11 @@ async function searchWalmartProduct(productInfo) {
 
     console.log(`Searching Walmart for: ${productInfo.term}`);
     const timestamp = Date.now().toString();
-    const correlationId = `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
 
     const baseHeaders = {
+        'WM_SEC.KEY_VERSION': '1',
         'WM_CONSUMER.ID': WALMART_CONSUMER_ID,
-        'WM_CONSUMER.CHANNEL.TYPE': '8b8c7e12-8219-4546-b45f-d70cda0d9c6d',
-        'WM_SEC.TIMESTAMP': timestamp,
-        'WM_QOS.CORRELATION_ID': correlationId,
+        'WM_CONSUMER.INTIMESTAMP': timestamp,
         'Accept': 'application/json'
     };
 
