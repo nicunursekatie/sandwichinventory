@@ -2851,6 +2851,35 @@
                 </div>
             </div>
 
+            <!-- Store Selector - Global Filter -->
+            <div style="background: linear-gradient(135deg, rgba(71,179,203,0.15) 0%, rgba(35,99,131,0.15) 100%); border-left: 4px solid #47B3CB; border-radius: 10px; padding: 20px; margin-bottom: 30px;">
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                    <span style="font-size: 1.4em;">🏪</span>
+                    <div>
+                        <p style="color: #1a4d66; font-weight: 600; font-size: 1.05em; margin: 0;">Where are you shopping? <span style="font-weight: 400; color: #64748b; font-size: 0.9em;">(Optional)</span></p>
+                        <p style="color: #64748b; font-size: 0.9em; margin: 4px 0 0 0;">Filter products by store, or keep "Show All" to see everything</p>
+                    </div>
+                </div>
+
+                <div class="store-selector-tabs">
+                    <button type="button" class="store-selector-tab active" data-store="all" onclick="selectStore('all')">
+                        Show All
+                    </button>
+                    <button type="button" class="store-selector-tab" data-store="kroger" onclick="selectStore('kroger')">
+                        🛒 Kroger
+                    </button>
+                    <button type="button" class="store-selector-tab" data-store="walmart" onclick="selectStore('walmart')">
+                        🏪 Walmart
+                    </button>
+                    <button type="button" class="store-selector-tab" data-store="costco" onclick="selectStore('costco')">
+                        📦 Costco
+                    </button>
+                    <button type="button" class="store-selector-tab" data-store="other" onclick="selectStore('other')">
+                        🏬 Other
+                    </button>
+                </div>
+            </div>
+
             <!-- Sandwich Type Toggle -->
             <p style="color: #1a4d66; font-weight: 600; font-size: 1.1em; margin-bottom: 10px;">Step 1: What type of sandwich are you making?</p>
             <div class="sandwich-type-toggle" role="tablist" aria-label="Sandwich type">
@@ -2915,30 +2944,6 @@
                         <label for="targetValue" id="targetLabel">How many sandwiches do you need?</label>
                         <input type="number" id="targetValue" min="1" max="5000" placeholder="e.g., 100" oninput="validateInputs()">
                         <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;" id="targetHint">We'll calculate the cost and shopping list for you</span>
-                    </div>
-
-                    <!-- Store Selector -->
-                    <div class="calc-input-group">
-                        <label>Where are you shopping?</label>
-                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 8px;">Filter products by store to see what's available</span>
-
-                        <div class="store-selector-tabs">
-                            <button type="button" class="store-selector-tab active" data-store="all" onclick="selectStore('all')">
-                                Show All
-                            </button>
-                            <button type="button" class="store-selector-tab" data-store="kroger" onclick="selectStore('kroger')">
-                                🛒 Kroger
-                            </button>
-                            <button type="button" class="store-selector-tab" data-store="walmart" onclick="selectStore('walmart')">
-                                🏪 Walmart
-                            </button>
-                            <button type="button" class="store-selector-tab" data-store="costco" onclick="selectStore('costco')">
-                                📦 Costco
-                            </button>
-                            <button type="button" class="store-selector-tab" data-store="other" onclick="selectStore('other')">
-                                🏬 Other
-                            </button>
-                        </div>
                     </div>
 
                     <!-- Meat Selection -->
