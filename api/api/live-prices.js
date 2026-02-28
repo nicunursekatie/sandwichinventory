@@ -242,26 +242,57 @@ function generateWalmartSignature(consumerId, privateKey, timestamp, keyVersion)
 }
 
 /**
+ * Get Walmart API credential diagnostics (safe to include in responses)
+ */
+function getWalmartDiagnostics() {
+    const diag = {
+        consumerIdSet: !!WALMART_CONSUMER_ID,
+        privateKeySet: !!WALMART_PRIVATE_KEY,
+    };
+
+    if (WALMART_CONSUMER_ID) {
+        diag.consumerIdPrefix = WALMART_CONSUMER_ID.substring(0, 8) + '...';
+    }
+
+    if (WALMART_PRIVATE_KEY) {
+        diag.keyFormat = WALMART_PRIVATE_KEY.includes('-----BEGIN RSA PRIVATE KEY-----') ? 'PKCS#1'
+            : WALMART_PRIVATE_KEY.includes('-----BEGIN PRIVATE KEY-----') ? 'PKCS#8'
+            : 'UNKNOWN (missing PEM header)';
+        diag.keyLength = WALMART_PRIVATE_KEY.length;
+        diag.keyStartsWith = WALMART_PRIVATE_KEY.substring(0, 30) + '...';
+        // Estimate RSA key size from base64-encoded key content
+        const base64Content = WALMART_PRIVATE_KEY.replace(/-----[A-Z ]+-----/g, '').replace(/\s/g, '');
+        const keyBytes = Math.floor(base64Content.length * 3 / 4);
+        diag.estimatedKeyBits = keyBytes * 8;
+        diag.note = keyBytes < 400 ? 'WARNING: Key appears too short. Walmart requires a 4096-bit RSA key.' : 'Key size looks reasonable';
+    }
+
+    return diag;
+}
+
+/**
  * Search for a product on the Walmart Affiliate API and return its price
+ * Returns { price, ... } on success, or { error: ... } on failure
  */
 async function searchWalmartProduct(productInfo) {
     if (!WALMART_CONSUMER_ID || !WALMART_PRIVATE_KEY) {
-        console.log('Walmart API credentials not configured — CONSUMER_ID:', !!WALMART_CONSUMER_ID, 'PRIVATE_KEY:', !!WALMART_PRIVATE_KEY);
-        return null;
+        return { error: 'credentials_missing', details: `CONSUMER_ID: ${!!WALMART_CONSUMER_ID}, PRIVATE_KEY: ${!!WALMART_PRIVATE_KEY}` };
     }
 
-    // Validate private key format
     if (!WALMART_PRIVATE_KEY.includes('-----BEGIN')) {
-        console.error('Walmart private key does not appear to be in PEM format. Ensure it starts with -----BEGIN PRIVATE KEY----- or -----BEGIN RSA PRIVATE KEY-----');
-        return null;
+        return { error: 'invalid_key_format', details: 'Private key does not appear to be in PEM format' };
     }
 
     console.log(`Searching Walmart for: ${productInfo.term}`);
     const timestamp = Date.now().toString();
     const keyVersion = '1';
 
-    // Generate signature once — Affiliate API signature does not depend on URL/path
-    const signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, timestamp, keyVersion);
+    let signature;
+    try {
+        signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, timestamp, keyVersion);
+    } catch (signError) {
+        return { error: 'signature_generation_failed', details: signError.message };
+    }
 
     const baseHeaders = {
         'WM_SEC.KEY_VERSION': keyVersion,
@@ -289,12 +320,14 @@ async function searchWalmartProduct(productInfo) {
                         itemId: data.itemId
                     };
                 }
+                return { error: 'no_price_in_response', details: `Item found but no salePrice field. Keys: ${Object.keys(data).join(', ')}` };
             } else {
                 const errorBody = await response.text();
                 console.error(`Walmart item lookup failed: ${response.status} - ${errorBody}`);
+                return { error: `walmart_http_${response.status}`, details: errorBody.substring(0, 500), signatureLength: Buffer.from(signature, 'base64').length };
             }
         } catch (error) {
-            console.error('Walmart item lookup failed:', error.message);
+            return { error: 'item_lookup_exception', details: error.message };
         }
     }
 
@@ -308,7 +341,6 @@ async function searchWalmartProduct(productInfo) {
 
             if (response.ok) {
                 const data = await response.json();
-                // UPC lookup returns an object with items array
                 const items = data.items || [data];
                 for (const item of items) {
                     if (item && item.salePrice) {
@@ -320,13 +352,17 @@ async function searchWalmartProduct(productInfo) {
                         };
                     }
                 }
+                return { error: 'no_price_in_upc_response', details: 'UPC matched but no salePrice found' };
+            } else {
+                const errorBody = await response.text();
+                return { error: `walmart_upc_http_${response.status}`, details: errorBody.substring(0, 500) };
             }
         } catch (error) {
-            console.error('Walmart UPC lookup failed:', error.message);
+            return { error: 'upc_lookup_exception', details: error.message };
         }
     }
 
-    return null;
+    return { error: 'no_item_id_or_upc', details: 'Product has neither itemId nor UPC configured' };
 }
 
 /**
@@ -424,6 +460,8 @@ async function searchLivePrices(products, locationId) {
     console.log(`Walmart searches queued: ${walmartSearches.length}`);
     console.log(`Walmart credentials available: ${!!WALMART_CONSUMER_ID && !!WALMART_PRIVATE_KEY}`);
 
+    const walmartErrors = [];
+
     if (walmartSearches.length > 0 && WALMART_CONSUMER_ID) {
         const walmartResults = await Promise.all(
             walmartSearches.map(async ({ key, productInfo }) => {
@@ -432,13 +470,13 @@ async function searchLivePrices(products, locationId) {
                     return { key, result };
                 } catch (error) {
                     console.error(`Walmart search failed for ${key}:`, error.message);
-                    return { key, result: null };
+                    return { key, result: { error: 'exception', details: error.message } };
                 }
             })
         );
 
         for (const { key, result } of walmartResults) {
-            if (result && result.price) {
+            if (result && result.price && !result.error) {
                 prices[key] = {
                     price: parseFloat(result.price.toFixed(2)),
                     confidence: 0.95,
@@ -446,8 +484,11 @@ async function searchLivePrices(products, locationId) {
                     notes: `${result.name} — Walmart.com`
                 };
             } else {
-                // Walmart API failed — use fallback
+                // Walmart API failed — use fallback and record the error
                 prices[key] = getFallbackPrice(key);
+                if (result && result.error) {
+                    walmartErrors.push({ product: key, ...result });
+                }
             }
         }
     } else if (walmartSearches.length > 0) {
@@ -460,9 +501,10 @@ async function searchLivePrices(products, locationId) {
                 notes: 'Price maintained by TSP team (Walmart API not configured)'
             };
         }
+        walmartErrors.push({ error: 'not_configured', details: 'WALMART_CONSUMER_ID env var is not set' });
     }
 
-    return prices;
+    return { prices, walmartErrors };
 }
 
 /**
@@ -537,14 +579,24 @@ module.exports = async (req, res) => {
         const limitedProducts = products.slice(0, 30);
 
         // Search for live prices (locationId is optional — defaults to a central US Kroger)
-        const prices = await searchLivePrices(limitedProducts, locationId);
+        const { prices, walmartErrors } = await searchLivePrices(limitedProducts, locationId);
 
-        res.status(200).json({
+        const response = {
             success: true,
             prices,
             timestamp: new Date().toISOString(),
             productsSearched: limitedProducts.length
-        });
+        };
+
+        // Include Walmart diagnostics if there were errors
+        if (walmartErrors && walmartErrors.length > 0) {
+            response.walmartDebug = {
+                diagnostics: getWalmartDiagnostics(),
+                errors: walmartErrors
+            };
+        }
+
+        res.status(200).json(response);
     } catch (error) {
         console.error('Live prices error:', error);
         res.status(500).json({
