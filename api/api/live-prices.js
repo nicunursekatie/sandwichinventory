@@ -21,6 +21,11 @@ if (!WALMART_PRIVATE_KEY && process.env.WALMART_PRIVATE_KEY_PATH) {
     }
 }
 
+// Fix private key format — Vercel env vars store literal \n instead of newlines
+if (WALMART_PRIVATE_KEY) {
+    WALMART_PRIVATE_KEY = WALMART_PRIVATE_KEY.replace(/\\n/g, '\n');
+}
+
 // Kroger UPC/search terms for each product key
 // These help the Kroger API find the exact right product
 const KROGER_PRODUCT_MAP = {
@@ -214,17 +219,22 @@ async function searchKrogerProduct(token, productInfo, locationId) {
 }
 
 /**
- * Generate Walmart API authentication signature using RSA-SHA256
+ * Generate Walmart Affiliate API authentication signature using RSA-SHA256
+ *
+ * The Affiliate API string-to-sign format is:
+ *   consumerId\ntimestamp\nkeyVersion\n
+ *
+ * This is different from the Marketplace API which includes the URL and method.
  */
-function generateWalmartSignature(consumerId, privateKey, requestPath, timestamp) {
+function generateWalmartSignature(consumerId, privateKey, timestamp, keyVersion) {
     const crypto = require('crypto');
 
-    // Create the string to sign (use path only, not full URL)
-    const stringToSign = consumerId + '\n' + requestPath + '\n' + 'GET' + '\n' + timestamp + '\n';
+    // Walmart Affiliate API: sign consumerId + timestamp + keyVersion
+    const stringToSign = consumerId + '\n' + timestamp + '\n' + keyVersion + '\n';
 
     // Generate RSA-SHA256 signature
     const signature = crypto
-        .createSign('sha256')
+        .createSign('RSA-SHA256')
         .update(stringToSign)
         .sign(privateKey, 'base64');
 
@@ -236,17 +246,28 @@ function generateWalmartSignature(consumerId, privateKey, requestPath, timestamp
  */
 async function searchWalmartProduct(productInfo) {
     if (!WALMART_CONSUMER_ID || !WALMART_PRIVATE_KEY) {
-        console.log('Walmart API credentials not configured');
+        console.log('Walmart API credentials not configured — CONSUMER_ID:', !!WALMART_CONSUMER_ID, 'PRIVATE_KEY:', !!WALMART_PRIVATE_KEY);
+        return null;
+    }
+
+    // Validate private key format
+    if (!WALMART_PRIVATE_KEY.includes('-----BEGIN')) {
+        console.error('Walmart private key does not appear to be in PEM format. Ensure it starts with -----BEGIN PRIVATE KEY----- or -----BEGIN RSA PRIVATE KEY-----');
         return null;
     }
 
     console.log(`Searching Walmart for: ${productInfo.term}`);
     const timestamp = Date.now().toString();
+    const keyVersion = '1';
+
+    // Generate signature once — Affiliate API signature does not depend on URL/path
+    const signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, timestamp, keyVersion);
 
     const baseHeaders = {
-        'WM_SEC.KEY_VERSION': '1',
+        'WM_SEC.KEY_VERSION': keyVersion,
         'WM_CONSUMER.ID': WALMART_CONSUMER_ID,
         'WM_CONSUMER.INTIMESTAMP': timestamp,
+        'WM_SEC.AUTH_SIGNATURE': signature,
         'Accept': 'application/json'
     };
 
@@ -255,14 +276,8 @@ async function searchWalmartProduct(productInfo) {
         try {
             const requestPath = `/api-proxy/service/affil/product/v2/items/${productInfo.itemId}`;
             const requestUrl = `https://developer.api.walmart.com${requestPath}`;
-            const signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, requestPath, timestamp);
 
-            const headers = {
-                ...baseHeaders,
-                'WM_SEC.AUTH_SIGNATURE': signature
-            };
-
-            const response = await fetch(requestUrl, { headers });
+            const response = await fetch(requestUrl, { headers: baseHeaders });
 
             if (response.ok) {
                 const data = await response.json();
@@ -275,7 +290,8 @@ async function searchWalmartProduct(productInfo) {
                     };
                 }
             } else {
-                console.error(`Walmart item lookup failed: ${response.status} - ${await response.text()}`);
+                const errorBody = await response.text();
+                console.error(`Walmart item lookup failed: ${response.status} - ${errorBody}`);
             }
         } catch (error) {
             console.error('Walmart item lookup failed:', error.message);
@@ -287,14 +303,8 @@ async function searchWalmartProduct(productInfo) {
         try {
             const requestPath = `/api-proxy/service/affil/product/v2/items?upc=${productInfo.upc}`;
             const requestUrl = `https://developer.api.walmart.com${requestPath}`;
-            const signature = generateWalmartSignature(WALMART_CONSUMER_ID, WALMART_PRIVATE_KEY, requestPath, timestamp);
 
-            const headers = {
-                ...baseHeaders,
-                'WM_SEC.AUTH_SIGNATURE': signature
-            };
-
-            const response = await fetch(requestUrl, { headers });
+            const response = await fetch(requestUrl, { headers: baseHeaders });
 
             if (response.ok) {
                 const data = await response.json();
