@@ -9,7 +9,17 @@
 const KROGER_CLIENT_ID = process.env.KROGER_CLIENT_ID;
 const KROGER_CLIENT_SECRET = process.env.KROGER_CLIENT_SECRET;
 const WALMART_CONSUMER_ID = process.env.WALMART_CONSUMER_ID;
-const WALMART_PRIVATE_KEY = process.env.WALMART_PRIVATE_KEY;
+
+// Load Walmart private key from env var or file path
+let WALMART_PRIVATE_KEY = process.env.WALMART_PRIVATE_KEY;
+if (!WALMART_PRIVATE_KEY && process.env.WALMART_PRIVATE_KEY_PATH) {
+    try {
+        const fs = require('fs');
+        WALMART_PRIVATE_KEY = fs.readFileSync(process.env.WALMART_PRIVATE_KEY_PATH, 'utf8');
+    } catch (error) {
+        console.error('Error reading Walmart private key file:', error.message);
+    }
+}
 
 // Kroger UPC/search terms for each product key
 // These help the Kroger API find the exact right product
@@ -204,7 +214,7 @@ async function searchKrogerProduct(token, productInfo, locationId) {
 }
 
 /**
- * Generate Walmart API authentication signature
+ * Generate Walmart API authentication signature using RSA-SHA256
  */
 function generateWalmartSignature(consumerId, privateKey, requestPath, timestamp) {
     const crypto = require('crypto');
@@ -212,11 +222,11 @@ function generateWalmartSignature(consumerId, privateKey, requestPath, timestamp
     // Create the string to sign (use path only, not full URL)
     const stringToSign = consumerId + '\n' + requestPath + '\n' + 'GET' + '\n' + timestamp + '\n';
 
-    // Generate HMAC-SHA256 signature
+    // Generate RSA-SHA256 signature
     const signature = crypto
-        .createHmac('sha256', privateKey)
+        .createSign('sha256')
         .update(stringToSign)
-        .digest('base64');
+        .sign(privateKey, 'base64');
 
     return signature;
 }
