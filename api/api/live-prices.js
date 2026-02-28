@@ -334,6 +334,9 @@ async function searchLivePrices(products, locationId) {
     const krogerSearches = [];
     const walmartSearches = [];
 
+    console.log('Processing products:', products.map(p => p.key));
+    console.log('Walmart product map keys:', Object.keys(WALMART_PRODUCT_MAP));
+
     for (const product of products) {
         const key = product.key;
 
@@ -350,6 +353,7 @@ async function searchLivePrices(products, locationId) {
 
         // Walmart products go to Walmart API
         if (WALMART_PRODUCT_MAP[key]) {
+            console.log(`Found Walmart product: ${key}`);
             walmartSearches.push({ key, productInfo: WALMART_PRODUCT_MAP[key] });
             continue;
         }
@@ -399,6 +403,9 @@ async function searchLivePrices(products, locationId) {
     }
 
     // Run Walmart searches in parallel
+    console.log(`Walmart searches queued: ${walmartSearches.length}`);
+    console.log(`Walmart credentials available: ${!!WALMART_CONSUMER_ID && !!WALMART_PRIVATE_KEY}`);
+
     if (walmartSearches.length > 0 && WALMART_CONSUMER_ID) {
         const walmartResults = await Promise.all(
             walmartSearches.map(async ({ key, productInfo }) => {
