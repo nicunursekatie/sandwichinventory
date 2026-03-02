@@ -303,12 +303,18 @@
             background: white;
             border: 2px solid #e9ecef;
             color: #2c3e50;
+            padding: 14px 16px;
+            font-size: 1.05em;
+            border-radius: 8px;
+            width: 100%;
+            font-weight: 500;
         }
 
         .ingredient-card select:focus,
         .ingredient-card input:focus {
             border-color: #47B3CB;
             outline: none;
+            box-shadow: 0 0 0 3px rgba(71, 179, 203, 0.1);
         }
 
         /* Section separator */
@@ -339,38 +345,6 @@
             position: relative;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-
-        /* Progress checklist */
-        .progress-checklist {
-            background: white;
-            border: 2px solid rgba(71,179,203,0.3);
-            border-radius: 10px;
-            padding: 16px;
-            margin-bottom: 16px;
-        }
-
-        .progress-checklist-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 0;
-            color: #2c3e50;
-            font-size: 0.95em;
-        }
-
-        .progress-checklist-item .check-icon {
-            font-size: 1.2em;
-            width: 24px;
-            text-align: center;
-        }
-
-        .progress-checklist-item.complete {
-            color: #16a34a;
-        }
-
-        .progress-checklist-item.incomplete {
-            color: #64748b;
         }
 
         /* PB&J Calculator specific layout fixes */
@@ -2997,7 +2971,7 @@
                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
                     <span style="font-size: 1.4em;">🏪</span>
                     <div>
-                        <p style="color: #1a4d66; font-weight: 600; font-size: 1.05em; margin: 0;">Where are you shopping? <span style="font-weight: 400; color: #64748b; font-size: 0.9em;">(Optional)</span></p>
+                        <p style="color: #1a4d66; font-weight: 600; font-size: 1.05em; margin: 0;">Where are you shopping?</p>
                         <p style="color: #64748b; font-size: 0.9em; margin: 4px 0 0 0;">Filter products by store, or keep "Show All" to see everything</p>
                     </div>
                 </div>
@@ -3178,10 +3152,10 @@
                             <span class="emoji">🧀</span>
                             <h3>Cheese</h3>
                         </div>
-                        <p class="helper-text">Optional ingredient — we calculate 2 slices per sandwich. Skip if you prefer!</p>
+                        <p class="helper-text">We calculate 2 slices per sandwich.</p>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="cheeseSelection" onchange="handleCheeseSelection()" style="margin-bottom: 10px;">
-                                <option value="">Choose from suggested packages (optional)</option>
+                                <option value="">Choose a cheese package</option>
                                 <optgroup label="🧀 American Cheese (Deli Style)">
                                     <option value="boars-head-american" data-store="other">Boar's Head American (24 slices, $8.99)</option>
                                     <option value="land-o-lakes-american" data-store="kroger walmart other">Land O'Lakes American (24 slices, $6.49)</option>
@@ -3220,7 +3194,7 @@
                         <p class="helper-text">Each loaf makes about 10–11 sandwiches (using 2 slices per sandwich).</p>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="breadSelection" onchange="handleBreadSelection()" style="margin-bottom: 10px;">
-                                <option value="">Choose from suggested packages (optional)</option>
+                                <option value="">Choose a bread package</option>
                                 <option value="great-value-white" data-store="walmart">Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
                                 <option value="kroger-white" data-store="kroger">Kroger White Sandwich (20 oz, ~11 sandwiches, ~$1.50)</option>
                                 <option value="wonder-classic" data-store="kroger walmart other">Wonder Bread Classic White (20 oz, ~10 sandwiches, ~$3.63)</option>
@@ -3251,18 +3225,6 @@
 
                     </div>
                     <!-- End Product Selection Grid -->
-
-                    <!-- Progress Checklist -->
-                    <div class="progress-checklist" id="progressChecklist">
-                        <div class="progress-checklist-item incomplete" id="progress-target">
-                            <span class="check-icon">⬜</span>
-                            <span>Sandwich count or budget entered</span>
-                        </div>
-                        <div class="progress-checklist-item incomplete" id="progress-meat">
-                            <span class="check-icon">⬜</span>
-                            <span>Meat selected</span>
-                        </div>
-                    </div>
 
                     <div class="calc-button-container">
                         <button class="calc-button" onclick="calculateSimplified()" id="calculateBtn" disabled>Calculate</button>
@@ -5006,51 +4968,11 @@
             }
         }
 
-        // Validate inputs to enable/disable calculate button
-        function updateProgressChecklist() {
-            const targetValue = parseFloat(document.getElementById('targetValue').value);
-            const hasMeat = selectedPackages.meat !== null ||
-                           (document.getElementById('meatCustomEntry').style.display === 'block' &&
-                            document.getElementById('meatWeightOz').value && document.getElementById('meatPrice').value);
-            const hasCheese = selectedPackages.cheese !== null ||
-                             (document.getElementById('cheeseCustomEntry').style.display === 'block' &&
-                              document.getElementById('cheeseSlices').value && document.getElementById('cheesePrice').value);
-            const hasBread = selectedPackages.bread !== null ||
-                            (document.getElementById('breadCustomEntry').style.display === 'block' &&
-                             document.getElementById('breadSandwiches').value && document.getElementById('breadPrice').value);
-
-            // Update target progress
-            const targetItem = document.getElementById('progress-target');
-            if (targetValue && targetValue > 0) {
-                targetItem.className = 'progress-checklist-item complete';
-                targetItem.querySelector('.check-icon').textContent = '✅';
-            } else {
-                targetItem.className = 'progress-checklist-item incomplete';
-                targetItem.querySelector('.check-icon').textContent = '⬜';
-            }
-
-            // Update meat progress
-            const meatItem = document.getElementById('progress-meat');
-            if (hasMeat) {
-                meatItem.className = 'progress-checklist-item complete';
-                meatItem.querySelector('.check-icon').textContent = '✅';
-            } else {
-                meatItem.className = 'progress-checklist-item incomplete';
-                meatItem.querySelector('.check-icon').textContent = '⬜';
-            }
-
-            // Cheese and bread always show as complete (optional)
-            // They're styled as complete by default
-        }
-
         function validateInputs() {
             const targetValue = parseFloat(document.getElementById('targetValue').value);
             const calculateBtn = document.getElementById('calculateBtn');
             const hintDiv = document.getElementById('validationHint');
             const mode = document.querySelector('input[name="calcMode"]:checked')?.value || 'sandwiches';
-
-            // Update progress checklist
-            updateProgressChecklist();
 
             let missing = [];
 
