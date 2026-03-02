@@ -3251,23 +3251,6 @@
                     </div>
                     <!-- End Product Selection Grid -->
 
-                    <!-- Advanced Options (Progressive Disclosure) -->
-                    <details style="grid-column: 1 / -1; margin-top: 24px; padding: 18px 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;">
-                        <summary style="cursor: pointer; font-weight: 600; color: rgba(255,255,255,0.95); font-size: 0.95em; text-transform: uppercase; letter-spacing: 0.5px;">⚙️ Advanced Options & Custom Package Settings</summary>
-                        <div style="padding-top: 15px; display: flex; flex-direction: column; gap: 15px;">
-                                <div class="calc-input-group">
-                                <label for="breadUsableSlices">Bread usable slices per loaf</label>
-                                <input type="number" id="breadUsableSlices" value="20" min="10" max="26" style="max-width: 200px;">
-                                <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 4px;">Default: 20 (total slices minus 2 heels). Adjust for non-standard loaf sizes.</span>
-                                </div>
-                                <div style="padding: 12px; background: rgba(251,173,63,0.2); border-radius: 8px; margin-top: 10px;">
-                                    <div style="font-size: 0.9em; color: rgba(255,255,255,0.95);">
-                                        <strong>💡 Custom Package Support:</strong> The calculator supports arbitrary package sizes and non-standard items. Enter any weight (oz), slice count, or price manually if the suggested packages don't match what you're using.
-                            </div>
-                            </div>
-                        </div>
-                </details>
-
                     <!-- Progress Checklist -->
                     <div class="progress-checklist" id="progressChecklist">
                         <div class="progress-checklist-item incomplete" id="progress-target">
@@ -3278,20 +3261,37 @@
                             <span class="check-icon">⬜</span>
                             <span>Meat selected</span>
                         </div>
-                        <div class="progress-checklist-item complete" id="progress-cheese">
-                            <span class="check-icon">✅</span>
-                            <span>Cheese (optional - can skip)</span>
-                        </div>
-                        <div class="progress-checklist-item complete" id="progress-bread">
-                            <span class="check-icon">✅</span>
-                            <span>Bread (optional - can skip)</span>
-                        </div>
                     </div>
 
                     <div class="calc-button-container">
                         <button class="calc-button" onclick="calculateSimplified()" id="calculateBtn" disabled>Calculate</button>
                         <div id="validationHint" class="validation-hint" style="display: none;"></div>
                                 </div>
+
+                    <!-- Advanced Options (Progressive Disclosure) -->
+                    <details style="margin-top: 24px; padding: 18px 20px; background: white; border: 2px solid rgba(71,179,203,0.3); border-radius: 10px;">
+                        <summary style="cursor: pointer; font-weight: 600; color: #236383; font-size: 0.95em; text-transform: uppercase; letter-spacing: 0.5px;">⚙️ Advanced Options & Custom Package Settings</summary>
+                        <div style="padding-top: 15px; display: flex; flex-direction: column; gap: 15px;">
+                                <div>
+                                <label for="breadUsableSlices" style="color: #236383; font-weight: 600; display: block; margin-bottom: 8px;">Bread usable slices per loaf</label>
+                                <input type="number" id="breadUsableSlices" value="20" min="10" max="26" style="max-width: 200px; padding: 10px; border: 2px solid #e9ecef; background: white; border-radius: 6px; color: #2c3e50;">
+                                <span style="font-size: 0.9em; color: #5a6c7d; margin-top: 4px; display: block;">Default: 20 (total slices minus 2 heels). Adjust for non-standard loaf sizes.</span>
+                                </div>
+                                <div style="padding: 12px; background: rgba(251,173,63,0.15); border-left: 3px solid #FBAD3F; border-radius: 6px; margin-top: 10px;">
+                                    <div style="font-size: 0.9em; color: #2c3e50;">
+                                        <strong>💡 Custom Package Support:</strong> The calculator supports arbitrary package sizes and non-standard items. Enter any weight (oz), slice count, or price manually if the suggested packages don't match what you're using.
+                            </div>
+                            </div>
+                        </div>
+                </details>
+
+                <!-- Ham Phase-Out Note -->
+                <div style="background: white; border: 2px solid rgba(71,179,203,0.3); border-radius: 10px; padding: 18px 22px; margin-top: 16px;">
+                    <p style="color: #1a4d66; font-size: 0.95em; line-height: 1.6; margin: 0;">
+                        ℹ️ <strong>About Ham Sandwiches:</strong> We're phasing out ham sandwiches based on feedback from our partner agencies. Many find that turkey and chicken are more widely accepted and preferred by their communities. We still gratefully accept ham sandwich donations—we never refuse sandwiches—but encourage turkey or chicken for new batches when possible.
+                    </p>
+                </div>
+
                                 </div>
 
                 <div class="calc-result" id="calcResult" style="display: none;"></div>
@@ -3299,13 +3299,6 @@
                 <!-- LLM Validation Feedback -->
                 <div id="llmValidation" style="display: none;"></div>
                 </div>
-
-            <!-- Ham Phase-Out Note -->
-            <div style="background: linear-gradient(135deg, rgba(71,179,203,0.08), rgba(35,99,131,0.08)); border: 2px solid rgba(71,179,203,0.25); border-radius: 12px; padding: 18px 22px; margin-top: 24px;">
-                <p style="color: #1a4d66; font-size: 0.95em; line-height: 1.6; margin: 0;">
-                    ℹ️ <strong>About Ham Sandwiches:</strong> We're phasing out ham sandwiches based on feedback from our partner agencies. Many find that turkey and chicken are more widely accepted and preferred by their communities. We still gratefully accept ham sandwich donations—we never refuse sandwiches—but encourage turkey or chicken for new batches when possible.
-                </p>
-            </div>
 
             </div>
             </div> <!-- End deli-calculator-panel -->
