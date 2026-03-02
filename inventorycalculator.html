@@ -1102,10 +1102,12 @@
 
                     <div class="calc-input-group">
                         <label>Meat type</label>
+                        <p style="font-size: 0.88em; color: rgba(255,255,255,0.85); margin: 0 0 8px 0; font-style: italic;">
+                            ℹ️ We're phasing out ham sandwiches based on feedback from our partner agencies. Many find that turkey and chicken are more widely accepted and preferred by their communities. We still gratefully accept ham sandwich donations—we never refuse sandwiches—but encourage turkey or chicken for new batches when possible.
+                        </p>
                         <select id="meatType" onchange="handleMeatTypeChange()">
                             <option value="">Choose your meat</option>
                             <optgroup label="Popular Options">
-                                <option value="ham">🐷 Kirkland Ham (2-pack, 48 slices each / 96 total, $9.89) - $0.10/slice</option>
                                 <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $3.50) - $0.19/slice</option>
                                 <option value="publix-turkey">🦃 Publix Turkey Breast, Thin Sliced (16 oz / 32 slices, $7.07) - $0.22/slice</option>
                                 <option value="kroger-turkey-thin">🦃 Kroger Turkey Thin Sliced (9 oz / 18 slices, $3.99) - $0.22/slice</option>
@@ -1580,15 +1582,7 @@
                 <div class="product-price">$4.39</div>
                 <div class="price-note">~$0.14/slice</div>
             </div>
-            
-            <div class="price-card card-meat">
-                <div class="product-emoji">🐷</div>
-                <div class="product-title">Kirkland Ham</div>
-                <div class="product-size">2-pack • 48 slices</div>
-                <div class="product-price">$9.89</div>
-                <div class="price-note">~$0.21/slice</div>
-            </div>
-            
+
             <div class="price-card card-meat">
                 <div class="product-emoji">🦃</div>
                 <div class="product-title">Publix Turkey Breast</div>
@@ -1830,7 +1824,7 @@
                         <span class="amount">2</span><span class="item">slices cheese (one per bread slice)</span>
                     </div>
                     <div class="ingredient">
-                        <span class="amount">2-3</span><span class="item">slices deli meat (turkey or ham)</span>
+                        <span class="amount">2-3</span><span class="item">slices deli meat (turkey or chicken)</span>
                     </div>
                     <div class="ingredient">
                         <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
@@ -1993,11 +1987,6 @@
                     meatWeightOz = 40; // Kirkland 2-pack, ~20 oz each = 40 oz total
                     meatPrice = 13.99;
                     meatDescription = '2-packs (~40 oz total)';
-                    break;
-                case 'ham':
-                    meatWeightOz = 48; // Kirkland 2-pack, ~24 oz each = 48 oz total
-                    meatPrice = 9.89;
-                    meatDescription = '2-packs (~48 oz total)';
                     break;
                 case 'publix-turkey':
                     meatWeightOz = 16;
@@ -2463,10 +2452,6 @@
                 case 'turkey':
                     meatWeightOz = 80;
                     meatPrice = 13.99;
-                    break;
-                case 'ham':
-                    meatWeightOz = 96;
-                    meatPrice = 9.89;
                     break;
                 case 'publix-turkey':
                     meatWeightOz = 32;
@@ -3068,7 +3053,6 @@
             <table style="width:100%; margin-top: 10px; border-collapse: collapse;">
                 <tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>
                 <tr><td>Turkey (Kirkland 2-pack, 40 slices)</td><td>$13.99</td><td>40 slices total</td></tr>
-                <tr><td>Ham (Kirkland 2-pack, 48 slices)</td><td>$9.89</td><td>48 slices total</td></tr>
                 <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 oz / 32 slices</td></tr>
                 <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 oz / 32 slices</td></tr>
                 <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 oz / 18 slices</td></tr>

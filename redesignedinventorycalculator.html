@@ -246,7 +246,132 @@
                 grid-template-columns: 1fr;
             }
         }
-        
+
+        /* Individual ingredient cards */
+        .ingredient-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #47B3CB;
+            transition: all 0.2s ease;
+        }
+
+        .ingredient-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .ingredient-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(71, 179, 203, 0.2);
+        }
+
+        .ingredient-card-header .emoji {
+            font-size: 1.8em;
+            line-height: 1;
+        }
+
+        .ingredient-card-header h3 {
+            margin: 0;
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #236383;
+        }
+
+        .ingredient-card label {
+            color: #236383;
+            font-weight: 600;
+            font-size: 0.95em;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .ingredient-card .helper-text {
+            font-size: 0.88em;
+            color: #5a6c7d;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .ingredient-card select,
+        .ingredient-card input {
+            background: white;
+            border: 2px solid #e9ecef;
+            color: #2c3e50;
+        }
+
+        .ingredient-card select:focus,
+        .ingredient-card input:focus {
+            border-color: #47B3CB;
+            outline: none;
+        }
+
+        /* Section separator */
+        .section-separator {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+        }
+
+        .section-separator::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 50%;
+            height: 1px;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+        }
+
+        .section-separator span {
+            background: #47B3CB;
+            padding: 8px 24px;
+            border-radius: 20px;
+            font-weight: 600;
+            color: white;
+            font-size: 0.95em;
+            position: relative;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Progress checklist */
+        .progress-checklist {
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .progress-checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 0;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.95em;
+        }
+
+        .progress-checklist-item .check-icon {
+            font-size: 1.2em;
+            width: 24px;
+            text-align: center;
+        }
+
+        .progress-checklist-item.complete {
+            color: #4ade80;
+        }
+
+        .progress-checklist-item.incomplete {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
         /* PB&J Calculator specific layout fixes */
         #pbj-calculator .calc-form {
             display: grid;
@@ -1045,10 +1170,10 @@
         .meat-type-tab {
             flex: 1;
             padding: 12px 16px;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid #e9ecef;
             border-radius: 8px;
-            background: rgba(255,255,255,0.15);
-            color: rgba(255,255,255,0.9);
+            background: white;
+            color: #236383;
             font-size: 0.95em;
             font-weight: 600;
             cursor: pointer;
@@ -1060,15 +1185,15 @@
         }
 
         .meat-type-tab:hover {
-            background: rgba(255,255,255,0.25);
-            border-color: rgba(255,255,255,0.5);
+            background: #f8f9fa;
+            border-color: #47B3CB;
         }
 
         .meat-type-tab.active {
-            background: rgba(255,255,255,0.95);
+            background: rgba(71,179,203,0.1);
             color: #236383;
-            border-color: #FBAD3F;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            border-color: #47B3CB;
+            box-shadow: 0 2px 8px rgba(71,179,203,0.2);
         }
 
         .meat-type-tab .tab-icon {
@@ -2942,11 +3067,6 @@
                         <a href="#pricing-info" style="font-size: 0.9em; color: rgba(255,255,255,0.9); text-decoration: underline; padding: 6px 12px; background: rgba(255,255,255,0.15); border-radius: 6px; transition: all 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.25)';" onmouseout="this.style.background='rgba(255,255,255,0.15)';">📊 View Pricing Info</a>
                     </div>
                 </div>
-                <div style="background: rgba(255,255,255,0.12); border-left: 4px solid #FBAD3F; border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; font-size: 0.92em; line-height: 1.7; color: rgba(255,255,255,0.95);">
-                    <p style="margin: 0 0 6px 0; font-weight: 600;">Please use at least 2 oz of meat on every sandwich.</p>
-                    <p style="margin: 0 0 6px 0;">Your package label often says how many ounces or grams are in each serving size.</p>
-                    <p style="margin: 0;">You can select <strong>Custom</strong> below to enter those specifics from your packaging if your brand isn't in this calculator already.</p>
-                </div>
 
                 <div id="livePriceStatusMain" style="display: none; padding: 12px; margin-bottom: 15px; border-radius: 8px; text-align: center; font-size: 0.9em;"></div>
 
@@ -2958,26 +3078,34 @@
                         <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;" id="targetHint">We'll calculate the cost and shopping list for you</span>
                     </div>
 
+                    <!-- Section Separator -->
+                    <div class="section-separator">
+                        <span>Choose Your Ingredients</span>
+                    </div>
+
                     <!-- Product Selection Grid (Meat, Cheese, Bread) -->
                     <div class="product-selection-grid">
 
                     <!-- Meat Selection -->
-                    <div class="calc-input-group">
-                        <label>Meat</label>
-                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">Pick the type of deli meat below, then choose a brand from the dropdown.</span>
+                    <div class="ingredient-card">
+                        <div class="ingredient-card-header">
+                            <span class="emoji">🥩</span>
+                            <h3>Meat</h3>
+                        </div>
+                        <p class="helper-text">Pick a meat type below, then choose your brand. TSP recommends 2.5 oz per sandwich.</p>
 
                         <!-- Meat Type Tabs -->
                         <div class="meat-type-tabs" role="tablist" aria-label="Select meat type">
                             <button type="button" class="meat-type-tab" data-meat-type="turkey" onclick="selectMeatType('turkey')" role="tab" aria-selected="false">
                                 <span class="tab-icon">🦃</span> Turkey
                             </button>
-                            <button type="button" class="meat-type-tab" data-meat-type="ham" onclick="selectMeatType('ham')" role="tab" aria-selected="false">
-                                <span class="tab-icon">🐷</span> Ham
-                            </button>
                             <button type="button" class="meat-type-tab" data-meat-type="chicken" onclick="selectMeatType('chicken')" role="tab" aria-selected="false">
                                 <span class="tab-icon">🐔</span> Chicken
                             </button>
                         </div>
+                        <p style="font-size: 0.85em; color: #5a6c7d; margin: 8px 0 0 0; font-style: italic;">
+                            ℹ️ We're phasing out ham sandwiches based on feedback from our partner agencies. Many find that turkey and chicken are more widely accepted and preferred by their communities. We still gratefully accept ham sandwich donations—we never refuse sandwiches—but encourage turkey or chicken for new batches when possible.
+                        </p>
 
                         <!-- Brand Dropdown (filtered by meat type) -->
                         <select id="meatSelection" onchange="handleMeatSelection()">
@@ -2991,10 +3119,6 @@
                             <option value="hillshire-turkey" data-type="turkey" data-store="kroger walmart other" style="display: none;">Hillshire Farm Turkey (9 oz) - $6.07</option>
                             <option value="oscar-mayer-turkey" data-type="turkey" data-store="kroger walmart other" style="display: none;">Oscar Mayer Turkey (2 lb) - $9.97</option>
                             <option value="great-value-turkey-9oz" data-type="turkey" data-store="walmart" style="display: none;">Great Value Oven Roasted Turkey (9 oz) - $3.48</option>
-                            <!-- Ham options (hidden until ham tab selected) -->
-                            <option value="kirkland-ham" data-type="ham" data-store="other" style="display: none;">Kirkland Ham (2-pack, 96 slices total) - $9.89</option>
-                            <option value="kroger-ham" data-type="ham" data-store="kroger" style="display: none;">Kroger Ham (16 oz) - $4.99</option>
-                            <option value="hillshire-ham" data-type="ham" data-store="kroger walmart other" style="display: none;">Hillshire Farm Ham (9 oz) - $5.49</option>
                             <!-- Chicken options (hidden until chicken tab selected) -->
                             <option value="kroger-chicken-thin" data-type="chicken" data-store="kroger" style="display: none;">Kroger Chicken Thin (9 oz) - $4.99</option>
                             <option value="kroger-chicken-deli" data-type="chicken" data-store="kroger" style="display: none;">Kroger Deli Style Chicken (16 oz) - $4.99</option>
@@ -3007,42 +3131,42 @@
 
                         <!-- Custom Entry (hidden by default) -->
                         <div id="meatCustomEntry" style="display: none; margin-top: 12px;">
-                            <input type="text" id="meatCustomText" placeholder="Paste package description (e.g., 'Publix turkey breast 16 oz $7.99')" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); margin-bottom: 10px;">
+                            <input type="text" id="meatCustomText" placeholder="Paste package description (e.g., 'Publix turkey breast 16 oz $7.99')" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #e9ecef; background: white; margin-bottom: 10px; color: #2c3e50;">
                             <div style="display: flex; gap: 10px; align-items: center; margin-bottom: 10px;">
                                 <button onclick="parseMeatPackage()" style="padding: 8px 16px; background: #FBAD3F; color: #333; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Parse Package</button>
-                                <span style="font-size: 0.9em; color: rgba(255,255,255,0.8);">or enter manually:</span>
+                                <span style="font-size: 0.9em; color: #5a6c7d;">or enter manually:</span>
                             </div>
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                                 <div style="display: flex; gap: 6px;">
-                                    <input type="number" id="meatWeightOz" placeholder="Weight (oz)" step="0.1" min="1" oninput="validateInputs()" style="flex: 1; padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
-                                    <select id="meatWeightUnit" onchange="updateMeatWeightPlaceholder()" style="padding: 10px 6px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); font-weight: 600; cursor: pointer;">
+                                    <input type="number" id="meatWeightOz" placeholder="Weight (oz)" step="0.1" min="1" oninput="validateInputs()" style="flex: 1; padding: 10px; border-radius: 6px; border: 2px solid #e9ecef; background: white; color: #2c3e50;">
+                                    <select id="meatWeightUnit" onchange="updateMeatWeightPlaceholder()" style="padding: 10px 6px; border-radius: 6px; border: 2px solid #e9ecef; background: white; font-weight: 600; cursor: pointer; color: #2c3e50;">
                                         <option value="oz" selected>oz</option>
                                         <option value="g">g</option>
                                     </select>
                                 </div>
-                                <input type="number" id="meatPrice" placeholder="Price ($)" step="0.01" min="0" oninput="validateInputs()" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
+                                <input type="number" id="meatPrice" placeholder="Price ($)" step="0.01" min="0" oninput="validateInputs()" style="padding: 10px; border-radius: 6px; border: 2px solid #e9ecef; background: white; color: #2c3e50;">
                             </div>
                         </div>
 
                         <!-- Selected package info -->
-                        <div style="margin-top: 12px; padding: 12px; background: rgba(251,173,63,0.2); border-radius: 8px; display: none;" id="meatInfo">
-                            <div style="font-size: 0.9em; color: rgba(255,255,255,0.95);">
+                        <div style="margin-top: 12px; padding: 12px; background: rgba(71,179,203,0.1); border-left: 3px solid #47B3CB; border-radius: 6px; display: none;" id="meatInfo">
+                            <div style="font-size: 0.9em; color: #236383; font-weight: 500;">
                                 <strong>Selected:</strong> <span id="meatInfoText">-</span>
                             </div>
                         </div>
 
                         <!-- Meat amount per sandwich -->
-                        <div style="margin-top: 12px;">
-                            <label style="font-size: 0.9em; color: rgba(255,255,255,0.9); margin-bottom: 6px; display: block;">Meat per sandwich</label>
-                            <span style="font-size: 0.85em; color: rgba(255,255,255,0.7); margin-bottom: 6px; display: block;">TSP recommends 2.5 oz per sandwich (selected by default). Adjust if needed.</span>
+                        <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(71, 179, 203, 0.2);">
+                            <label style="font-size: 0.95em; color: #236383; font-weight: 600; margin-bottom: 6px; display: block;">Amount per sandwich</label>
+                            <p class="helper-text" style="margin: 0 0 10px 0;">Select 2.5 oz (recommended) or adjust as needed.</p>
                             <div style="display: flex; gap: 8px;">
-                                <button type="button" class="meat-amount-btn" data-oz="2" onclick="selectMeatAmount(2)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                <button type="button" class="meat-amount-btn" data-oz="2" onclick="selectMeatAmount(2)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #e9ecef; background: white; color: #236383; font-weight: 600; cursor: pointer; transition: all 0.2s;">
                                     2 oz
                                 </button>
-                                <button type="button" class="meat-amount-btn selected" data-oz="2.5" onclick="selectMeatAmount(2.5)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #FBAD3F; background: rgba(251,173,63,0.3); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                <button type="button" class="meat-amount-btn selected" data-oz="2.5" onclick="selectMeatAmount(2.5)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #47B3CB; background: rgba(71,179,203,0.1); color: #236383; font-weight: 600; cursor: pointer; transition: all 0.2s;">
                                     2.5 oz
                                 </button>
-                                <button type="button" class="meat-amount-btn" data-oz="3" onclick="selectMeatAmount(3)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.15); color: white; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                <button type="button" class="meat-amount-btn" data-oz="3" onclick="selectMeatAmount(3)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #e9ecef; background: white; color: #236383; font-weight: 600; cursor: pointer; transition: all 0.2s;">
                                     3 oz
                                 </button>
                             </div>
@@ -3051,9 +3175,12 @@
                     </div>
 
                     <!-- Cheese Selection -->
-                        <div class="calc-input-group">
-                        <label for="cheeseSelection">Cheese</label>
-                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">We calculate 2 slices of cheese per sandwich. Cheese is optional — skip it if you prefer!</span>
+                    <div class="ingredient-card">
+                        <div class="ingredient-card-header">
+                            <span class="emoji">🧀</span>
+                            <h3>Cheese</h3>
+                        </div>
+                        <p class="helper-text">Optional ingredient — we calculate 2 slices per sandwich. Skip if you prefer!</p>
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="cheeseSelection" onchange="handleCheeseSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose from suggested packages (optional)</option>
@@ -3067,29 +3194,33 @@
                                 <option value="custom">Enter custom package →</option>
                             </select>
                             <div id="cheeseCustomEntry" style="display: none;">
-                                <input type="text" id="cheeseCustomText" placeholder="Paste package description" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); margin-bottom: 10px;">
+                                <input type="text" id="cheeseCustomText" placeholder="Paste package description" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #e9ecef; background: white; margin-bottom: 10px; color: #2c3e50;">
                                 <div style="display: flex; gap: 10px; align-items: center;">
                                     <button onclick="parseCheesePackage()" style="padding: 8px 16px; background: #FBAD3F; color: #333; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Parse Package</button>
-                                    <span style="font-size: 0.9em; color: rgba(255,255,255,0.8);">or enter manually:</span>
-                        </div>
+                                    <span style="font-size: 0.9em; color: #5a6c7d;">or enter manually:</span>
+                                </div>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                                    <input type="number" id="cheeseSlices" placeholder="Slices" min="1" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
-                                    <input type="number" id="cheesePrice" placeholder="Price ($)" step="0.01" min="0" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
+                                    <input type="number" id="cheeseSlices" placeholder="Slices" min="1" style="padding: 10px; border-radius: 6px; border: 2px solid #e9ecef; background: white; color: #2c3e50;">
+                                    <input type="number" id="cheesePrice" placeholder="Price ($)" step="0.01" min="0" style="padding: 10px; border-radius: 6px; border: 2px solid #e9ecef; background: white; color: #2c3e50;">
+                                </div>
+                            </div>
+                    </div>
+                        <div style="margin-top: 12px; padding: 12px; background: rgba(71,179,203,0.1); border-left: 3px solid #47B3CB; border-radius: 6px; display: none;" id="cheeseInfo">
+                            <div style="font-size: 0.9em; color: #236383; font-weight: 500;">
+                                <strong>Selected:</strong> <span id="cheeseInfoText">-</span>
+                            </div>
                         </div>
                     </div>
                     </div>
-                        <div style="margin-top: 12px; padding: 12px; background: rgba(251,173,63,0.2); border-radius: 8px; display: none;" id="cheeseInfo">
-                            <div style="font-size: 0.9em; color: rgba(255,255,255,0.95);">
-                                <strong>Selected:</strong> <span id="cheeseInfoText">-</span>
-                    </div>
-                </div>
-            </div>
 
                     <!-- Bread Selection -->
-                    <div class="calc-input-group">
-                        <label for="breadSelection">Bread</label>
-                        <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">Each loaf makes about 10–11 sandwiches (using 2 slices per sandwich).</span>
-                                <div style="display: flex; flex-direction: column; gap: 12px;">
+                    <div class="ingredient-card">
+                        <div class="ingredient-card-header">
+                            <span class="emoji">🍞</span>
+                            <h3>Bread</h3>
+                        </div>
+                        <p class="helper-text">Each loaf makes about 10–11 sandwiches (using 2 slices per sandwich).</p>
+                        <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="breadSelection" onchange="handleBreadSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose from suggested packages (optional)</option>
                                 <option value="great-value-white" data-store="walmart">Great Value White (20 oz, ~11 sandwiches, $1.48)</option>
@@ -3101,30 +3232,31 @@
                                 <option value="custom">Enter custom package →</option>
                         </select>
                             <div id="breadCustomEntry" style="display: none;">
-                                <input type="text" id="breadCustomText" placeholder="Paste package description" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); margin-bottom: 10px;">
+                                <input type="text" id="breadCustomText" placeholder="Paste package description" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #e9ecef; background: white; margin-bottom: 10px; color: #2c3e50;">
                                 <div style="display: flex; gap: 10px; align-items: center;">
                                     <button onclick="parseBreadPackage()" style="padding: 8px 16px; background: #FBAD3F; color: #333; border: none; border-radius: 6px; font-weight: 600; cursor: pointer;">Parse Package</button>
-                                    <span style="font-size: 0.9em; color: rgba(255,255,255,0.8);">or enter manually:</span>
+                                    <span style="font-size: 0.9em; color: #5a6c7d;">or enter manually:</span>
                                 </div>
                                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px;">
-                                    <input type="number" id="breadSandwiches" placeholder="Sandwiches per loaf" min="1" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
-                                    <input type="number" id="breadPrice" placeholder="Price ($)" step="0.01" min="0" style="padding: 10px; border-radius: 6px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95);">
+                                    <input type="number" id="breadSandwiches" placeholder="Sandwiches per loaf" min="1" style="padding: 10px; border-radius: 6px; border: 2px solid #e9ecef; background: white; color: #2c3e50;">
+                                    <input type="number" id="breadPrice" placeholder="Price ($)" step="0.01" min="0" style="padding: 10px; border-radius: 6px; border: 2px solid #e9ecef; background: white; color: #2c3e50;">
                             </div>
                                 </div>
                                 </div>
-                        <div style="margin-top: 12px; padding: 12px; background: rgba(251,173,63,0.2); border-radius: 8px; display: none;" id="breadInfo">
-                            <div style="font-size: 0.9em; color: rgba(255,255,255,0.95);">
+                        <div style="margin-top: 12px; padding: 12px; background: rgba(71,179,203,0.1); border-left: 3px solid #47B3CB; border-radius: 6px; display: none;" id="breadInfo">
+                            <div style="font-size: 0.9em; color: #236383; font-weight: 500;">
                                 <strong>Selected:</strong> <span id="breadInfoText">-</span>
                             </div>
-                            </div>
                         </div>
+                    </div>
+                    </div>
 
                     </div>
                     <!-- End Product Selection Grid -->
 
                     <!-- Advanced Options (Progressive Disclosure) -->
-                    <details style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
-                        <summary style="cursor: pointer; font-weight: 600; color: rgba(255,255,255,0.95); font-size: 1em; margin-bottom: 10px;">⚙️ Advanced Options & Custom Package Settings</summary>
+                    <details style="grid-column: 1 / -1; margin-top: 24px; padding: 18px 20px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px;">
+                        <summary style="cursor: pointer; font-weight: 600; color: rgba(255,255,255,0.95); font-size: 0.95em; text-transform: uppercase; letter-spacing: 0.5px;">⚙️ Advanced Options & Custom Package Settings</summary>
                         <div style="padding-top: 15px; display: flex; flex-direction: column; gap: 15px;">
                                 <div class="calc-input-group">
                                 <label for="breadUsableSlices">Bread usable slices per loaf</label>
@@ -3138,6 +3270,26 @@
                             </div>
                         </div>
                 </details>
+
+                    <!-- Progress Checklist -->
+                    <div class="progress-checklist" id="progressChecklist">
+                        <div class="progress-checklist-item incomplete" id="progress-target">
+                            <span class="check-icon">⬜</span>
+                            <span>Sandwich count or budget entered</span>
+                        </div>
+                        <div class="progress-checklist-item incomplete" id="progress-meat">
+                            <span class="check-icon">⬜</span>
+                            <span>Meat selected</span>
+                        </div>
+                        <div class="progress-checklist-item complete" id="progress-cheese">
+                            <span class="check-icon">✅</span>
+                            <span>Cheese (optional - can skip)</span>
+                        </div>
+                        <div class="progress-checklist-item complete" id="progress-bread">
+                            <span class="check-icon">✅</span>
+                            <span>Bread (optional - can skip)</span>
+                        </div>
+                    </div>
 
                     <div class="calc-button-container">
                         <button class="calc-button" onclick="calculateSimplified()" id="calculateBtn" disabled>Calculate</button>
@@ -4115,10 +4267,6 @@
                 'hillshire-turkey': { weightOz: 9, price: 6.07, name: 'Hillshire Farm Turkey', type: 'turkey' },
                 'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: 'Oscar Mayer Turkey', type: 'turkey' },
                 'great-value-turkey-9oz': { weightOz: 9, price: 3.48, name: 'Great Value Oven Roasted Turkey', type: 'turkey' },
-                // Ham options
-                'kirkland-ham': { slices: 96, price: 9.89, name: 'Kirkland Ham', type: 'ham' }, // 2-pack, 48 slices each = 96 total
-                'kroger-ham': { weightOz: 16, price: 4.99, name: 'Kroger Ham', type: 'ham' },
-                'hillshire-ham': { weightOz: 9, price: 5.49, name: 'Hillshire Farm Ham', type: 'ham' },
                 // Chicken options
                 'kroger-chicken-thin': { weightOz: 9, price: 4.99, name: 'Kroger Chicken Thin', type: 'chicken' },
                 'kroger-chicken-deli': { weightOz: 16, price: 4.99, name: 'Kroger Deli Style Chicken', type: 'chicken' },
@@ -4199,7 +4347,7 @@
         // Current selected meat type (null until user selects)
         let currentMeatType = null;
 
-        // Select meat type (Turkey/Ham/Chicken tabs)
+        // Select meat type (Turkey/Chicken tabs)
         // Store selector state
         let currentStore = 'all';
 
@@ -4424,10 +4572,6 @@
                             { name: 'Hillshire Farm Ultra Thin Turkey Breast deli meat 9 oz', category: 'meat', key: 'hillshire-turkey' },
                             { name: "Oscar Mayer Turkey Breast deli meat 2 lb", category: 'meat', key: 'oscar-mayer-turkey' },
                             { name: 'Great Value Oven Roasted Turkey Breast 9 oz', category: 'meat', key: 'great-value-turkey-9oz' },
-                            // Ham
-                            { name: 'Kirkland Signature Ham deli meat Costco 2-pack', category: 'meat', key: 'kirkland-ham' },
-                            { name: 'Kroger Ham deli meat 16 oz', category: 'meat', key: 'kroger-ham' },
-                            { name: 'Hillshire Farm Ultra Thin Ham deli meat 9 oz', category: 'meat', key: 'hillshire-ham' },
                             // Chicken
                             { name: 'Kroger Chicken Breast Thin Sliced deli meat 9 oz', category: 'meat', key: 'kroger-chicken-thin' },
                             { name: 'Kroger Deli Style Oven Roasted Chicken Breast 16 oz', category: 'meat', key: 'kroger-chicken-deli' },
@@ -4557,8 +4701,8 @@
             const container = document.getElementById('pricing-cards-container');
             if (!container) return;
 
-            const typeEmoji = { turkey: '🦃', ham: '🐷', chicken: '🐔' };
-            const typeLabel = { turkey: 'Turkey', ham: 'Ham', chicken: 'Chicken' };
+            const typeEmoji = { turkey: '🦃', chicken: '🐔' };
+            const typeLabel = { turkey: 'Turkey', chicken: 'Chicken' };
 
             // Build meat cards grouped by type, sorted by price per sandwich within each group
             const meatEntries = Object.entries(packageData.meat).map(([key, pkg]) => {
@@ -4573,13 +4717,13 @@
 
             // Group by type
             const meatByType = {};
-            ['turkey', 'ham', 'chicken'].forEach(type => {
+            ['turkey', 'chicken'].forEach(type => {
                 meatByType[type] = meatEntries
                     .filter(m => m.type === type)
                     .sort((a, b) => a.perSandwich - b.perSandwich);
             });
 
-            const meatCards = ['turkey', 'ham', 'chicken'].map(type => {
+            const meatCards = ['turkey', 'chicken'].map(type => {
                 if (!meatByType[type] || meatByType[type].length === 0) return '';
                 const cards = meatByType[type].map(m =>
                     `<div class="price-card card-meat">
@@ -4864,11 +5008,50 @@
         }
 
         // Validate inputs to enable/disable calculate button
+        function updateProgressChecklist() {
+            const targetValue = parseFloat(document.getElementById('targetValue').value);
+            const hasMeat = selectedPackages.meat !== null ||
+                           (document.getElementById('meatCustomEntry').style.display === 'block' &&
+                            document.getElementById('meatWeightOz').value && document.getElementById('meatPrice').value);
+            const hasCheese = selectedPackages.cheese !== null ||
+                             (document.getElementById('cheeseCustomEntry').style.display === 'block' &&
+                              document.getElementById('cheeseSlices').value && document.getElementById('cheesePrice').value);
+            const hasBread = selectedPackages.bread !== null ||
+                            (document.getElementById('breadCustomEntry').style.display === 'block' &&
+                             document.getElementById('breadSandwiches').value && document.getElementById('breadPrice').value);
+
+            // Update target progress
+            const targetItem = document.getElementById('progress-target');
+            if (targetValue && targetValue > 0) {
+                targetItem.className = 'progress-checklist-item complete';
+                targetItem.querySelector('.check-icon').textContent = '✅';
+            } else {
+                targetItem.className = 'progress-checklist-item incomplete';
+                targetItem.querySelector('.check-icon').textContent = '⬜';
+            }
+
+            // Update meat progress
+            const meatItem = document.getElementById('progress-meat');
+            if (hasMeat) {
+                meatItem.className = 'progress-checklist-item complete';
+                meatItem.querySelector('.check-icon').textContent = '✅';
+            } else {
+                meatItem.className = 'progress-checklist-item incomplete';
+                meatItem.querySelector('.check-icon').textContent = '⬜';
+            }
+
+            // Cheese and bread always show as complete (optional)
+            // They're styled as complete by default
+        }
+
         function validateInputs() {
             const targetValue = parseFloat(document.getElementById('targetValue').value);
             const calculateBtn = document.getElementById('calculateBtn');
             const hintDiv = document.getElementById('validationHint');
             const mode = document.querySelector('input[name="calcMode"]:checked')?.value || 'sandwiches';
+
+            // Update progress checklist
+            updateProgressChecklist();
 
             let missing = [];
 
@@ -4883,7 +5066,7 @@
 
             // Check if meat type is selected first
             if (!currentMeatType) {
-                missing.push('meat type (Turkey, Ham, or Chicken)');
+                missing.push('meat type (Turkey or Chicken)');
             } else {
                 // Check if meat brand is selected
                 let hasMeat = selectedPackages.meat !== null ||
