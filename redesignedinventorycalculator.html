@@ -232,6 +232,20 @@
             margin-bottom: 30px;
             align-items: start;
         }
+
+        /* Product selection grid - keeps meat, cheese, bread together */
+        .product-selection-grid {
+            grid-column: 1 / -1; /* Span full width */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .product-selection-grid {
+                grid-template-columns: 1fr;
+            }
+        }
         
         /* PB&J Calculator specific layout fixes */
         #pbj-calculator .calc-form {
@@ -2944,6 +2958,9 @@
                         <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px;" id="targetHint">We'll calculate the cost and shopping list for you</span>
                     </div>
 
+                    <!-- Product Selection Grid (Meat, Cheese, Bread) -->
+                    <div class="product-selection-grid">
+
                     <!-- Meat Selection -->
                     <div class="calc-input-group">
                         <label>Meat</label>
@@ -3101,6 +3118,9 @@
                             </div>
                             </div>
                         </div>
+
+                    </div>
+                    <!-- End Product Selection Grid -->
 
                     <!-- Advanced Options (Progressive Disclosure) -->
                     <details style="margin-top: 20px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
