@@ -1147,6 +1147,7 @@
                                 <option value="sargento-american">🇺🇸 Sargento Sliced American (22 slices, $4.99)</option>
                                 <option value="land-o-lakes-american">🇺🇸 Land O'Lakes American (24 slices, $6.49)</option>
                                 <option value="boars-head-american">🇺🇸 Boar's Head American (24 slices, $8.99)</option>
+                                <option value="members-mark-american">🇺🇸 Member's Mark American - Sam's Club (80 slices, $13.89)</option>
                             </optgroup>
                         </select>
                     </div>
@@ -1306,8 +1307,8 @@
         </div>
 
         <!-- Ham Phase-Out Note -->
-        <div style="background: rgba(255,255,255,0.95); border: 2px solid rgba(71,179,203,0.4); border-radius: 12px; padding: 18px 22px; margin: 24px 0;">
-            <p style="color: #1a4d66; font-size: 0.95em; line-height: 1.6; margin: 0;">
+        <div style="background: #ffffff; border: 2px solid rgba(71,179,203,0.4); border-radius: 12px; padding: 18px 22px; margin: 24px 0;">
+            <p style="color: #333; font-size: 0.95em; line-height: 1.6; margin: 0;">
                 ℹ️ <strong>About Ham Sandwiches:</strong> We're phasing out ham sandwiches based on feedback from our partner agencies. Many find that turkey and chicken are more widely accepted and preferred by their communities. We still gratefully accept ham sandwich donations—we never refuse sandwiches—but encourage turkey or chicken for new batches when possible.
             </p>
         </div>
@@ -2086,6 +2087,11 @@
                     cheesePrice = 8.99;
                     cheeseDescription = '24 slices each';
                     break;
+                case 'members-mark-american':
+                    cheesePerPackage = 80;
+                    cheesePrice = 13.89;
+                    cheeseDescription = '80 slices each';
+                    break;
                 default:
                     cheesePerPackage = 24;
                     cheesePrice = 3.98;
@@ -2530,6 +2536,10 @@
                 case 'boars-head-american':
                     cheesePerPackage = 24;
                     cheesePrice = 8.99;
+                    break;
+                case 'members-mark-american':
+                    cheesePerPackage = 80;
+                    cheesePrice = 13.89;
                     break;
                 default:
                     cheesePerPackage = 24;
