@@ -1149,9 +1149,15 @@
                                 <option value="boars-head-american">🇺🇸 Boar's Head American (24 slices, $8.99)</option>
                                 <option value="members-mark-american">🇺🇸 Member's Mark American - Sam's Club (80 slices, $13.89)</option>
                             </optgroup>
+                            <optgroup label="🧀 Muenster Cheese (Deli Slices)">
+                                <option value="finlandia-muenster">🧀 Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)</option>
+                            </optgroup>
+                            <optgroup label="🧀 Havarti Cheese (Deli Slices)">
+                                <option value="arla-havarti">🧀 Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)</option>
+                            </optgroup>
                         </select>
                     </div>
-                    
+
                     <div class="calc-input-group">
                         <label>Bread type</label>
                         <select id="breadType">
@@ -2102,6 +2108,18 @@
                     cheesePrice = 13.89;
                     cheeseDescription = '80 slices each';
                     break;
+                // Muenster Cheese options
+                case 'finlandia-muenster':
+                    cheesePerPackage = 32;
+                    cheesePrice = 8.96;
+                    cheeseDescription = '~32 slices each (2 lbs)';
+                    break;
+                // Havarti Cheese options
+                case 'arla-havarti':
+                    cheesePerPackage = 32;
+                    cheesePrice = 10.20;
+                    cheeseDescription = '~32 slices each (2 lbs)';
+                    break;
                 default:
                     cheesePerPackage = 24;
                     cheesePrice = 3.98;
@@ -2556,11 +2574,21 @@
                     cheesePerPackage = 80;
                     cheesePrice = 13.89;
                     break;
+                // Muenster Cheese options
+                case 'finlandia-muenster':
+                    cheesePerPackage = 32;
+                    cheesePrice = 8.96;
+                    break;
+                // Havarti Cheese options
+                case 'arla-havarti':
+                    cheesePerPackage = 32;
+                    cheesePrice = 10.20;
+                    break;
                 default:
                     cheesePerPackage = 24;
                     cheesePrice = 3.98;
             }
-            
+
             let breadSandwichesPerPackage, breadPrice;
             switch(breadType.value) {
                 case 'great-value-white':
