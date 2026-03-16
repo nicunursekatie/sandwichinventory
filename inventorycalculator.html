@@ -1162,9 +1162,10 @@
                             <option value="wonder-giant">🍞 Wonder Bread Giant White Bread (24 oz, ~11 sandwiches, ~$4.64)</option>
                             <option value="sara-lee-butter">🍞 Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
                             <option value="sara-lee-classic">🍞 Sara Lee Classic White Bread (20 oz, ~10 sandwiches, ~$3.99)</option>
+                            <option value="natures-own-honey-wheat-2pk">🍞 Nature's Own Honey Wheat 2-Pack (2x 20 oz, ~20 sandwiches, ~$5.98)</option>
                         </select>
                     </div>
-                    
+
                     <div class="calc-button-container">
                         <button class="calc-button" onclick="calculateNeeds()">Calculate My Order</button>
                     </div>
@@ -1251,6 +1252,7 @@
                             <option value="wonder-giant">🍞 Wonder Bread Giant White Bread (24 oz, ~11 sandwiches, ~$4.64)</option>
                             <option value="sara-lee-butter">🍞 Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
                             <option value="sara-lee-classic">🍞 Sara Lee Classic White Bread (20 oz, ~10 sandwiches, ~$3.99)</option>
+                            <option value="natures-own-honey-wheat-2pk">🍞 Nature's Own Honey Wheat 2-Pack (2x 20 oz, ~20 sandwiches, ~$5.98)</option>
                         </select>
                     </div>
 
@@ -1749,6 +1751,14 @@
                 <div class="price-note">~$0.35–$0.45/sandwich</div>
             </div>
 
+            <div class="price-card card-bread">
+                <div class="product-emoji">🍞</div>
+                <div class="product-title">Nature's Own Honey Wheat (2-Pack)</div>
+                <div class="product-size">2x 20 oz • ~20 sandwiches</div>
+                <div class="product-price">$5.98</div>
+                <div class="price-note">~$0.30/sandwich</div>
+            </div>
+
         </div>
     </div>
 
@@ -2128,6 +2138,11 @@
                     breadSandwichesPerPackage = 10;
                     breadDescription = 'loaves (~10 sandwiches each)';
                     breadPrice = 3.99;
+                    break;
+                case 'natures-own-honey-wheat-2pk':
+                    breadSandwichesPerPackage = 20;
+                    breadDescription = '2-packs (~20 sandwiches each)';
+                    breadPrice = 5.98;
                     break;
                 default:
                     breadSandwichesPerPackage = 11;
@@ -2572,6 +2587,10 @@
                     breadSandwichesPerPackage = 10;
                     breadPrice = 3.99;
                     break;
+                case 'natures-own-honey-wheat-2pk':
+                    breadSandwichesPerPackage = 20;
+                    breadPrice = 5.98;
+                    break;
                 default:
                     breadSandwichesPerPackage = 11;
                     breadPrice = 1.48;
@@ -2804,6 +2823,10 @@
                 case 'sara-lee-classic':
                     usableBreadSlicesPerLoaf = 20;
                     breadPrice = 3.99;
+                    break;
+                case 'natures-own-honey-wheat-2pk':
+                    usableBreadSlicesPerLoaf = 40;
+                    breadPrice = 5.98;
                     break;
                 default:
                     usableBreadSlicesPerLoaf = 22;
@@ -3091,6 +3114,7 @@
                 <tr><td>Wonder Bread Giant White</td><td>$3.99–$5.29</td><td>~11 sandwiches</td></tr>
                 <tr><td>Sara Lee Butter Bread</td><td>$2.98–$3.29</td><td>~10 sandwiches</td></tr>
                 <tr><td>Sara Lee Classic White</td><td>$3.48–$4.49</td><td>~10 sandwiches</td></tr>
+                <tr><td>Nature's Own Honey Wheat (2-Pack)</td><td>$5.98</td><td>~20 sandwiches</td></tr>
                 <tr><td>Zip-lock Sandwich Bags</td><td>$7.99</td><td>480 count</td></tr>
             </table>
         </div>
