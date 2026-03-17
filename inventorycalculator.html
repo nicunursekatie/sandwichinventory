@@ -1156,6 +1156,9 @@
                             <optgroup label="🧀 Havarti Cheese (Deli Slices)">
                                 <option value="arla-havarti">🧀 Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)</option>
                             </optgroup>
+                            <optgroup label="🧀 Provolone Cheese (Deli Slices)">
+                                <option value="members-mark-provolone">🧀 Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)</option>
+                            </optgroup>
                         </select>
                     </div>
 
@@ -2126,6 +2129,12 @@
                     cheesePrice = 10.20;
                     cheeseDescription = '~32 slices each (2 lbs)';
                     break;
+                // Provolone Cheese options
+                case 'members-mark-provolone':
+                    cheesePerPackage = 42;
+                    cheesePrice = 6.96;
+                    cheeseDescription = '~42 slices each (2 lbs)';
+                    break;
                 default:
                     cheesePerPackage = 24;
                     cheesePrice = 3.98;
@@ -2593,6 +2602,11 @@
                 case 'arla-havarti':
                     cheesePerPackage = 32;
                     cheesePrice = 10.20;
+                    break;
+                // Provolone Cheese options
+                case 'members-mark-provolone':
+                    cheesePerPackage = 42;
+                    cheesePrice = 6.96;
                     break;
                 default:
                     cheesePerPackage = 24;
