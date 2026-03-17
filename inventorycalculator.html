@@ -1144,6 +1144,7 @@
                             <optgroup label="🇺🇸 American Cheese (Deli Style)">
                                 <option value="great-value-american">🇺🇸 Great Value American - Walmart (24 slices, $3.98)</option>
                                 <option value="kroger-american">🇺🇸 Kroger Deli American (24 slices, $4.29)</option>
+                                <option value="kroger-white-american">🇺🇸 Kroger White American (12 oz, ~12 slices, $5.00)</option>
                                 <option value="sargento-american">🇺🇸 Sargento Sliced American (22 slices, $4.99)</option>
                                 <option value="land-o-lakes-american">🇺🇸 Land O'Lakes American (24 slices, $6.49)</option>
                                 <option value="boars-head-american">🇺🇸 Boar's Head American (24 slices, $8.99)</option>
@@ -2088,6 +2089,11 @@
                     cheesePrice = 4.29;
                     cheeseDescription = '24 slices each';
                     break;
+                case 'kroger-white-american':
+                    cheesePerPackage = 12;
+                    cheesePrice = 5.00;
+                    cheeseDescription = '~12 slices each (12 oz)';
+                    break;
                 case 'sargento-american':
                     cheesePerPackage = 22;
                     cheesePrice = 4.99;
@@ -2557,6 +2563,10 @@
                 case 'kroger-american':
                     cheesePerPackage = 24;
                     cheesePrice = 4.29;
+                    break;
+                case 'kroger-white-american':
+                    cheesePerPackage = 12;
+                    cheesePrice = 5.00;
                     break;
                 case 'sargento-american':
                     cheesePerPackage = 22;

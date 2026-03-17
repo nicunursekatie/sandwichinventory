@@ -282,21 +282,29 @@
             </svg>
             <h1>Group Capacity Estimator</h1>
         </div>
-        <p class="subtitle">Estimate sandwich production based on adult and student volunteers</p>
-        
+        <p class="subtitle">Estimate sandwich production based on your volunteer team</p>
+
         <div class="input-group">
-            <label for="adults">Number of Adults</label>
+            <label for="adults">Number of Adults (30/hr each)</label>
             <input type="number" id="adults" min="0" max="500" value="10" placeholder="Enter number of adults">
             <div class="slider-container" style="margin-top: 10px;">
                 <input type="range" id="adultsSlider" min="0" max="200" value="10" style="opacity: 0.6;">
             </div>
         </div>
-        
+
         <div class="input-group">
-            <label for="students">Number of Students/Kids</label>
-            <input type="number" id="students" min="0" max="500" value="5" placeholder="Enter number of students/kids">
+            <label for="olderKids">Number of Kids Ages 12–18 (20/hr each)</label>
+            <input type="number" id="olderKids" min="0" max="500" value="5" placeholder="Enter number of kids 12-18">
             <div class="slider-container" style="margin-top: 10px;">
-                <input type="range" id="studentsSlider" min="0" max="200" value="5" style="opacity: 0.6;">
+                <input type="range" id="olderKidsSlider" min="0" max="200" value="5" style="opacity: 0.6;">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="youngerKids">Number of Kids Under 12 (10/hr each)</label>
+            <input type="number" id="youngerKids" min="0" max="500" value="0" placeholder="Enter number of kids under 12">
+            <div class="slider-container" style="margin-top: 10px;">
+                <input type="range" id="youngerKidsSlider" min="0" max="200" value="0" style="opacity: 0.6;">
             </div>
         </div>
         
@@ -364,8 +372,10 @@
     <script>
         const adultsInput = document.getElementById('adults');
         const adultsSlider = document.getElementById('adultsSlider');
-        const studentsInput = document.getElementById('students');
-        const studentsSlider = document.getElementById('studentsSlider');
+        const olderKidsInput = document.getElementById('olderKids');
+        const olderKidsSlider = document.getElementById('olderKidsSlider');
+        const youngerKidsInput = document.getElementById('youngerKids');
+        const youngerKidsSlider = document.getElementById('youngerKidsSlider');
         const hoursInput = document.getElementById('hours');
         const hoursSlider = document.getElementById('hoursSlider');
         const budgetInput = document.getElementById('budget');
@@ -383,11 +393,9 @@
         const COST_PER_SANDWICH = 1.50;
         
         // Productivity rates per hour (based on actual experience)
-        // 10 adults = 250 sandwiches/hour = 25 sandwiches per adult per hour
-        // 20 people = 500 sandwiches/hour = 25 sandwiches per person per hour
-        // Students are slower than adults
-        const ADULT_PRODUCTIVITY = 25; // Adults: 25 sandwiches per hour (based on real data)
-        const STUDENT_PRODUCTIVITY = 15; // Students: ~15 sandwiches per hour (slower than adults)
+        const ADULT_PRODUCTIVITY = 30;        // Adults: 30 sandwiches per hour
+        const OLDER_KIDS_PRODUCTIVITY = 20;   // Kids 12-18: 20 sandwiches per hour
+        const YOUNGER_KIDS_PRODUCTIVITY = 10; // Kids under 12: 10 sandwiches per hour
         
         function roundToSensibleNumber(num) {
             // Round to practical numbers for event planning
@@ -402,23 +410,23 @@
             }
         }
         
-        function calculateProductivity(adults, students) {
-            // Calculate total productivity based on adult vs student rates
+        function calculateProductivity(adults, olderKids, youngerKids) {
             const totalAdults = adults || 0;
-            const totalStudents = students || 0;
-            
-            if (totalAdults === 0 && totalStudents === 0) return 0;
-            
-            const adultProductivity = totalAdults * ADULT_PRODUCTIVITY;
-            const studentProductivity = totalStudents * STUDENT_PRODUCTIVITY;
-            
-            return adultProductivity + studentProductivity;
+            const totalOlderKids = olderKids || 0;
+            const totalYoungerKids = youngerKids || 0;
+
+            if (totalAdults === 0 && totalOlderKids === 0 && totalYoungerKids === 0) return 0;
+
+            return (totalAdults * ADULT_PRODUCTIVITY) +
+                   (totalOlderKids * OLDER_KIDS_PRODUCTIVITY) +
+                   (totalYoungerKids * YOUNGER_KIDS_PRODUCTIVITY);
         }
         
-        function getEfficiencyDescription(adults, students, totalProductivity) {
-            const totalVolunteers = adults + students;
+        function getEfficiencyDescription(adults, olderKids, youngerKids) {
+            const totalVolunteers = adults + olderKids + youngerKids;
             const adultRatio = totalVolunteers > 0 ? adults / totalVolunteers : 0;
-            
+            const youngerRatio = totalVolunteers > 0 ? youngerKids / totalVolunteers : 0;
+
             if (totalVolunteers === 0) {
                 return {
                     level: "No volunteers",
@@ -432,41 +440,50 @@
             } else if (adultRatio >= 0.5) {
                 return {
                     level: "Balanced team",
-                    tip: "Good mix of adults and students. Adults provide guidance while students learn."
+                    tip: "Good mix of adults and kids. Adults provide guidance while kids learn and contribute."
+                };
+            } else if (youngerRatio >= 0.5) {
+                return {
+                    level: "Young kids team",
+                    tip: "Lots of younger helpers! Great learning experience — make sure there are enough adults to supervise."
                 };
             } else if (adultRatio >= 0.2) {
                 return {
-                    level: "Student-heavy team",
-                    tip: "More students than adults. Consider recruiting more adult volunteers for better efficiency."
+                    level: "Kid-heavy team",
+                    tip: "More kids than adults. Consider recruiting more adult volunteers for better efficiency."
                 };
             } else {
                 return {
-                    level: "Student-led production",
-                    tip: "Mostly students volunteering. Great learning opportunity, but consider adult supervision for safety."
+                    level: "Kid-led production",
+                    tip: "Mostly kids volunteering. Great learning opportunity, but ensure adult supervision is available."
                 };
             }
         }
         
         function updateCalculations() {
             const adults = parseInt(adultsInput.value) || 0;
-            const students = parseInt(studentsInput.value) || 0;
+            const olderKids = parseInt(olderKidsInput.value) || 0;
+            const youngerKids = parseInt(youngerKidsInput.value) || 0;
             const hours = parseFloat(hoursInput.value) || 0.5;
             const budget = parseFloat(budgetInput.value) || 0;
-            const totalVolunteers = adults + students;
-            
+            const totalVolunteers = adults + olderKids + youngerKids;
+
             // Keep sliders in sync
             if (adults <= 200) {
                 adultsSlider.value = adults;
             }
-            if (students <= 200) {
-                studentsSlider.value = students;
+            if (olderKids <= 200) {
+                olderKidsSlider.value = olderKids;
+            }
+            if (youngerKids <= 200) {
+                youngerKidsSlider.value = youngerKids;
             }
             if (hours <= 4) {
                 hoursSlider.value = hours;
             }
-            
-            // Calculate sandwiches based on adult/student productivity rates
-            const totalProductivityPerHour = calculateProductivity(adults, students);
+
+            // Calculate sandwiches based on productivity rates per age group
+            const totalProductivityPerHour = calculateProductivity(adults, olderKids, youngerKids);
             const rawTotalSandwiches = totalProductivityPerHour * hours;
             const totalSandwiches = roundToSensibleNumber(rawTotalSandwiches);
             const sandwichesPerHour = roundToSensibleNumber(totalProductivityPerHour);
@@ -483,7 +500,7 @@
             }
             
             // Update efficiency description
-            const efficiencyInfo = getEfficiencyDescription(adults, students, totalProductivityPerHour);
+            const efficiencyInfo = getEfficiencyDescription(adults, olderKids, youngerKids);
             efficiencyLevel.textContent = efficiencyInfo.level;
             efficiencyTip.textContent = efficiencyInfo.tip;
             
@@ -522,13 +539,15 @@
         
         // Event listeners for inputs
         adultsInput.addEventListener('input', updateCalculations);
-        studentsInput.addEventListener('input', updateCalculations);
+        olderKidsInput.addEventListener('input', updateCalculations);
+        youngerKidsInput.addEventListener('input', updateCalculations);
         hoursInput.addEventListener('input', updateCalculations);
         budgetInput.addEventListener('input', updateCalculations);
-        
+
         // Event listeners for sliders
         adultsSlider.addEventListener('input', () => syncFromSlider(adultsSlider, adultsInput));
-        studentsSlider.addEventListener('input', () => syncFromSlider(studentsSlider, studentsInput));
+        olderKidsSlider.addEventListener('input', () => syncFromSlider(olderKidsSlider, olderKidsInput));
+        youngerKidsSlider.addEventListener('input', () => syncFromSlider(youngerKidsSlider, youngerKidsInput));
         hoursSlider.addEventListener('input', () => syncFromSlider(hoursSlider, hoursInput));
         
         // Initial calculation
