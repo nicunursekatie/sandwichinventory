@@ -540,7 +540,6 @@
                     </div>`;
             }
 
-            const stationHtml = buildStationHtml(sandwichType, volunteersNeeded);
             const budgetHtml = buildBudgetHtml(budget, target);
             const typeLabels = { 'meat-cheese': 'Meat & Cheese', 'pbj': 'PB&J', 'mix': 'Mix of Both' };
 
@@ -568,7 +567,6 @@
                     </div>
                 </div>
                 ${breakdownHtml}
-                ${stationHtml}
                 ${budgetHtml}
             `;
 
@@ -623,7 +621,6 @@
             }
 
             const avgRate = Math.round(totalPerHour / totalVolunteers);
-            const stationHtml = buildStationHtml(sandwichType, totalVolunteers);
             const budgetHtml = buildBudgetHtml(budget, totalSandwiches);
             const typeLabels = { 'meat-cheese': 'Meat & Cheese', 'pbj': 'PB&J', 'mix': 'Mix of Both' };
 
@@ -659,7 +656,6 @@
                     </div>
                 </div>
                 ${volBreakdown}
-                ${stationHtml}
                 ${budgetHtml}
             `;
 
@@ -674,22 +670,6 @@
         }
 
         // --- Shared helpers ---
-        function buildStationHtml(sandwichType, totalPeople) {
-            let html = '<div class="breakdown-section"><h4>Recommended Setup</h4>';
-            if (sandwichType === 'meat-cheese' || sandwichType === 'mix') {
-                const stations = Math.max(1, Math.ceil(totalPeople / 5));
-                html += `<div class="breakdown-item"><span>Meat & Cheese assembly lines</span><span>${stations} (4-5 people each)</span></div>`;
-            }
-            if (sandwichType === 'pbj' || sandwichType === 'mix') {
-                const stations = Math.max(1, Math.ceil(totalPeople / 4));
-                html += `<div class="breakdown-item"><span>PB&J stations</span><span>${stations} (3-4 people each)</span></div>`;
-                const spatulaPacks = Math.ceil(stations * 2 / 4);
-                html += `<div class="breakdown-item"><span>Spatula packs needed</span><span>${spatulaPacks} (2 per station)</span></div>`;
-            }
-            html += '</div>';
-            return html;
-        }
-
         function buildBudgetHtml(budget, sandwiches) {
             if (!budget || budget <= 0) return '';
             const totalCost = sandwiches * COST_PER_SANDWICH;
