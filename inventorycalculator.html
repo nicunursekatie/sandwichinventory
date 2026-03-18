@@ -1110,11 +1110,9 @@
                     </div>
 
                     <div class="calc-input-group">
-                        <label>Meat per sandwich (oz)</label>
-                        <select id="meatAmount">
-                            <option value="2" selected>2 oz of meat per sandwich</option>
-                            <option value="3">3 oz of meat per sandwich</option>
-                        </select>
+                        <label>Meat per sandwich</label>
+                        <input type="text" id="meatAmount" value="2" readonly style="background: #f1f5f9; cursor: default; color: #475569; font-weight: 600;" aria-label="2 oz per sandwich (TSP standard)">
+                        <span style="font-size: 0.85em; color: #888; margin-top: 4px;">2 oz per sandwich (TSP standard)</span>
                     </div>
 
                     <div class="calc-input-group">
@@ -1979,6 +1977,9 @@
     </div>
     
     <script>
+        // Stores the last calculation results so PDF export uses the same numbers
+        let lastCalculation = null;
+
         // Clean product names for grid display (strip emoji, parenthetical details, per-slice pricing)
         function cleanName(name) {
             return name.replace(/^[^\w]*/, '').replace(/\s*\(.*$/, '').replace(/\s*-\s*\$[\d.]+\/slice$/, '').trim();
@@ -2392,6 +2393,15 @@
 
             const costPerSandwich = (totalCost / sandwichCount).toFixed(2);
 
+            // Store results for PDF export
+            lastCalculation = {
+                sandwichCount, meatPackages, cheesePackages, breadPackages, bagPackages,
+                meatCost, cheeseCost, breadCost, bagCost, totalCost,
+                meatName, cheeseName: cheeseName, breadName,
+                meatDescription, cheeseDescription, breadDescription,
+                costPerSandwich, icePacksNeeded, coolersNeeded
+            };
+
             document.getElementById('calcResult').innerHTML = `
                 ${budgetStatusMessage}
                 <div class="result-summary">
@@ -2511,256 +2521,138 @@
         }
         
         function generatePDF() {
-            // Get form data
-            const sandwichCount = document.getElementById('sandwichCount').value;
-            const meatType = document.getElementById('meatType');
-            const cheeseType = document.getElementById('cheeseType');
-            const breadType = document.getElementById('breadType');
-            
-            const meatText = meatType.value === 'custom' ? 'Custom Meat' : meatType.options[meatType.selectedIndex].text;
-            const cheeseText = cheeseType.options[cheeseType.selectedIndex].text;
-            const breadText = breadType.options[breadType.selectedIndex].text;
-            
-            // Calculate the results (same logic as in calculateNeeds)
-            const meatOzPerSandwich = 2; // 2 oz per sandwich (standard)
-            const cheesePerSandwich = 2;
-            let meatWeightOz, meatPrice;
-            switch(meatType.value) {
-                case 'turkey':
-                    meatWeightOz = 80;
-                    meatPrice = 13.99;
-                    break;
-                case 'publix-turkey':
-                    meatWeightOz = 32;
-                    meatPrice = 7.07;
-                    break;
-                case 'land-o-frost-turkey':
-                    meatWeightOz = 32;
-                    meatPrice = 9.53;
-                    break;
-                case 'hillshire-turkey':
-                    meatWeightOz = 18;
-                    meatPrice = 6.07;
-                    break;
-                case 'kroger-turkey-regular':
-                    meatWeightOz = 12;
-                    meatPrice = 6.49;
-                    break;
-                case 'kroger-turkey-thin':
-                    meatWeightOz = 18;
-                    meatPrice = 3.99;
-                    break;
-                case 'kroger-chicken-thin':
-                    meatWeightOz = 18;
-                    meatPrice = 3.50;
-                    break;
-                case 'kroger-turkey-family':
-                    meatWeightOz = 31;
-                    meatPrice = 4.39;
-                    break;
-                case 'oscar-mayer-chicken-blackened':
-                    meatWeightOz = 12;
-                    meatPrice = 4.49;
-                    break;
-                case 'oscar-mayer-chicken-rotisserie':
-                    meatWeightOz = 32;
-                    meatPrice = 7.99;
-                    break;
-                case 'custom':
-                    meatWeightOz = getCustomMeatWeightOz();
-                    meatPrice = parseFloat(document.getElementById('customMeatPrice').value) || 0;
-                    break;
-                default:
-                    meatWeightOz = 80;
-                    meatPrice = 13.99;
+            if (!lastCalculation) {
+                alert('Please run the calculator first before exporting to PDF.');
+                return;
             }
 
-            let cheesePerPackage, cheesePrice;
-            switch(cheeseType.value) {
-                // American Cheese options
-                case 'great-value-american':
-                    cheesePerPackage = 24;
-                    cheesePrice = 3.98;
-                    break;
-                case 'kroger-american':
-                    cheesePerPackage = 24;
-                    cheesePrice = 4.29;
-                    break;
-                case 'kroger-white-american':
-                    cheesePerPackage = 12;
-                    cheesePrice = 5.00;
-                    break;
-                case 'sargento-american':
-                    cheesePerPackage = 22;
-                    cheesePrice = 4.99;
-                    break;
-                case 'land-o-lakes-american':
-                    cheesePerPackage = 24;
-                    cheesePrice = 6.49;
-                    break;
-                case 'boars-head-american':
-                    cheesePerPackage = 24;
-                    cheesePrice = 8.99;
-                    break;
-                case 'members-mark-american':
-                    cheesePerPackage = 80;
-                    cheesePrice = 13.89;
-                    break;
-                // Muenster Cheese options
-                case 'finlandia-muenster':
-                    cheesePerPackage = 32;
-                    cheesePrice = 8.96;
-                    break;
-                // Havarti Cheese options
-                case 'arla-havarti':
-                    cheesePerPackage = 32;
-                    cheesePrice = 10.20;
-                    break;
-                // Provolone Cheese options
-                case 'members-mark-provolone':
-                    cheesePerPackage = 42;
-                    cheesePrice = 6.96;
-                    break;
-                default:
-                    cheesePerPackage = 24;
-                    cheesePrice = 3.98;
-            }
-
-            let breadSandwichesPerPackage, breadPrice;
-            switch(breadType.value) {
-                case 'great-value-white':
-                    breadSandwichesPerPackage = 11;
-                    breadPrice = 1.48;
-                    break;
-                case 'kroger-white':
-                    breadSandwichesPerPackage = 11;
-                    breadPrice = 1.50;
-                    break;
-                case 'wonder-classic':
-                    breadSandwichesPerPackage = 10;
-                    breadPrice = 3.63;
-                    break;
-                case 'wonder-giant':
-                    breadSandwichesPerPackage = 11;
-                    breadPrice = 4.64;
-                    break;
-                case 'sara-lee-butter':
-                    breadSandwichesPerPackage = 10;
-                    breadPrice = 3.14;
-                    break;
-                case 'sara-lee-classic':
-                    breadSandwichesPerPackage = 10;
-                    breadPrice = 3.99;
-                    break;
-                case 'natures-own-honey-wheat-2pk':
-                    breadSandwichesPerPackage = 20;
-                    breadPrice = 5.98;
-                    break;
-                default:
-                    breadSandwichesPerPackage = 11;
-                    breadPrice = 1.48;
-            }
-            
-            const meatPackages = Math.ceil((sandwichCount * meatOzPerSandwich) / meatWeightOz);
-            const cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
-            const breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
-            
-            // meatPrice already defined above in the switch statement
-            const bagPrice = 7.99;
-            
-            const meatCost = meatPackages * meatPrice;
-            const cheeseCost = cheesePackages * cheesePrice;
-            const breadCost = breadPackages * breadPrice;
-            const bagCost = Math.ceil(sandwichCount / 480) * bagPrice;
-            const totalCost = Math.round((meatCost + cheeseCost + breadCost + bagCost) * 100) / 100;
-            const coolersNeeded = Math.ceil(sandwichCount / 100);
-            
-            // Create printable content
+            const r = lastCalculation;
             const date = new Date().toLocaleDateString();
+
+            // Strip emoji from names for cleaner PDF
+            const cleanMeat = cleanName(r.meatName);
+            const cleanCheese = cleanName(r.cheeseName);
+            const cleanBread = cleanName(r.breadName);
+
             const printContent = `
-                <div class="pdf-content">
-                    <div class="pdf-header">
-                        <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 300px; width: 100%; height: auto; margin-bottom: 15px;">
-                        <h1>Sandwich Planning Guide</h1>
-                        <h2>Shopping List & Budget Report</h2>
-                        <p>Generated: ${date}</p>
+                <div class="pdf-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 750px; margin: 0 auto; color: #1a1a1a; line-height: 1.6;">
+
+                    <!-- Header -->
+                    <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #236383;">
+                        <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 280px; width: 100%; height: auto; margin-bottom: 12px;">
+                        <h1 style="color: #236383; font-size: 22px; margin: 0;">Sandwich Planning Guide</h1>
+                        <p style="color: #666; font-size: 13px; margin: 4px 0 0 0;">Generated ${date}</p>
                     </div>
-                    
-                    <div class="pdf-section">
-                        <h3>Order Summary</h3>
-                        <p><strong>Number of sandwiches:</strong> ${sandwichCount}</p>
-                        <p><strong>Meat type:</strong> ${meatText}</p>
-                        <p><strong>Cheese type:</strong> ${cheeseText}</p>
-                        <p><strong>Bread type:</strong> ${breadText}</p>
+
+                    <!-- Summary Banner -->
+                    <div style="background: #236383; color: white; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 25px;">
+                        <div style="font-size: 36px; font-weight: 800;">${r.sandwichCount} Sandwiches</div>
+                        <div style="font-size: 18px; margin-top: 4px;">Estimated Total: $${r.totalCost.toFixed(2)}</div>
+                        <div style="font-size: 14px; opacity: 0.85; margin-top: 2px;">~$${r.costPerSandwich} per sandwich</div>
                     </div>
-                    
-                    <div class="pdf-section">
-                        <h3>Budget Summary</h3>
-                        <div class="pdf-grid">
-                            <div>
-                                <p><strong>Meat packages needed:</strong> ${meatPackages}</p>
-                                <p><strong>Cheese packages needed:</strong> ${cheesePackages}</p>
-                                <p><strong>Bread packages needed:</strong> ${breadPackages}</p>
-                            </div>
-                            <div>
-                                <p style="font-size: 18px; font-weight: bold; color: #236383;">
-                                    Total estimated cost: $${totalCost.toFixed(2)}
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="pdf-section">
-                        <h3>Shopping Checklist</h3>
-                        <ul class="pdf-checklist">
-                            <li>☐ ${meatPackages} × ${meatText.replace('🦃 ', '').replace('🐷 ', '')}</li>
-                            <li>☐ ${cheesePackages} × ${cheeseText.replace('🧀 ', '').split(' (')[0]} cheese slices</li>
-                            <li>☐ ${breadPackages} × ${breadText.replace('🍞 ', '').split(' (')[0]}</li>
-                            <li>☐ ${Math.ceil(sandwichCount / 480)} × Zip-lock sandwich bags (480 count)</li>
-                            <li>☐ ${Math.max(Math.ceil(sandwichCount / 20), 4)} × Ice packs (enough to touch every loaf)</li>
-                            <li>☐ Food-safe disposable gloves (multiple boxes)</li>
-                            <li>☐ Hair ties/nets and beard nets</li>
-                            <li>☐ Hand soap</li>
-                            <li>☐ Paper towels for cleanup</li>
-                            <li>☐ Disinfecting wipes for surfaces</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="pdf-section">
-                        <h3>Food Safety Reminders</h3>
-                        <ul class="pdf-checklist">
-                            <li>• Keep all ingredients refrigerated at 40°F or below</li>
-                            <li>• Use disposable gloves and hair/beard nets</li>
-                            <li>• Remove only 1 package of meat at a time from fridge</li>
-                            <li>• Cool sandwiches in freezer 20-30 minutes before packing</li>
-                            <li>• Never put warm sandwiches in coolers</li>
-                        </ul>
+
+                    <!-- Cost Breakdown Table -->
+                    <h3 style="color: #236383; font-size: 16px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #236383;">Cost Breakdown</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 14px;">
+                        <thead>
+                            <tr style="background: #f1f5f9;">
+                                <th style="text-align: left; padding: 10px 12px; border-bottom: 2px solid #cbd5e1; color: #475569;">Item</th>
+                                <th style="text-align: center; padding: 10px 12px; border-bottom: 2px solid #cbd5e1; color: #475569;">Qty</th>
+                                <th style="text-align: right; padding: 10px 12px; border-bottom: 2px solid #cbd5e1; color: #475569;">Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
+                                    <strong>${cleanMeat}</strong>
+                                    <div style="font-size: 12px; color: #64748b;">${r.meatDescription}</div>
+                                </td>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600;">${r.meatPackages}</td>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">$${r.meatCost.toFixed(2)}</td>
+                            </tr>
+                            <tr style="background: #fafafa;">
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
+                                    <strong>${cleanCheese}</strong>
+                                    <div style="font-size: 12px; color: #64748b;">${r.cheeseDescription}</div>
+                                </td>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600;">${r.cheesePackages}</td>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">$${r.cheeseCost.toFixed(2)}</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
+                                    <strong>${cleanBread}</strong>
+                                    <div style="font-size: 12px; color: #64748b;">${r.breadDescription}</div>
+                                </td>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600;">${r.breadPackages}</td>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">$${r.breadCost.toFixed(2)}</td>
+                            </tr>
+                            <tr style="background: #fafafa;">
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
+                                    <strong>Sandwich Bags</strong>
+                                    <div style="font-size: 12px; color: #64748b;">480-count boxes</div>
+                                </td>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600;">${r.bagPackages}</td>
+                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">$${r.bagCost.toFixed(2)}</td>
+                            </tr>
+                            <tr style="background: #236383; color: white;">
+                                <td style="padding: 12px; font-weight: 700; font-size: 15px;" colspan="2">Estimated Total</td>
+                                <td style="padding: 12px; text-align: right; font-weight: 700; font-size: 15px;">$${r.totalCost.toFixed(2)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Shopping Checklist -->
+                    <h3 style="color: #236383; font-size: 16px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #236383;">Shopping Checklist</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 13px;">
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; ${r.meatPackages} × ${cleanMeat}</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; ${r.cheesePackages} × ${cleanCheese}</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; ${r.breadPackages} × ${cleanBread}</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; ${r.bagPackages} × Zip-lock sandwich bags (480 count)</td></tr>
+                    </table>
+
+                    <h4 style="color: #64748b; font-size: 13px; margin: 20px 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Supplies (not included in total)</h4>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 13px;">
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; ${r.icePacksNeeded} × Ice packs (enough to touch every loaf)</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; Food-safe disposable gloves (multiple boxes)</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; Hair ties/nets and beard nets</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; Hand soap</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; Paper towels for cleanup</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; Disinfecting wipes for surfaces</td></tr>
+                    </table>
+
+                    <!-- Food Safety -->
+                    <h3 style="color: #236383; font-size: 16px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #236383;">Food Safety Reminders</h3>
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">Keep all ingredients refrigerated at 40°F or below</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">Use disposable gloves and hair/beard nets</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">Remove only 1 package of meat at a time from fridge</td></tr>
+                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">Cool sandwiches in freezer 20-30 min before packing</td></tr>
+                        <tr><td style="padding: 7px 10px;">Never put warm sandwiches in coolers</td></tr>
+                    </table>
+
+                    <div style="text-align: center; font-size: 11px; color: #94a3b8; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+                        The Sandwich Project &mdash; thesandwichproject.org
                     </div>
                 </div>
             `;
-            
-            // Create a temporary element with the content
+
+            // Swap body content for print
             const originalContent = document.body.innerHTML;
             const originalBackground = document.body.style.background;
             document.body.style.background = 'white';
             document.body.style.color = '#1a1a1a';
             document.body.innerHTML = printContent;
-            
-            // Add a print instruction
+
             window.alert('A print dialog will open. Please select "Save as PDF" or "Microsoft Print to PDF" as your printer destination to save as a PDF file.');
-            
-            // Open print dialog
             window.print();
-            
+
             // Restore original content after print dialog closes
             setTimeout(() => {
                 document.body.style.background = originalBackground;
                 document.body.style.color = '';
                 document.body.innerHTML = originalContent;
-                // Reattach event listeners by recalculating if data is available
                 const sandwichCountInput = document.getElementById('sandwichCount');
                 if (sandwichCountInput && sandwichCountInput.value) {
-                    // Just refresh the page to restore functionality
                     window.location.reload();
                 }
             }, 1000);
