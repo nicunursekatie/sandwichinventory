@@ -3083,7 +3083,7 @@
                             <span class="emoji">🥩</span>
                             <h3>Meat</h3>
                         </div>
-                        <p class="helper-text">Pick a meat type below, then choose your brand. TSP recommends 2.5 oz per sandwich.</p>
+                        <p class="helper-text">Pick a meat type below, then choose your brand. TSP recommends 2 oz per sandwich.</p>
 
                         <!-- Meat Type Tabs -->
                         <div class="meat-type-tabs" role="tablist" aria-label="Select meat type">
@@ -3144,19 +3144,13 @@
                         <!-- Meat amount per sandwich -->
                         <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(71, 179, 203, 0.2);">
                             <label style="font-size: 0.95em; color: #236383; font-weight: 600; margin-bottom: 6px; display: block;">Amount per sandwich</label>
-                            <p class="helper-text" style="margin: 0 0 10px 0;">Select 2.5 oz (recommended) or adjust as needed.</p>
+                            <p class="helper-text" style="margin: 0 0 10px 0;">2 oz per sandwich (TSP standard).</p>
                             <div style="display: flex; gap: 8px;">
-                                <button type="button" class="meat-amount-btn" data-oz="2" onclick="selectMeatAmount(2)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #e9ecef; background: white; color: #236383; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                                <button type="button" class="meat-amount-btn selected" data-oz="2" onclick="selectMeatAmount(2)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #47B3CB; background: rgba(71,179,203,0.1); color: #236383; font-weight: 600; cursor: pointer; transition: all 0.2s;">
                                     2 oz
                                 </button>
-                                <button type="button" class="meat-amount-btn selected" data-oz="2.5" onclick="selectMeatAmount(2.5)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #47B3CB; background: rgba(71,179,203,0.1); color: #236383; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                                    2.5 oz
-                                </button>
-                                <button type="button" class="meat-amount-btn" data-oz="3" onclick="selectMeatAmount(3)" style="flex: 1; padding: 10px; border-radius: 8px; border: 2px solid #e9ecef; background: white; color: #236383; font-weight: 600; cursor: pointer; transition: all 0.2s;">
-                                    3 oz
-                                </button>
                             </div>
-                            <input type="hidden" id="meatOzPerSandwich" value="2.5">
+                            <input type="hidden" id="meatOzPerSandwich" value="2">
                         </div>
                     </div>
 
@@ -3176,7 +3170,17 @@
                                     <option value="sargento-american" data-store="kroger walmart other">Sargento Sliced American (22 slices, $4.99)</option>
                                     <option value="great-value-american" data-store="walmart">Great Value American - Walmart (24 slices, $3.98)</option>
                                     <option value="kroger-american" data-store="kroger">Kroger Deli American (24 slices, $4.29)</option>
+                                    <option value="kroger-white-american" data-store="kroger">Kroger White American (12 oz, ~12 slices, $5.00)</option>
                                     <option value="members-mark-american" data-store="other">Member's Mark American - Sam's Club (80 slices, $13.89)</option>
+                                </optgroup>
+                                <optgroup label="🧀 Muenster Cheese (Deli Slices)">
+                                    <option value="finlandia-muenster" data-store="other">Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)</option>
+                                </optgroup>
+                                <optgroup label="🧀 Havarti Cheese (Deli Slices)">
+                                    <option value="arla-havarti" data-store="other">Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)</option>
+                                </optgroup>
+                                <optgroup label="🧀 Provolone Cheese (Deli Slices)">
+                                    <option value="members-mark-provolone" data-store="other">Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)</option>
                                 </optgroup>
                                 <option value="custom">Enter custom package →</option>
                             </select>
@@ -3424,7 +3428,7 @@
                         </div>
                     </div>
                     <div class="assembly-tip">
-                        <strong>Meat tip:</strong> Check the package label—if serving size = 2 slices (thick cut), use 2. If serving size = 3 slices (thin cut), use 3. Goal is ~2.5 oz per sandwich.
+                        <strong>Meat tip:</strong> Check the package label—if serving size = 2 slices (thick cut), use 2. If serving size = 3 slices (thin cut), use 3. Goal is ~2 oz per sandwich.
                     </div>
                     <div class="assembly-tip" style="margin-top: 8px;">
                         <strong>Assembly Order:</strong> Bread → Cheese → Meat → Cheese → Bread
@@ -3870,25 +3874,65 @@
             </div>
         </div> <!-- End food-safety-section -->
 
-        <!-- Plan Your Event Section -->
+        <!-- Group Event Planner Section -->
         <div class="section" id="plan-your-event">
-            <h2>📋 Plan Your Event</h2>
+            <h2>📋 Group Event Planner</h2>
+            <p style="color: #64748b; margin-bottom: 20px;">Enter your sandwich goal and we'll tell you how many volunteers you need and how long it will take.</p>
 
-            <!-- Timing Guidelines -->
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <h3>⏱️ Timing Guidelines (+20 min for setup/cleanup)</h3>
-                    <ul>
-                        <li>Small (50–100 sandwiches, 3–5 adults): 45–90 minutes</li>
-                        <li>Medium (200–300 sandwiches, 5–8 adults): 1.5–2.5 hours</li>
-                        <li>Large (500+ sandwiches, 10–20 adults): 2–4 hours</li>
-                        <li>Solo/pair events: plan ~25 sandwiches per adult per hour</li>
-                    </ul>
+            <div style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%); padding: 30px; border-radius: 16px; color: white;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 20px;">
+
+                    <!-- Sandwich Count -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="eventSandwichCount" style="font-weight: 600; font-size: 0.95em;">How many sandwiches?</label>
+                        <input type="number" id="eventSandwichCount" placeholder="e.g. 100" min="1" style="padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); color: #2c3e50; font-size: 1.05em; font-weight: 500;">
+                    </div>
+
+                    <!-- Sandwich Type -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="eventSandwichType" style="font-weight: 600; font-size: 0.95em;">Sandwich type</label>
+                        <select id="eventSandwichType" style="padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); color: #2c3e50; font-size: 1.05em; font-weight: 500;">
+                            <option value="meat-cheese">Meat & Cheese</option>
+                            <option value="pbj">PB&J</option>
+                            <option value="mix">Mix of Both</option>
+                        </select>
+                    </div>
+
+                    <!-- Group Composition -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="eventGroupType" style="font-weight: 600; font-size: 0.95em;">Who's volunteering?</label>
+                        <select id="eventGroupType" style="padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); color: #2c3e50; font-size: 1.05em; font-weight: 500;">
+                            <option value="all-adults">All Adults</option>
+                            <option value="adults-and-kids">Adults & Kids (mixed)</option>
+                            <option value="mostly-kids">Mostly Kids (with adult supervision)</option>
+                        </select>
+                    </div>
+
+                    <!-- Available Time -->
+                    <div style="display: flex; flex-direction: column; gap: 6px;">
+                        <label for="eventTimeAvailable" style="font-weight: 600; font-size: 0.95em;">Time available</label>
+                        <select id="eventTimeAvailable" style="padding: 12px; border-radius: 8px; border: 2px solid rgba(255,255,255,0.3); background: rgba(255,255,255,0.95); color: #2c3e50; font-size: 1.05em; font-weight: 500;">
+                            <option value="30">30 minutes</option>
+                            <option value="45">45 minutes</option>
+                            <option value="60" selected>1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                            <option value="180">3 hours</option>
+                        </select>
+                    </div>
                 </div>
+
+                <button onclick="calculateEventPlan()" style="background: #FBAD3F; color: #333; border: none; padding: 14px 36px; border-radius: 10px; font-size: 1.1em; font-weight: 700; cursor: pointer; width: 100%; transition: all 0.2s ease;">
+                    Plan My Event
+                </button>
+            </div>
+
+            <!-- Event Plan Results -->
+            <div id="eventPlanResult" style="display: none; margin-top: 24px;">
             </div>
 
             <!-- Quick Reference Section (always visible) -->
-            <div class="resource-accordion" id="quick-ref-accordion">
+            <div class="resource-accordion" id="quick-ref-accordion" style="margin-top: 24px;">
                 <div class="resource-accordion-header" aria-expanded="true">
                     <span class="resource-accordion-title">
                         <span class="accordion-icon" aria-hidden="true">🎯</span>
@@ -3940,6 +3984,142 @@
         // Clean product names for grid display (strip emoji, parenthetical details, per-slice pricing)
         function cleanName(name) {
             return name.replace(/^[^\w]*/, '').replace(/\s*\(.*$/, '').replace(/\s*-\s*\$[\d.]+\/slice$/, '').trim();
+        }
+
+        // Group Event Planner calculator
+        function calculateEventPlan() {
+            const sandwichCount = parseInt(document.getElementById('eventSandwichCount').value);
+            if (!sandwichCount || sandwichCount < 1) {
+                document.getElementById('eventPlanResult').innerHTML = `
+                    <div style="background: #fef3cd; border-left: 4px solid #FBAD3F; padding: 16px; border-radius: 8px; color: #856404;">
+                        Please enter the number of sandwiches you want to make.
+                    </div>`;
+                document.getElementById('eventPlanResult').style.display = 'block';
+                return;
+            }
+
+            const sandwichType = document.getElementById('eventSandwichType').value;
+            const groupType = document.getElementById('eventGroupType').value;
+            const timeAvailable = parseInt(document.getElementById('eventTimeAvailable').value);
+
+            // Production rates (sandwiches per person per hour)
+            // Meat & cheese is slower (assembly line with more steps)
+            // PB&J is faster (simpler process)
+            const rates = {
+                'meat-cheese': { 'all-adults': 25, 'adults-and-kids': 18, 'mostly-kids': 12 },
+                'pbj':         { 'all-adults': 35, 'adults-and-kids': 25, 'mostly-kids': 16 },
+                'mix':         { 'all-adults': 30, 'adults-and-kids': 21, 'mostly-kids': 14 }
+            };
+
+            const ratePerPersonPerHour = rates[sandwichType][groupType];
+            const ratePerPersonInTime = ratePerPersonPerHour * (timeAvailable / 60);
+
+            // Calculate volunteers needed (round up)
+            const volunteersNeeded = Math.ceil(sandwichCount / ratePerPersonInTime);
+
+            // For mixed groups, estimate adult/kid split
+            let groupBreakdown = '';
+            if (groupType === 'adults-and-kids') {
+                const adults = Math.max(2, Math.ceil(volunteersNeeded * 0.5));
+                const kids = volunteersNeeded - adults;
+                groupBreakdown = `<div style="margin-top: 4px; font-size: 0.9em; color: #64748b;">Suggested split: ~${adults} adults + ~${kids} kids</div>`;
+            } else if (groupType === 'mostly-kids') {
+                const adults = Math.max(1, Math.ceil(volunteersNeeded * 0.25));
+                const kids = volunteersNeeded - adults;
+                groupBreakdown = `<div style="margin-top: 4px; font-size: 0.9em; color: #64748b;">Suggested: ~${adults} adult supervisor${adults > 1 ? 's' : ''} + ~${kids} kids</div>`;
+            }
+
+            // Calculate actual time with the recommended volunteers
+            const actualMinutes = Math.round((sandwichCount / (volunteersNeeded * ratePerPersonPerHour)) * 60);
+            const setupCleanup = 20;
+            const totalMinutes = actualMinutes + setupCleanup;
+
+            // Format time display
+            function formatTime(mins) {
+                if (mins < 60) return `${mins} minutes`;
+                const h = Math.floor(mins / 60);
+                const m = mins % 60;
+                return m > 0 ? `${h} hr ${m} min` : `${h} hr`;
+            }
+
+            // Assembly line stations recommendation
+            let stationsHtml = '';
+            if (sandwichType === 'meat-cheese' || sandwichType === 'mix') {
+                const mcStations = Math.max(1, Math.ceil(volunteersNeeded / 5));
+                stationsHtml += `<div class="cost-item">Meat & Cheese: ${mcStations} assembly line${mcStations > 1 ? 's' : ''} (4-5 people each)</div>`;
+            }
+            if (sandwichType === 'pbj' || sandwichType === 'mix') {
+                const pbjStations = Math.max(1, Math.ceil(volunteersNeeded / 4));
+                stationsHtml += `<div class="cost-item">PB&J: ${pbjStations} station${pbjStations > 1 ? 's' : ''} (3-4 people each)</div>`;
+            }
+            if (sandwichType === 'pbj' || sandwichType === 'mix') {
+                const spatulaPacks = Math.ceil((sandwichType === 'mix' ? Math.ceil(volunteersNeeded / 4) : Math.ceil(volunteersNeeded / 4)) * 2 / 4);
+                stationsHtml += `<div class="cost-item">Spatulas needed: ${spatulaPacks} pack${spatulaPacks > 1 ? 's' : ''} (2 per PB&J station)</div>`;
+            }
+
+            // Sandwich type label
+            const typeLabels = { 'meat-cheese': 'Meat & Cheese', 'pbj': 'PB&J', 'mix': 'Mix of Both' };
+            const groupLabels = { 'all-adults': 'All Adults', 'adults-and-kids': 'Adults & Kids', 'mostly-kids': 'Mostly Kids' };
+
+            // Tips based on scenario
+            let tips = [];
+            if (sandwichCount >= 200) tips.push('For 200+ sandwiches, consider splitting into shifts to avoid volunteer fatigue.');
+            if (groupType === 'mostly-kids') tips.push('Assign one adult per station to supervise food safety and quality.');
+            if (sandwichType === 'meat-cheese') tips.push('Set up assembly-line style: bread, then cheese, then meat, then cheese, then bread.');
+            if (sandwichType === 'mix') tips.push('Keep meat & cheese and PB&J stations separate to avoid cross-contamination (allergies!).');
+            if (timeAvailable <= 30 && sandwichCount > 50) tips.push('This is a tight timeline. Consider adding more volunteers or extending the time.');
+            if (volunteersNeeded <= 2) tips.push('With a small crew, set up one station and work through systematically.');
+
+            const tipsHtml = tips.length > 0 ? `
+                <div style="margin-top: 16px; padding: 16px; background: #f0f9ff; border-left: 3px solid #47B3CB; border-radius: 0 8px 8px 0;">
+                    <strong style="color: #236383;">Tips for your event:</strong>
+                    <ul style="margin: 8px 0 0 0; padding-left: 20px; color: #475569;">
+                        ${tips.map(t => `<li style="margin: 4px 0;">${t}</li>`).join('')}
+                    </ul>
+                </div>
+            ` : '';
+
+            document.getElementById('eventPlanResult').innerHTML = `
+                <div style="background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+                    <!-- Header -->
+                    <div style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%); color: white; padding: 24px; text-align: center;">
+                        <div style="font-size: 2.5em; font-weight: 800;">${sandwichCount}</div>
+                        <div style="font-size: 1.1em; opacity: 0.9;">sandwiches (${typeLabels[sandwichType]})</div>
+                    </div>
+
+                    <!-- Results Grid -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; padding: 24px;">
+                        <div style="text-align: center; padding: 16px; background: #f0fdf4; border-radius: 12px;">
+                            <div style="font-size: 2em; font-weight: 800; color: #166534;">👥 ${volunteersNeeded}</div>
+                            <div style="font-weight: 600; color: #166534; font-size: 0.95em;">Volunteers Needed</div>
+                            <div style="font-size: 0.85em; color: #64748b; margin-top: 4px;">${groupLabels[groupType]}</div>
+                            ${groupBreakdown}
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #eff6ff; border-radius: 12px;">
+                            <div style="font-size: 2em; font-weight: 800; color: #1e40af;">⏱️ ${formatTime(actualMinutes)}</div>
+                            <div style="font-weight: 600; color: #1e40af; font-size: 0.95em;">Making Time</div>
+                            <div style="font-size: 0.85em; color: #64748b; margin-top: 4px;">+ ${setupCleanup} min setup/cleanup</div>
+                        </div>
+                        <div style="text-align: center; padding: 16px; background: #fefce8; border-radius: 12px;">
+                            <div style="font-size: 2em; font-weight: 800; color: #854d0e;">🕐 ${formatTime(totalMinutes)}</div>
+                            <div style="font-weight: 600; color: #854d0e; font-size: 0.95em;">Total Event Time</div>
+                            <div style="font-size: 0.85em; color: #64748b; margin-top: 4px;">Start to finish</div>
+                        </div>
+                    </div>
+
+                    <!-- Stations -->
+                    <div style="padding: 0 24px 16px 24px;">
+                        <h4 style="color: #236383; margin-bottom: 10px;">Recommended Setup</h4>
+                        <div style="display: grid; gap: 8px;">
+                            ${stationsHtml}
+                        </div>
+                    </div>
+
+                    ${tipsHtml ? `<div style="padding: 0 24px 24px 24px;">${tipsHtml}</div>` : ''}
+                </div>
+            `;
+            document.getElementById('eventPlanResult').style.display = 'block';
+            document.getElementById('eventPlanResult').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
 
         // Dropdown menu functions
@@ -4261,7 +4441,14 @@
                 'sargento-american': { slices: 22, price: 4.99, name: 'Sargento Sliced American' },
                 'great-value-american': { slices: 24, price: 3.98, name: 'Great Value American (Walmart)' },
                 'kroger-american': { slices: 24, price: 4.29, name: 'Kroger Deli American' },
-                'members-mark-american': { slices: 80, price: 13.89, name: "Member's Mark American (Sam's Club)" }
+                'kroger-white-american': { slices: 12, price: 5.00, name: 'Kroger White American' },
+                'members-mark-american': { slices: 80, price: 13.89, name: "Member's Mark American (Sam's Club)" },
+                // Muenster cheese options
+                'finlandia-muenster': { slices: 32, price: 8.96, name: 'Finlandia Muenster Deli Slices (Costco)' },
+                // Havarti cheese options
+                'arla-havarti': { slices: 32, price: 10.20, name: 'Arla Havarti Cheese Slices (Costco)' },
+                // Provolone cheese options
+                'members-mark-provolone': { slices: 42, price: 6.96, name: "Member's Mark Smoked Provolone (Sam's Club)" }
             },
             bread: {
                 'great-value-white': { sandwiches: 11, price: 1.48, name: 'Great Value White' },
@@ -4566,6 +4753,14 @@
                             { name: 'Sargento American cheese slices', category: 'cheese', key: 'sargento-american' },
                             { name: 'Great Value American cheese slices Walmart', category: 'cheese', key: 'great-value-american' },
                             { name: 'Kroger Deli American cheese slices', category: 'cheese', key: 'kroger-american' },
+                            { name: 'Kroger White American cheese slices', category: 'cheese', key: 'kroger-white-american' },
+                            { name: "Member's Mark American cheese Sam's Club", category: 'cheese', key: 'members-mark-american' },
+                            // Muenster Cheese
+                            { name: 'Finlandia Muenster deli slices Costco', category: 'cheese', key: 'finlandia-muenster' },
+                            // Havarti Cheese
+                            { name: 'Arla Havarti cheese slices Costco', category: 'cheese', key: 'arla-havarti' },
+                            // Provolone Cheese
+                            { name: "Member's Mark Smoked Provolone Sam's Club", category: 'cheese', key: 'members-mark-provolone' },
                             // Bread
                             { name: 'Great Value White bread loaf', category: 'bread', key: 'great-value-white' },
                             { name: 'Kroger White Sandwich bread loaf', category: 'bread', key: 'kroger-white' },
@@ -4688,7 +4883,7 @@
 
             // Build meat cards grouped by type, sorted by price per sandwich within each group
             const meatEntries = Object.entries(packageData.meat).map(([key, pkg]) => {
-                const ozPerSandwich = 2.5;
+                const ozPerSandwich = 2;
                 const perOz = pkg.weightOz ? (pkg.price / pkg.weightOz) : null;
                 const perSandwich = pkg.weightOz
                     ? (pkg.price / (pkg.weightOz / ozPerSandwich))
@@ -5048,7 +5243,7 @@
         function calculateSimplified() {
             const mode = document.querySelector('input[name="calcMode"]:checked').value;
             const targetValue = parseFloat(document.getElementById('targetValue').value);
-            const meatOzPerSandwich = parseFloat(document.getElementById('meatOzPerSandwich').value) || 2.5;
+            const meatOzPerSandwich = parseFloat(document.getElementById('meatOzPerSandwich').value) || 2;
             const calcButton = document.getElementById('calculateBtn');
 
             // Get package info for each ingredient
@@ -5127,7 +5322,7 @@
                 const isBudgetMode = result.mode === 'budget';
                 const totalSandwiches = isBudgetMode ? result.maxSandwiches : result.targetSandwiches;
                 const totalCost = isBudgetMode ? result.actualCost : result.totalCost;
-                const meatOzPerSandwich = parseFloat(document.getElementById('meatOzPerSandwich').value) || 2.5;
+                const meatOzPerSandwich = parseFloat(document.getElementById('meatOzPerSandwich').value) || 2;
 
                 // Compute per-package sandwich counts (matching calculateQuantities math)
                 const meatSandwichesPerPkg = meatPkg.weightOz
