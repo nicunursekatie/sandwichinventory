@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Group Capacity Estimator - The Sandwich Project</title>
+    <title>Group Event Planner - The Sandwich Project</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
             background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
@@ -20,16 +20,16 @@
             justify-content: center;
             align-items: center;
         }
-        
+
         .container {
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            max-width: 600px;
+            max-width: 650px;
             width: 100%;
             padding: 40px;
         }
-        
+
         .header {
             display: flex;
             align-items: center;
@@ -39,7 +39,7 @@
             border-bottom: 3px solid #47B3CB;
             position: relative;
         }
-        
+
         .header::after {
             content: '';
             position: absolute;
@@ -49,34 +49,69 @@
             height: 3px;
             background: linear-gradient(90deg, #47B3CB 0%, #FBAD3F 100%);
         }
-        
+
         .logo {
             width: 50px;
             height: 50px;
             flex-shrink: 0;
             transition: transform 0.3s;
         }
-        
+
         .logo:hover {
             transform: rotate(10deg) scale(1.1);
         }
-        
+
         h1 {
             color: #236383;
-            font-size: 28px;
+            font-size: 26px;
             flex: 1;
         }
-        
+
         .subtitle {
             color: #646464;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             font-size: 14px;
         }
-        
-        .input-group {
-            margin-bottom: 25px;
+
+        /* Mode toggle */
+        .mode-toggle {
+            display: flex;
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 4px;
+            margin-bottom: 28px;
+            gap: 4px;
         }
-        
+
+        .mode-btn {
+            flex: 1;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: transparent;
+            color: #64748b;
+        }
+
+        .mode-btn.active {
+            background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(35,99,131,0.3);
+        }
+
+        .mode-btn:not(.active):hover {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        /* Form inputs */
+        .input-group {
+            margin-bottom: 22px;
+        }
+
         label {
             display: block;
             margin-bottom: 8px;
@@ -85,12 +120,12 @@
             font-size: 14px;
             transition: color 0.3s;
         }
-        
+
         .input-group:focus-within label {
             color: #007E8C;
         }
-        
-        input {
+
+        input, select {
             width: 100%;
             padding: 12px;
             border: 2px solid #D1D3D4;
@@ -99,51 +134,70 @@
             transition: all 0.3s;
             background: white;
         }
-        
-        input:focus {
+
+        input:focus, select:focus {
             outline: none;
             border-color: #47B3CB;
             box-shadow: 0 0 0 3px rgba(71,179,203,0.1);
         }
-        
-        input:hover:not(:focus) {
+
+        input:hover:not(:focus), select:hover:not(:focus) {
             border-color: #FBAD3F;
         }
-        
+
         .slider-container {
             display: flex;
             align-items: center;
             gap: 15px;
+            margin-top: 10px;
         }
-        
+
         input[type="range"] {
             flex: 1;
             accent-color: #FBAD3F;
         }
-        
+
         .slider-value {
             min-width: 60px;
             text-align: center;
             font-weight: bold;
             color: #236383;
         }
-        
+
+        .calculate-btn {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #FBAD3F 0%, #f59e0b 100%);
+            color: #333;
+            border: none;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 5px;
+        }
+
+        .calculate-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(251,173,63,0.4);
+        }
+
+        .calculate-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Results */
         .results {
             background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
             border-radius: 12px;
             padding: 25px;
-            margin-top: 30px;
+            margin-top: 25px;
             color: white;
             position: relative;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
         }
-        
-        .results:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 25px 70px rgba(35,99,131,0.4);
-        }
-        
+
         .results::before {
             content: '';
             position: absolute;
@@ -155,116 +209,111 @@
             transform: rotate(15deg);
             pointer-events: none;
         }
-        
-        .result-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid rgba(255,255,255,0.15);
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
         }
-        
-        .result-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
+
+        .result-card {
+            text-align: center;
+            padding: 16px 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
         }
-        
-        .result-label {
-            font-size: 14px;
+
+        .result-card .number {
+            font-size: 1.8em;
+            font-weight: 800;
+            display: block;
+            line-height: 1.2;
+        }
+
+        .result-card .label {
+            font-size: 0.85em;
             opacity: 0.9;
-            margin-bottom: 5px;
+            margin-top: 4px;
         }
-        
-        .result-value {
-            font-size: 32px;
-            font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+
+        .result-card .detail {
+            font-size: 0.75em;
+            opacity: 0.7;
+            margin-top: 4px;
         }
-        
-        .result-detail {
-            font-size: 13px;
-            opacity: 0.8;
-            margin-top: 5px;
+
+        .breakdown-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(255,255,255,0.2);
         }
-        
-        .efficiency-note {
+
+        .breakdown-section h4 {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .tip-box {
             background: white;
             border-left: 4px solid #FBAD3F;
             border-radius: 8px;
             padding: 15px;
             margin-top: 20px;
             font-size: 13px;
-            line-height: 1.5;
+            line-height: 1.6;
             color: #236383;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-        
-        .efficiency-note strong {
+
+        .tip-box strong {
             color: #007E8C;
             display: block;
             margin-bottom: 5px;
             font-size: 14px;
         }
-        
-        .budget-section {
-            background: linear-gradient(to bottom, #f9f9f9, #f5f5f5);
+
+        .tip-box ul {
+            margin: 8px 0 0 0;
+            padding-left: 18px;
+        }
+
+        .tip-box li {
+            margin: 4px 0;
+        }
+
+        .nav-link {
+            display: block;
+            margin-top: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #007E8C 0%, #47B3CB 100%);
             border-radius: 12px;
-            padding: 20px;
-            margin-top: 25px;
-            border: 2px solid #47B3CB;
-            position: relative;
+            text-align: center;
         }
-        
-        .budget-section::before {
-            content: '💰';
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 24px;
-            opacity: 0.3;
-        }
-        
-        .budget-title {
-            color: #236383;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 16px;
-        }
-        
-        .cost-breakdown {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #D1D3D4;
-        }
-        
-        .cost-label {
-            color: #646464;
-            font-size: 14px;
-        }
-        
-        .cost-value {
-            color: #007E8C;
+
+        .nav-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
             font-weight: 600;
         }
-        
-        .total-cost {
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 2px solid #FBAD3F;
-        }
-        
-        .total-cost .cost-value {
-            font-size: 24px;
-            color: #236383;
-        }
-        
-        #limitingFactor[data-status="limited"] {
-            color: #A31C41;
-        }
-        
-        #limitingFactor[data-status="sufficient"] {
-            color: #007E8C;
+
+        .mode-panel { display: none; }
+        .mode-panel.active { display: block; }
+
+        @media (max-width: 500px) {
+            .container { padding: 25px; }
+            h1 { font-size: 22px; }
+            .results-grid { grid-template-columns: 1fr; }
+            .mode-btn { font-size: 12px; padding: 10px 8px; }
         }
     </style>
 </head>
@@ -272,286 +321,439 @@
     <div class="container">
         <div class="header">
             <svg class="logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <!-- Sandwich layers -->
                 <path d="M 20,70 Q 15,70 15,65 L 15,60 Q 15,55 20,55 L 80,55 Q 85,55 85,60 L 85,65 Q 85,70 80,70 Z" fill="#FBAD3F" opacity="0.9"/>
                 <path d="M 18,60 L 82,60 L 78,50 L 22,50 Z" fill="#FBAD3F" opacity="0.7"/>
                 <path d="M 20,50 Q 15,50 15,45 L 15,40 Q 15,35 20,35 L 80,35 Q 85,35 85,40 L 85,45 Q 85,50 80,50 Z" fill="#FBAD3F"/>
-                <!-- Toothpick -->
                 <rect x="48" y="20" width="4" height="35" rx="2" fill="#646464"/>
                 <circle cx="50" cy="20" r="5" fill="#646464"/>
             </svg>
-            <h1>Group Capacity Estimator</h1>
+            <h1>Group Event Planner</h1>
         </div>
-        <p class="subtitle">Estimate sandwich production based on your volunteer team</p>
+        <p class="subtitle">Plan your sandwich-making event from either direction.</p>
 
-        <div class="input-group">
-            <label for="adults">Number of Adults (30/hr each)</label>
-            <input type="number" id="adults" min="0" max="500" value="10" placeholder="Enter number of adults">
-            <div class="slider-container" style="margin-top: 10px;">
-                <input type="range" id="adultsSlider" min="0" max="200" value="10" style="opacity: 0.6;">
-            </div>
-        </div>
-
-        <div class="input-group">
-            <label for="olderKids">Number of Kids Ages 12–18 (20/hr each)</label>
-            <input type="number" id="olderKids" min="0" max="500" value="5" placeholder="Enter number of kids 12-18">
-            <div class="slider-container" style="margin-top: 10px;">
-                <input type="range" id="olderKidsSlider" min="0" max="200" value="5" style="opacity: 0.6;">
-            </div>
+        <!-- Mode Toggle -->
+        <div class="mode-toggle">
+            <button class="mode-btn active" onclick="switchMode('sandwiches')" id="mode-sandwiches-btn">
+                🥪 I know how many sandwiches
+            </button>
+            <button class="mode-btn" onclick="switchMode('volunteers')" id="mode-volunteers-btn">
+                👥 I know how many volunteers
+            </button>
         </div>
 
-        <div class="input-group">
-            <label for="youngerKids">Number of Kids Under 12 (10/hr each)</label>
-            <input type="number" id="youngerKids" min="0" max="500" value="0" placeholder="Enter number of kids under 12">
-            <div class="slider-container" style="margin-top: 10px;">
-                <input type="range" id="youngerKidsSlider" min="0" max="200" value="0" style="opacity: 0.6;">
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label for="hours">Hours Available</label>
-            <input type="number" id="hours" min="0.5" max="8" step="0.5" value="2" placeholder="Enter hours (e.g., 2.5)">
-            <div class="slider-container" style="margin-top: 10px;">
-                <input type="range" id="hoursSlider" min="0.5" max="4" step="0.5" value="2" style="opacity: 0.6;">
-            </div>
-        </div>
-        
-        <div class="input-group">
-            <label for="budget">Budget Available ($)</label>
-            <input type="number" id="budget" placeholder="Enter budget (optional)" min="0" step="10">
-        </div>
-        
-        <div class="results">
-            <div class="result-item">
-                <div class="result-label">Estimated Sandwiches</div>
-                <div class="result-value" id="sandwichCount">--</div>
-                <div class="result-detail" id="perPersonRate"></div>
-            </div>
-            
-            <div class="result-item">
-                <div class="result-label">Production Rate</div>
-                <div class="result-value" id="hourlyRate">--</div>
-                <div class="result-detail">sandwiches per hour</div>
-            </div>
-            
-            <div class="efficiency-note">
-                <strong>Efficiency Level:</strong> <span id="efficiencyLevel"></span>
-                <br><span id="efficiencyTip"></span>
+        <!-- MODE 1: Sandwiches → Volunteers -->
+        <div class="mode-panel active" id="panel-sandwiches">
+            <div class="input-group">
+                <label for="targetSandwiches">How many sandwiches do you want to make?</label>
+                <input type="number" id="targetSandwiches" min="1" placeholder="e.g. 100">
             </div>
 
-            <div style="margin-top: 20px; padding: 15px; background: linear-gradient(135deg, #007E8C 0%, #47B3CB 100%); border-radius: 12px; text-align: center;">
-                <a href="../inventorycalculator.html" style="color: white; text-decoration: none; font-size: 16px; font-weight: 600; display: block;">
-                    📊 Go to Inventory Calculator for Detailed Shopping Lists →
-                </a>
+            <div class="input-group">
+                <label for="sandwichType1">What type of sandwiches?</label>
+                <select id="sandwichType1">
+                    <option value="meat-cheese">Meat & Cheese</option>
+                    <option value="pbj">PB&J</option>
+                    <option value="mix">Mix of Both (roughly half and half)</option>
+                </select>
             </div>
+
+            <div class="input-group">
+                <label for="groupType1">Who will be volunteering?</label>
+                <select id="groupType1">
+                    <option value="all-adults">All Adults</option>
+                    <option value="adults-and-kids">Adults & Kids (mixed group)</option>
+                    <option value="mostly-kids">Mostly Kids (with adult supervision)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="timeAvailable1">How much time for making sandwiches?</label>
+                <select id="timeAvailable1">
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60" selected>1 hour</option>
+                    <option value="90">1.5 hours</option>
+                    <option value="120">2 hours</option>
+                    <option value="180">3 hours</option>
+                    <option value="240">4 hours</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="budget1">Budget (optional)</label>
+                <input type="number" id="budget1" placeholder="Enter budget in dollars" min="0" step="10">
+            </div>
+
+            <button class="calculate-btn" onclick="calcFromSandwiches()">How Many Volunteers Do I Need?</button>
         </div>
-        
-        <div class="budget-section" id="budgetSection" style="display: none;">
-            <div class="budget-title">Budget Analysis</div>
-            <div class="cost-breakdown">
-                <span class="cost-label">Cost per sandwich (avg)</span>
-                <span class="cost-value">$1.50</span>
-            </div>
-            <div class="cost-breakdown">
-                <span class="cost-label">Sandwiches from budget</span>
-                <span class="cost-value" id="budgetSandwiches">--</span>
-            </div>
-            <div class="cost-breakdown">
-                <span class="cost-label">Production capacity</span>
-                <span class="cost-value" id="capacitySandwiches">--</span>
-            </div>
-            <div class="total-cost">
-                <div class="cost-breakdown">
-                    <span class="cost-label"><strong id="limitingFactor">--</strong></span>
-                    <span class="cost-value" id="recommendation">--</span>
+
+        <!-- MODE 2: Volunteers → Sandwiches -->
+        <div class="mode-panel" id="panel-volunteers">
+            <div class="input-group">
+                <label for="numAdults">Number of Adults (25/hr each)</label>
+                <input type="number" id="numAdults" min="0" max="500" value="10" placeholder="Enter number of adults">
+                <div class="slider-container">
+                    <input type="range" id="adultsSlider" min="0" max="100" value="10" style="opacity: 0.6;">
                 </div>
+            </div>
+
+            <div class="input-group">
+                <label for="numOlderKids">Number of Kids Ages 12–18 (18/hr each)</label>
+                <input type="number" id="numOlderKids" min="0" max="500" value="0" placeholder="Enter number of kids 12-18">
+                <div class="slider-container">
+                    <input type="range" id="olderKidsSlider" min="0" max="100" value="0" style="opacity: 0.6;">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="numYoungerKids">Number of Kids Under 12 (10/hr each)</label>
+                <input type="number" id="numYoungerKids" min="0" max="500" value="0" placeholder="Enter number of kids under 12">
+                <div class="slider-container">
+                    <input type="range" id="youngerKidsSlider" min="0" max="100" value="0" style="opacity: 0.6;">
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="sandwichType2">What type of sandwiches?</label>
+                <select id="sandwichType2">
+                    <option value="meat-cheese">Meat & Cheese</option>
+                    <option value="pbj">PB&J</option>
+                    <option value="mix">Mix of Both (roughly half and half)</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="timeAvailable2">How much time for making sandwiches?</label>
+                <select id="timeAvailable2">
+                    <option value="30">30 minutes</option>
+                    <option value="45">45 minutes</option>
+                    <option value="60" selected>1 hour</option>
+                    <option value="90">1.5 hours</option>
+                    <option value="120">2 hours</option>
+                    <option value="180">3 hours</option>
+                    <option value="240">4 hours</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="budget2">Budget (optional)</label>
+                <input type="number" id="budget2" placeholder="Enter budget in dollars" min="0" step="10">
+            </div>
+
+            <button class="calculate-btn" onclick="calcFromVolunteers()">How Many Sandwiches Can We Make?</button>
+        </div>
+
+        <!-- Shared Results -->
+        <div id="resultsContainer" style="display: none;">
+            <div class="results" id="resultsContent"></div>
+            <div id="tipsContainer"></div>
+            <div class="nav-link">
+                <a href="../inventorycalculator.html">📊 Go to Inventory Calculator for Detailed Shopping Lists →</a>
             </div>
         </div>
     </div>
-    
+
     <script>
-        const adultsInput = document.getElementById('adults');
-        const adultsSlider = document.getElementById('adultsSlider');
-        const olderKidsInput = document.getElementById('olderKids');
-        const olderKidsSlider = document.getElementById('olderKidsSlider');
-        const youngerKidsInput = document.getElementById('youngerKids');
-        const youngerKidsSlider = document.getElementById('youngerKidsSlider');
-        const hoursInput = document.getElementById('hours');
-        const hoursSlider = document.getElementById('hoursSlider');
-        const budgetInput = document.getElementById('budget');
-        const sandwichCount = document.getElementById('sandwichCount');
-        const hourlyRate = document.getElementById('hourlyRate');
-        const perPersonRate = document.getElementById('perPersonRate');
-        const efficiencyLevel = document.getElementById('efficiencyLevel');
-        const efficiencyTip = document.getElementById('efficiencyTip');
-        const budgetSection = document.getElementById('budgetSection');
-        const budgetSandwiches = document.getElementById('budgetSandwiches');
-        const capacitySandwiches = document.getElementById('capacitySandwiches');
-        const limitingFactor = document.getElementById('limitingFactor');
-        const recommendation = document.getElementById('recommendation');
-        
+        // --- Production rates (sandwiches per person per hour) ---
+        // Base rates are for adults; kids scale down from these
+        const BASE_RATES = {
+            'meat-cheese': 25,
+            'pbj': 35,
+            'mix': 30
+        };
+        const OLDER_KID_FACTOR = 0.72;   // ~18/25 for meat-cheese
+        const YOUNGER_KID_FACTOR = 0.40; // ~10/25 for meat-cheese
+
+        // Group-average rates (for "sandwiches → volunteers" mode)
+        const GROUP_RATES = {
+            'meat-cheese': { 'all-adults': 25, 'adults-and-kids': 18, 'mostly-kids': 12 },
+            'pbj':         { 'all-adults': 35, 'adults-and-kids': 25, 'mostly-kids': 16 },
+            'mix':         { 'all-adults': 30, 'adults-and-kids': 21, 'mostly-kids': 14 }
+        };
+
         const COST_PER_SANDWICH = 1.50;
-        
-        // Productivity rates per hour (based on actual experience)
-        const ADULT_PRODUCTIVITY = 30;        // Adults: 30 sandwiches per hour
-        const OLDER_KIDS_PRODUCTIVITY = 20;   // Kids 12-18: 20 sandwiches per hour
-        const YOUNGER_KIDS_PRODUCTIVITY = 10; // Kids under 12: 10 sandwiches per hour
-        
-        function roundToSensibleNumber(num) {
-            // Round to practical numbers for event planning
-            if (num <= 50) {
-                return Math.round(num / 5) * 5;  // Round to nearest 5
-            } else if (num <= 200) {
-                return Math.round(num / 10) * 10;  // Round to nearest 10
-            } else if (num <= 500) {
-                return Math.round(num / 25) * 25;  // Round to nearest 25
-            } else {
-                return Math.round(num / 50) * 50;  // Round to nearest 50
+
+        function formatTime(mins) {
+            if (mins < 60) return `${mins} min`;
+            const h = Math.floor(mins / 60);
+            const m = mins % 60;
+            return m > 0 ? `${h} hr ${m} min` : `${h} hr`;
+        }
+
+        function roundToSensible(num) {
+            if (num <= 50) return Math.round(num / 5) * 5;
+            if (num <= 200) return Math.round(num / 10) * 10;
+            if (num <= 500) return Math.round(num / 25) * 25;
+            return Math.round(num / 50) * 50;
+        }
+
+        // --- Mode switching ---
+        function switchMode(mode) {
+            document.querySelectorAll('.mode-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('panel-' + mode).classList.add('active');
+            document.getElementById('mode-' + mode + '-btn').classList.add('active');
+            document.getElementById('resultsContainer').style.display = 'none';
+        }
+
+        // --- MODE 1: Sandwiches → Volunteers ---
+        function calcFromSandwiches() {
+            const target = parseInt(document.getElementById('targetSandwiches').value);
+            if (!target || target < 1) {
+                alert('Please enter the number of sandwiches you want to make.');
+                return;
             }
-        }
-        
-        function calculateProductivity(adults, olderKids, youngerKids) {
-            const totalAdults = adults || 0;
-            const totalOlderKids = olderKids || 0;
-            const totalYoungerKids = youngerKids || 0;
 
-            if (totalAdults === 0 && totalOlderKids === 0 && totalYoungerKids === 0) return 0;
+            const sandwichType = document.getElementById('sandwichType1').value;
+            const groupType = document.getElementById('groupType1').value;
+            const timeMinutes = parseInt(document.getElementById('timeAvailable1').value);
+            const budget = parseFloat(document.getElementById('budget1').value) || 0;
+            const timeHours = timeMinutes / 60;
 
-            return (totalAdults * ADULT_PRODUCTIVITY) +
-                   (totalOlderKids * OLDER_KIDS_PRODUCTIVITY) +
-                   (totalYoungerKids * YOUNGER_KIDS_PRODUCTIVITY);
+            const ratePerPersonPerHour = GROUP_RATES[sandwichType][groupType];
+            const ratePerPersonInTime = ratePerPersonPerHour * timeHours;
+            const volunteersNeeded = Math.ceil(target / ratePerPersonInTime);
+
+            const actualMinutes = Math.round((target / (volunteersNeeded * ratePerPersonPerHour)) * 60);
+            const setupCleanup = 20;
+            const totalMinutes = actualMinutes + setupCleanup;
+
+            // Group breakdown
+            let breakdownHtml = '';
+            if (groupType === 'adults-and-kids') {
+                const adults = Math.max(2, Math.ceil(volunteersNeeded * 0.5));
+                const kids = volunteersNeeded - adults;
+                breakdownHtml = `
+                    <div class="breakdown-section">
+                        <h4>Suggested Group Breakdown</h4>
+                        <div class="breakdown-item"><span>Adults</span><span>~${adults}</span></div>
+                        <div class="breakdown-item"><span>Kids (ages 12+)</span><span>~${kids}</span></div>
+                    </div>`;
+            } else if (groupType === 'mostly-kids') {
+                const adults = Math.max(1, Math.ceil(volunteersNeeded * 0.25));
+                const kids = volunteersNeeded - adults;
+                breakdownHtml = `
+                    <div class="breakdown-section">
+                        <h4>Suggested Group Breakdown</h4>
+                        <div class="breakdown-item"><span>Adult supervisors</span><span>~${adults}</span></div>
+                        <div class="breakdown-item"><span>Kids</span><span>~${kids}</span></div>
+                    </div>`;
+            }
+
+            const stationHtml = buildStationHtml(sandwichType, volunteersNeeded);
+            const budgetHtml = buildBudgetHtml(budget, target);
+            const typeLabels = { 'meat-cheese': 'Meat & Cheese', 'pbj': 'PB&J', 'mix': 'Mix of Both' };
+
+            document.getElementById('resultsContent').innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 0.9em; opacity: 0.8;">To make</div>
+                    <div style="font-size: 2.5em; font-weight: 800; line-height: 1.2;">${target.toLocaleString()} sandwiches</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">${typeLabels[sandwichType]}</div>
+                </div>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <span class="number">👥 ${volunteersNeeded}</span>
+                        <div class="label">Volunteers</div>
+                        <div class="detail">needed</div>
+                    </div>
+                    <div class="result-card">
+                        <span class="number">⏱️ ${formatTime(actualMinutes)}</span>
+                        <div class="label">Making Time</div>
+                        <div class="detail">sandwich assembly</div>
+                    </div>
+                    <div class="result-card">
+                        <span class="number">🕐 ${formatTime(totalMinutes)}</span>
+                        <div class="label">Total Time</div>
+                        <div class="detail">+${setupCleanup} min setup/cleanup</div>
+                    </div>
+                </div>
+                ${breakdownHtml}
+                ${stationHtml}
+                ${budgetHtml}
+            `;
+
+            buildTips(target, sandwichType, groupType, timeMinutes, volunteersNeeded);
+            document.getElementById('resultsContainer').style.display = 'block';
+            document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
-        
-        function getEfficiencyDescription(adults, olderKids, youngerKids) {
+
+        // --- MODE 2: Volunteers → Sandwiches ---
+        function calcFromVolunteers() {
+            const adults = parseInt(document.getElementById('numAdults').value) || 0;
+            const olderKids = parseInt(document.getElementById('numOlderKids').value) || 0;
+            const youngerKids = parseInt(document.getElementById('numYoungerKids').value) || 0;
             const totalVolunteers = adults + olderKids + youngerKids;
-            const adultRatio = totalVolunteers > 0 ? adults / totalVolunteers : 0;
-            const youngerRatio = totalVolunteers > 0 ? youngerKids / totalVolunteers : 0;
 
             if (totalVolunteers === 0) {
-                return {
-                    level: "No volunteers",
-                    tip: "Add some volunteers to start making sandwiches!"
-                };
-            } else if (adultRatio >= 0.8) {
-                return {
-                    level: "Adult-led production",
-                    tip: "Great adult leadership! High productivity with experienced volunteers."
-                };
+                alert('Please add at least one volunteer.');
+                return;
+            }
+
+            const sandwichType = document.getElementById('sandwichType2').value;
+            const timeMinutes = parseInt(document.getElementById('timeAvailable2').value);
+            const budget = parseFloat(document.getElementById('budget2').value) || 0;
+            const timeHours = timeMinutes / 60;
+
+            const baseRate = BASE_RATES[sandwichType];
+            const totalPerHour = (adults * baseRate) +
+                                 (olderKids * baseRate * OLDER_KID_FACTOR) +
+                                 (youngerKids * baseRate * YOUNGER_KID_FACTOR);
+
+            const rawTotal = totalPerHour * timeHours;
+            const totalSandwiches = roundToSensible(rawTotal);
+            const perHourDisplay = roundToSensible(totalPerHour);
+            const setupCleanup = 20;
+            const totalEventMinutes = timeMinutes + setupCleanup;
+
+            // Efficiency description
+            const adultRatio = adults / totalVolunteers;
+            let effLevel, effTip;
+            if (adultRatio >= 0.8) {
+                effLevel = 'Adult-led production';
+                effTip = 'High productivity with experienced volunteers.';
             } else if (adultRatio >= 0.5) {
-                return {
-                    level: "Balanced team",
-                    tip: "Good mix of adults and kids. Adults provide guidance while kids learn and contribute."
-                };
-            } else if (youngerRatio >= 0.5) {
-                return {
-                    level: "Young kids team",
-                    tip: "Lots of younger helpers! Great learning experience — make sure there are enough adults to supervise."
-                };
-            } else if (adultRatio >= 0.2) {
-                return {
-                    level: "Kid-heavy team",
-                    tip: "More kids than adults. Consider recruiting more adult volunteers for better efficiency."
-                };
+                effLevel = 'Balanced team';
+                effTip = 'Good mix — adults guide while kids learn and contribute.';
+            } else if (youngerKids / totalVolunteers >= 0.5) {
+                effLevel = 'Young kids team';
+                effTip = 'Great learning experience — make sure there are enough adults to supervise.';
             } else {
-                return {
-                    level: "Kid-led production",
-                    tip: "Mostly kids volunteering. Great learning opportunity, but ensure adult supervision is available."
-                };
-            }
-        }
-        
-        function updateCalculations() {
-            const adults = parseInt(adultsInput.value) || 0;
-            const olderKids = parseInt(olderKidsInput.value) || 0;
-            const youngerKids = parseInt(youngerKidsInput.value) || 0;
-            const hours = parseFloat(hoursInput.value) || 0.5;
-            const budget = parseFloat(budgetInput.value) || 0;
-            const totalVolunteers = adults + olderKids + youngerKids;
-
-            // Keep sliders in sync
-            if (adults <= 200) {
-                adultsSlider.value = adults;
-            }
-            if (olderKids <= 200) {
-                olderKidsSlider.value = olderKids;
-            }
-            if (youngerKids <= 200) {
-                youngerKidsSlider.value = youngerKids;
-            }
-            if (hours <= 4) {
-                hoursSlider.value = hours;
+                effLevel = 'Kid-heavy team';
+                effTip = 'Consider recruiting more adults for better efficiency.';
             }
 
-            // Calculate sandwiches based on productivity rates per age group
-            const totalProductivityPerHour = calculateProductivity(adults, olderKids, youngerKids);
-            const rawTotalSandwiches = totalProductivityPerHour * hours;
-            const totalSandwiches = roundToSensibleNumber(rawTotalSandwiches);
-            const sandwichesPerHour = roundToSensibleNumber(totalProductivityPerHour);
-            
-            sandwichCount.textContent = totalSandwiches.toLocaleString();
-            hourlyRate.textContent = sandwichesPerHour.toLocaleString();
-            
-            // Update per-person rate display
-            if (totalVolunteers > 0) {
-                const avgRatePerPerson = totalProductivityPerHour / totalVolunteers;
-                perPersonRate.textContent = `~${Math.round(avgRatePerPerson)} sandwiches per person/hour`;
-            } else {
-                perPersonRate.textContent = `(No volunteers)`;
-            }
-            
-            // Update efficiency description
-            const efficiencyInfo = getEfficiencyDescription(adults, olderKids, youngerKids);
-            efficiencyLevel.textContent = efficiencyInfo.level;
-            efficiencyTip.textContent = efficiencyInfo.tip;
-            
-            // Budget analysis
-            if (budget > 0) {
-                budgetSection.style.display = 'block';
-                const sandwichesFromBudget = Math.floor(budget / COST_PER_SANDWICH);
-                budgetSandwiches.textContent = sandwichesFromBudget.toLocaleString();
-                capacitySandwiches.textContent = totalSandwiches.toLocaleString();
-                
-                if (sandwichesFromBudget < totalSandwiches) {
-                    limitingFactor.textContent = "⚠️ Budget Limited";
-                    limitingFactor.setAttribute('data-status', 'limited');
-                    const shortfall = (totalSandwiches - sandwichesFromBudget) * COST_PER_SANDWICH;
-                    recommendation.textContent = `Need $${shortfall.toFixed(2)} more to reach capacity`;
-                } else {
-                    limitingFactor.textContent = "✅ Budget Sufficient";
-                    limitingFactor.setAttribute('data-status', 'sufficient');
-                    const excess = budget - (totalSandwiches * COST_PER_SANDWICH);
-                    if (excess > 50) {
-                        recommendation.textContent = `Consider adding volunteers or time`;
-                    } else {
-                        recommendation.textContent = `Well matched to capacity!`;
-                    }
-                }
-            } else {
-                budgetSection.style.display = 'none';
-            }
-        }
-        
-        // Sync sliders with input fields
-        function syncFromSlider(slider, input) {
-            input.value = slider.value;
-            updateCalculations();
-        }
-        
-        // Event listeners for inputs
-        adultsInput.addEventListener('input', updateCalculations);
-        olderKidsInput.addEventListener('input', updateCalculations);
-        youngerKidsInput.addEventListener('input', updateCalculations);
-        hoursInput.addEventListener('input', updateCalculations);
-        budgetInput.addEventListener('input', updateCalculations);
+            const avgRate = Math.round(totalPerHour / totalVolunteers);
+            const stationHtml = buildStationHtml(sandwichType, totalVolunteers);
+            const budgetHtml = buildBudgetHtml(budget, totalSandwiches);
+            const typeLabels = { 'meat-cheese': 'Meat & Cheese', 'pbj': 'PB&J', 'mix': 'Mix of Both' };
 
-        // Event listeners for sliders
-        adultsSlider.addEventListener('input', () => syncFromSlider(adultsSlider, adultsInput));
-        olderKidsSlider.addEventListener('input', () => syncFromSlider(olderKidsSlider, olderKidsInput));
-        youngerKidsSlider.addEventListener('input', () => syncFromSlider(youngerKidsSlider, youngerKidsInput));
-        hoursSlider.addEventListener('input', () => syncFromSlider(hoursSlider, hoursInput));
-        
-        // Initial calculation
-        updateCalculations();
+            // Build volunteer breakdown
+            let volBreakdown = '<div class="breakdown-section"><h4>Your Team</h4>';
+            if (adults > 0) volBreakdown += `<div class="breakdown-item"><span>Adults (${baseRate}/hr each)</span><span>${adults}</span></div>`;
+            if (olderKids > 0) volBreakdown += `<div class="breakdown-item"><span>Kids 12-18 (${Math.round(baseRate * OLDER_KID_FACTOR)}/hr each)</span><span>${olderKids}</span></div>`;
+            if (youngerKids > 0) volBreakdown += `<div class="breakdown-item"><span>Kids under 12 (${Math.round(baseRate * YOUNGER_KID_FACTOR)}/hr each)</span><span>${youngerKids}</span></div>`;
+            volBreakdown += `<div class="breakdown-item" style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 8px; margin-top: 4px;"><span><strong>${effLevel}</strong></span><span>~${avgRate}/hr avg</span></div>`;
+            volBreakdown += '</div>';
+
+            document.getElementById('resultsContent').innerHTML = `
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <div style="font-size: 0.9em; opacity: 0.8;">With ${totalVolunteers} volunteers in ${formatTime(timeMinutes)}</div>
+                    <div style="font-size: 2.5em; font-weight: 800; line-height: 1.2;">${totalSandwiches.toLocaleString()} sandwiches</div>
+                    <div style="font-size: 0.9em; opacity: 0.8;">${typeLabels[sandwichType]} · ${perHourDisplay}/hr</div>
+                </div>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <span class="number">👥 ${totalVolunteers}</span>
+                        <div class="label">Volunteers</div>
+                        <div class="detail">${adults} adult${adults !== 1 ? 's' : ''}${olderKids + youngerKids > 0 ? ', ' + (olderKids + youngerKids) + ' kids' : ''}</div>
+                    </div>
+                    <div class="result-card">
+                        <span class="number">🥪 ${totalSandwiches.toLocaleString()}</span>
+                        <div class="label">Sandwiches</div>
+                        <div class="detail">estimated total</div>
+                    </div>
+                    <div class="result-card">
+                        <span class="number">🕐 ${formatTime(totalEventMinutes)}</span>
+                        <div class="label">Total Time</div>
+                        <div class="detail">+${setupCleanup} min setup/cleanup</div>
+                    </div>
+                </div>
+                ${volBreakdown}
+                ${stationHtml}
+                ${budgetHtml}
+            `;
+
+            // Determine group type for tips
+            let groupType = 'all-adults';
+            if (adultRatio < 0.5 && youngerKids / totalVolunteers >= 0.4) groupType = 'mostly-kids';
+            else if (olderKids + youngerKids > 0) groupType = 'adults-and-kids';
+
+            buildTips(totalSandwiches, sandwichType, groupType, timeMinutes, totalVolunteers);
+            document.getElementById('resultsContainer').style.display = 'block';
+            document.getElementById('resultsContainer').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        // --- Shared helpers ---
+        function buildStationHtml(sandwichType, totalPeople) {
+            let html = '<div class="breakdown-section"><h4>Recommended Setup</h4>';
+            if (sandwichType === 'meat-cheese' || sandwichType === 'mix') {
+                const stations = Math.max(1, Math.ceil(totalPeople / 5));
+                html += `<div class="breakdown-item"><span>Meat & Cheese assembly lines</span><span>${stations} (4-5 people each)</span></div>`;
+            }
+            if (sandwichType === 'pbj' || sandwichType === 'mix') {
+                const stations = Math.max(1, Math.ceil(totalPeople / 4));
+                html += `<div class="breakdown-item"><span>PB&J stations</span><span>${stations} (3-4 people each)</span></div>`;
+                const spatulaPacks = Math.ceil(stations * 2 / 4);
+                html += `<div class="breakdown-item"><span>Spatula packs needed</span><span>${spatulaPacks} (2 per station)</span></div>`;
+            }
+            html += '</div>';
+            return html;
+        }
+
+        function buildBudgetHtml(budget, sandwiches) {
+            if (!budget || budget <= 0) return '';
+            const totalCost = sandwiches * COST_PER_SANDWICH;
+            if (budget >= totalCost) {
+                const surplus = budget - totalCost;
+                return `
+                    <div class="breakdown-section">
+                        <h4>Budget Analysis</h4>
+                        <div class="breakdown-item"><span>Estimated cost (~$${COST_PER_SANDWICH.toFixed(2)}/sandwich)</span><span>$${totalCost.toFixed(2)}</span></div>
+                        <div class="breakdown-item"><span>Budget remaining</span><span style="color: #86efac;">$${surplus.toFixed(2)}</span></div>
+                    </div>`;
+            } else {
+                const shortfall = totalCost - budget;
+                const canAfford = Math.floor(budget / COST_PER_SANDWICH);
+                return `
+                    <div class="breakdown-section">
+                        <h4>Budget Analysis</h4>
+                        <div class="breakdown-item"><span>Estimated cost (~$${COST_PER_SANDWICH.toFixed(2)}/sandwich)</span><span>$${totalCost.toFixed(2)}</span></div>
+                        <div class="breakdown-item"><span style="color: #fca5a5;">Budget shortfall</span><span style="color: #fca5a5;">-$${shortfall.toFixed(2)}</span></div>
+                        <div class="breakdown-item"><span>Sandwiches budget covers</span><span>${canAfford.toLocaleString()}</span></div>
+                    </div>`;
+            }
+        }
+
+        function buildTips(sandwiches, sandwichType, groupType, timeMinutes, volunteers) {
+            let tips = [];
+            if (sandwiches >= 200) tips.push('For 200+ sandwiches, consider splitting into shifts to avoid volunteer fatigue.');
+            if (groupType === 'mostly-kids') tips.push('Assign one adult per station to supervise food safety and quality.');
+            if (sandwichType === 'meat-cheese') tips.push('Assembly line order: Bread → Cheese → Meat → Cheese → Bread.');
+            if (sandwichType === 'mix') tips.push('Keep meat & cheese and PB&J stations separate to avoid cross-contamination (allergies!).');
+            if (timeMinutes <= 30 && sandwiches > 50) tips.push('This is a tight timeline — consider adding more time or recruiting extra volunteers.');
+            if (volunteers <= 2) tips.push('With a small crew, set up one station and work through it systematically.');
+            if (volunteers >= 15) tips.push('With a large group, designate 1-2 floaters to restock supplies and bag finished sandwiches.');
+
+            const container = document.getElementById('tipsContainer');
+            if (tips.length > 0) {
+                container.innerHTML = `
+                    <div class="tip-box">
+                        <strong>Tips for Your Event</strong>
+                        <ul>${tips.map(t => `<li>${t}</li>`).join('')}</ul>
+                    </div>`;
+            } else {
+                container.innerHTML = '';
+            }
+        }
+
+        // --- Slider sync for Mode 2 ---
+        function syncSlider(sliderId, inputId) {
+            const slider = document.getElementById(sliderId);
+            const input = document.getElementById(inputId);
+            slider.addEventListener('input', () => { input.value = slider.value; });
+            input.addEventListener('input', () => { if (parseInt(input.value) <= parseInt(slider.max)) slider.value = input.value; });
+        }
+        syncSlider('adultsSlider', 'numAdults');
+        syncSlider('olderKidsSlider', 'numOlderKids');
+        syncSlider('youngerKidsSlider', 'numYoungerKids');
+
+        // Enter key triggers calculation
+        document.querySelectorAll('#panel-sandwiches input, #panel-sandwiches select').forEach(el => {
+            el.addEventListener('keypress', e => { if (e.key === 'Enter') calcFromSandwiches(); });
+        });
+        document.querySelectorAll('#panel-volunteers input, #panel-volunteers select').forEach(el => {
+            el.addEventListener('keypress', e => { if (e.key === 'Enter') calcFromVolunteers(); });
+        });
     </script>
 </body>
 </html>
