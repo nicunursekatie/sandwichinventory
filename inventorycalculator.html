@@ -367,63 +367,21 @@
         @media print {
             body {
                 background: white !important;
-                color: #1a1a1a !important;
             }
             body * {
                 visibility: hidden;
             }
             .pdf-content, .pdf-content * {
                 visibility: visible;
-                color: #1a1a1a !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
             }
             .pdf-content {
                 position: absolute;
                 left: 0;
                 top: 0;
                 width: 100%;
-                background: white !important;
-                padding: 20px;
             }
-
-            .pdf-header {
-                text-align: center;
-                margin-bottom: 30px;
-            }
-
-            .pdf-header h1, .pdf-header h2 {
-                color: #236383 !important;
-            }
-
-            .pdf-section {
-                margin-bottom: 20px;
-                page-break-inside: avoid;
-            }
-
-            .pdf-section h3 {
-                border-bottom: 2px solid #236383;
-                padding-bottom: 5px;
-                margin-bottom: 15px;
-                color: #236383 !important;
-            }
-
-            .pdf-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr;
-                gap: 20px;
-                margin-bottom: 20px;
-            }
-
-            .pdf-checklist {
-                list-style: none;
-                padding: 0;
-            }
-
-            .pdf-checklist li {
-                margin: 8px 0;
-                font-size: 11px;
-                color: #1a1a1a !important;
-            }
-
             .no-print {
                 display: none !important;
             }
@@ -1109,18 +1067,14 @@
                         <span style="font-size: 0.98em; color: rgba(255,255,255,0.9); margin-top: 2px;">Enter the total amount you want to spend.</span>
                     </div>
 
-                    <div class="calc-input-group">
-                        <label>Meat per sandwich</label>
-                        <input type="text" id="meatAmount" value="2" readonly style="background: #f1f5f9; cursor: default; color: #475569; font-weight: 600;" aria-label="2 oz per sandwich (TSP standard)">
-                        <span style="font-size: 0.85em; color: #888; margin-top: 4px;">2 oz per sandwich (TSP standard)</span>
-                    </div>
-
+                    <input type="hidden" id="meatAmount" value="2">
                     <div class="calc-input-group">
                         <label>Meat type</label>
+                        <span style="font-size: 0.85em; color: #888; margin-bottom: 4px;">Calculates 2 oz of meat per sandwich</span>
                         <select id="meatType" onchange="handleMeatTypeChange()">
                             <option value="">Choose your meat</option>
                             <optgroup label="Popular Options">
-                                <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $3.50) - $0.19/slice</option>
+                                <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $4.99) - $0.28/slice</option>
                                 <option value="publix-turkey">🦃 Publix Turkey Breast, Thin Sliced (16 oz / 32 slices, $7.07) - $0.22/slice</option>
                                 <option value="kroger-turkey-thin">🦃 Kroger Turkey Thin Sliced (9 oz / 18 slices, $3.99) - $0.22/slice</option>
                                 <option value="kroger-turkey-family">🦃 Kroger Turkey Family Size (1 lb / 30-32 slices, $4.39) - $0.14/slice</option>
@@ -2060,7 +2014,7 @@
                     break;
                 case 'kroger-chicken-thin':
                     meatWeightOz = 9;
-                    meatPrice = 3.50;
+                    meatPrice = 4.99;
                     meatDescription = '9 oz packages';
                     break;
                 case 'kroger-turkey-family':
@@ -2535,103 +2489,115 @@
             const cleanBread = cleanName(r.breadName);
 
             const printContent = `
-                <div class="pdf-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 750px; margin: 0 auto; color: #1a1a1a; line-height: 1.6;">
+                <div class="pdf-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 750px; margin: 0 auto; color: #333; line-height: 1.6;">
 
-                    <!-- Header -->
-                    <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 3px solid #236383;">
-                        <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 280px; width: 100%; height: auto; margin-bottom: 12px;">
-                        <h1 style="color: #236383; font-size: 22px; margin: 0;">Sandwich Planning Guide</h1>
-                        <p style="color: #666; font-size: 13px; margin: 4px 0 0 0;">Generated ${date}</p>
+                    <!-- Header with teal bar -->
+                    <div style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%); padding: 28px 30px; border-radius: 12px 12px 0 0; text-align: center;">
+                        <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 240px; width: 100%; height: auto; margin-bottom: 10px;">
+                        <div style="color: white; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Sandwich Planning Guide</div>
+                        <div style="color: rgba(255,255,255,0.75); font-size: 12px; margin-top: 4px;">Generated ${date}</div>
                     </div>
 
                     <!-- Summary Banner -->
-                    <div style="background: #236383; color: white; border-radius: 10px; padding: 20px; text-align: center; margin-bottom: 25px;">
-                        <div style="font-size: 36px; font-weight: 800;">${r.sandwichCount} Sandwiches</div>
-                        <div style="font-size: 18px; margin-top: 4px;">Estimated Total: $${r.totalCost.toFixed(2)}</div>
-                        <div style="font-size: 14px; opacity: 0.85; margin-top: 2px;">~$${r.costPerSandwich} per sandwich</div>
+                    <div style="background: #FBAD3F; padding: 22px 30px; text-align: center; border-bottom: 4px solid #e09a2e;">
+                        <div style="font-size: 38px; font-weight: 800; color: #236383;">${r.sandwichCount} Sandwiches</div>
+                        <div style="font-size: 17px; font-weight: 600; color: #236383; margin-top: 2px;">Estimated Total: $${r.totalCost.toFixed(2)}</div>
+                        <div style="font-size: 13px; color: #4a3510; margin-top: 2px;">~$${r.costPerSandwich} per sandwich</div>
                     </div>
 
-                    <!-- Cost Breakdown Table -->
-                    <h3 style="color: #236383; font-size: 16px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #236383;">Cost Breakdown</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 14px;">
-                        <thead>
-                            <tr style="background: #f1f5f9;">
-                                <th style="text-align: left; padding: 10px 12px; border-bottom: 2px solid #cbd5e1; color: #475569;">Item</th>
-                                <th style="text-align: center; padding: 10px 12px; border-bottom: 2px solid #cbd5e1; color: #475569;">Qty</th>
-                                <th style="text-align: right; padding: 10px 12px; border-bottom: 2px solid #cbd5e1; color: #475569;">Cost</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                    <strong>${cleanMeat}</strong>
-                                    <div style="font-size: 12px; color: #64748b;">${r.meatDescription}</div>
-                                </td>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600;">${r.meatPackages}</td>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">$${r.meatCost.toFixed(2)}</td>
-                            </tr>
-                            <tr style="background: #fafafa;">
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                    <strong>${cleanCheese}</strong>
-                                    <div style="font-size: 12px; color: #64748b;">${r.cheeseDescription}</div>
-                                </td>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600;">${r.cheesePackages}</td>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">$${r.cheeseCost.toFixed(2)}</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                    <strong>${cleanBread}</strong>
-                                    <div style="font-size: 12px; color: #64748b;">${r.breadDescription}</div>
-                                </td>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600;">${r.breadPackages}</td>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">$${r.breadCost.toFixed(2)}</td>
-                            </tr>
-                            <tr style="background: #fafafa;">
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                    <strong>Sandwich Bags</strong>
-                                    <div style="font-size: 12px; color: #64748b;">480-count boxes</div>
-                                </td>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600;">${r.bagPackages}</td>
-                                <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right;">$${r.bagCost.toFixed(2)}</td>
-                            </tr>
-                            <tr style="background: #236383; color: white;">
-                                <td style="padding: 12px; font-weight: 700; font-size: 15px;" colspan="2">Estimated Total</td>
-                                <td style="padding: 12px; text-align: right; font-weight: 700; font-size: 15px;">$${r.totalCost.toFixed(2)}</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <!-- Main content area -->
+                    <div style="padding: 25px 30px; background: white;">
 
-                    <!-- Shopping Checklist -->
-                    <h3 style="color: #236383; font-size: 16px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #236383;">Shopping Checklist</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 13px;">
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; ${r.meatPackages} × ${cleanMeat}</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; ${r.cheesePackages} × ${cleanCheese}</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; ${r.breadPackages} × ${cleanBread}</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; ${r.bagPackages} × Zip-lock sandwich bags (480 count)</td></tr>
-                    </table>
+                        <!-- Cost Breakdown Table -->
+                        <h3 style="color: #236383; font-size: 15px; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 3px solid #47B3CB;">Cost Breakdown</h3>
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 28px; font-size: 13px;">
+                            <thead>
+                                <tr style="background: #eef7fa;">
+                                    <th style="text-align: left; padding: 10px 12px; border-bottom: 2px solid #47B3CB; color: #236383; font-weight: 700;">Item</th>
+                                    <th style="text-align: center; padding: 10px 12px; border-bottom: 2px solid #47B3CB; color: #236383; font-weight: 700;">Qty</th>
+                                    <th style="text-align: right; padding: 10px 12px; border-bottom: 2px solid #47B3CB; color: #236383; font-weight: 700;">Cost</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
+                                        <strong style="color: #236383;">${cleanMeat}</strong>
+                                        <div style="font-size: 11px; color: #007E8C;">${r.meatDescription}</div>
+                                    </td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.meatPackages}</td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.meatCost.toFixed(2)}</td>
+                                </tr>
+                                <tr style="background: #f8fcfd;">
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
+                                        <strong style="color: #236383;">${cleanCheese}</strong>
+                                        <div style="font-size: 11px; color: #007E8C;">${r.cheeseDescription}</div>
+                                    </td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.cheesePackages}</td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.cheeseCost.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
+                                        <strong style="color: #236383;">${cleanBread}</strong>
+                                        <div style="font-size: 11px; color: #007E8C;">${r.breadDescription}</div>
+                                    </td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.breadPackages}</td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.breadCost.toFixed(2)}</td>
+                                </tr>
+                                <tr style="background: #f8fcfd;">
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
+                                        <strong style="color: #236383;">Sandwich Bags</strong>
+                                        <div style="font-size: 11px; color: #007E8C;">480-count boxes</div>
+                                    </td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.bagPackages}</td>
+                                    <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.bagCost.toFixed(2)}</td>
+                                </tr>
+                                <tr style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%);">
+                                    <td style="padding: 14px 12px; font-weight: 700; font-size: 15px; color: white;" colspan="2">Estimated Total</td>
+                                    <td style="padding: 14px 12px; text-align: right; font-weight: 700; font-size: 15px; color: #FBAD3F;">$${r.totalCost.toFixed(2)}</td>
+                                </tr>
+                            </tbody>
+                        </table>
 
-                    <h4 style="color: #64748b; font-size: 13px; margin: 20px 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">Supplies (not included in total)</h4>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px; font-size: 13px;">
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; ${r.icePacksNeeded} × Ice packs (enough to touch every loaf)</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; Food-safe disposable gloves (multiple boxes)</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; Hair ties/nets and beard nets</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; Hand soap</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">&#9744; Paper towels for cleanup</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">&#9744; Disinfecting wipes for surfaces</td></tr>
-                    </table>
+                        <!-- Shopping Checklist -->
+                        <h3 style="color: #236383; font-size: 15px; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 3px solid #47B3CB;">Shopping Checklist</h3>
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 13px;">
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.meatPackages}</strong> × ${cleanMeat}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.cheesePackages}</strong> × ${cleanCheese}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.breadPackages}</strong> × ${cleanBread}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.bagPackages}</strong> × Zip-lock sandwich bags (480 count)</td></tr>
+                        </table>
 
-                    <!-- Food Safety -->
-                    <h3 style="color: #236383; font-size: 16px; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid #236383;">Food Safety Reminders</h3>
-                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px;">
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">Keep all ingredients refrigerated at 40°F or below</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">Use disposable gloves and hair/beard nets</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0;">Remove only 1 package of meat at a time from fridge</td></tr>
-                        <tr><td style="padding: 7px 10px; border-bottom: 1px solid #e2e8f0; background: #fafafa;">Cool sandwiches in freezer 20-30 min before packing</td></tr>
-                        <tr><td style="padding: 7px 10px;">Never put warm sandwiches in coolers</td></tr>
-                    </table>
+                        <div style="margin: 22px 0 10px 0; padding: 4px 0; border-bottom: 2px solid #47B3CB;">
+                            <span style="font-size: 12px; font-weight: 700; color: #007E8C; text-transform: uppercase; letter-spacing: 0.5px;">Supplies (not included in total)</span>
+                        </div>
+                        <table style="width: 100%; border-collapse: collapse; margin-bottom: 28px; font-size: 13px;">
+                            <tr><td style="padding: 7px 12px; border-bottom: 1px solid #e2e8f0; color: #333;"><span style="color: #47B3CB; margin-right: 6px;">&#9744;</span> ${r.icePacksNeeded} × Ice packs (enough to touch every loaf)</td></tr>
+                            <tr><td style="padding: 7px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #333;"><span style="color: #47B3CB; margin-right: 6px;">&#9744;</span> Food-safe disposable gloves (multiple boxes)</td></tr>
+                            <tr><td style="padding: 7px 12px; border-bottom: 1px solid #e2e8f0; color: #333;"><span style="color: #47B3CB; margin-right: 6px;">&#9744;</span> Hair ties/nets and beard nets</td></tr>
+                            <tr><td style="padding: 7px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #333;"><span style="color: #47B3CB; margin-right: 6px;">&#9744;</span> Hand soap</td></tr>
+                            <tr><td style="padding: 7px 12px; border-bottom: 1px solid #e2e8f0; color: #333;"><span style="color: #47B3CB; margin-right: 6px;">&#9744;</span> Paper towels for cleanup</td></tr>
+                            <tr><td style="padding: 7px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #333;"><span style="color: #47B3CB; margin-right: 6px;">&#9744;</span> Disinfecting wipes for surfaces</td></tr>
+                        </table>
 
-                    <div style="text-align: center; font-size: 11px; color: #94a3b8; padding-top: 15px; border-top: 1px solid #e2e8f0;">
-                        The Sandwich Project &mdash; thesandwichproject.org
+                        <!-- Food Safety -->
+                        <div style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%); border-radius: 10px; padding: 18px 20px; margin-bottom: 20px;">
+                            <h3 style="color: #FBAD3F; font-size: 14px; margin: 0 0 12px 0; text-transform: uppercase; letter-spacing: 0.5px;">Food Safety Reminders</h3>
+                            <table style="width: 100%; border-collapse: collapse; font-size: 13px; color: white;">
+                                <tr><td style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.15);">&#8226; Keep all ingredients refrigerated at 40°F or below</td></tr>
+                                <tr><td style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.15);">&#8226; Use disposable gloves and hair/beard nets</td></tr>
+                                <tr><td style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.15);">&#8226; Remove only 1 package of meat at a time from fridge</td></tr>
+                                <tr><td style="padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.15);">&#8226; Cool sandwiches in freezer 20-30 min before packing</td></tr>
+                                <tr><td style="padding: 6px 0;">&#8226; Never put warm sandwiches in coolers</td></tr>
+                            </table>
+                        </div>
+
+                    </div>
+
+                    <!-- Footer -->
+                    <div style="background: #236383; padding: 14px 30px; border-radius: 0 0 12px 12px; text-align: center;">
+                        <span style="color: rgba(255,255,255,0.7); font-size: 11px;">The Sandwich Project</span>
+                        <span style="color: #FBAD3F; font-size: 11px; margin: 0 6px;">|</span>
+                        <span style="color: rgba(255,255,255,0.7); font-size: 11px;">thesandwichproject.org</span>
                     </div>
                 </div>
             `;

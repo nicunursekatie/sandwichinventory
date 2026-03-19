@@ -28,7 +28,7 @@ const PRODUCT_DATABASE = {
         'kroger-ham': { weightOz: 16, price: 4.99, name: 'Kroger Ham', type: 'ham', store: 'Kroger' },
         'hillshire-ham': { weightOz: 9, price: 5.49, name: 'Hillshire Farm Ham', type: 'ham', store: 'Various' },
         // Chicken options
-        'kroger-chicken-thin': { weightOz: 9, price: 3.50, name: 'Kroger Chicken Thin', type: 'chicken', store: 'Kroger' },
+        'kroger-chicken-thin': { weightOz: 9, price: 4.99, name: 'Kroger Chicken Thin', type: 'chicken', store: 'Kroger' },
         'oscar-mayer-chicken-rotisserie': { weightOz: 16, price: 7.99, name: 'Oscar Mayer Rotisserie Chicken', type: 'chicken', store: 'Various' },
         'oscar-mayer-chicken-blackened': { weightOz: 8, price: 4.49, name: 'Oscar Mayer Blackened Chicken', type: 'chicken', store: 'Various' },
     },
