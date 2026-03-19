@@ -2353,7 +2353,8 @@
                 meatCost, cheeseCost, breadCost, bagCost, totalCost,
                 meatName, cheeseName: cheeseName, breadName,
                 meatDescription, cheeseDescription, breadDescription,
-                costPerSandwich, icePacksNeeded, coolersNeeded
+                costPerSandwich, icePacksNeeded, coolersNeeded,
+                meatWeightOz, cheesePerPackage, breadSandwichesPerPackage
             };
 
             document.getElementById('calcResult').innerHTML = `
@@ -2488,6 +2489,13 @@
             const cleanCheese = cleanName(r.cheeseName);
             const cleanBread = cleanName(r.breadName);
 
+            // Calculate total weights/quantities
+            const totalMeatOz = r.meatPackages * r.meatWeightOz;
+            const totalMeatLbs = (totalMeatOz / 16).toFixed(1);
+            const totalCheeseSlices = r.meatPackages ? r.cheesePackages * r.cheesePerPackage : 0;
+            const totalBreadSandwiches = r.breadPackages * r.breadSandwichesPerPackage;
+            const totalBags = r.bagPackages * 480;
+
             const printContent = `
                 <div class="pdf-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 750px; margin: 0 auto; color: #333; line-height: 1.6;">
 
@@ -2522,7 +2530,7 @@
                                 <tr>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
                                         <strong style="color: #236383;">${cleanMeat}</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">${r.meatDescription}</div>
+                                        <div style="font-size: 11px; color: #007E8C;">${r.meatDescription} &mdash; ${totalMeatOz} oz total (${totalMeatLbs} lbs)</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.meatPackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.meatCost.toFixed(2)}</td>
@@ -2530,7 +2538,7 @@
                                 <tr style="background: #f8fcfd;">
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
                                         <strong style="color: #236383;">${cleanCheese}</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">${r.cheeseDescription}</div>
+                                        <div style="font-size: 11px; color: #007E8C;">${r.cheeseDescription} &mdash; ${totalCheeseSlices} slices total</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.cheesePackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.cheeseCost.toFixed(2)}</td>
@@ -2538,7 +2546,7 @@
                                 <tr>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
                                         <strong style="color: #236383;">${cleanBread}</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">${r.breadDescription}</div>
+                                        <div style="font-size: 11px; color: #007E8C;">${r.breadDescription} &mdash; covers ~${totalBreadSandwiches} sandwiches total</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.breadPackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.breadCost.toFixed(2)}</td>
@@ -2546,7 +2554,7 @@
                                 <tr style="background: #f8fcfd;">
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
                                         <strong style="color: #236383;">Sandwich Bags</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">480-count boxes</div>
+                                        <div style="font-size: 11px; color: #007E8C;">480-count boxes &mdash; ${totalBags} bags total</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.bagPackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.bagCost.toFixed(2)}</td>
@@ -2600,6 +2608,8 @@
                         <span style="color: rgba(255,255,255,0.7); font-size: 11px;">The Sandwich Project</span>
                         <span style="color: #FBAD3F; font-size: 11px; margin: 0 6px;">|</span>
                         <span style="color: rgba(255,255,255,0.7); font-size: 11px;">thesandwichproject.org</span>
+                        <span style="color: #FBAD3F; font-size: 11px; margin: 0 6px;">|</span>
+                        <a href="https://nicunursekatie.github.io/sandwichinventory/inventorycalculator.html" style="color: #47B3CB; font-size: 11px; text-decoration: none;">Inventory Calculator</a>
                     </div>
                 </div>
             `;
