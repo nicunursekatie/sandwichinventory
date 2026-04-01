@@ -10,7 +10,55 @@
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        /* Lucide-style inline SVG icon system */
+        .icon {
+            display: inline-block;
+            width: 1.1em;
+            height: 1.1em;
+            vertical-align: -0.15em;
+            background-color: currentColor;
+            -webkit-mask-size: contain;
+            mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            mask-repeat: no-repeat;
+            -webkit-mask-position: center;
+            mask-position: center;
+            flex-shrink: 0;
+        }
+        .icon-lg { width: 1.4em; height: 1.4em; vertical-align: -0.25em; }
+        .icon-xl { width: 2em; height: 2em; vertical-align: -0.4em; }
+        .icon-product { width: 1.8em; height: 1.8em; }
+
+        /* Brand colors for icons */
+        .icon-primary { background-color: #236383; }
+        .icon-accent { background-color: #007E8C; }
+        .icon-highlight { background-color: #FBAD3F; }
+        .icon-alert { background-color: #A31C41; }
+        .icon-teal { background-color: #47B3CB; }
+        .icon-white { background-color: white; }
+        .icon-muted { background-color: #888; }
+
+        /* Icon shapes - Lucide paths */
+        .icon-calculator { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='16' height='20' x='4' y='2' rx='2'/%3E%3Cline x1='8' x2='16' y1='6' y2='6'/%3E%3Cline x1='16' x2='16' y1='14' y2='18'/%3E%3Cpath d='M16 10h.01'/%3E%3Cpath d='M12 10h.01'/%3E%3Cpath d='M8 10h.01'/%3E%3Cpath d='M12 14h.01'/%3E%3Cpath d='M8 14h.01'/%3E%3Cpath d='M12 18h.01'/%3E%3Cpath d='M8 18h.01'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='16' height='20' x='4' y='2' rx='2'/%3E%3Cline x1='8' x2='16' y1='6' y2='6'/%3E%3Cline x1='16' x2='16' y1='14' y2='18'/%3E%3Cpath d='M16 10h.01'/%3E%3Cpath d='M12 10h.01'/%3E%3Cpath d='M8 10h.01'/%3E%3Cpath d='M12 14h.01'/%3E%3Cpath d='M8 14h.01'/%3E%3Cpath d='M12 18h.01'/%3E%3Cpath d='M8 18h.01'/%3E%3C/svg%3E"); }
+        .icon-users { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='9' cy='7' r='4'/%3E%3Cpath d='M22 21v-2a4 4 0 0 0-3-3.87'/%3E%3Cpath d='M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E"); }
+        .icon-chart { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' x2='18' y1='20' y2='10'/%3E%3Cline x1='12' x2='12' y1='20' y2='4'/%3E%3Cline x1='6' x2='6' y1='20' y2='14'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='18' x2='18' y1='20' y2='10'/%3E%3Cline x1='12' x2='12' y1='20' y2='4'/%3E%3Cline x1='6' x2='6' y1='20' y2='14'/%3E%3C/svg%3E"); }
+        .icon-sandwich { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3'/%3E%3Cpath d='M12 19H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-3.83'/%3E%3Cpath d='m3 11 7.77-6.04a2 2 0 0 1 2.46 0L21 11H3Z'/%3E%3Cpath d='M12.97 19.77 7 15h12.5l-3.75 4.5a2 2 0 0 1-2.78.27Z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M3 11v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1v-3'/%3E%3Cpath d='M12 19H4a1 1 0 0 1-1-1v-2a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v2a1 1 0 0 1-1 1h-3.83'/%3E%3Cpath d='m3 11 7.77-6.04a2 2 0 0 1 2.46 0L21 11H3Z'/%3E%3Cpath d='M12.97 19.77 7 15h12.5l-3.75 4.5a2 2 0 0 1-2.78.27Z'/%3E%3C/svg%3E"); }
+        .icon-shield { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z'/%3E%3C/svg%3E"); }
+        .icon-alert-triangle { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3'/%3E%3Cpath d='M12 9v4'/%3E%3Cpath d='M12 17h.01'/%3E%3C/svg%3E"); }
+        .icon-clipboard { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='M12 11h4'/%3E%3Cpath d='M12 16h4'/%3E%3Cpath d='M8 11h.01'/%3E%3Cpath d='M8 16h.01'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect width='8' height='4' x='8' y='2' rx='1' ry='1'/%3E%3Cpath d='M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2'/%3E%3Cpath d='M12 11h4'/%3E%3Cpath d='M12 16h4'/%3E%3Cpath d='M8 11h.01'/%3E%3Cpath d='M8 16h.01'/%3E%3C/svg%3E"); }
+        .icon-lightbulb { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5'/%3E%3Cpath d='M9 18h6'/%3E%3Cpath d='M10 22h4'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5'/%3E%3Cpath d='M9 18h6'/%3E%3Cpath d='M10 22h4'/%3E%3C/svg%3E"); }
+        .icon-package { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7.5 4.27 9 5.15'/%3E%3Cpath d='M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z'/%3E%3Cpath d='m3.3 7 8.7 5 8.7-5'/%3E%3Cpath d='M12 22V12'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m7.5 4.27 9 5.15'/%3E%3Cpath d='M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z'/%3E%3Cpath d='m3.3 7 8.7 5 8.7-5'/%3E%3Cpath d='M12 22V12'/%3E%3C/svg%3E"); }
+        .icon-target { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Ccircle cx='12' cy='12' r='6'/%3E%3Ccircle cx='12' cy='12' r='2'/%3E%3C/svg%3E"); }
+        .icon-shopping-cart { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='8' cy='21' r='1'/%3E%3Ccircle cx='19' cy='21' r='1'/%3E%3Cpath d='M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='8' cy='21' r='1'/%3E%3Ccircle cx='19' cy='21' r='1'/%3E%3Cpath d='M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12'/%3E%3C/svg%3E"); }
+        .icon-peanut { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a5 5 0 0 1 5 5c0 2-1.5 3.5-3 4.5 1.5 1 3 2.5 3 4.5a5 5 0 0 1-10 0c0-2 1.5-3.5 3-4.5-1.5-1-3-2.5-3-4.5a5 5 0 0 1 5-5z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M12 2a5 5 0 0 1 5 5c0 2-1.5 3.5-3 4.5 1.5 1 3 2.5 3 4.5a5 5 0 0 1-10 0c0-2 1.5-3.5 3-4.5-1.5-1-3-2.5-3-4.5a5 5 0 0 1 5-5z'/%3E%3C/svg%3E"); }
+        .icon-wheat { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 22 16 8'/%3E%3Cpath d='M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z'/%3E%3Cpath d='M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z'/%3E%3Cpath d='M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z'/%3E%3Cpath d='M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z'/%3E%3Cpath d='M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z'/%3E%3Cpath d='M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z'/%3E%3Cpath d='M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M2 22 16 8'/%3E%3Cpath d='M3.47 12.53 5 11l1.53 1.53a3.5 3.5 0 0 1 0 4.94L5 19l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z'/%3E%3Cpath d='M7.47 8.53 9 7l1.53 1.53a3.5 3.5 0 0 1 0 4.94L9 15l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z'/%3E%3Cpath d='M11.47 4.53 13 3l1.53 1.53a3.5 3.5 0 0 1 0 4.94L13 11l-1.53-1.53a3.5 3.5 0 0 1 0-4.94Z'/%3E%3Cpath d='M20 2h2v2a4 4 0 0 1-4 4h-2V6a4 4 0 0 1 4-4Z'/%3E%3Cpath d='M11.47 17.47 13 19l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L5 19l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z'/%3E%3Cpath d='M15.47 13.47 17 15l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L9 15l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z'/%3E%3Cpath d='M19.47 9.47 21 11l-1.53 1.53a3.5 3.5 0 0 1-4.94 0L13 11l1.53-1.53a3.5 3.5 0 0 1 4.94 0Z'/%3E%3C/svg%3E"); }
+        .icon-cheese { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m15.5 2-8.4 8.4a2.1 2.1 0 0 0 0 3l4.5 4.5a2.1 2.1 0 0 0 3 0L23 9.5'/%3E%3Cpath d='M2 22h20'/%3E%3Cpath d='m2 13 5.5-5.5'/%3E%3Cpath d='m15.5 2 6 6'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m15.5 2-8.4 8.4a2.1 2.1 0 0 0 0 3l4.5 4.5a2.1 2.1 0 0 0 3 0L23 9.5'/%3E%3Cpath d='M2 22h20'/%3E%3Cpath d='m2 13 5.5-5.5'/%3E%3Cpath d='m15.5 2 6 6'/%3E%3C/svg%3E"); }
+        .icon-timer { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='10' x2='14' y1='2' y2='2'/%3E%3Cline x1='12' x2='15' y1='14' y2='11'/%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cline x1='10' x2='14' y1='2' y2='2'/%3E%3Cline x1='12' x2='15' y1='14' y2='11'/%3E%3Ccircle cx='12' cy='14' r='8'/%3E%3C/svg%3E"); }
+        .icon-x-circle { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m15 9-6 6'/%3E%3Cpath d='m9 9 6 6'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='12' cy='12' r='10'/%3E%3Cpath d='m15 9-6 6'/%3E%3Cpath d='m9 9 6 6'/%3E%3C/svg%3E"); }
+        .icon-check-circle { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/%3E%3Cpath d='m9 11 3 3L22 4'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M22 11.08V12a10 10 0 1 1-5.93-9.14'/%3E%3Cpath d='m9 11 3 3L22 4'/%3E%3C/svg%3E"); }
+        .icon-thermometer { -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M14 4v10.54a4 4 0 1 1-4 0V4a2 2 0 0 1 4 0Z'/%3E%3C/svg%3E"); }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             font-weight: 400;
@@ -787,6 +835,10 @@
             .receipt-total {
                 font-size: 1.05em;
             }
+
+            .meat-info-cards {
+                grid-template-columns: 1fr !important;
+            }
         }
         .shopping-calculator .plan-mode-label,
         .plan-mode-label {
@@ -1006,12 +1058,12 @@
         <div class="nav-menu">
             <h3>Quick Navigation</h3>
             <div class="nav-links">
-                <a href="eventestimator/sandwichprojecteventestimator.html" class="nav-link">👥 Group Capacity Estimator</a>
-                <a href="#calculator" class="nav-link">🧮 Deli Calculator</a>
-                <a href="#pbj-calculator" class="nav-link">🥜 PB&J Calculator</a>
-                <a href="#pricing-info" class="nav-link">📊 Pricing Info</a>
-                <a href="#recipe" class="nav-link">🥪 Recipes</a>
-                <a href="#food-safety" class="nav-link">🛡️ Food Safety</a>
+                <a href="eventestimator/sandwichprojecteventestimator.html" class="nav-link"><span class="icon icon-users icon-accent"></span> Group Capacity Estimator</a>
+                <a href="#calculator" class="nav-link"><span class="icon icon-calculator icon-primary"></span> Deli Calculator</a>
+                <a href="#pbj-calculator" class="nav-link"><span class="icon icon-peanut icon-highlight"></span> PB&J Calculator</a>
+                <a href="#pricing-info" class="nav-link"><span class="icon icon-chart icon-accent"></span> Pricing Info</a>
+                <a href="#recipe" class="nav-link"><span class="icon icon-sandwich icon-primary"></span> Recipes</a>
+                <a href="#food-safety" class="nav-link"><span class="icon icon-shield icon-alert"></span> Food Safety</a>
             </div>
         </div>
 
@@ -1022,7 +1074,7 @@
                 Enter a sandwich count or budget, pick your brands, and get a full shopping list with quantities and costs.
             </p>
 
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px;">
+            <div class="meat-info-cards" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px;">
                 <div style="background: #236383; color: white; border-radius: 10px; padding: 14px 16px; text-align: center;">
                     <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 4px;">2 oz min</div>
                     <div style="font-size: 0.85em; line-height: 1.3; opacity: 0.9;">of meat per sandwich</div>
@@ -1052,10 +1104,10 @@
         
         <!-- Interactive Calculator Section -->
         <div class="section" id="calculator">
-            <h2>🧮 Interactive Calculator</h2>
+            <h2><span class="icon icon-lg icon-calculator icon-primary"></span> Interactive Calculator</h2>
             <!-- Shopping Reminders -->
             <div style="background: #fffbe8; border: 1px solid #f0d060; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px; font-size: 0.93em; line-height: 1.5; color: #5a4b1a;">
-                <strong>⚠️ Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced American cheese</strong> — not Kraft singles or any individually plastic-wrapped slices.
+                <strong><span class="icon icon-alert-triangle" style="background-color: #5a4b1a;"></span> Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced American cheese</strong> — not Kraft singles or any individually plastic-wrapped slices.
             </div>
             <div class="shopping-calculator">
                 <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your Sandwich Making Shopping Trip</h3>
@@ -1132,14 +1184,14 @@
                                 <option value="boars-head-american">🇺🇸 Boar's Head American (24 slices, $8.99)</option>
                                 <option value="members-mark-american">🇺🇸 Member's Mark American - Sam's Club (80 slices, $13.89)</option>
                             </optgroup>
-                            <optgroup label="🧀 Muenster Cheese (Deli Slices)">
-                                <option value="finlandia-muenster">🧀 Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)</option>
+                            <optgroup label="Muenster Cheese (Deli Slices)">
+                                <option value="finlandia-muenster">Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)</option>
                             </optgroup>
-                            <optgroup label="🧀 Havarti Cheese (Deli Slices)">
-                                <option value="arla-havarti">🧀 Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)</option>
+                            <optgroup label="Havarti Cheese (Deli Slices)">
+                                <option value="arla-havarti">Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)</option>
                             </optgroup>
-                            <optgroup label="🧀 Provolone Cheese (Deli Slices)">
-                                <option value="members-mark-provolone">🧀 Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)</option>
+                            <optgroup label="Provolone Cheese (Deli Slices)">
+                                <option value="members-mark-provolone">Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)</option>
                             </optgroup>
                         </select>
                     </div>
@@ -1148,13 +1200,13 @@
                         <label>Bread type</label>
                         <select id="breadType">
                             <option value="">Choose your bread</option>
-                            <option value="great-value-white">🍞 Great Value White Bread (20 oz, ~11 sandwiches, $1.48)</option>
-                            <option value="kroger-white">🍞 Kroger White Sandwich Bread (20 oz, ~11 sandwiches, ~$1.50)</option>
-                            <option value="wonder-classic">🍞 Wonder Bread Classic White — Regular Loaf (20 oz, ~10 sandwiches, ~$3.63)</option>
-                            <option value="wonder-giant">🍞 Wonder Bread Giant White — Large Loaf (24 oz, ~11 sandwiches, ~$4.64)</option>
-                            <option value="sara-lee-butter">🍞 Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
-                            <option value="sara-lee-classic">🍞 Sara Lee Classic White Bread (20 oz, ~10 sandwiches, ~$3.99)</option>
-                            <option value="natures-own-honey-wheat-2pk">🍞 Nature's Own Honey Wheat 2-Pack (2x 20 oz, ~20 sandwiches, ~$5.98)</option>
+                            <option value="great-value-white">Great Value White Bread (20 oz, ~11 sandwiches, $1.48)</option>
+                            <option value="kroger-white">Kroger White Sandwich Bread (20 oz, ~11 sandwiches, ~$1.50)</option>
+                            <option value="wonder-classic">Wonder Bread Classic White — Regular Loaf (20 oz, ~10 sandwiches, ~$3.63)</option>
+                            <option value="wonder-giant">Wonder Bread Giant White — Large Loaf (24 oz, ~11 sandwiches, ~$4.64)</option>
+                            <option value="sara-lee-butter">Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
+                            <option value="sara-lee-classic">Sara Lee Classic White Bread (20 oz, ~10 sandwiches, ~$3.99)</option>
+                            <option value="natures-own-honey-wheat-2pk">Nature's Own Honey Wheat 2-Pack (2x 20 oz, ~20 sandwiches, ~$5.98)</option>
                         </select>
                     </div>
 
@@ -1177,7 +1229,7 @@
             </div>
             
             <div class="shopping-list" id="shoppingList" style="display: none;">
-                <h3>📝 Your Shopping Checklist</h3>
+                <h3><span class="icon icon-clipboard icon-white"></span> Your Shopping Checklist</h3>
                 <ul class="checklist" id="shoppingChecklist">
                 </ul>
             </div>
@@ -1185,7 +1237,7 @@
 
         <!-- PB&J Calculator Section -->
         <div class="section" id="pbj-calculator">
-            <h2>🥜 Peanut Butter & Jelly Calculator</h2>
+            <h2>Peanut Butter & Jelly Calculator</h2>
             <div class="shopping-calculator">
                 <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
                 <div style="margin-bottom: 24px; padding: 18px 32px; background: #f8f9fa; border-radius: 10px; border: 1.5px solid #e0e0e0;">
@@ -1216,10 +1268,10 @@
                     <div class="calc-input-group">
                         <label>Peanut butter type</label>
                         <select id="pbType">
-                            <option value="jif-40">🥜 Jif Creamy Peanut Butter 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
-                            <option value="skippy-40">🥜 Skippy Creamy Peanut Butter 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
-                            <option value="jif-16">🥜 Jif Creamy Peanut Butter 16 oz (454g, ~30 tbsp) - $3.59</option>
-                            <option value="skippy-16">🥜 Skippy Creamy Peanut Butter 16.3 oz (462g, ~31 tbsp) - $3.59</option>
+                            <option value="jif-40">Jif Creamy Peanut Butter 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
+                            <option value="skippy-40">Skippy Creamy Peanut Butter 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
+                            <option value="jif-16">Jif Creamy Peanut Butter 16 oz (454g, ~30 tbsp) - $3.59</option>
+                            <option value="skippy-16">Skippy Creamy Peanut Butter 16.3 oz (462g, ~31 tbsp) - $3.59</option>
                         </select>
                     </div>
 
@@ -1231,20 +1283,20 @@
                             <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz (~38 tbsp) - $3.59</option>
                             <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz (~34 tbsp) - $3.83</option>
                         </select>
-                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 600;">⚠️ IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
+                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 600;"><span class="icon icon-alert-triangle icon-white"></span> IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
                     </div>
 
                     <div class="calc-input-group">
                         <label>Bread type</label>
                         <select id="pbjBreadType">
                             <option value="">Choose your bread</option>
-                            <option value="great-value-white">🍞 Great Value White Bread (20 oz, ~11 sandwiches, $1.48)</option>
-                            <option value="kroger-white">🍞 Kroger White Sandwich Bread (20 oz, ~11 sandwiches, ~$1.50)</option>
-                            <option value="wonder-classic">🍞 Wonder Bread Classic White — Regular Loaf (20 oz, ~10 sandwiches, ~$3.63)</option>
-                            <option value="wonder-giant">🍞 Wonder Bread Giant White — Large Loaf (24 oz, ~11 sandwiches, ~$4.64)</option>
-                            <option value="sara-lee-butter">🍞 Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
-                            <option value="sara-lee-classic">🍞 Sara Lee Classic White Bread (20 oz, ~10 sandwiches, ~$3.99)</option>
-                            <option value="natures-own-honey-wheat-2pk">🍞 Nature's Own Honey Wheat 2-Pack (2x 20 oz, ~20 sandwiches, ~$5.98)</option>
+                            <option value="great-value-white">Great Value White Bread (20 oz, ~11 sandwiches, $1.48)</option>
+                            <option value="kroger-white">Kroger White Sandwich Bread (20 oz, ~11 sandwiches, ~$1.50)</option>
+                            <option value="wonder-classic">Wonder Bread Classic White — Regular Loaf (20 oz, ~10 sandwiches, ~$3.63)</option>
+                            <option value="wonder-giant">Wonder Bread Giant White — Large Loaf (24 oz, ~11 sandwiches, ~$4.64)</option>
+                            <option value="sara-lee-butter">Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
+                            <option value="sara-lee-classic">Sara Lee Classic White Bread (20 oz, ~10 sandwiches, ~$3.99)</option>
+                            <option value="natures-own-honey-wheat-2pk">Nature's Own Honey Wheat 2-Pack (2x 20 oz, ~20 sandwiches, ~$5.98)</option>
                         </select>
                     </div>
 
@@ -1266,8 +1318,8 @@
                             <label for="spatulaPackCount" style="font-size: 0.95em;">How many 4-packs do you need?</label>
                             <input type="number" id="spatulaPackCount" min="1" value="1" placeholder="1" style="margin-top: 5px;">
                             <div style="font-size: 0.85em; color: rgba(255,255,255,0.85); margin-top: 8px; padding: 10px; background: rgba(251,173,63,0.2); border-radius: 8px;">
-                                <strong>💡 Tip:</strong> You need 2 spatulas per group/table making sandwiches — one for peanut butter and one for jelly. Each pack contains 4 spatulas ($5.99/pack).<br>
-                                <strong>📦 Overnight shipping available on Amazon!</strong>
+                                <strong><span class="icon icon-lightbulb" style="background-color: #5a4b1a;"></span> Tip:</strong> You need 2 spatulas per group/table making sandwiches — one for peanut butter and one for jelly. Each pack contains 4 spatulas ($5.99/pack).<br>
+                                <strong><span class="icon icon-package" style="background-color: #5a4b1a;"></span> Overnight shipping available on Amazon!</strong>
                             </div>
                         </div>
                     </div>
@@ -1309,23 +1361,23 @@
 
         <!-- Move Pricing Information section down here -->
         <div class="section" id="pricing-info" style="margin-bottom: 32px;">
-            <h2>📊 Pricing Information <span style='font-size:0.7em; font-weight:400;'>(Updated 9/17/2025)</span></h2>
+            <h2><span class="icon icon-lg icon-chart icon-primary"></span> Pricing Information <span style='font-size:0.7em; font-weight:400;'>(Updated 9/17/2025)</span></h2>
             
             <!-- Important shopping notes - NOT a hazmat warning -->
             <div style="background: #fffbf0; border: 2px solid #f4a261; border-radius: 10px; padding: 20px; margin-bottom: 24px;">
                 <h3 style="color: #d97706; font-size: 1.2em; margin-bottom: 16px; font-weight: 600;">
-                    📝 Important Shopping Notes
+                    <span class="icon icon-clipboard icon-primary"></span> Important Shopping Notes
                 </h3>
                 <div style="display: flex; flex-direction: column; gap: 14px; color: #555; font-size: 1.05em;">
                     <div style="display: flex; gap: 12px; align-items: start;">
-                        <span style="font-size: 1.4em; flex-shrink: 0;">🥩</span>
+                        <span class="icon icon-lg icon-alert" style="font-size: 1.4em; flex-shrink: 0;"></span>
                         <div>
                             <strong style="color: #333;">Meat: Buy pre-packaged only</strong><br>
                             <span style="font-size: 0.95em;">Don't get meat sliced at the deli counter—pre-packaged is safer and easier to work with.</span>
                         </div>
                     </div>
                     <div style="display: flex; gap: 12px; align-items: start;">
-                        <span style="font-size: 1.4em; flex-shrink: 0;">🧀</span>
+                        <span class="icon icon-lg icon-cheese icon-highlight" style="flex-shrink: 0;"></span>
                         <div>
                             <strong style="color: #333;">Cheese: Avoid individually wrapped slices</strong><br>
                             <span style="font-size: 0.95em;">Individually wrapped slices like Kraft singles are a pain to unwrap, they're "cheese product" (not real cheese), and they turn into a gross mess on sandwiches. Get deli-style sliced cheese—the kind sold together in one pack, not individually wrapped processed singles</span>
@@ -1696,7 +1748,7 @@
         <div class="category-label">BREAD</div>
         <div class="price-grid">
             <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
+                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
                 <div class="product-title">Great Value White</div>
                 <div class="product-size">20 oz • ~11 sandwiches</div>
                 <div class="product-price">$1.48</div>
@@ -1704,7 +1756,7 @@
             </div>
 
             <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
+                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
                 <div class="product-title">Kroger White Sandwich</div>
                 <div class="product-size">20 oz • ~11 sandwiches</div>
                 <div class="product-price">$1.00–$1.99</div>
@@ -1712,7 +1764,7 @@
             </div>
 
             <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
+                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
                 <div class="product-title">Wonder Bread Classic White — Regular Loaf</div>
                 <div class="product-size">20 oz • ~10 sandwiches</div>
                 <div class="product-price">$2.47–$4.79</div>
@@ -1720,7 +1772,7 @@
             </div>
 
             <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
+                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
                 <div class="product-title">Wonder Bread Giant White — Large Loaf</div>
                 <div class="product-size">24 oz • ~11 sandwiches</div>
                 <div class="product-price">$3.99–$5.29</div>
@@ -1728,7 +1780,7 @@
             </div>
 
             <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
+                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
                 <div class="product-title">Sara Lee Butter Bread</div>
                 <div class="product-size">20 oz • ~10 sandwiches</div>
                 <div class="product-price">$2.98–$3.29</div>
@@ -1736,7 +1788,7 @@
             </div>
 
             <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
+                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
                 <div class="product-title">Sara Lee Classic White</div>
                 <div class="product-size">20 oz • ~10 sandwiches</div>
                 <div class="product-price">$3.48–$4.49</div>
@@ -1744,7 +1796,7 @@
             </div>
 
             <div class="price-card card-bread">
-                <div class="product-emoji">🍞</div>
+                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
                 <div class="product-title">Nature's Own Honey Wheat (2-Pack)</div>
                 <div class="product-size">2x 20 oz • ~20 sandwiches</div>
                 <div class="product-price">$5.98</div>
@@ -1759,7 +1811,7 @@
         <div class="category-label">SUPPLIES</div>
         <div class="price-grid">
             <div class="price-card card-supplies">
-                <div class="product-emoji">📦</div>
+                <div class="product-emoji"><span class="icon icon-product icon-package icon-accent"></span></div>
                 <div class="product-title">Sandwich Bags</div>
                 <div class="product-size">480 count</div>
                 <div class="product-price">$7.99</div>
@@ -1770,11 +1822,11 @@
     
     <div class="cheese-guide">
         <div class="cheese-do">
-            <strong>✅ Right Cheese</strong>
+            <strong><span class="icon icon-check-circle" style="background-color: #2E7D32;"></span> Right Cheese</strong>
             Deli-style sliced American cheese (NOT individually wrapped)
         </div>
         <div class="cheese-dont">
-            <strong>❌ Wrong Cheese</strong>
+            <strong><span class="icon icon-x-circle icon-alert"></span> Wrong Cheese</strong>
             Kraft singles or any individually plastic-wrapped slices — they're "cheese product" (not real cheese), a pain to unwrap, and turn into a gross mess on sandwiches
         </div>
     </div>
@@ -1783,7 +1835,7 @@
         
         <!-- Move Quick Reference section below calculator -->
         <div class="section">
-            <h2>🎯 Quick Reference: Popular Quantities</h2>
+            <h2><span class="icon icon-lg icon-target icon-primary"></span> Quick Reference: Popular Quantities</h2>
             <p style="color: #64748b; font-size: 0.95em; margin-bottom: 16px;">Quantities based on common package sizes (~24 slices cheese, ~30-32 slices meat). Use the calculator above for exact costs with your chosen brands.</p>
             <div class="quick-ref">
                 <div class="ref-card">
@@ -1826,7 +1878,7 @@
         </div>
 
         <div class="section" id="recipe">
-            <h2>🥪 Perfect Sandwich Recipe</h2>
+            <h2><span class="icon icon-lg icon-sandwich icon-primary"></span> Perfect Sandwich Recipe</h2>
             <div class="recipe-card">
                 <h3>Every Sandwich Contains</h3>
                 <div class="recipe-ingredients">
@@ -1848,15 +1900,15 @@
 
         <div class="safety-banner">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; text-align: left;">
-                <div>🛡️ <strong>Keep ingredients refrigerated</strong></div>
+                <div><span class="icon icon-shield icon-accent"></span> <strong>Keep ingredients refrigerated</strong></div>
                 <div>🧤 <strong>Please use gloves & hair ties + hair/beard nets</strong></div>
-                <div>📦 <strong>Remove only 1 package of meat at a time</strong></div>
+                <div><span class="icon icon-package icon-accent"></span> <strong>Remove only 1 package of meat at a time</strong></div>
                 <div>❄️ <strong>Return completed loaves immediately</strong></div>
             </div>
         </div>
 
         <div class="section" id="food-safety">
-            <h2>🛡️ Food Safety Requirements</h2>
+            <h2><span class="icon icon-lg icon-shield icon-primary"></span> Food Safety Requirements</h2>
             <div class="tips-grid">
                 <div class="tip-card">
                     <h3>🧤 Personal Hygiene</h3>
@@ -1882,7 +1934,7 @@
                 </div>
                 
                 <div class="tip-card">
-                    <h3>📦 Ingredient Standards</h3>
+                    <h3><span class="icon icon-package icon-primary"></span> Ingredient Standards</h3>
                     <ul>
                         <li>Use same quality you'd feed your family</li>
                         <li>Pre-packaged deli meat only (no deli counter)</li>
@@ -1906,15 +1958,15 @@
             </div>
             
             <div class="safety-banner" style="margin-top: 30px;">
-                ⚠️ REMEMBER: Recipients may be children, elderly, or immunocompromised. Food safety protects our most vulnerable community members.
+                <span class="icon icon-alert-triangle icon-alert"></span> REMEMBER: Recipients may be children, elderly, or immunocompromised. Food safety protects our most vulnerable community members.
             </div>
         </div>
         
         <div class="section">
-            <h2>💡 Planning Tips</h2>
+            <h2><span class="icon icon-lg icon-lightbulb icon-primary"></span> Planning Tips</h2>
             <div class="tips-grid">
                 <div class="tip-card">
-                    <h3>⏱️ Timing Guidelines (+20 min for setup/cleanup)</h3>
+                    <h3><span class="icon icon-timer icon-primary"></span> Timing Guidelines (+20 min for setup/cleanup)</h3>
                     <ul>
                         <li>Small (50–100 sandwiches, 3–5 adults): 45–90 minutes</li>
                         <li>Medium (200–300 sandwiches, 5–8 adults): 1.5–2.5 hours</li>
@@ -1935,7 +1987,7 @@
                 </div>
                 
                 <div class="tip-card">
-                    <h3>✅ Quality Standards</h3>
+                    <h3><span class="icon icon-check-circle" style="background-color: #2E7D32;"></span> Quality Standards</h3>
                     <ul>
                         <li>Same quality you'd serve family</li>
                         <li>10+ days until expiration</li>
@@ -2307,7 +2359,7 @@
                 if (budget <= 50) {
                     tightBudgetWarning = `
                         <p style="color: #E65100; margin-top: 12px; font-size: 1em; font-weight: 600;">
-                            ⚠️ Note: Budgets under $50 are quite tight and yield limited quantities. Consider increasing your budget for better value and more sandwiches.
+                            <span class="icon icon-alert-triangle icon-alert"></span> Note: Budgets under $50 are quite tight and yield limited quantities. Consider increasing your budget for better value and more sandwiches.
                         </p>
                     `;
                 }
@@ -2315,7 +2367,7 @@
                 if (remaining > 5) { // More than $5 remaining
                     budgetStatusMessage = `
                         <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">✅</div>
+                            <div style="font-size: 2em; margin-bottom: 12px;"><span class="icon icon-xl icon-check-circle" style="background-color: #2E7D32;"></span></div>
                             <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Optimal Budget Planning!</h4>
                             <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
                                 <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> | 
@@ -2330,7 +2382,7 @@
                 } else if (remaining > 0) { // Small amount remaining
                     budgetStatusMessage = `
                         <div style="background: rgba(255,152,0,0.2); border: 3px solid #FF9800; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">⚠️</div>
+                            <div style="font-size: 2em; margin-bottom: 12px;"><span class="icon icon-xl icon-alert-triangle" style="background-color: #E65100;"></span></div>
                             <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Budget Optimized!</h4>
                             <p style="color: #BF360C; margin: 0; font-size: 1.2em; font-weight: 500;">
                                 <strong>${totalSandwichesPossible} sandwiches</strong> for <strong>$${totalCost.toFixed(2)}</strong> | 
@@ -2345,7 +2397,7 @@
                 } else { // Exactly at budget
                     budgetStatusMessage = `
                         <div style="background: rgba(76,175,80,0.15); border: 3px solid #4CAF50; border-radius: 12px; padding: 20px; margin-bottom: 25px; text-align: center;">
-                            <div style="font-size: 2em; margin-bottom: 12px;">🎯</div>
+                            <div style="font-size: 2em; margin-bottom: 12px;"><span class="icon icon-xl icon-target" style="background-color: #2E7D32;"></span></div>
                             <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">Perfect Budget Match!</h4>
                             <p style="color: #1B5E20; margin: 0; font-size: 1.2em; font-weight: 500;">
                                 <strong>${totalSandwichesPossible} sandwiches</strong> for exactly <strong>$${totalCost.toFixed(2)}</strong> | 
@@ -2889,7 +2941,7 @@
                 if (budget <= 30) {
                     tightBudgetWarning = `
                         <div style="margin-top: 12px; padding: 10px; background: rgba(255,193,7,0.2); border-radius: 8px; font-size: 0.95em;">
-                            ⚠️ Note: Budgets under $30 are quite tight and yield limited quantities. Consider increasing your budget for better value and more sandwiches.
+                            <span class="icon icon-alert-triangle icon-alert"></span> Note: Budgets under $30 are quite tight and yield limited quantities. Consider increasing your budget for better value and more sandwiches.
                         </div>
                     `;
                 }
@@ -2897,7 +2949,7 @@
                 if (remaining >= budget * 0.1) {
                     budgetStatusMessage = `
                         <div style="margin-top: 20px; padding: 20px; background: rgba(46,125,50,0.25); border-radius: 12px; text-align: center; border: 2px solid rgba(46,125,50,0.4);">
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">✅ Optimal Budget Planning!</h4>
+                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;"><span class="icon icon-check-circle" style="background-color: #2E7D32;"></span> Optimal Budget Planning!</h4>
                             <div style="color: #1B5E20; font-size: 1.1em;">
                                 Remaining budget: <strong>$${remaining.toFixed(2)}</strong> (${savingsPercent}% under budget)
                             </div>
@@ -2910,7 +2962,7 @@
                 } else if (remaining > 0) {
                     budgetStatusMessage = `
                         <div style="margin-top: 20px; padding: 20px; background: rgba(230,81,0,0.2); border-radius: 12px; text-align: center; border: 2px solid rgba(230,81,0,0.4);">
-                            <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">📊 Budget Optimized!</h4>
+                            <h4 style="color: #E65100; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;"><span class="icon icon-chart" style="background-color: #E65100;"></span> Budget Optimized!</h4>
                             <div style="color: #BF360C; font-size: 1.1em;">
                                 Only <strong>$${remaining.toFixed(2)}</strong> remaining (${savingsPercent}% under budget)
                             </div>
@@ -2923,7 +2975,7 @@
                 } else {
                     budgetStatusMessage = `
                         <div style="margin-top: 20px; padding: 20px; background: rgba(46,125,50,0.25); border-radius: 12px; text-align: center; border: 2px solid rgba(46,125,50,0.4);">
-                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;">🎯 Perfect Budget Match!</h4>
+                            <h4 style="color: #2E7D32; margin-bottom: 12px; font-size: 1.4em; font-weight: 700;"><span class="icon icon-target" style="background-color: #2E7D32;"></span> Perfect Budget Match!</h4>
                             <div style="color: #1B5E20; font-size: 1.1em;">
                                 Uses your entire $${budget.toFixed(2)} budget
                             </div>
@@ -3046,7 +3098,7 @@
 <div class="section" style="max-width: 700px; margin: 40px auto 24px auto;">
     <details style="background: #fffbe8; border: 1.5px solid #f7c873; border-radius: 10px; box-shadow: 0 2px 8px #f7c87322; padding: 0 0 18px 0; font-size: 1em;">
         <summary style="display: flex; align-items: center; gap: 10px; padding: 0 18px; min-height: 56px; font-weight: 600; font-size: 1.08em; color: #236383; background: linear-gradient(90deg, #ffe6b3 60%, #fffbe8 100%); border-bottom: 1.5px solid #f7c873; border-radius: 10px 10px 0 0; box-shadow: 0 2px 8px #f7c87322; cursor: pointer; outline: none; letter-spacing: 0.01em;">
-            <span style="font-size: 1.3em;">🛒</span>
+            <span class="icon icon-lg icon-shopping-cart icon-white"></span>
             <span>Ingredient Price Summary</span>
             <span style="margin-left:auto; font-size:0.98em; color:#b97a1a; font-weight:400;">(click to view all ingredient prices used in calculations)</span>
         </summary>
