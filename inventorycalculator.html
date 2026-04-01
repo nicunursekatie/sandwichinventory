@@ -1018,24 +1018,34 @@
 
         <div class="section" id="intro-section" style="margin-bottom: 28px; background: linear-gradient(135deg, #f8f9fa 80%, #e3f6f9 100%); border: 2px solid #FBAD3F; box-shadow: 0 4px 16px #FBAD3F22;">
             <h2 style="color: #A31C41; font-size: 1.7em; font-weight: 700; margin-bottom: 10px;">Welcome to the Sandwich Project Planning Tool!</h2>
-            <p style="font-size: 1.1em; color: #236383; margin-bottom: 14px; line-height: 1.6;">
-                Use the calculator below to plan your sandwich-making event — enter a sandwich count or budget, pick your brands, and get a full shopping list with quantities and costs.
+            <p style="font-size: 1.05em; color: #236383; margin-bottom: 14px; line-height: 1.5;">
+                Enter a sandwich count or budget, pick your brands, and get a full shopping list with quantities and costs.
             </p>
 
-            <div style="background: #fff4e6; border: 2px solid #FBAD3F; border-radius: 10px; padding: 16px 20px; margin-bottom: 14px;">
-                <p style="color: #7c4a03; font-size: 1.1em; font-weight: 700; margin: 0 0 8px 0;">🥩 Important: How Much Meat Goes on Each Sandwich</p>
-                <p style="color: #5a3e0a; font-size: 1.02em; line-height: 1.6; margin: 0 0 8px 0;">
-                    Every deli sandwich requires a <strong>minimum of 2 oz of meat</strong> (our calculator defaults to 2.5 oz for a better sandwich). One slice of deli meat is <em>not</em> the same as 2 oz — most brands require <strong>2–4 slices to equal one 2 oz serving</strong>, depending on the brand.
-                </p>
-                <p style="color: #5a3e0a; font-size: 1.02em; line-height: 1.6; margin: 0 0 8px 0;">
-                    <strong>How to check:</strong> Look at the nutrition label on your package. It will say something like <em>"Serving size: 2 oz (56g), about 5 slices"</em> — that tells you how many slices make up the minimum 2 oz per sandwich. Every brand is different.
-                </p>
-                <p style="color: #5a3e0a; font-size: 1.02em; line-height: 1.6; margin: 0;">
-                    <strong>The calculator does this math for you</strong> — it knows the weight and slice count for each brand listed, so your shopping list will already account for the right amount of meat. But if you’re using a brand that isn’t listed, always check the label.
-                </p>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px;">
+                <div style="background: #236383; color: white; border-radius: 10px; padding: 14px 16px; text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 4px;">2 oz min</div>
+                    <div style="font-size: 0.85em; line-height: 1.3; opacity: 0.9;">of meat per sandwich</div>
+                </div>
+                <div style="background: #A31C41; color: white; border-radius: 10px; padding: 14px 16px; text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 4px;">1 slice ≠ 2 oz</div>
+                    <div style="font-size: 0.85em; line-height: 1.3; opacity: 0.9;">most brands need 2–4 slices</div>
+                </div>
+                <div style="background: #007E8C; color: white; border-radius: 10px; padding: 14px 16px; text-align: center;">
+                    <div style="font-size: 1.5em; font-weight: 700; margin-bottom: 4px;">Check labels</div>
+                    <div style="font-size: 0.85em; line-height: 1.3; opacity: 0.9;">to see how many slices = 2 oz</div>
+                </div>
             </div>
 
-            <p style="font-size: 0.95em; color: #888; margin-bottom: 0;">
+            <details style="margin-bottom: 10px;">
+                <summary style="cursor: pointer; font-weight: 600; color: #236383; font-size: 0.95em;">Why does this matter? (click to read more)</summary>
+                <div style="padding: 12px 16px; margin-top: 8px; background: rgba(71,179,203,0.08); border-left: 3px solid #47B3CB; border-radius: 0 8px 8px 0; color: #236383; font-size: 0.95em; line-height: 1.6;">
+                    <p style="margin: 0 0 8px 0;">Every brand slices their meat differently — some slices are paper-thin, others are thick-cut. That means the number of slices needed to reach 2 oz varies by package. Your nutrition label will say something like <em>"Serving size: 2 oz (56g), about 5 slices"</em> — that’s how many slices equal one sandwich’s worth of meat.</p>
+                    <p style="margin: 0;"><strong>The calculator handles this for you</strong> — it knows the weight-per-slice for each brand listed and will tell you exactly how much to buy. If you’re using a brand not listed here, just check the label so you don’t end up short.</p>
+                </div>
+            </details>
+
+            <p style="font-size: 0.9em; color: #888; margin-bottom: 0;">
                 All pricing is based on recent retail pricing at various stores (Kroger, Walmart, Costco, etc.) and may vary by location.
             </p>
         </div>
