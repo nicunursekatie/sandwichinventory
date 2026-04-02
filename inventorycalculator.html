@@ -1803,16 +1803,16 @@
                 { id: 'oscar-mayer-chicken-blackened', name: 'Oscar Mayer Blackened Chicken', store: 'Various', weightOz: 8, slices: 16, price: 4.49, meatType: 'chicken', group: 'hidden', description: '8 oz packages' }
             ],
             cheese: [
+                { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)', pricingTitle: 'Finlandia Muenster (Costco)' },
+                { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)', pricingTitle: 'Arla Havarti (Costco)' },
+                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" },
                 { id: 'great-value-american', name: 'Great Value American - Walmart', store: 'Walmart', slices: 24, price: 3.98, cheeseType: 'american', description: '24 slices each', pricingTitle: 'Great Value American', showInPricing: true },
                 { id: 'kroger-american', name: 'Kroger Deli American', store: 'Kroger', slices: 24, price: 4.29, cheeseType: 'american', description: '24 slices each', pricingTitle: 'Kroger Deli American', showInPricing: true },
                 { id: 'kroger-white-american', name: 'Kroger White American', store: 'Kroger', slices: 12, price: 5.00, cheeseType: 'american', dropdownLabel: 'Kroger White American (12 oz, ~12 slices, $5.00)', description: '~12 slices each (12 oz)', pricingTitle: 'Kroger White American' },
                 { id: 'sargento-american', name: 'Sargento Sliced American', store: 'Various', slices: 22, price: 4.99, cheeseType: 'american', description: '22 slices each', pricingTitle: 'Sargento American', showInPricing: true },
                 { id: 'land-o-lakes-american', name: "Land O'Lakes American", store: 'Various', slices: 24, price: 6.49, cheeseType: 'american', description: '24 slices each', pricingTitle: "Land O'Lakes American", showInPricing: true },
                 { id: 'boars-head-american', name: "Boar's Head American", store: 'Various', slices: 24, price: 8.99, cheeseType: 'american', description: '24 slices each', pricingTitle: "Boar's Head American", showInPricing: true },
-                { id: 'members-mark-american', name: "Member's Mark American - Sam's Club", store: "Sam's Club", slices: 80, price: 13.89, cheeseType: 'american', description: '80 slices each', pricingTitle: "Member's Mark American (Sam's Club)" },
-                { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)', pricingTitle: 'Finlandia Muenster (Costco)' },
-                { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)', pricingTitle: 'Arla Havarti (Costco)' },
-                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" }
+                { id: 'members-mark-american', name: "Member's Mark American - Sam's Club", store: "Sam's Club", slices: 80, price: 13.89, cheeseType: 'american', description: '80 slices each', pricingTitle: "Member's Mark American (Sam's Club)" }
             ],
             bread: [
                 { id: 'great-value-white', name: 'Great Value White Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.48, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Great Value White', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.48', pricingNote: '~$0.13/sandwich' },
@@ -1889,7 +1889,7 @@
             const select = document.getElementById('cheeseType');
             select.innerHTML = '<option value="">Choose your cheese</option>';
             const typeLabels = { american: 'American Cheese (Deli Style)', muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)' };
-            ['american', 'muenster', 'havarti', 'provolone'].forEach(type => {
+            ['muenster', 'havarti', 'provolone', 'american'].forEach(type => {
                 const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type);
                 if (items.length === 0) return;
                 const group = document.createElement('optgroup');
