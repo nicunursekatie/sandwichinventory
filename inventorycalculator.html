@@ -218,6 +218,14 @@
             box-shadow: 0 15px 40px rgba(35, 99, 131, 0.2);
         }
         
+        .ref-card-visual {
+            margin-bottom: 12px;
+        }
+        .ref-card-visual .icon {
+            width: 2.5em;
+            height: 2.5em;
+        }
+
         .ref-card h3 {
             font-size: 2.2em;
             margin-bottom: 12px;
@@ -1142,22 +1150,7 @@
                         <span style="font-size: 0.95em; color: white; margin-bottom: 6px; display: block;">Calculates 2 oz of meat per sandwich</span>
                         <select id="meatType" onchange="handleMeatTypeChange()">
                             <option value="">Choose your meat</option>
-                            <optgroup label="Popular Options">
-                                <option value="kroger-chicken-thin">🐔 Kroger Chicken Thin Sliced (9 oz / 18 slices, $4.99) - $0.28/slice</option>
-                                <option value="publix-turkey">🦃 Publix Turkey Breast, Thin Sliced (16 oz / 32 slices, $7.07) - $0.22/slice</option>
-                                <option value="kroger-turkey-thin">🦃 Kroger Turkey Thin Sliced (9 oz / 18 slices, $3.99) - $0.22/slice</option>
-                                <option value="kroger-turkey-family">🦃 Kroger Turkey Family Size (1 lb / 30-32 slices, $4.39) - $0.14/slice</option>
-                            </optgroup>
-                            <optgroup label="More Options">
-                                <option value="turkey">🦃 Kirkland Turkey (2-pack, 40 slices each / 80 total, $13.99) - $0.17/slice</option>
-                                <option value="hillshire-turkey">🦃 Hillshire Farm Ultra Thin Turkey (9 oz / 18 slices, $6.07) - $0.34/slice</option>
-                                <option value="land-o-frost-turkey">🦃 Land O'Frost Premium Turkey (16 oz / 32 slices, $9.53) - $0.30/slice</option>
-                                <option value="kroger-turkey-regular">🦃 Kroger Private Selection® Turkey (8 oz / 11-12 slices, $6.49) - $0.56/slice</option>
-                                <option value="oscar-mayer-chicken-rotisserie">🐔 Oscar Mayer Rotisserie Chicken (16 oz / 32 slices, $7.99) - $0.25/slice</option>
-                            </optgroup>
-                            <optgroup label="Custom">
-                                <option value="custom">✏️ Enter custom meat package...</option>
-                            </optgroup>
+                            <!-- Options populated dynamically by buildMeatDropdown() -->
                         </select>
                         <div id="meatCustomEntry" style="display: none; margin-top: 10px;">
                             <div style="display: flex; gap: 8px; margin-bottom: 8px;">
@@ -1175,24 +1168,7 @@
                         <label>Cheese type</label>
                         <select id="cheeseType">
                             <option value="">Choose your cheese</option>
-                            <optgroup label="🇺🇸 American Cheese (Deli Style)">
-                                <option value="great-value-american">🇺🇸 Great Value American - Walmart (24 slices, $3.98)</option>
-                                <option value="kroger-american">🇺🇸 Kroger Deli American (24 slices, $4.29)</option>
-                                <option value="kroger-white-american">🇺🇸 Kroger White American (12 oz, ~12 slices, $5.00)</option>
-                                <option value="sargento-american">🇺🇸 Sargento Sliced American (22 slices, $4.99)</option>
-                                <option value="land-o-lakes-american">🇺🇸 Land O'Lakes American (24 slices, $6.49)</option>
-                                <option value="boars-head-american">🇺🇸 Boar's Head American (24 slices, $8.99)</option>
-                                <option value="members-mark-american">🇺🇸 Member's Mark American - Sam's Club (80 slices, $13.89)</option>
-                            </optgroup>
-                            <optgroup label="Muenster Cheese (Deli Slices)">
-                                <option value="finlandia-muenster">Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)</option>
-                            </optgroup>
-                            <optgroup label="Havarti Cheese (Deli Slices)">
-                                <option value="arla-havarti">Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)</option>
-                            </optgroup>
-                            <optgroup label="Provolone Cheese (Deli Slices)">
-                                <option value="members-mark-provolone">Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)</option>
-                            </optgroup>
+                            <!-- Options populated dynamically by buildCheeseDropdown() -->
                         </select>
                     </div>
 
@@ -1200,13 +1176,7 @@
                         <label>Bread type</label>
                         <select id="breadType">
                             <option value="">Choose your bread</option>
-                            <option value="great-value-white">Great Value White Bread (20 oz, ~11 sandwiches, $1.48)</option>
-                            <option value="kroger-white">Kroger White Sandwich Bread (20 oz, ~11 sandwiches, ~$1.50)</option>
-                            <option value="wonder-classic">Wonder Bread Classic White — Regular Loaf (20 oz, ~10 sandwiches, ~$3.63)</option>
-                            <option value="wonder-giant">Wonder Bread Giant White — Large Loaf (24 oz, ~11 sandwiches, ~$4.64)</option>
-                            <option value="sara-lee-butter">Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
-                            <option value="sara-lee-classic">Sara Lee Classic White Bread (20 oz, ~10 sandwiches, ~$3.99)</option>
-                            <option value="natures-own-honey-wheat-2pk">Nature's Own Honey Wheat 2-Pack (2x 20 oz, ~20 sandwiches, ~$5.98)</option>
+                            <!-- Options populated dynamically by buildBreadDropdowns() -->
                         </select>
                     </div>
 
@@ -1219,12 +1189,12 @@
                 </div>
                 
                 <button class="export-button" id="exportButton" onclick="generatePDF()" style="display: none;">
-                    📄 Export to PDF
+                    Export to PDF
                 </button>
             </div>
             
             <div style="background: rgba(255,193,63,0.25); border: 2px solid #FBAD3F; padding: 20px; border-radius: 12px; margin-top: 25px; font-size: 1.1em;">
-                <strong style="color: #B8860B; font-size: 1.2em;">🧊 Before You Shop:</strong>
+                <strong style="color: #B8860B; font-size: 1.2em;"><span class="icon icon-thermometer icon-primary"></span> Before You Shop:</strong>
                 <span style="color: #8B4513; font-weight: 500;">Please bring a cooler with ice packs to the store to keep meat and cheese cold on the drive home — deli ingredients need to stay refrigerated.</span>
             </div>
             
@@ -1268,20 +1238,14 @@
                     <div class="calc-input-group">
                         <label>Peanut butter type</label>
                         <select id="pbType">
-                            <option value="jif-40">Jif Creamy Peanut Butter 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
-                            <option value="skippy-40">Skippy Creamy Peanut Butter 40 oz (1.13kg, ~75 tbsp) - $7.99</option>
-                            <option value="jif-16">Jif Creamy Peanut Butter 16 oz (454g, ~30 tbsp) - $3.59</option>
-                            <option value="skippy-16">Skippy Creamy Peanut Butter 16.3 oz (462g, ~31 tbsp) - $3.59</option>
+                            <!-- Options populated dynamically by buildPBDropdown() -->
                         </select>
                     </div>
 
                     <div class="calc-input-group">
                         <label>Jelly type</label>
                         <select id="jellyType">
-                            <option value="smuckers-32">🍇 Smucker's Concord Grape Jelly 32 oz (~60 tbsp) - $4.99</option>
-                            <option value="welchs-30">🍇 Welch's Concord Grape Jelly 30 oz (~56 tbsp) - $3.59</option>
-                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Grape Jelly 20 oz (~38 tbsp) - $3.59</option>
-                            <option value="welchs-squeeze-18">🍇 Welch's Natural Concord Grape Squeeze 18 oz (~34 tbsp) - $3.83</option>
+                            <!-- Options populated dynamically by buildJellyDropdown() -->
                         </select>
                         <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 600;"><span class="icon icon-alert-triangle icon-white"></span> IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
                     </div>
@@ -1290,13 +1254,7 @@
                         <label>Bread type</label>
                         <select id="pbjBreadType">
                             <option value="">Choose your bread</option>
-                            <option value="great-value-white">Great Value White Bread (20 oz, ~11 sandwiches, $1.48)</option>
-                            <option value="kroger-white">Kroger White Sandwich Bread (20 oz, ~11 sandwiches, ~$1.50)</option>
-                            <option value="wonder-classic">Wonder Bread Classic White — Regular Loaf (20 oz, ~10 sandwiches, ~$3.63)</option>
-                            <option value="wonder-giant">Wonder Bread Giant White — Large Loaf (24 oz, ~11 sandwiches, ~$4.64)</option>
-                            <option value="sara-lee-butter">Sara Lee Butter Bread (20 oz, ~10 sandwiches, ~$3.14)</option>
-                            <option value="sara-lee-classic">Sara Lee Classic White Bread (20 oz, ~10 sandwiches, ~$3.99)</option>
-                            <option value="natures-own-honey-wheat-2pk">Nature's Own Honey Wheat 2-Pack (2x 20 oz, ~20 sandwiches, ~$5.98)</option>
+                            <!-- Options populated dynamically by buildBreadDropdowns() -->
                         </select>
                     </div>
 
@@ -1355,7 +1313,7 @@
         <!-- Ham Phase-Out Note -->
         <div style="background: #ffffff; border: 2px solid rgba(71,179,203,0.4); border-radius: 12px; padding: 18px 22px; margin: 24px 0;">
             <p style="color: #333; font-size: 0.95em; line-height: 1.6; margin: 0;">
-                ℹ️ <strong>About Ham Sandwiches:</strong> We're phasing out ham sandwiches based on feedback from our partner agencies. Many find that turkey and chicken are more widely accepted and preferred by their communities. We still gratefully accept ham sandwich donations—we never refuse sandwiches—but encourage turkey or chicken for new batches when possible.
+                <span class="icon icon-lightbulb icon-accent"></span> <strong>About Ham Sandwiches:</strong> We're phasing out ham sandwiches based on feedback from our partner agencies. Many find that turkey and chicken are more widely accepted and preferred by their communities. We still gratefully accept ham sandwich donations—we never refuse sandwiches—but encourage turkey or chicken for new batches when possible.
             </p>
         </div>
 
@@ -1625,201 +1583,12 @@
 <div class="pricing-section">
     <div class="pricing-header">
         <h2>Ingredient Cost Guide</h2>
-        <div class="pricing-meta">Based on recent shopping • Prices vary by location</div>
+        <div class="pricing-meta">Based on recent shopping &bull; Prices vary by location</div>
     </div>
     
-    <!-- Meat Section -->
-    <div class="price-category">
-        <div class="category-label">MEAT</div>
-        <div class="price-grid">
-            <div class="price-card card-meat">
-                <div class="product-emoji">🦃</div>
-                <div class="product-title">Kroger Turkey Family Size</div>
-                <div class="product-size">1 lb • 30-32 slices</div>
-                <div class="product-price">$4.39</div>
-                <div class="price-note">~$0.14/slice</div>
-            </div>
+    <!-- Pricing cards populated dynamically by buildPricingCards() -->
+    <div id="pricing-cards-container"></div>
 
-            <div class="price-card card-meat">
-                <div class="product-emoji">🦃</div>
-                <div class="product-title">Publix Turkey Breast</div>
-                <div class="product-size">16 oz • 32 slices</div>
-                <div class="product-price">$7.07</div>
-                <div class="price-note">~$0.22/slice</div>
-            </div>
-            
-            <div class="price-card card-meat">
-                <div class="product-emoji">🦃</div>
-                <div class="product-title">Kroger Turkey Thin Sliced</div>
-                <div class="product-size">9 oz • 18 slices</div>
-                <div class="product-price">$3.99</div>
-                <div class="price-note">~$0.22/slice</div>
-            </div>
-        </div>
-        
-        <details style="margin-top: 20px;">
-            <summary style="cursor: pointer; font-weight: 600; color: #1a4d66; font-size: 1.1em; padding: 12px; background: rgba(251,173,63,0.15); border-radius: 8px; margin-bottom: 15px;">
-                ➕ Show More Meat Options
-            </summary>
-            <div class="price-grid" style="margin-top: 15px;">
-                <div class="price-card card-meat">
-                    <div class="product-emoji">🦃</div>
-                    <div class="product-title">Land O'Frost Premium</div>
-                    <div class="product-size">16 oz • 32 slices</div>
-                    <div class="product-price">$9.53</div>
-                    <div class="price-note">~$0.30/slice</div>
-                </div>
-                
-                <div class="price-card card-meat">
-                    <div class="product-emoji">🦃</div>
-                    <div class="product-title">Hillshire Farm Ultra Thin</div>
-                    <div class="product-size">9 oz • 18 slices</div>
-                    <div class="product-price">$6.07</div>
-                    <div class="price-note">~$0.34/slice</div>
-                </div>
-                
-                <div class="price-card card-meat">
-                    <div class="product-emoji">🦃</div>
-                    <div class="product-title">Kirkland Turkey</div>
-                    <div class="product-size">2-pack • 40 slices</div>
-                    <div class="product-price">$13.99</div>
-                    <div class="price-note">~$0.17/slice</div>
-                </div>
-                
-                <div class="price-card card-meat">
-                    <div class="product-emoji">🦃</div>
-                    <div class="product-title">Kroger Private Selection®</div>
-                    <div class="product-size">8 oz • 11-12 slices</div>
-                    <div class="product-price">$6.49</div>
-                    <div class="price-note">~$0.56/slice</div>
-                </div>
-            </div>
-        </details>
-    </div>
-    
-    <!-- American Cheese Section -->
-    <div class="price-category">
-        <div class="category-label">AMERICAN CHEESE (Deli Style)</div>
-        <div class="price-grid">
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Great Value American</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$3.98</div>
-                <div class="price-note">~$0.17/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Kroger Deli American</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$4.29</div>
-                <div class="price-note">~$0.18/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Sargento American</div>
-                <div class="product-size">22 slices</div>
-                <div class="product-price">$4.99</div>
-                <div class="price-note">~$0.23/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Land O'Lakes American</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$6.49</div>
-                <div class="price-note">~$0.27/slice</div>
-            </div>
-
-            <div class="price-card card-cheese">
-                <div class="product-emoji">🇺🇸</div>
-                <div class="product-title">Boar's Head American</div>
-                <div class="product-size">24 slices</div>
-                <div class="product-price">$8.99</div>
-                <div class="price-note">~$0.37/slice</div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Bread Section -->
-    <div class="price-category">
-        <div class="category-label">BREAD</div>
-        <div class="price-grid">
-            <div class="price-card card-bread">
-                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
-                <div class="product-title">Great Value White</div>
-                <div class="product-size">20 oz • ~11 sandwiches</div>
-                <div class="product-price">$1.48</div>
-                <div class="price-note">~$0.13/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
-                <div class="product-title">Kroger White Sandwich</div>
-                <div class="product-size">20 oz • ~11 sandwiches</div>
-                <div class="product-price">$1.00–$1.99</div>
-                <div class="price-note">~$0.09–$0.18/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
-                <div class="product-title">Wonder Bread Classic White — Regular Loaf</div>
-                <div class="product-size">20 oz • ~10 sandwiches</div>
-                <div class="product-price">$2.47–$4.79</div>
-                <div class="price-note">~$0.25–$0.48/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
-                <div class="product-title">Wonder Bread Giant White — Large Loaf</div>
-                <div class="product-size">24 oz • ~11 sandwiches</div>
-                <div class="product-price">$3.99–$5.29</div>
-                <div class="price-note">~$0.36–$0.48/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
-                <div class="product-title">Sara Lee Butter Bread</div>
-                <div class="product-size">20 oz • ~10 sandwiches</div>
-                <div class="product-price">$2.98–$3.29</div>
-                <div class="price-note">~$0.30–$0.33/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
-                <div class="product-title">Sara Lee Classic White</div>
-                <div class="product-size">20 oz • ~10 sandwiches</div>
-                <div class="product-price">$3.48–$4.49</div>
-                <div class="price-note">~$0.35–$0.45/sandwich</div>
-            </div>
-
-            <div class="price-card card-bread">
-                <div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div>
-                <div class="product-title">Nature's Own Honey Wheat (2-Pack)</div>
-                <div class="product-size">2x 20 oz • ~20 sandwiches</div>
-                <div class="product-price">$5.98</div>
-                <div class="price-note">~$0.30/sandwich</div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Supplies Section -->
-    <div class="price-category">
-        <div class="category-label">SUPPLIES</div>
-        <div class="price-grid">
-            <div class="price-card card-supplies">
-                <div class="product-emoji"><span class="icon icon-product icon-package icon-accent"></span></div>
-                <div class="product-title">Sandwich Bags</div>
-                <div class="product-size">480 count</div>
-                <div class="product-price">$7.99</div>
-                <div class="price-note">~$0.02/bag</div>
-            </div>
-        </div>
-    </div>
-    
     <div class="cheese-guide">
         <div class="cheese-do">
             <strong><span class="icon icon-check-circle" style="background-color: #2E7D32;"></span> Right Cheese</strong>
@@ -1836,10 +1605,10 @@
         <!-- Move Quick Reference section below calculator -->
         <div class="section">
             <h2><span class="icon icon-lg icon-target icon-primary"></span> Quick Reference: Popular Quantities</h2>
-            <p style="color: #64748b; font-size: 0.95em; margin-bottom: 16px;">Quantities based on common package sizes (~24 slices cheese, ~30-32 slices meat). Use the calculator above for exact costs with your chosen brands.</p>
+            <p style="color: #64748b; font-size: 0.95em; margin-bottom: 16px;">Rough package counts for common batch sizes, using typical deli packs (~24 slices cheese, ~30 slices meat per pack). Use the calculator above for exact costs with your brands.</p>
             <div class="quick-ref">
                 <div class="ref-card">
-                    <div style="font-size: 2.5em; margin-bottom: 15px;">🏠</div>
+                    <div class="ref-card-visual" aria-hidden="true"><span class="icon icon-users icon-primary"></span></div>
                     <h3>40</h3>
                     <div class="cost-display">
                         <div class="cost-item">~4-5 meat packages</div>
@@ -1848,7 +1617,7 @@
                     </div>
                 </div>
                 <div class="ref-card">
-                    <div style="font-size: 2.5em; margin-bottom: 15px;">🏢</div>
+                    <div class="ref-card-visual" aria-hidden="true"><span class="icon icon-users icon-primary"></span></div>
                     <h3>80</h3>
                     <div class="cost-display">
                         <div class="cost-item">~8-10 meat packages</div>
@@ -1857,7 +1626,7 @@
                     </div>
                 </div>
                 <div class="ref-card">
-                    <div style="font-size: 2.5em; margin-bottom: 15px;">🏫</div>
+                    <div class="ref-card-visual" aria-hidden="true"><span class="icon icon-users icon-primary"></span></div>
                     <h3>120</h3>
                     <div class="cost-display">
                         <div class="cost-item">~12-15 meat packages</div>
@@ -1866,7 +1635,7 @@
                     </div>
                 </div>
                 <div class="ref-card">
-                    <div style="font-size: 2.5em; margin-bottom: 15px;">🎪</div>
+                    <div class="ref-card-visual" aria-hidden="true"><span class="icon icon-users icon-primary"></span></div>
                     <h3>200</h3>
                     <div class="cost-display">
                         <div class="cost-item">~20-25 meat packages</div>
@@ -1901,9 +1670,9 @@
         <div class="safety-banner">
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; text-align: left;">
                 <div><span class="icon icon-shield icon-accent"></span> <strong>Keep ingredients refrigerated</strong></div>
-                <div>🧤 <strong>Please use gloves & hair ties + hair/beard nets</strong></div>
+                <div><span class="icon icon-shield icon-accent"></span> <strong>Please use gloves & hair ties + hair/beard nets</strong></div>
                 <div><span class="icon icon-package icon-accent"></span> <strong>Remove only 1 package of meat at a time</strong></div>
-                <div>❄️ <strong>Return completed loaves immediately</strong></div>
+                <div><span class="icon icon-thermometer icon-accent"></span> <strong>Return completed loaves immediately</strong></div>
             </div>
         </div>
 
@@ -1911,7 +1680,7 @@
             <h2><span class="icon icon-lg icon-shield icon-primary"></span> Food Safety Requirements</h2>
             <div class="tips-grid">
                 <div class="tip-card">
-                    <h3>🧤 Personal Hygiene</h3>
+                    <h3><span class="icon icon-shield icon-primary"></span> Personal Hygiene</h3>
                     <ul>
                         <li>Wash hands with soap and warm water</li>
                         <li>Wear disposable gloves (required)</li>
@@ -1923,7 +1692,7 @@
                 </div>
                 
                 <div class="tip-card">
-                    <h3>❄️ Temperature Control</h3>
+                    <h3><span class="icon icon-thermometer icon-primary"></span> Temperature Control</h3>
                     <ul>
                         <li>Keep all ingredients at 40°F or below</li>
                         <li>Never leave ingredients at 80°F or above</li>
@@ -1945,7 +1714,7 @@
                 </div>
                 
                 <div class="tip-card">
-                    <h3>🚚 Transport Safety</h3>
+                    <h3><span class="icon icon-package icon-primary"></span> Transport Safety</h3>
                     <ul>
                         <li>Cool sandwiches in freezer 20-30 minutes before packing</li>
                         <li>Ensure coolers are cool before loading (not hot from garage)</li>
@@ -1976,7 +1745,7 @@
                 </div>
                 
                 <div class="tip-card">
-                    <h3>❄️ Storage & Transport</h3>
+                    <h3><span class="icon icon-thermometer icon-primary"></span> Storage & Transport</h3>
                     <ul>
                         <li>~100 sandwiches per large cooler</li>
                         <li>Plan 2-3 hours ingredient storage</li>
@@ -2000,10 +1769,229 @@
     </div>
     
     <script>
-        // Stores the last calculation results so PDF export uses the same numbers
+        // ===============================================================
+        // PRODUCT DATA - Single source of truth for all product info
+        // ===============================================================
+        const PRODUCT_DATA = {
+            metadata: { lastUpdated: "2025-09-17", version: "1.0" },
+            meat: [
+                { id: 'kroger-chicken-thin', name: 'Kroger Chicken Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 4.99, meatType: 'chicken', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Chicken Thin', pricingSize: '9 oz \u2022 18 slices' },
+                { id: 'publix-turkey', name: 'Publix Turkey Breast, Thin Sliced', store: 'Publix', weightOz: 16, slices: 32, price: 7.07, meatType: 'turkey', group: 'popular', description: '16 oz packages', pricingTitle: 'Publix Turkey Breast', pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'main' },
+                { id: 'kroger-turkey-thin', name: 'Kroger Turkey Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 3.99, meatType: 'turkey', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Turkey Thin Sliced', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'main' },
+                { id: 'kroger-turkey-family', name: 'Kroger Turkey Family Size', store: 'Kroger', weightOz: 16, slices: 31, price: 4.39, meatType: 'turkey', group: 'popular', description: '1 lb packages (16 oz)', dropdownSliceLabel: '30-32 slices', pricingTitle: 'Kroger Turkey Family Size', pricingSize: '1 lb \u2022 30-32 slices', showInPricing: true, pricingGroup: 'main' },
+                { id: 'turkey', name: 'Kirkland Turkey', store: 'Costco', weightOz: 40, slices: 80, price: 13.99, meatType: 'turkey', group: 'more', description: '2-packs (~40 oz total)', pricingTitle: 'Kirkland Turkey', pricingSize: '2-pack \u2022 40 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'hillshire-turkey', name: 'Hillshire Farm Ultra Thin Turkey', store: 'Various', weightOz: 9, slices: 18, price: 6.07, meatType: 'turkey', group: 'more', description: '9 oz packages', pricingTitle: 'Hillshire Farm Ultra Thin', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'land-o-frost-turkey', name: "Land O'Frost Premium Turkey", store: 'Various', weightOz: 16, slices: 32, price: 9.53, meatType: 'turkey', group: 'more', description: '16 oz packages', pricingTitle: "Land O'Frost Premium", pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'kroger-turkey-regular', name: 'Kroger Private Selection\u00AE Turkey', store: 'Kroger', weightOz: 8, slices: 11.5, price: 6.49, meatType: 'turkey', group: 'more', description: '8 oz packages', dropdownSliceLabel: '11-12 slices', pricingTitle: 'Kroger Private Selection\u00AE', pricingSize: '8 oz \u2022 11-12 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'oscar-mayer-chicken-rotisserie', name: 'Oscar Mayer Rotisserie Chicken', store: 'Various', weightOz: 16, slices: 32, price: 7.99, meatType: 'chicken', group: 'more', description: '16 oz packages' },
+                { id: 'oscar-mayer-chicken-blackened', name: 'Oscar Mayer Blackened Chicken', store: 'Various', weightOz: 8, slices: 16, price: 4.49, meatType: 'chicken', group: 'hidden', description: '8 oz packages' }
+            ],
+            cheese: [
+                { id: 'great-value-american', name: 'Great Value American - Walmart', store: 'Walmart', slices: 24, price: 3.98, cheeseType: 'american', description: '24 slices each', pricingTitle: 'Great Value American', showInPricing: true },
+                { id: 'kroger-american', name: 'Kroger Deli American', store: 'Kroger', slices: 24, price: 4.29, cheeseType: 'american', description: '24 slices each', pricingTitle: 'Kroger Deli American', showInPricing: true },
+                { id: 'kroger-white-american', name: 'Kroger White American', store: 'Kroger', slices: 12, price: 5.00, cheeseType: 'american', dropdownLabel: 'Kroger White American (12 oz, ~12 slices, $5.00)', description: '~12 slices each (12 oz)' },
+                { id: 'sargento-american', name: 'Sargento Sliced American', store: 'Various', slices: 22, price: 4.99, cheeseType: 'american', description: '22 slices each', pricingTitle: 'Sargento American', showInPricing: true },
+                { id: 'land-o-lakes-american', name: "Land O'Lakes American", store: 'Various', slices: 24, price: 6.49, cheeseType: 'american', description: '24 slices each', pricingTitle: "Land O'Lakes American", showInPricing: true },
+                { id: 'boars-head-american', name: "Boar's Head American", store: 'Various', slices: 24, price: 8.99, cheeseType: 'american', description: '24 slices each', pricingTitle: "Boar's Head American", showInPricing: true },
+                { id: 'members-mark-american', name: "Member's Mark American - Sam's Club", store: "Sam's Club", slices: 80, price: 13.89, cheeseType: 'american', description: '80 slices each' },
+                { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)' },
+                { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)' },
+                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)' }
+            ],
+            bread: [
+                { id: 'great-value-white', name: 'Great Value White Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.48, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Great Value White', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.48', pricingNote: '~$0.13/sandwich' },
+                { id: 'kroger-white', name: 'Kroger White Sandwich Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.50, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Kroger White Sandwich', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.00\u2013$1.99', pricingNote: '~$0.09\u2013$0.18/sandwich' },
+                { id: 'wonder-classic', name: 'Wonder Bread Classic White \u2014 Regular Loaf', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.63, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Wonder Bread Classic White \u2014 Regular Loaf', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$2.47\u2013$4.79', pricingNote: '~$0.25\u2013$0.48/sandwich' },
+                { id: 'wonder-giant', name: 'Wonder Bread Giant White \u2014 Large Loaf', weightOz: 24, sandwichesPerLoaf: 11, usableSlices: 22, price: 4.64, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Wonder Bread Giant White \u2014 Large Loaf', pricingSize: '24 oz \u2022 ~11 sandwiches', pricingPrice: '$3.99\u2013$5.29', pricingNote: '~$0.36\u2013$0.48/sandwich' },
+                { id: 'sara-lee-butter', name: 'Sara Lee Butter Bread', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.14, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Sara Lee Butter Bread', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$2.98\u2013$3.29', pricingNote: '~$0.30\u2013$0.33/sandwich' },
+                { id: 'sara-lee-classic', name: 'Sara Lee Classic White Bread', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.99, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Sara Lee Classic White', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$3.48\u2013$4.49', pricingNote: '~$0.35\u2013$0.45/sandwich' },
+                { id: 'natures-own-honey-wheat-2pk', name: "Nature's Own Honey Wheat 2-Pack", weightOz: 40, sandwichesPerLoaf: 20, usableSlices: 40, price: 5.98, description: '2-packs (~20 sandwiches each)', dropdownWeightLabel: '2x 20 oz', pricingTitle: "Nature's Own Honey Wheat (2-Pack)", pricingSize: '2x 20 oz \u2022 ~20 sandwiches', pricingPrice: '$5.98', pricingNote: '~$0.30/sandwich' }
+            ],
+            peanutButter: [
+                { id: 'jif-40', name: 'Jif Creamy Peanut Butter 40 oz', sizeOz: 40, tablespoons: 75, price: 7.99, description: 'Jif Creamy 40 oz (1.13kg)', sizeLabel: '1.13kg' },
+                { id: 'skippy-40', name: 'Skippy Creamy Peanut Butter 40 oz', sizeOz: 40, tablespoons: 75, price: 7.99, description: 'Skippy Creamy 40 oz (1.13kg)', sizeLabel: '1.13kg' },
+                { id: 'jif-16', name: 'Jif Creamy Peanut Butter 16 oz', sizeOz: 16, tablespoons: 30, price: 3.59, description: 'Jif Creamy 16 oz (454g)', sizeLabel: '454g' },
+                { id: 'skippy-16', name: 'Skippy Creamy Peanut Butter 16.3 oz', sizeOz: 16.3, tablespoons: 31, price: 3.59, description: 'Skippy Creamy 16.3 oz (462g)', sizeLabel: '462g' }
+            ],
+            jelly: [
+                { id: 'smuckers-32', name: "Smucker's Concord Grape Jelly 32 oz", sizeOz: 32, tablespoons: 60, price: 4.99, description: "Smucker's Concord Grape Jelly 32 oz" },
+                { id: 'welchs-30', name: "Welch's Concord Grape Jelly 30 oz", sizeOz: 30, tablespoons: 56, price: 3.59, description: "Welch's Concord Grape Jelly 30 oz" },
+                { id: 'smuckers-squeeze-20', name: "Smucker's Squeeze Grape Jelly 20 oz", sizeOz: 20, tablespoons: 38, price: 3.59, description: "Smucker's Squeeze Grape Jelly 20 oz" },
+                { id: 'welchs-squeeze-18', name: "Welch's Natural Concord Grape Squeeze 18 oz", sizeOz: 18, tablespoons: 34, price: 3.83, description: "Welch's Natural Concord Grape Squeeze 18 oz" }
+            ],
+            bags: { countPerBox: 480, pricePerBox: 7.99 },
+            spatulas: { pricePerPack: 5.99, countPerPack: 4, amazonUrl: "https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" }
+        };
+
+        // ===============================================================
+        // PRODUCT INDEX - Flat lookup by category + id
+        // ===============================================================
+        const PRODUCT_INDEX = {};
+        function buildProductIndex() {
+            ['meat','cheese','bread','peanutButter','jelly'].forEach(cat => {
+                PRODUCT_INDEX[cat] = {};
+                PRODUCT_DATA[cat].forEach(p => { PRODUCT_INDEX[cat][p.id] = p; });
+            });
+        }
+        buildProductIndex();
+
+        // ===============================================================
+        // DROPDOWN BUILDERS
+        // ===============================================================
+        function buildMeatDropdown() {
+            const select = document.getElementById('meatType');
+            select.innerHTML = '<option value="">Choose your meat</option>';
+            const popular = PRODUCT_DATA.meat.filter(m => m.group === 'popular');
+            const more = PRODUCT_DATA.meat.filter(m => m.group === 'more');
+            function meatOptionLabel(m) {
+                const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
+                const perSlice = (m.price / m.slices).toFixed(2);
+                if (m.id === 'turkey') {
+                    return 'Kirkland Turkey (2-pack, 40 slices each / 80 total, $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
+                }
+                const sizeLabel = m.weightOz >= 16 ? (m.weightOz === 16 ? '1 lb' : m.weightOz + ' oz') : m.weightOz + ' oz';
+                return m.name + ' (' + sizeLabel + ' / ' + sliceLabel + ', $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
+            }
+            const popularGroup = document.createElement('optgroup');
+            popularGroup.label = 'Popular Options';
+            popular.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); popularGroup.appendChild(opt); });
+            select.appendChild(popularGroup);
+            const moreGroup = document.createElement('optgroup');
+            moreGroup.label = 'More Options';
+            more.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); moreGroup.appendChild(opt); });
+            select.appendChild(moreGroup);
+            const customGroup = document.createElement('optgroup');
+            customGroup.label = 'Custom';
+            const customOpt = document.createElement('option');
+            customOpt.value = 'custom';
+            customOpt.textContent = 'Enter custom meat package...';
+            customGroup.appendChild(customOpt);
+            select.appendChild(customGroup);
+        }
+
+        function buildCheeseDropdown() {
+            const select = document.getElementById('cheeseType');
+            select.innerHTML = '<option value="">Choose your cheese</option>';
+            const typeLabels = { american: 'American Cheese (Deli Style)', muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)' };
+            ['american', 'muenster', 'havarti', 'provolone'].forEach(type => {
+                const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type);
+                if (items.length === 0) return;
+                const group = document.createElement('optgroup');
+                group.label = typeLabels[type];
+                items.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.dropdownLabel ? c.dropdownLabel : c.name + ' (' + c.slices + ' slices, $' + c.price.toFixed(2) + ')';
+                    group.appendChild(opt);
+                });
+                select.appendChild(group);
+            });
+        }
+
+        function buildBreadDropdowns() {
+            [document.getElementById('breadType'), document.getElementById('pbjBreadType')].forEach(select => {
+                if (!select) return;
+                select.innerHTML = '<option value="">Choose your bread</option>';
+                PRODUCT_DATA.bread.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b.id;
+                    const wLabel = b.dropdownWeightLabel || (b.weightOz + ' oz');
+                    opt.textContent = b.name + ' (' + wLabel + ', ~' + b.sandwichesPerLoaf + ' sandwiches, $' + b.price.toFixed(2) + ')';
+                    select.appendChild(opt);
+                });
+            });
+        }
+
+        function buildPBDropdown() {
+            const select = document.getElementById('pbType');
+            select.innerHTML = '';
+            PRODUCT_DATA.peanutButter.forEach(pb => {
+                const opt = document.createElement('option');
+                opt.value = pb.id;
+                opt.textContent = pb.name + ' (' + pb.sizeLabel + ', ~' + pb.tablespoons + ' tbsp) - $' + pb.price.toFixed(2);
+                select.appendChild(opt);
+            });
+        }
+
+        function buildJellyDropdown() {
+            const select = document.getElementById('jellyType');
+            select.innerHTML = '';
+            PRODUCT_DATA.jelly.forEach(j => {
+                const opt = document.createElement('option');
+                opt.value = j.id;
+                opt.textContent = j.name + ' (~' + j.tablespoons + ' tbsp) - $' + j.price.toFixed(2);
+                select.appendChild(opt);
+            });
+        }
+
+        // ===============================================================
+        // PRICING SECTION BUILDERS
+        // ===============================================================
+        function buildPricingCards() {
+            const container = document.getElementById('pricing-cards-container');
+            if (!container) return;
+            const mainMeatIds = ['kroger-turkey-family', 'publix-turkey', 'kroger-turkey-thin'];
+            const moreMeatIds = ['land-o-frost-turkey', 'hillshire-turkey', 'turkey', 'kroger-turkey-regular'];
+            let meatHTML = '<div class="price-category"><div class="category-label">MEAT</div><div class="price-grid">';
+            mainMeatIds.forEach(id => { const m = PRODUCT_INDEX.meat[id]; if (!m) return; const ps = (m.price / m.slices).toFixed(2); meatHTML += '<div class="price-card card-meat"><div class="product-emoji"><span class="icon icon-product icon-sandwich icon-white"></span></div><div class="product-title">' + m.pricingTitle + '</div><div class="product-size">' + m.pricingSize + '</div><div class="product-price">$' + m.price.toFixed(2) + '</div><div class="price-note">~$' + ps + '/slice</div></div>'; });
+            meatHTML += '</div><details style="margin-top: 20px;"><summary style="cursor: pointer; font-weight: 600; color: #1a4d66; font-size: 1.1em; padding: 12px; background: rgba(251,173,63,0.15); border-radius: 8px; margin-bottom: 15px;">Show More Meat Options</summary><div class="price-grid" style="margin-top: 15px;">';
+            moreMeatIds.forEach(id => { const m = PRODUCT_INDEX.meat[id]; if (!m) return; const ps = (m.price / m.slices).toFixed(2); meatHTML += '<div class="price-card card-meat"><div class="product-emoji"><span class="icon icon-product icon-sandwich icon-white"></span></div><div class="product-title">' + m.pricingTitle + '</div><div class="product-size">' + m.pricingSize + '</div><div class="product-price">$' + m.price.toFixed(2) + '</div><div class="price-note">~$' + ps + '/slice</div></div>'; });
+            meatHTML += '</div></details></div>';
+            const cheesePricingIds = ['great-value-american', 'kroger-american', 'sargento-american', 'land-o-lakes-american', 'boars-head-american'];
+            let cheeseHTML = '<div class="price-category"><div class="category-label">AMERICAN CHEESE (Deli Style)</div><div class="price-grid">';
+            cheesePricingIds.forEach(id => { const c = PRODUCT_INDEX.cheese[id]; if (!c) return; const ps = (c.price / c.slices).toFixed(2); cheeseHTML += '<div class="price-card card-cheese"><div class="product-emoji"><span class="icon icon-product icon-cheese icon-white"></span></div><div class="product-title">' + c.pricingTitle + '</div><div class="product-size">' + c.slices + ' slices</div><div class="product-price">$' + c.price.toFixed(2) + '</div><div class="price-note">~$' + ps + '/slice</div></div>'; });
+            cheeseHTML += '</div></div>';
+            let breadHTML = '<div class="price-category"><div class="category-label">BREAD</div><div class="price-grid">';
+            PRODUCT_DATA.bread.forEach(b => { breadHTML += '<div class="price-card card-bread"><div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div><div class="product-title">' + b.pricingTitle + '</div><div class="product-size">' + b.pricingSize + '</div><div class="product-price">' + b.pricingPrice + '</div><div class="price-note">' + b.pricingNote + '</div></div>'; });
+            breadHTML += '</div></div>';
+            let suppliesHTML = '<div class="price-category"><div class="category-label">SUPPLIES</div><div class="price-grid"><div class="price-card card-supplies"><div class="product-emoji"><span class="icon icon-product icon-package icon-accent"></span></div><div class="product-title">Sandwich Bags</div><div class="product-size">' + PRODUCT_DATA.bags.countPerBox + ' count</div><div class="product-price">$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</div><div class="price-note">~$' + (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) + '/bag</div></div></div></div>';
+            container.innerHTML = meatHTML + cheeseHTML + breadHTML + suppliesHTML;
+        }
+
+        function buildPricingSummaryTable() {
+            const container = document.getElementById('pricing-summary-table');
+            if (!container) return;
+            let html = '<table style="width:100%; margin-top: 10px; border-collapse: collapse;">';
+            html += '<tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>';
+            PRODUCT_DATA.meat.filter(m => m.group !== 'hidden').forEach(m => {
+                const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
+                const sizeNote = m.id === 'turkey' ? '80 slices total (40 per pack)' : (m.weightOz + ' oz / ' + sliceLabel);
+                html += '<tr><td>' + m.name + '</td><td>$' + m.price.toFixed(2) + '</td><td>' + sizeNote + '</td></tr>';
+            });
+            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">American Cheese (Deli Style)</td></tr>';
+            PRODUCT_DATA.cheese.filter(c => c.cheeseType === 'american').forEach(c => {
+                const name = c.name.replace(' - Walmart', ' (Walmart)').replace(" - Sam's Club", " (Sam's Club)");
+                html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.slices + ' slices</td></tr>';
+            });
+            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Muenster, Havarti &amp; Provolone (Deli Slices)</td></tr>';
+            PRODUCT_DATA.cheese.filter(c => c.cheeseType !== 'american').forEach(c => {
+                const name = c.name.replace(' - Costco', ' (Costco)').replace(" - Sam's Club", " (Sam's Club)");
+                html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.description + '</td></tr>';
+            });
+            PRODUCT_DATA.bread.forEach(b => { html += '<tr><td>' + b.pricingTitle + '</td><td>' + b.pricingPrice + '</td><td>~' + b.sandwichesPerLoaf + ' sandwiches</td></tr>'; });
+            html += '<tr><td>Zip-lock Sandwich Bags</td><td>$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</td><td>' + PRODUCT_DATA.bags.countPerBox + ' count</td></tr>';
+            html += '</table>';
+            container.innerHTML = html;
+        }
+
+        // ===============================================================
+        // INITIALIZATION
+        // ===============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            buildMeatDropdown();
+            buildCheeseDropdown();
+            buildBreadDropdowns();
+            buildPBDropdown();
+            buildJellyDropdown();
+            buildPricingCards();
+            buildPricingSummaryTable();
+        });
+
+        // ===============================================================
+        // CORE FUNCTIONS
+        // ===============================================================
         let lastCalculation = null;
 
-        // Clean product names for grid display (strip emoji, parenthetical details, per-slice pricing)
         function cleanName(name) {
             return name.replace(/^[^\w]*/, '').replace(/\s*\(.*$/, '').replace(/\s*-\s*\$[\d.]+\/slice$/, '').trim();
         }
@@ -2045,182 +2033,57 @@
             const breadGridName = cleanName(breadName);
             const meatOzPerSandwich = parseFloat(document.getElementById('meatAmount').value);
 
-            // Ingredient constants
-            const cheesePerSandwich = 2; // 2 slices per sandwich
+            const cheesePerSandwich = 2;
 
-            // Package sizes and prices (oz per package)
+            // Package sizes and prices - lookup from PRODUCT_INDEX
             let meatWeightOz, meatPrice, meatDescription;
-            switch(meatType) {
-                case 'turkey':
-                    meatWeightOz = 40; // Kirkland 2-pack, ~20 oz each = 40 oz total
-                    meatPrice = 13.99;
-                    meatDescription = '2-packs (~40 oz total)';
-                    break;
-                case 'publix-turkey':
-                    meatWeightOz = 16;
-                    meatPrice = 7.07;
-                    meatDescription = '16 oz packages';
-                    break;
-                case 'land-o-frost-turkey':
-                    meatWeightOz = 16;
-                    meatPrice = 9.53;
-                    meatDescription = '16 oz packages';
-                    break;
-                case 'hillshire-turkey':
-                    meatWeightOz = 9;
-                    meatPrice = 6.07;
-                    meatDescription = '9 oz packages';
-                    break;
-                case 'kroger-turkey-regular':
-                    meatWeightOz = 8;
-                    meatPrice = 6.49;
-                    meatDescription = '8 oz packages';
-                    break;
-                case 'kroger-turkey-thin':
-                    meatWeightOz = 9;
-                    meatPrice = 3.99;
-                    meatDescription = '9 oz packages';
-                    break;
-                case 'kroger-chicken-thin':
-                    meatWeightOz = 9;
-                    meatPrice = 4.99;
-                    meatDescription = '9 oz packages';
-                    break;
-                case 'kroger-turkey-family':
-                    meatWeightOz = 16; // 1 lb
-                    meatPrice = 4.39;
-                    meatDescription = '1 lb packages (16 oz)';
-                    break;
-                case 'oscar-mayer-chicken-blackened':
-                    meatWeightOz = 8;
-                    meatPrice = 4.49;
-                    meatDescription = '8 oz packages';
-                    break;
-                case 'oscar-mayer-chicken-rotisserie':
-                    meatWeightOz = 16;
-                    meatPrice = 7.99;
-                    meatDescription = '16 oz packages';
-                    break;
-                case 'custom':
-                    meatWeightOz = getCustomMeatWeightOz();
-                    meatPrice = parseFloat(document.getElementById('customMeatPrice').value);
-                    if (!meatWeightOz || !meatPrice) {
-                        alert('Please enter both weight and price for your custom meat package');
-                        return;
-                    }
-                    meatDescription = meatWeightOz + ' oz packages (custom)';
-                    break;
-                default:
+            if (meatType === 'custom') {
+                meatWeightOz = getCustomMeatWeightOz();
+                meatPrice = parseFloat(document.getElementById('customMeatPrice').value);
+                if (!meatWeightOz || !meatPrice) {
+                    alert('Please enter both weight and price for your custom meat package');
+                    return;
+                }
+                meatDescription = meatWeightOz + ' oz packages (custom)';
+            } else {
+                const meat = PRODUCT_INDEX.meat[meatType];
+                if (meat) {
+                    meatWeightOz = meat.weightOz;
+                    meatPrice = meat.price;
+                    meatDescription = meat.description;
+                } else {
                     meatWeightOz = 40;
                     meatPrice = 13.99;
                     meatDescription = 'packages';
-            }
-            const bagPrice = 7.99;
-            let cheesePerPackage, cheesePrice, cheeseDescription;
-            switch(cheeseType) {
-                // American Cheese options
-                case 'great-value-american':
-                    cheesePerPackage = 24;
-                    cheesePrice = 3.98;
-                    cheeseDescription = '24 slices each';
-                    break;
-                case 'kroger-american':
-                    cheesePerPackage = 24;
-                    cheesePrice = 4.29;
-                    cheeseDescription = '24 slices each';
-                    break;
-                case 'kroger-white-american':
-                    cheesePerPackage = 12;
-                    cheesePrice = 5.00;
-                    cheeseDescription = '~12 slices each (12 oz)';
-                    break;
-                case 'sargento-american':
-                    cheesePerPackage = 22;
-                    cheesePrice = 4.99;
-                    cheeseDescription = '22 slices each';
-                    break;
-                case 'land-o-lakes-american':
-                    cheesePerPackage = 24;
-                    cheesePrice = 6.49;
-                    cheeseDescription = '24 slices each';
-                    break;
-                case 'boars-head-american':
-                    cheesePerPackage = 24;
-                    cheesePrice = 8.99;
-                    cheeseDescription = '24 slices each';
-                    break;
-                case 'members-mark-american':
-                    cheesePerPackage = 80;
-                    cheesePrice = 13.89;
-                    cheeseDescription = '80 slices each';
-                    break;
-                // Muenster Cheese options
-                case 'finlandia-muenster':
-                    cheesePerPackage = 32;
-                    cheesePrice = 8.96;
-                    cheeseDescription = '~32 slices each (2 lbs)';
-                    break;
-                // Havarti Cheese options
-                case 'arla-havarti':
-                    cheesePerPackage = 32;
-                    cheesePrice = 10.20;
-                    cheeseDescription = '~32 slices each (2 lbs)';
-                    break;
-                // Provolone Cheese options
-                case 'members-mark-provolone':
-                    cheesePerPackage = 42;
-                    cheesePrice = 6.96;
-                    cheeseDescription = '~42 slices each (2 lbs)';
-                    break;
-                default:
-                    cheesePerPackage = 24;
-                    cheesePrice = 3.98;
-                    cheeseDescription = '24 slices each';
-            }
-            let breadSandwichesPerPackage, breadDescription, breadPrice;
-            switch(breadType) {
-                case 'great-value-white':
-                    breadSandwichesPerPackage = 11;
-                    breadDescription = 'loaves (~11 sandwiches each)';
-                    breadPrice = 1.48;
-                    break;
-                case 'kroger-white':
-                    breadSandwichesPerPackage = 11;
-                    breadDescription = 'loaves (~11 sandwiches each)';
-                    breadPrice = 1.50;
-                    break;
-                case 'wonder-classic':
-                    breadSandwichesPerPackage = 10;
-                    breadDescription = 'loaves (~10 sandwiches each)';
-                    breadPrice = 3.63;
-                    break;
-                case 'wonder-giant':
-                    breadSandwichesPerPackage = 11;
-                    breadDescription = 'loaves (~11 sandwiches each)';
-                    breadPrice = 4.64;
-                    break;
-                case 'sara-lee-butter':
-                    breadSandwichesPerPackage = 10;
-                    breadDescription = 'loaves (~10 sandwiches each)';
-                    breadPrice = 3.14;
-                    break;
-                case 'sara-lee-classic':
-                    breadSandwichesPerPackage = 10;
-                    breadDescription = 'loaves (~10 sandwiches each)';
-                    breadPrice = 3.99;
-                    break;
-                case 'natures-own-honey-wheat-2pk':
-                    breadSandwichesPerPackage = 20;
-                    breadDescription = '2-packs (~20 sandwiches each)';
-                    breadPrice = 5.98;
-                    break;
-                default:
-                    breadSandwichesPerPackage = 11;
-                    breadDescription = 'loaves';
-                    breadPrice = 1.48;
+                }
             }
 
-            // Validation for ingredient selections
+            const bagPrice = PRODUCT_DATA.bags.pricePerBox;
+            let cheesePerPackage, cheesePrice, cheeseDescription;
+            const cheese = PRODUCT_INDEX.cheese[cheeseType];
+            if (cheese) {
+                cheesePerPackage = cheese.slices;
+                cheesePrice = cheese.price;
+                cheeseDescription = cheese.description || (cheese.slices + ' slices each');
+            } else {
+                cheesePerPackage = 24;
+                cheesePrice = 3.98;
+                cheeseDescription = '24 slices each';
+            }
+
+            let breadSandwichesPerPackage, breadDescription, breadPrice;
+            const bread = PRODUCT_INDEX.bread[breadType];
+            if (bread) {
+                breadSandwichesPerPackage = bread.sandwichesPerLoaf;
+                breadDescription = bread.description;
+                breadPrice = bread.price;
+            } else {
+                breadSandwichesPerPackage = 11;
+                breadDescription = 'loaves';
+                breadPrice = 1.48;
+            }
+
+            // Validation for ingredient selections            // Validation for ingredient selections
             if (!meatType) {
                 alert('Please select a meat type');
                 return;
@@ -2251,7 +2114,7 @@
                 const meatCostPerSandwich = meatPrice / (meatWeightOz / meatOzPerSandwich);
                 const cheeseCostPerSandwich = cheesePrice / (cheesePerPackage / cheesePerSandwich);
                 const breadCostPerSandwich = breadPrice / breadSandwichesPerPackage;
-                const bagCostPerSandwich = bagPrice / 480;
+                const bagCostPerSandwich = bagPrice / PRODUCT_DATA.bags.countPerBox;
                 const totalCostPerSandwich = meatCostPerSandwich + cheeseCostPerSandwich + breadCostPerSandwich + bagCostPerSandwich;
                 sandwichCount = Math.floor(budget / totalCostPerSandwich);
                 if (sandwichCount < 1) {
@@ -2281,7 +2144,7 @@
                     meatPackages = Math.ceil((mid * meatOzPerSandwich) / meatWeightOz);
                     cheesePackages = Math.ceil((mid * cheesePerSandwich) / cheesePerPackage);
                     breadPackages = Math.ceil(mid / breadSandwichesPerPackage);
-                    bagPackages = Math.ceil(mid / 480);
+                    bagPackages = Math.ceil(mid / PRODUCT_DATA.bags.countPerBox);
                     
                     meatCost = meatPackages * meatPrice;
                     cheeseCost = cheesePackages * cheesePrice;
@@ -2303,7 +2166,7 @@
                 meatPackages = Math.ceil((sandwichCount * meatOzPerSandwich) / meatWeightOz);
                 cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
                 breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
-                bagPackages = Math.ceil(sandwichCount / 480);
+                bagPackages = Math.ceil(sandwichCount / PRODUCT_DATA.bags.countPerBox);
                 
                 meatCost = meatPackages * meatPrice;
                 cheeseCost = cheesePackages * cheesePrice;
@@ -2315,7 +2178,7 @@
                 meatPackages = Math.ceil((sandwichCount * meatOzPerSandwich) / meatWeightOz);
                 cheesePackages = Math.ceil((sandwichCount * cheesePerSandwich) / cheesePerPackage);
                 breadPackages = Math.ceil(sandwichCount / breadSandwichesPerPackage);
-                bagPackages = Math.ceil(sandwichCount / 480);
+                bagPackages = Math.ceil(sandwichCount / PRODUCT_DATA.bags.countPerBox);
 
                 meatCost = meatPackages * meatPrice;
                 cheeseCost = cheesePackages * cheesePrice;
@@ -2482,7 +2345,7 @@
                         <input type="checkbox">
                         <div class="item-details">
                             <div class="item-name">${bagPackages} × Zip-lock sandwich bags</div>
-                            <div class="item-meta">480 count boxes</div>
+                            <div class="item-meta">${PRODUCT_DATA.bags.countPerBox} count boxes</div>
                         </div>
                         <div class="item-price">$${bagCost.toFixed(2)}</div>
                     </li>
@@ -2563,7 +2426,7 @@
             const totalMeatLbs = (totalMeatOz / 16).toFixed(1);
             const totalCheeseSlices = r.meatPackages ? r.cheesePackages * r.cheesePerPackage : 0;
             const totalBreadSandwiches = r.breadPackages * r.breadSandwichesPerPackage;
-            const totalBags = r.bagPackages * 480;
+            const totalBags = r.bagPackages * PRODUCT_DATA.bags.countPerBox;
 
             const printContent = `
                 <div class="pdf-content" style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif; max-width: 750px; margin: 0 auto; color: #333; line-height: 1.6;">
@@ -2623,7 +2486,7 @@
                                 <tr style="background: #f8fcfd;">
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
                                         <strong style="color: #236383;">Sandwich Bags</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">480-count boxes &mdash; ${totalBags} bags total</div>
+                                        <div style="font-size: 11px; color: #007E8C;">${PRODUCT_DATA.bags.countPerBox}-count boxes &mdash; ${totalBags} bags total</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.bagPackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.bagCost.toFixed(2)}</td>
@@ -2643,7 +2506,7 @@
                             <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.meatPackages}</strong> × ${cleanMeat}</td></tr>
                             <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.cheesePackages}</strong> × ${cleanCheese}</td></tr>
                             <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.breadPackages}</strong> × ${cleanBread}</td></tr>
-                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.bagPackages}</strong> × Zip-lock sandwich bags (480 count)</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.bagPackages}</strong> × Zip-lock sandwich bags (${PRODUCT_DATA.bags.countPerBox} count)</td></tr>
                         </table>
 
                         <div style="margin: 22px 0 10px 0; padding: 4px 0; border-bottom: 2px solid #47B3CB;">
@@ -2737,70 +2600,32 @@
 
             // Peanut butter options (1 oz PB = 1.875 tbsp)
             let pbJarSize, pbTbspPerJar, pbJarPrice, pbDescription;
-            switch(pbType) {
-                case 'jif-40':
-                    pbJarSize = 40;
-                    pbTbspPerJar = 75;
-                    pbJarPrice = 7.99;
-                    pbDescription = 'Jif Creamy 40 oz (1.13kg)';
-                    break;
-                case 'skippy-40':
-                    pbJarSize = 40;
-                    pbTbspPerJar = 75;
-                    pbJarPrice = 7.99;
-                    pbDescription = 'Skippy Creamy 40 oz (1.13kg)';
-                    break;
-                case 'jif-16':
-                    pbJarSize = 16;
-                    pbTbspPerJar = 30;
-                    pbJarPrice = 3.59;
-                    pbDescription = 'Jif Creamy 16 oz (454g)';
-                    break;
-                case 'skippy-16':
-                    pbJarSize = 16.3;
-                    pbTbspPerJar = 31;
-                    pbJarPrice = 3.59;
-                    pbDescription = 'Skippy Creamy 16.3 oz (462g)';
-                    break;
-                default:
-                    pbJarSize = 40;
-                    pbTbspPerJar = 75;
-                    pbJarPrice = 7.99;
-                    pbDescription = 'Jif Creamy 40 oz (1.13kg)';
+            const pb = PRODUCT_INDEX.peanutButter[pbType];
+            if (pb) {
+                pbJarSize = pb.sizeOz;
+                pbTbspPerJar = pb.tablespoons;
+                pbJarPrice = pb.price;
+                pbDescription = pb.description;
+            } else {
+                pbJarSize = 40;
+                pbTbspPerJar = 75;
+                pbJarPrice = 7.99;
+                pbDescription = 'Jif Creamy 40 oz (1.13kg)';
             }
 
             // Jelly options (1 oz jelly = 1.875 tbsp)
             let jellyJarSize, jellyTbspPerJar, jellyJarPrice, jellyDescription;
-            switch(jellyType) {
-                case 'smuckers-32':
-                    jellyJarSize = 32;
-                    jellyTbspPerJar = 60;
-                    jellyJarPrice = 4.99;
-                    jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
-                    break;
-                case 'welchs-30':
-                    jellyJarSize = 30;
-                    jellyTbspPerJar = 56;
-                    jellyJarPrice = 3.59;
-                    jellyDescription = "Welch's Concord Grape Jelly 30 oz";
-                    break;
-                case 'smuckers-squeeze-20':
-                    jellyJarSize = 20;
-                    jellyTbspPerJar = 38;
-                    jellyJarPrice = 3.59;
-                    jellyDescription = "Smucker's Squeeze Grape Jelly 20 oz";
-                    break;
-                case 'welchs-squeeze-18':
-                    jellyJarSize = 18;
-                    jellyTbspPerJar = 34;
-                    jellyJarPrice = 3.83;
-                    jellyDescription = "Welch's Natural Concord Grape Squeeze 18 oz";
-                    break;
-                default:
-                    jellyJarSize = 32;
-                    jellyTbspPerJar = 60;
-                    jellyJarPrice = 4.99;
-                    jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
+            const jelly = PRODUCT_INDEX.jelly[jellyType];
+            if (jelly) {
+                jellyJarSize = jelly.sizeOz;
+                jellyTbspPerJar = jelly.tablespoons;
+                jellyJarPrice = jelly.price;
+                jellyDescription = jelly.description;
+            } else {
+                jellyJarSize = 32;
+                jellyTbspPerJar = 60;
+                jellyJarPrice = 4.99;
+                jellyDescription = "Smucker's Concord Grape Jelly 32 oz";
             }
 
             // Bread selection
@@ -2809,41 +2634,16 @@
             const pbjBreadName = pbjBreadSelect.options[pbjBreadSelect.selectedIndex].text;
             const pbjBreadGridName = cleanName(pbjBreadName);
             let usableBreadSlicesPerLoaf, breadPrice;
-            switch(pbjBreadType) {
-                case 'great-value-white':
-                    usableBreadSlicesPerLoaf = 22;
-                    breadPrice = 1.48;
-                    break;
-                case 'kroger-white':
-                    usableBreadSlicesPerLoaf = 22;
-                    breadPrice = 1.50;
-                    break;
-                case 'wonder-classic':
-                    usableBreadSlicesPerLoaf = 20;
-                    breadPrice = 3.63;
-                    break;
-                case 'wonder-giant':
-                    usableBreadSlicesPerLoaf = 22;
-                    breadPrice = 4.64;
-                    break;
-                case 'sara-lee-butter':
-                    usableBreadSlicesPerLoaf = 20;
-                    breadPrice = 3.14;
-                    break;
-                case 'sara-lee-classic':
-                    usableBreadSlicesPerLoaf = 20;
-                    breadPrice = 3.99;
-                    break;
-                case 'natures-own-honey-wheat-2pk':
-                    usableBreadSlicesPerLoaf = 40;
-                    breadPrice = 5.98;
-                    break;
-                default:
-                    usableBreadSlicesPerLoaf = 22;
-                    breadPrice = 1.48;
+            const pbjBread = PRODUCT_INDEX.bread[pbjBreadType];
+            if (pbjBread) {
+                usableBreadSlicesPerLoaf = pbjBread.usableSlices;
+                breadPrice = pbjBread.price;
+            } else {
+                usableBreadSlicesPerLoaf = 22;
+                breadPrice = 1.48;
             }
-            const bagsPerBox = 480;
-            const bagBoxPrice = 7.99;
+            const bagsPerBox = PRODUCT_DATA.bags.countPerBox;
+            const bagBoxPrice = PRODUCT_DATA.bags.pricePerBox;
 
             let pbjCount;
 
@@ -2923,8 +2723,8 @@
 
             // Spatula calculation
             const includeSpatulas = document.getElementById('includeSpatulas').checked;
-            const spatulaPackPrice = 5.99;
-            const spatulasPerPack = 4;
+            const spatulaPackPrice = PRODUCT_DATA.spatulas.pricePerPack;
+            const spatulasPerPack = PRODUCT_DATA.spatulas.countPerPack;
             const spatulaPackCount = includeSpatulas ? Math.max(1, parseInt(document.getElementById('spatulaPackCount').value) || 1) : 0;
             const spatulaCost = spatulaPackCount * spatulaPackPrice;
 
@@ -3103,30 +2903,8 @@
             <span style="margin-left:auto; font-size:0.98em; color:#b97a1a; font-weight:400;">(click to view all ingredient prices used in calculations)</span>
         </summary>
         <div style="padding: 0 18px;">
-            <table style="width:100%; margin-top: 10px; border-collapse: collapse;">
-                <tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>
-                <tr><td>Turkey (Kirkland 2-pack, 40 slices)</td><td>$13.99</td><td>40 slices total (~40 oz)</td></tr>
-                <tr><td>Publix Turkey Breast, Roasted, Thin Sliced</td><td>$7.07</td><td>16 oz / 32 slices</td></tr>
-                <tr><td>Land O'Frost Premium Oven Roasted Turkey Breast</td><td>$9.53</td><td>16 oz / 32 slices</td></tr>
-                <tr><td>Hillshire Farm Ultra Thin Sliced Oven Roasted Turkey Breast</td><td>$6.07</td><td>9 oz / 18 slices</td></tr>
-                <tr><td>Kroger Private Selection® Turkey Breast Oven Roasted Deli Sliced</td><td>$6.49</td><td>8 oz / 11-12 slices</td></tr>
-                <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced</td><td>$3.99</td><td>9 oz / 18 slices</td></tr>
-                <tr><td>Kroger® Turkey Breast Oven Roasted Deli Thin Sliced Family Size</td><td>$4.39</td><td>1 lb / 30-32 slices</td></tr>
-                <tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">🇺🇸 American Cheese (Deli Style)</td></tr>
-                <tr><td>Great Value American (Walmart)</td><td>$3.98</td><td>24 slices</td></tr>
-                <tr><td>Kroger Deli American</td><td>$4.29</td><td>24 slices</td></tr>
-                <tr><td>Sargento Sliced American</td><td>$4.99</td><td>22 slices</td></tr>
-                <tr><td>Land O'Lakes American</td><td>$6.49</td><td>24 slices</td></tr>
-                <tr><td>Boar's Head American</td><td>$8.99</td><td>24 slices</td></tr>
-                <tr><td>Great Value White</td><td>$1.48</td><td>~11 sandwiches</td></tr>
-                <tr><td>Kroger White Sandwich</td><td>$1.00–$1.99</td><td>~11 sandwiches</td></tr>
-                <tr><td>Wonder Bread Classic White — Regular Loaf</td><td>$2.47–$4.79</td><td>~10 sandwiches</td></tr>
-                <tr><td>Wonder Bread Giant White — Large Loaf</td><td>$3.99–$5.29</td><td>~11 sandwiches</td></tr>
-                <tr><td>Sara Lee Butter Bread</td><td>$2.98–$3.29</td><td>~10 sandwiches</td></tr>
-                <tr><td>Sara Lee Classic White</td><td>$3.48–$4.49</td><td>~10 sandwiches</td></tr>
-                <tr><td>Nature's Own Honey Wheat (2-Pack)</td><td>$5.98</td><td>~20 sandwiches</td></tr>
-                <tr><td>Zip-lock Sandwich Bags</td><td>$7.99</td><td>480 count</td></tr>
-            </table>
+            <!-- Table populated dynamically by buildPricingSummaryTable() -->
+            <div id="pricing-summary-table"></div>
         </div>
     </details>
 </div>
