@@ -1463,6 +1463,26 @@
         box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
     }
 
+    .card-cheese-muenster {
+        background: linear-gradient(135deg, #FBAD3F 0%, #e89a2e 100%);
+        box-shadow: 0 3px 8px rgba(251, 173, 63, 0.25);
+    }
+
+    .card-cheese-havarti {
+        background: linear-gradient(135deg, #47B3CB 0%, #3a9bb0 100%);
+        box-shadow: 0 3px 8px rgba(71, 179, 203, 0.25);
+    }
+
+    .card-cheese-provolone {
+        background: linear-gradient(135deg, #A31C41 0%, #8B1639 100%);
+        box-shadow: 0 3px 8px rgba(163, 28, 65, 0.25);
+    }
+
+    .card-cheese-american {
+        background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);
+        box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
+    }
+
     .card-bread {
         background: linear-gradient(135deg, #FBAD3F 0%, #F39C12 100%);
         box-shadow: 0 3px 8px rgba(251, 173, 63, 0.25);
@@ -1962,7 +1982,10 @@
             function cheeseCard(c) {
                 const ps = (c.price / c.slices).toFixed(2);
                 const sizeLabel = c.description && c.description.includes('2 lbs') ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
-                return '<div class="price-card card-cheese">' +
+                const cardClass = 'card-cheese-' + c.cheeseType;
+                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', american: 'AMERICAN' };
+                return '<div class="price-card ' + cardClass + '">' +
+                    '<div class="meat-type-label">' + (typeLabels[c.cheeseType] || '') + '</div>' +
                     '<div class="product-title">' + (c.pricingTitle || c.name) + '</div>' +
                     '<div class="product-size">' + sizeLabel + '</div>' +
                     '<div class="product-price">$' + c.price.toFixed(2) + '</div>' +
