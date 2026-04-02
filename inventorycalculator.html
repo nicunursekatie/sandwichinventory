@@ -1421,87 +1421,104 @@
     /* Product grid */
     .price-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 10px;
+        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+        gap: 8px;
     }
-    
+
     .price-card {
         border-radius: 8px;
-        padding: 12px;
+        padding: 10px;
         text-align: center;
         color: white;
         transition: transform 0.2s;
-        cursor: pointer;
         position: relative;
         overflow: visible;
         display: flex;
         flex-direction: column;
-        gap: 3px;
-        min-height: 150px;
+        gap: 2px;
     }
-    
+
     .price-card:hover {
-        transform: translateY(-3px);
+        transform: translateY(-2px);
     }
-    
+
     /* Card colors using brand palette */
+    .card-turkey {
+        background: linear-gradient(135deg, #A31C41 0%, #8B1639 100%);
+        box-shadow: 0 3px 8px rgba(163, 28, 65, 0.25);
+    }
+
+    .card-chicken {
+        background: linear-gradient(135deg, #007E8C 0%, #236383 100%);
+        box-shadow: 0 3px 8px rgba(0, 126, 140, 0.25);
+    }
+
     .card-meat {
         background: linear-gradient(135deg, #A31C41 0%, #8B1639 100%);
-        box-shadow: 0 4px 12px rgba(163, 28, 65, 0.3);
+        box-shadow: 0 3px 8px rgba(163, 28, 65, 0.25);
     }
-    
+
     .card-cheese {
-        background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
-        box-shadow: 0 4px 12px rgba(35, 99, 131, 0.3);
+        background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);
+        box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
     }
-    
+
     .card-bread {
         background: linear-gradient(135deg, #FBAD3F 0%, #F39C12 100%);
-        box-shadow: 0 4px 12px rgba(251, 173, 63, 0.3);
+        box-shadow: 0 3px 8px rgba(251, 173, 63, 0.25);
     }
-    
+
     .card-supplies {
         background: linear-gradient(135deg, #47B3CB 0%, #007E8C 100%);
-        box-shadow: 0 4px 12px rgba(71, 179, 203, 0.3);
+        box-shadow: 0 3px 8px rgba(71, 179, 203, 0.25);
     }
-    
+
     .product-emoji {
-        font-size: 1.5em;
-        margin-bottom: 4px;
+        font-size: 1.2em;
+        margin-bottom: 2px;
     }
-    
+
     .product-title {
-        font-size: 1.05em;
+        font-size: 0.88em;
         font-weight: 700;
-        line-height: 1.3;
-        border-bottom: 1px solid rgba(255,255,255,0.4);
-        padding-bottom: 8px;
-        margin-bottom: 6px;
+        line-height: 1.2;
+        border-bottom: 1px solid rgba(255,255,255,0.3);
+        padding-bottom: 5px;
+        margin-bottom: 3px;
     }
-    
+
     .product-size {
-        font-size: 0.85em;
-        opacity: 0.95;
-        margin-bottom: 6px;
+        font-size: 0.78em;
+        opacity: 0.9;
+        margin-bottom: 3px;
         font-weight: 500;
     }
-    
+
     .product-price {
-        font-size: 1.5em;
+        font-size: 1.15em;
         font-weight: 800;
-        margin-top: 6px;
-        margin-bottom: 6px;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        margin-top: 2px;
+        margin-bottom: 2px;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
     }
-    
+
     .price-note {
-        font-size: 1.1em;
+        font-size: 0.8em;
         font-weight: 600;
-        background: rgba(255,255,255,0.25);
+        background: rgba(255,255,255,0.2);
         color: #1a1a2e;
-        padding: 4px 10px;
-        border-radius: 6px;
-        margin-top: 4px;
+        padding: 3px 6px;
+        border-radius: 4px;
+        margin-top: 2px;
+    }
+
+    .meat-type-label {
+        font-size: 0.65em;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        opacity: 0.85;
+        margin-bottom: 2px;
     }
     
     /* Cheese guide - compact */
@@ -1541,21 +1558,20 @@
     /* Mobile responsive */
     @media (max-width: 768px) {
         .price-grid {
-            grid-template-columns: 1fr;
-            gap: 16px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
         }
-        
+
         .price-card {
-            padding: 16px;
-            min-height: auto;
+            padding: 10px;
         }
-        
+
         .product-title {
-            font-size: 1.1em;
+            font-size: 0.85em;
             word-wrap: break-word;
             overflow-wrap: break-word;
         }
-        
+
         .product-size {
             font-size: 0.95em;
             word-wrap: break-word;
@@ -1780,23 +1796,23 @@
                 { id: 'kroger-turkey-thin', name: 'Kroger Turkey Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 3.99, meatType: 'turkey', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Turkey Thin Sliced', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'main' },
                 { id: 'kroger-turkey-family', name: 'Kroger Turkey Family Size', store: 'Kroger', weightOz: 16, slices: 31, price: 4.39, meatType: 'turkey', group: 'popular', description: '1 lb packages (16 oz)', dropdownSliceLabel: '30-32 slices', pricingTitle: 'Kroger Turkey Family Size', pricingSize: '1 lb \u2022 30-32 slices', showInPricing: true, pricingGroup: 'main' },
                 { id: 'turkey', name: 'Kirkland Turkey', store: 'Costco', weightOz: 40, slices: 80, price: 13.99, meatType: 'turkey', group: 'more', description: '2-packs (~40 oz total)', pricingTitle: 'Kirkland Turkey', pricingSize: '2-pack \u2022 40 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'hillshire-turkey', name: 'Hillshire Farm Ultra Thin Turkey', store: 'Various', weightOz: 9, slices: 18, price: 6.07, meatType: 'turkey', group: 'more', description: '9 oz packages', pricingTitle: 'Hillshire Farm Ultra Thin', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'land-o-frost-turkey', name: "Land O'Frost Premium Turkey", store: 'Various', weightOz: 16, slices: 32, price: 9.53, meatType: 'turkey', group: 'more', description: '16 oz packages', pricingTitle: "Land O'Frost Premium", pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'kroger-turkey-regular', name: 'Kroger Private Selection\u00AE Turkey', store: 'Kroger', weightOz: 8, slices: 11.5, price: 6.49, meatType: 'turkey', group: 'more', description: '8 oz packages', dropdownSliceLabel: '11-12 slices', pricingTitle: 'Kroger Private Selection\u00AE', pricingSize: '8 oz \u2022 11-12 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'oscar-mayer-chicken-rotisserie', name: 'Oscar Mayer Rotisserie Chicken', store: 'Various', weightOz: 16, slices: 32, price: 7.99, meatType: 'chicken', group: 'more', description: '16 oz packages' },
+                { id: 'hillshire-turkey', name: 'Hillshire Farm Ultra Thin Turkey', store: 'Various', weightOz: 9, slices: 18, price: 6.07, meatType: 'turkey', group: 'more', description: '9 oz packages', pricingTitle: 'Hillshire Farm Ultra Thin Turkey', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'land-o-frost-turkey', name: "Land O'Frost Premium Turkey", store: 'Various', weightOz: 16, slices: 32, price: 9.53, meatType: 'turkey', group: 'more', description: '16 oz packages', pricingTitle: "Land O'Frost Premium Turkey", pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'kroger-turkey-regular', name: 'Kroger Private Selection\u00AE Turkey', store: 'Kroger', weightOz: 8, slices: 11.5, price: 6.49, meatType: 'turkey', group: 'more', description: '8 oz packages', dropdownSliceLabel: '11-12 slices', pricingTitle: 'Kroger Private Selection\u00AE Turkey', pricingSize: '8 oz \u2022 11-12 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'oscar-mayer-chicken-rotisserie', name: 'Oscar Mayer Rotisserie Chicken', store: 'Various', weightOz: 16, slices: 32, price: 7.99, meatType: 'chicken', group: 'more', description: '16 oz packages', pricingTitle: 'Oscar Mayer Rotisserie Chicken', pricingSize: '16 oz \u2022 32 slices' },
                 { id: 'oscar-mayer-chicken-blackened', name: 'Oscar Mayer Blackened Chicken', store: 'Various', weightOz: 8, slices: 16, price: 4.49, meatType: 'chicken', group: 'hidden', description: '8 oz packages' }
             ],
             cheese: [
                 { id: 'great-value-american', name: 'Great Value American - Walmart', store: 'Walmart', slices: 24, price: 3.98, cheeseType: 'american', description: '24 slices each', pricingTitle: 'Great Value American', showInPricing: true },
                 { id: 'kroger-american', name: 'Kroger Deli American', store: 'Kroger', slices: 24, price: 4.29, cheeseType: 'american', description: '24 slices each', pricingTitle: 'Kroger Deli American', showInPricing: true },
-                { id: 'kroger-white-american', name: 'Kroger White American', store: 'Kroger', slices: 12, price: 5.00, cheeseType: 'american', dropdownLabel: 'Kroger White American (12 oz, ~12 slices, $5.00)', description: '~12 slices each (12 oz)' },
+                { id: 'kroger-white-american', name: 'Kroger White American', store: 'Kroger', slices: 12, price: 5.00, cheeseType: 'american', dropdownLabel: 'Kroger White American (12 oz, ~12 slices, $5.00)', description: '~12 slices each (12 oz)', pricingTitle: 'Kroger White American' },
                 { id: 'sargento-american', name: 'Sargento Sliced American', store: 'Various', slices: 22, price: 4.99, cheeseType: 'american', description: '22 slices each', pricingTitle: 'Sargento American', showInPricing: true },
                 { id: 'land-o-lakes-american', name: "Land O'Lakes American", store: 'Various', slices: 24, price: 6.49, cheeseType: 'american', description: '24 slices each', pricingTitle: "Land O'Lakes American", showInPricing: true },
                 { id: 'boars-head-american', name: "Boar's Head American", store: 'Various', slices: 24, price: 8.99, cheeseType: 'american', description: '24 slices each', pricingTitle: "Boar's Head American", showInPricing: true },
-                { id: 'members-mark-american', name: "Member's Mark American - Sam's Club", store: "Sam's Club", slices: 80, price: 13.89, cheeseType: 'american', description: '80 slices each' },
-                { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)' },
-                { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)' },
-                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)' }
+                { id: 'members-mark-american', name: "Member's Mark American - Sam's Club", store: "Sam's Club", slices: 80, price: 13.89, cheeseType: 'american', description: '80 slices each', pricingTitle: "Member's Mark American (Sam's Club)" },
+                { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)', pricingTitle: 'Finlandia Muenster (Costco)' },
+                { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)', pricingTitle: 'Arla Havarti (Costco)' },
+                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" }
             ],
             bread: [
                 { id: 'great-value-white', name: 'Great Value White Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.48, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Great Value White', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.48', pricingNote: '~$0.13/sandwich' },
@@ -1930,21 +1946,58 @@
         function buildPricingCards() {
             const container = document.getElementById('pricing-cards-container');
             if (!container) return;
-            const mainMeatIds = ['kroger-turkey-family', 'publix-turkey', 'kroger-turkey-thin'];
-            const moreMeatIds = ['land-o-frost-turkey', 'hillshire-turkey', 'turkey', 'kroger-turkey-regular'];
-            let meatHTML = '<div class="price-category"><div class="category-label">MEAT</div><div class="price-grid">';
-            mainMeatIds.forEach(id => { const m = PRODUCT_INDEX.meat[id]; if (!m) return; const ps = (m.price / m.slices).toFixed(2); meatHTML += '<div class="price-card card-meat"><div class="product-emoji"><span class="icon icon-product icon-sandwich icon-white"></span></div><div class="product-title">' + m.pricingTitle + '</div><div class="product-size">' + m.pricingSize + '</div><div class="product-price">$' + m.price.toFixed(2) + '</div><div class="price-note">~$' + ps + '/slice</div></div>'; });
-            meatHTML += '</div><details style="margin-top: 20px;"><summary style="cursor: pointer; font-weight: 600; color: #1a4d66; font-size: 1.1em; padding: 12px; background: rgba(251,173,63,0.15); border-radius: 8px; margin-bottom: 15px;">Show More Meat Options</summary><div class="price-grid" style="margin-top: 15px;">';
-            moreMeatIds.forEach(id => { const m = PRODUCT_INDEX.meat[id]; if (!m) return; const ps = (m.price / m.slices).toFixed(2); meatHTML += '<div class="price-card card-meat"><div class="product-emoji"><span class="icon icon-product icon-sandwich icon-white"></span></div><div class="product-title">' + m.pricingTitle + '</div><div class="product-size">' + m.pricingSize + '</div><div class="product-price">$' + m.price.toFixed(2) + '</div><div class="price-note">~$' + ps + '/slice</div></div>'; });
-            meatHTML += '</div></details></div>';
-            const cheesePricingIds = ['great-value-american', 'kroger-american', 'sargento-american', 'land-o-lakes-american', 'boars-head-american'];
-            let cheeseHTML = '<div class="price-category"><div class="category-label">AMERICAN CHEESE (Deli Style)</div><div class="price-grid">';
-            cheesePricingIds.forEach(id => { const c = PRODUCT_INDEX.cheese[id]; if (!c) return; const ps = (c.price / c.slices).toFixed(2); cheeseHTML += '<div class="price-card card-cheese"><div class="product-emoji"><span class="icon icon-product icon-cheese icon-white"></span></div><div class="product-title">' + c.pricingTitle + '</div><div class="product-size">' + c.slices + ' slices</div><div class="product-price">$' + c.price.toFixed(2) + '</div><div class="price-note">~$' + ps + '/slice</div></div>'; });
+
+            function meatCard(m) {
+                const ps = (m.price / m.slices).toFixed(2);
+                const cardClass = m.meatType === 'chicken' ? 'card-chicken' : 'card-turkey';
+                const typeLabel = m.meatType === 'chicken' ? 'CHICKEN' : 'TURKEY';
+                return '<div class="price-card ' + cardClass + '">' +
+                    '<div class="meat-type-label">' + typeLabel + '</div>' +
+                    '<div class="product-title">' + (m.pricingTitle || m.name) + '</div>' +
+                    '<div class="product-size">' + (m.pricingSize || (m.weightOz + ' oz')) + '</div>' +
+                    '<div class="product-price">$' + m.price.toFixed(2) + '</div>' +
+                    '<div class="price-note">~$' + ps + '/slice</div></div>';
+            }
+
+            function cheeseCard(c) {
+                const ps = (c.price / c.slices).toFixed(2);
+                const sizeLabel = c.description && c.description.includes('2 lbs') ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
+                return '<div class="price-card card-cheese">' +
+                    '<div class="product-title">' + (c.pricingTitle || c.name) + '</div>' +
+                    '<div class="product-size">' + sizeLabel + '</div>' +
+                    '<div class="product-price">$' + c.price.toFixed(2) + '</div>' +
+                    '<div class="price-note">~$' + ps + '/slice</div></div>';
+            }
+
+            // Meat — all visible products, no collapse
+            let meatHTML = '<div class="price-category"><div class="category-label">DELI MEAT</div><div class="price-grid">';
+            PRODUCT_DATA.meat.filter(m => m.group !== 'hidden').forEach(m => { meatHTML += meatCard(m); });
+            meatHTML += '</div></div>';
+
+            // Cheese — all types
+            let cheeseHTML = '<div class="price-category"><div class="category-label">CHEESE (Deli Slices)</div><div class="price-grid">';
+            PRODUCT_DATA.cheese.forEach(c => { cheeseHTML += cheeseCard(c); });
             cheeseHTML += '</div></div>';
+
+            // Bread
             let breadHTML = '<div class="price-category"><div class="category-label">BREAD</div><div class="price-grid">';
-            PRODUCT_DATA.bread.forEach(b => { breadHTML += '<div class="price-card card-bread"><div class="product-emoji"><span class="icon icon-product icon-wheat icon-accent"></span></div><div class="product-title">' + b.pricingTitle + '</div><div class="product-size">' + b.pricingSize + '</div><div class="product-price">' + b.pricingPrice + '</div><div class="price-note">' + b.pricingNote + '</div></div>'; });
+            PRODUCT_DATA.bread.forEach(b => {
+                breadHTML += '<div class="price-card card-bread">' +
+                    '<div class="product-title">' + b.pricingTitle + '</div>' +
+                    '<div class="product-size">' + b.pricingSize + '</div>' +
+                    '<div class="product-price">' + b.pricingPrice + '</div>' +
+                    '<div class="price-note">' + b.pricingNote + '</div></div>';
+            });
             breadHTML += '</div></div>';
-            let suppliesHTML = '<div class="price-category"><div class="category-label">SUPPLIES</div><div class="price-grid"><div class="price-card card-supplies"><div class="product-emoji"><span class="icon icon-product icon-package icon-accent"></span></div><div class="product-title">Sandwich Bags</div><div class="product-size">' + PRODUCT_DATA.bags.countPerBox + ' count</div><div class="product-price">$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</div><div class="price-note">~$' + (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) + '/bag</div></div></div></div>';
+
+            // Supplies
+            let suppliesHTML = '<div class="price-category"><div class="category-label">SUPPLIES</div><div class="price-grid">' +
+                '<div class="price-card card-supplies">' +
+                '<div class="product-title">Sandwich Bags</div>' +
+                '<div class="product-size">' + PRODUCT_DATA.bags.countPerBox + ' count</div>' +
+                '<div class="product-price">$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</div>' +
+                '<div class="price-note">~$' + (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) + '/bag</div></div></div></div>';
+
             container.innerHTML = meatHTML + cheeseHTML + breadHTML + suppliesHTML;
         }
 
