@@ -3329,8 +3329,6 @@
                         <label>Peanut butter type</label>
                         <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">We use 3 tablespoons of peanut butter per sandwich.</span>
                         <select id="pbType">
-                            <option value="jif-40">🥜 Jif Creamy 40 oz (~75 tbsp) - $7.99</option>
-                            <option value="skippy-40">🥜 Skippy Creamy 40 oz (~75 tbsp) - $7.99</option>
                             <option value="jif-16">🥜 Jif Creamy 16 oz (~30 tbsp) - $3.59</option>
                             <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (~31 tbsp) - $3.59</option>
                         </select>
@@ -6140,12 +6138,10 @@
         // Helper function to get peanut butter info
         function getPBInfo(pbType) {
             const pbOptions = {
-                'jif-40': { tbspPerJar: 75, price: 7.99, description: 'Jif Creamy 40 oz' },
-                'skippy-40': { tbspPerJar: 75, price: 7.99, description: 'Skippy Creamy 40 oz' },
                 'jif-16': { tbspPerJar: 30, price: 3.59, description: 'Jif Creamy 16 oz' },
                 'skippy-16': { tbspPerJar: 31, price: 3.59, description: 'Skippy Creamy 16.3 oz' }
             };
-            return pbOptions[pbType] || pbOptions['jif-40'];
+            return pbOptions[pbType] || pbOptions['jif-16'];
         }
 
         // Helper function to get jelly info
