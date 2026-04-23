@@ -554,7 +554,59 @@
                 </div>
                 <div class="form-group">
                     <label for="state">State *</label>
-                    <input type="text" id="state" name="state" placeholder="GA" required maxlength="2" style="text-transform: uppercase;">
+                    <select id="state" name="state" required>
+                        <option value="GA" selected>GA</option>
+                        <option value="AL">AL</option>
+                        <option value="AK">AK</option>
+                        <option value="AZ">AZ</option>
+                        <option value="AR">AR</option>
+                        <option value="CA">CA</option>
+                        <option value="CO">CO</option>
+                        <option value="CT">CT</option>
+                        <option value="DE">DE</option>
+                        <option value="FL">FL</option>
+                        <option value="HI">HI</option>
+                        <option value="ID">ID</option>
+                        <option value="IL">IL</option>
+                        <option value="IN">IN</option>
+                        <option value="IA">IA</option>
+                        <option value="KS">KS</option>
+                        <option value="KY">KY</option>
+                        <option value="LA">LA</option>
+                        <option value="ME">ME</option>
+                        <option value="MD">MD</option>
+                        <option value="MA">MA</option>
+                        <option value="MI">MI</option>
+                        <option value="MN">MN</option>
+                        <option value="MS">MS</option>
+                        <option value="MO">MO</option>
+                        <option value="MT">MT</option>
+                        <option value="NE">NE</option>
+                        <option value="NV">NV</option>
+                        <option value="NH">NH</option>
+                        <option value="NJ">NJ</option>
+                        <option value="NM">NM</option>
+                        <option value="NY">NY</option>
+                        <option value="NC">NC</option>
+                        <option value="ND">ND</option>
+                        <option value="OH">OH</option>
+                        <option value="OK">OK</option>
+                        <option value="OR">OR</option>
+                        <option value="PA">PA</option>
+                        <option value="RI">RI</option>
+                        <option value="SC">SC</option>
+                        <option value="SD">SD</option>
+                        <option value="TN">TN</option>
+                        <option value="TX">TX</option>
+                        <option value="UT">UT</option>
+                        <option value="VT">VT</option>
+                        <option value="VA">VA</option>
+                        <option value="WA">WA</option>
+                        <option value="WV">WV</option>
+                        <option value="WI">WI</option>
+                        <option value="WY">WY</option>
+                        <option value="DC">DC</option>
+                    </select>
                 </div>
                 <div class="form-group">
                     <label for="zipCode">Zip Code *</label>
@@ -580,25 +632,47 @@
                 </div>
             </div>
 
-            <!-- Preferred Contact Method Row -->
+            <!-- Preferred Contact Methods (Primary & Backup) -->
             <div class="form-group">
-                <label>Which communication methods do you regularly monitor? *</label>
-                <p class="helper-text">Check all that apply</p>
-                <div class="checkbox-group">
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="contactMethod" value="Text"> Text</label>
+                <label>How would you prefer we contact the primary contact? *</label>
+                <p class="helper-text">Select one</p>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <label><input type="radio" name="primaryContactMethod" value="Text" required> Text</label>
                     </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="contactMethod" value="Email"> Email</label>
+                    <div class="radio-item">
+                        <label><input type="radio" name="primaryContactMethod" value="Email"> Email</label>
                     </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="contactMethod" value="Phone"> Phone</label>
+                    <div class="radio-item">
+                        <label><input type="radio" name="primaryContactMethod" value="Phone"> Phone</label>
                     </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="contactMethod" value="WhatsApp"> WhatsApp</label>
+                    <div class="radio-item">
+                        <label><input type="radio" name="primaryContactMethod" value="WhatsApp"> WhatsApp</label>
                     </div>
-                    <div class="checkbox-item">
-                        <label><input type="checkbox" name="contactMethod" value="Facebook Messenger"> Facebook Messenger</label>
+                    <div class="radio-item">
+                        <label><input type="radio" name="primaryContactMethod" value="Facebook Messenger"> Facebook Messenger</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>How would you prefer we contact the backup contact?</label>
+                <p class="helper-text">Select one (only if you provided a backup contact above)</p>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <label><input type="radio" name="backupContactMethod" value="Text"> Text</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="backupContactMethod" value="Email"> Email</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="backupContactMethod" value="Phone"> Phone</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="backupContactMethod" value="WhatsApp"> WhatsApp</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="backupContactMethod" value="Facebook Messenger"> Facebook Messenger</label>
                     </div>
                 </div>
             </div>
@@ -765,6 +839,16 @@
                 </div>
             </div>
 
+            <div class="form-group hidden" id="freezeDetailsGroup" style="margin-left: 28px; padding-left: 12px; border-left: 3px solid #A31C41; background: #f7fafc;">
+                <label for="freezeReason">Why do you freeze sandwiches?</label>
+                <p class="helper-text">Help us understand the situation (e.g., excess from a delivery, holding for a future event, etc.)</p>
+                <textarea id="freezeReason" name="freezeReason" placeholder="Briefly describe why" rows="2"></textarea>
+
+                <label for="freezeDuration" style="margin-top: 12px;">How long do you typically keep sandwiches frozen?</label>
+                <p class="helper-text">For example: a few days, up to a week, a month, etc.</p>
+                <input type="text" id="freezeDuration" name="freezeDuration" placeholder="e.g., 1 week">
+            </div>
+
             <!-- Partnership & Impact -->
             <h2 class="section-header">Partnership & Impact</h2>
             
@@ -779,19 +863,13 @@
                             <label><input type="radio" name="yearsReceivingSandwiches" value="Less than 1 year"> Less than 1 year</label>
                         </div>
                         <div class="radio-item">
-                            <label><input type="radio" name="yearsReceivingSandwiches" value="1 year"> 1 year</label>
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="1-2 years"> 1-2 years</label>
                         </div>
                         <div class="radio-item">
-                            <label><input type="radio" name="yearsReceivingSandwiches" value="2 years"> 2 years</label>
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="3-5 years"> 3-5 years</label>
                         </div>
                         <div class="radio-item">
-                            <label><input type="radio" name="yearsReceivingSandwiches" value="3 years"> 3 years</label>
-                        </div>
-                        <div class="radio-item">
-                            <label><input type="radio" name="yearsReceivingSandwiches" value="4 years"> 4 years</label>
-                        </div>
-                        <div class="radio-item">
-                            <label><input type="radio" name="yearsReceivingSandwiches" value="5 years"> 5 years</label>
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="5+ years"> 5+ years</label>
                         </div>
                     </div>
                 </div>
@@ -1215,6 +1293,24 @@
             });
         });
 
+        // Show freeze details (why + how long) when "Yes" is selected for freezing sandwiches
+        const freezeSandwichesInputs = document.querySelectorAll('input[name="freezeSandwiches"]');
+        const freezeDetailsGroup = document.getElementById('freezeDetailsGroup');
+        const freezeReason = document.getElementById('freezeReason');
+        const freezeDuration = document.getElementById('freezeDuration');
+
+        freezeSandwichesInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value === 'Yes') {
+                    freezeDetailsGroup.classList.remove('hidden');
+                } else {
+                    freezeDetailsGroup.classList.add('hidden');
+                    freezeReason.value = '';
+                    freezeDuration.value = '';
+                }
+            });
+        });
+
         // Show delivery feedback field when rating is less than 5
         const deliveryRatingInputs = document.querySelectorAll('input[name="deliveryRating"]');
         const deliveryFeedbackGroup = document.getElementById('deliveryFeedbackGroup');
@@ -1273,7 +1369,7 @@
         function updateProgress() {
             const requiredInputs = Array.from(allInputs).filter(input => {
                 if (input.type === 'checkbox' || input.type === 'radio') {
-                    return input.required || input.name === 'contactMethod';
+                    return input.required;
                 }
                 return input.required;
             });
@@ -1325,11 +1421,11 @@
             const errors = [];
             let firstErrorElement = null;
 
-            // Validate contact methods
-            const contactMethodsChecked = document.querySelectorAll('input[name="contactMethod"]:checked').length > 0;
-            if (!contactMethodsChecked) {
-                errors.push('Select at least one communication method you regularly monitor');
-                if (!firstErrorElement) firstErrorElement = document.querySelector('input[name="contactMethod"]');
+            // Validate primary contact method
+            const primaryContactMethodChecked = document.querySelector('input[name="primaryContactMethod"]:checked');
+            if (!primaryContactMethodChecked) {
+                errors.push('Select how we should contact the primary contact');
+                if (!firstErrorElement) firstErrorElement = document.querySelector('input[name="primaryContactMethod"]');
             }
 
             // Validate sandwich restrictions reason
