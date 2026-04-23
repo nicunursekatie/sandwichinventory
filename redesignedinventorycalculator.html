@@ -3329,6 +3329,9 @@
                         <label>Peanut butter type</label>
                         <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">We use 3 tablespoons of peanut butter per sandwich.</span>
                         <select id="pbType">
+                            <option value="great-value-pb-16">🥜 Great Value Creamy 16 oz (~30 tbsp) - $2.18</option>
+                            <option value="kroger-pb-16">🥜 Kroger Creamy 16 oz (~30 tbsp) - $2.49</option>
+                            <option value="peter-pan-16">🥜 Peter Pan Creamy 16.3 oz (~31 tbsp) - $3.29</option>
                             <option value="jif-16">🥜 Jif Creamy 16 oz (~30 tbsp) - $3.59</option>
                             <option value="skippy-16">🥜 Skippy Creamy 16.3 oz (~31 tbsp) - $3.59</option>
                         </select>
@@ -3338,10 +3341,10 @@
                         <label>Jelly type</label>
                         <span style="font-size: 0.9em; color: rgba(255,255,255,0.8); margin-top: 2px; display: block; margin-bottom: 6px;">We use 1.5 tablespoons of jelly per sandwich.</span>
                         <select id="jellyType">
-                            <option value="smuckers-32">🍇 Smucker's Grape Jelly 32 oz (~60 tbsp) - $4.99</option>
-                            <option value="welchs-30">🍇 Welch's Grape Jelly 30 oz (~56 tbsp) - $3.59</option>
-                            <option value="smuckers-squeeze-20">🍇 Smucker's Squeeze Jelly 20 oz (~38 tbsp) - $3.59</option>
-                            <option value="welchs-squeeze-18">🍇 Welch's Squeeze Jelly 18 oz (~34 tbsp) - $3.83</option>
+                            <option value="great-value-grape-12">🍇 Great Value Grape Jelly 12 oz (~23 tbsp) - $1.78</option>
+                            <option value="smuckers-grape-12">🍇 Smucker's Grape Jelly 12 oz (~23 tbsp) - $3.29</option>
+                            <option value="welchs-grape-15">🍇 Welch's Grape Jelly 15 oz (~28 tbsp) - $3.49</option>
+                            <option value="welchs-squeeze-18">🍇 Welch's Squeeze Grape Jelly 18 oz (~34 tbsp) - $3.83</option>
                         </select>
                         <span style="font-size: 0.9em; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 500;">⚠️ Use JELLY only - no jam, preserves, or fruit spread!</span>
                     </div>
@@ -6138,21 +6141,24 @@
         // Helper function to get peanut butter info
         function getPBInfo(pbType) {
             const pbOptions = {
+                'great-value-pb-16': { tbspPerJar: 30, price: 2.18, description: 'Great Value Creamy 16 oz' },
+                'kroger-pb-16': { tbspPerJar: 30, price: 2.49, description: 'Kroger Creamy 16 oz' },
+                'peter-pan-16': { tbspPerJar: 31, price: 3.29, description: 'Peter Pan Creamy 16.3 oz' },
                 'jif-16': { tbspPerJar: 30, price: 3.59, description: 'Jif Creamy 16 oz' },
                 'skippy-16': { tbspPerJar: 31, price: 3.59, description: 'Skippy Creamy 16.3 oz' }
             };
-            return pbOptions[pbType] || pbOptions['jif-16'];
+            return pbOptions[pbType] || pbOptions['great-value-pb-16'];
         }
 
         // Helper function to get jelly info
         function getJellyInfo(jellyType) {
             const jellyOptions = {
-                'smuckers-32': { tbspPerJar: 60, price: 4.99, description: "Smucker's Grape Jelly 32 oz" },
-                'welchs-30': { tbspPerJar: 56, price: 3.59, description: "Welch's Grape Jelly 30 oz" },
-                'smuckers-squeeze-20': { tbspPerJar: 38, price: 3.59, description: "Smucker's Squeeze Jelly 20 oz" },
-                'welchs-squeeze-18': { tbspPerJar: 34, price: 3.83, description: "Welch's Squeeze Jelly 18 oz" }
+                'great-value-grape-12': { tbspPerJar: 23, price: 1.78, description: "Great Value Grape Jelly 12 oz" },
+                'smuckers-grape-12': { tbspPerJar: 23, price: 3.29, description: "Smucker's Grape Jelly 12 oz" },
+                'welchs-grape-15': { tbspPerJar: 28, price: 3.49, description: "Welch's Grape Jelly 15 oz" },
+                'welchs-squeeze-18': { tbspPerJar: 34, price: 3.83, description: "Welch's Squeeze Grape Jelly 18 oz" }
             };
-            return jellyOptions[jellyType] || jellyOptions['smuckers-32'];
+            return jellyOptions[jellyType] || jellyOptions['great-value-grape-12'];
         }
 
 

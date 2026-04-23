@@ -716,6 +716,55 @@
                 <textarea id="restrictionReason" name="restrictionReason" placeholder="E.g., Religious dietary laws, allergy concerns in our facility, cultural preferences of our community, etc." rows="2"></textarea>
             </div>
 
+            <!-- Distribution & Storage -->
+            <h2 class="section-header">Distribution & Storage</h2>
+
+            <div class="form-group">
+                <label>How do you distribute deli sandwiches to the people you serve? *</label>
+                <p class="helper-text">For deli sandwiches only — PB&J questions don't apply here.</p>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <label><input type="radio" name="distributionMethod" value="On-site only" required> Consumed on-site only</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="distributionMethod" value="Take-home"> Sent home with each person</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="distributionMethod" value="Both"> Both — some eat on-site, some take home</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group hidden" id="takeHomeQuantityGroup" style="margin-left: 28px; padding-left: 12px; border-left: 3px solid #FBAD3F; background: #f7fafc;">
+                <label for="takeHomeQuantity">How many deli sandwiches do you send home with each person?</label>
+                <p class="helper-text">A typical number per person (it's okay to give a range)</p>
+                <input type="text" id="takeHomeQuantity" name="takeHomeQuantity" placeholder="e.g., 1, 2, or 1-3">
+            </div>
+
+            <div class="form-group">
+                <label>Are sandwiches placed in refrigeration immediately upon delivery? *</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="immediateRefrigeration" value="Yes" required> Yes</label>
+                    <label><input type="radio" name="immediateRefrigeration" value="No"> No</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Are sandwiches kept refrigerated until they are eaten or distributed? *</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="refrigeratedUntilEaten" value="Yes" required> Yes</label>
+                    <label><input type="radio" name="refrigeratedUntilEaten" value="No"> No</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Do you ever freeze sandwiches? *</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="freezeSandwiches" value="Yes" required> Yes</label>
+                    <label><input type="radio" name="freezeSandwiches" value="No"> No</label>
+                </div>
+            </div>
+
             <!-- Partnership & Impact -->
             <h2 class="section-header">Partnership & Impact</h2>
             
@@ -1146,6 +1195,22 @@
                 } else {
                     restrictionReasonGroup.classList.add('hidden');
                     restrictionReason.value = '';
+                }
+            });
+        });
+
+        // Show take-home quantity question when distribution method involves sending sandwiches home
+        const distributionMethodInputs = document.querySelectorAll('input[name="distributionMethod"]');
+        const takeHomeQuantityGroup = document.getElementById('takeHomeQuantityGroup');
+        const takeHomeQuantity = document.getElementById('takeHomeQuantity');
+
+        distributionMethodInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value === 'Take-home' || this.value === 'Both') {
+                    takeHomeQuantityGroup.classList.remove('hidden');
+                } else {
+                    takeHomeQuantityGroup.classList.add('hidden');
+                    takeHomeQuantity.value = '';
                 }
             });
         });

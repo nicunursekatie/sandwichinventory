@@ -365,8 +365,14 @@
             <img src="sandwich logo.png" alt="The Sandwich Project Logo">
         </div>
 
-        <h1>The Sandwich Project Recipient Survey</h1>
-        <div class="subtitle">
+        <div style="background: #fff3cd; border: 2px solid #ffc107; padding: 20px; border-radius: 8px; margin-bottom: 30px; text-align: center;">
+            <h2 style="color: #856404; margin-bottom: 10px; font-size: 20px;">⚠️ Please use the updated survey</h2>
+            <p style="color: #856404; font-size: 15px; margin-bottom: 15px;">This version is experiencing technical issues. Your responses may not be saved.</p>
+            <a href="expandedrecipientsurvey-firebase.html" style="display: inline-block; background: #48bb78; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 15px;">→ Go to Updated Survey</a>
+        </div>
+
+        <h1 style="opacity: 0.5;">The Sandwich Project Recipient Survey</h1>
+        <div class="subtitle" style="opacity: 0.5;">
             <p><strong>Why we're asking:</strong> This short survey helps us better understand the organizations we partner with.</p>
 
             <p><strong>What won't change:</strong> Your responses will not affect what we're currently providing or how we provide it.</p>
@@ -381,12 +387,12 @@
         </div>
 
         <div class="error-message" id="errorMessage"></div>
-        
+
         <div class="save-status" id="saveStatus" style="display: none;">
             <span>💾 Progress saved automatically</span>
         </div>
 
-        <form id="surveyForm" action="https://script.google.com/macros/s/AKfycbzSeKM9FHQslxbmQmx4yZ9GwzbvCExJtX1f1QIjnQGh8J5DQZNiOfTlHpNffeNfPvDwwA/exec" method="POST">
+        <form id="surveyForm" action="https://script.google.com/macros/s/AKfycbzSeKM9FHQslxbmQmx4yZ9GwzbvCExJtX1f1QIjnQGh8J5DQZNiOfTlHpNffeNfPvDwwA/exec" method="POST" style="opacity: 0.3; pointer-events: none;">
             <h2 class="section-header">Contact Information</h2>
             
             <!-- Organization & Contact Info Row -->
@@ -440,25 +446,44 @@
                 </div>
             </div>
 
-            <!-- Backup Contact & Preferred Method Row -->
-            <div class="form-row" style="margin-top: 30px;">
+            <!-- Backup Contact Name -->
+            <div class="form-group" style="margin-top: 30px;">
+                <label for="backupContactName">Backup Contact Name</label>
+                <input type="text" id="backupContactName" name="backupContactName" placeholder="Optional but recommended">
+            </div>
+
+            <!-- Backup Contact Email & Phone Row -->
+            <div class="form-row">
                 <div class="form-group">
-                    <label for="backupContactName">Backup Contact Name</label>
-                    <input type="text" id="backupContactName" name="backupContactName" placeholder="Optional but recommended">
+                    <label for="backupContactEmail">Backup Contact Email</label>
+                    <input type="email" id="backupContactEmail" name="backupContactEmail" placeholder="Optional">
                 </div>
                 <div class="form-group">
-                    <label for="backupContactInfo">Backup Contact Email/Phone</label>
-                    <input type="text" id="backupContactInfo" name="backupContactInfo" placeholder="Email or phone number">
+                    <label for="backupContactPhone">Backup Contact Phone</label>
+                    <input type="tel" id="backupContactPhone" name="backupContactPhone" placeholder="Optional">
                 </div>
             </div>
 
-            <!-- Preferred Contact Method Row -->
+            <!-- Communication Methods Monitored -->
             <div class="form-group">
-                <label>Preferred Contact Method *</label>
-                <div class="radio-group horizontal">
-                    <label><input type="radio" name="contactMethod" value="Email" required> Email</label>
-                    <label><input type="radio" name="contactMethod" value="Text"> Text</label>
-                    <label><input type="radio" name="contactMethod" value="Phone"> Phone</label>
+                <label>Which communication methods do you regularly monitor? *</label>
+                <p class="helper-text">Check all that apply</p>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="Text"> Text</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="Email"> Email</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="Phone"> Phone</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="WhatsApp"> WhatsApp</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <label><input type="checkbox" name="contactMethod" value="Facebook Messenger"> Facebook Messenger</label>
+                    </div>
                 </div>
             </div>
 
@@ -674,6 +699,169 @@
                 <label for="restrictionReason">Can you tell us why? (Optional)</label>
                 <p class="helper-text">This helps us understand and plan better for future partnerships.</p>
                 <textarea id="restrictionReason" name="restrictionReason" placeholder="E.g., Religious dietary laws, allergy concerns in our facility, cultural preferences of our community, etc." rows="2"></textarea>
+            </div>
+
+            <!-- Distribution & Storage -->
+            <h2 class="section-header">Distribution & Storage</h2>
+
+            <div class="form-group">
+                <label>How do you distribute deli sandwiches to the people you serve? *</label>
+                <p class="helper-text">For deli sandwiches only — PB&J questions don't apply here.</p>
+                <div class="radio-group">
+                    <div class="radio-item">
+                        <label><input type="radio" name="distributionMethod" value="On-site only" required> Consumed on-site only</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="distributionMethod" value="Take-home"> Sent home with each person</label>
+                    </div>
+                    <div class="radio-item">
+                        <label><input type="radio" name="distributionMethod" value="Both"> Both — some eat on-site, some take home</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group hidden" id="takeHomeQuantityGroup" style="margin-left: 28px; padding-left: 12px; border-left: 3px solid #FBAD3F; background: #f7fafc;">
+                <label for="takeHomeQuantity">How many deli sandwiches do you send home with each person?</label>
+                <p class="helper-text">A typical number per person (it's okay to give a range)</p>
+                <input type="text" id="takeHomeQuantity" name="takeHomeQuantity" placeholder="e.g., 1, 2, or 1-3">
+            </div>
+
+            <div class="form-group">
+                <label>Are sandwiches placed in refrigeration immediately upon delivery? *</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="immediateRefrigeration" value="Yes" required> Yes</label>
+                    <label><input type="radio" name="immediateRefrigeration" value="No"> No</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Are sandwiches kept refrigerated until they are eaten or distributed? *</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="refrigeratedUntilEaten" value="Yes" required> Yes</label>
+                    <label><input type="radio" name="refrigeratedUntilEaten" value="No"> No</label>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Do you ever freeze sandwiches? *</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="freezeSandwiches" value="Yes" required> Yes</label>
+                    <label><input type="radio" name="freezeSandwiches" value="No"> No</label>
+                </div>
+            </div>
+
+            <!-- Partnership & Impact -->
+            <h2 class="section-header">Partnership & Impact</h2>
+
+            <p class="helper-text" style="margin-bottom: 25px; color: #236383;">These questions help us secure funding, improve our delivery process, and connect you with additional resources. Most take just a few seconds.</p>
+
+            <!-- Partnership Length & Fruit/Snacks Row -->
+            <div class="form-row">
+                <div class="form-group">
+                    <label>How long have you been receiving sandwiches from TSP?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="Less than 1 year"> Less than 1 year</label>
+                        </div>
+                        <div class="radio-item">
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="1-2 years"> 1-2 years</label>
+                        </div>
+                        <div class="radio-item">
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="2-5 years"> 2-5 years</label>
+                        </div>
+                        <div class="radio-item">
+                            <label><input type="radio" name="yearsReceivingSandwiches" value="5+ years"> 5+ years</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Do you also receive fruit and snacks from TSP?</label>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <label><input type="radio" name="receivesFruitSnacks" value="Yes"> Yes</label>
+                        </div>
+                        <div class="radio-item">
+                            <label><input type="radio" name="receivesFruitSnacks" value="No"> No</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group hidden" id="fruitSnacksInterestGroup" style="margin-left: 28px; padding-left: 12px; border-left: 3px solid #FBAD3F; background: #f7fafc;">
+                <label>Would you like to receive fruit and snacks from TSP?</label>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="fruitSnacksInterest" value="Yes"> Yes</label>
+                    <label><input type="radio" name="fruitSnacksInterest" value="No"> No</label>
+                </div>
+            </div>
+
+            <!-- Delivery Process Rating -->
+            <div class="form-group">
+                <label>How would you rate the ease and efficiency of our delivery process?</label>
+                <div class="radio-group horizontal" style="gap: 15px;">
+                    <label><input type="radio" name="deliveryRating" value="1"> 1 - Poor</label>
+                    <label><input type="radio" name="deliveryRating" value="2"> 2</label>
+                    <label><input type="radio" name="deliveryRating" value="3"> 3</label>
+                    <label><input type="radio" name="deliveryRating" value="4"> 4</label>
+                    <label><input type="radio" name="deliveryRating" value="5"> 5 - Excellent</label>
+                </div>
+            </div>
+
+            <div class="form-group hidden" id="deliveryFeedbackGroup" style="margin-left: 28px; padding-left: 12px; border-left: 3px solid #A31C41; background: #f7fafc;">
+                <label for="deliveryFeedback">Any suggestions to improve our delivery process?</label>
+                <p class="helper-text">Help us serve you better—what could make deliveries smoother?</p>
+                <textarea id="deliveryFeedback" name="deliveryFeedback" placeholder="E.g., different delivery times, communication preferences, access instructions, etc." rows="2"></textarea>
+            </div>
+
+            <!-- Seasonal Needs -->
+            <div class="form-group">
+                <label>Do your organizational needs change throughout the year?</label>
+                <p class="helper-text">For example, greater needs during extreme temperatures, weather emergencies, school breaks, holidays, etc.</p>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="seasonalNeeds" value="Yes"> Yes</label>
+                    <label><input type="radio" name="seasonalNeeds" value="No"> No</label>
+                </div>
+            </div>
+
+            <div class="form-group hidden" id="seasonalDetailsGroup" style="margin-left: 28px; padding-left: 12px; border-left: 3px solid #007E8C; background: #f7fafc;">
+                <label for="seasonalDetails">Please describe when your needs increase or decrease</label>
+                <p class="helper-text">E.g., greater needs during winter months or during local school breaks</p>
+                <textarea id="seasonalDetails" name="seasonalDetails" placeholder="E.g., Need doubles during summer months, increased demand during holiday season, higher numbers during extreme cold weather, etc." rows="3"></textarea>
+            </div>
+
+            <!-- Organization Referrals -->
+            <div class="form-group">
+                <label for="orgReferrals">Are there other organizations you recommend we partner with?</label>
+                <p class="helper-text">Help us expand our reach—share names and contact info if you know organizations that could benefit.</p>
+                <textarea id="orgReferrals" name="orgReferrals" placeholder="E.g., Hope Center Atlanta (contact: Jane Smith, jane@hopecenter.org, 404-555-1234)" rows="3"></textarea>
+            </div>
+
+            <!-- Grant Funding Interest -->
+            <div class="form-group">
+                <label>Would you be interested in exploring grant funding opportunities collaboratively?</label>
+                <p class="helper-text">We occasionally identify funding opportunities that could benefit partner organizations.</p>
+                <div class="radio-group horizontal">
+                    <label><input type="radio" name="grantInterest" value="Yes"> Yes</label>
+                    <label><input type="radio" name="grantInterest" value="No"> No</label>
+                </div>
+            </div>
+
+            <!-- Impact Stories -->
+            <h2 class="section-header">Share Your Impact</h2>
+
+            <p class="helper-text" style="margin-bottom: 25px; color: #236383;">Stories and visuals help us communicate the importance of this work to funders and volunteers. Anything you can share is valuable.</p>
+
+            <div class="form-group">
+                <label for="impactStory">Do you have a story, quote, or example that shows the impact of sandwiches on the people you serve?</label>
+                <p class="helper-text">This could be a testimonial, an observation, or a specific moment that stood out.</p>
+                <textarea id="impactStory" name="impactStory" placeholder="E.g., 'One of our regulars told us these sandwiches are often his only meal of the day...' or 'During the last cold snap, we saw our numbers double and the sandwiches were critical...'" rows="4"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="impactPhotos">Do you have photos you'd be willing to share?</label>
+                <p class="helper-text">You can share links to photos, or let us know you have them and we'll follow up. (No personally identifiable images without consent.)</p>
+                <textarea id="impactPhotos" name="impactPhotos" placeholder="E.g., Google Drive link, Dropbox link, or just 'Yes, we have photos—please contact us'" rows="2"></textarea>
             </div>
 
             <!-- Open Feedback -->
@@ -905,6 +1093,71 @@
             }
         });
 
+        // Show take-home quantity question when distribution method involves sending sandwiches home
+        const distributionMethodInputs = document.querySelectorAll('input[name="distributionMethod"]');
+        const takeHomeQuantityGroup = document.getElementById('takeHomeQuantityGroup');
+        const takeHomeQuantity = document.getElementById('takeHomeQuantity');
+
+        distributionMethodInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value === 'Take-home' || this.value === 'Both') {
+                    takeHomeQuantityGroup.classList.remove('hidden');
+                } else {
+                    takeHomeQuantityGroup.classList.add('hidden');
+                    takeHomeQuantity.value = '';
+                }
+            });
+        });
+
+        // Show fruit/snacks interest question when "No" is selected
+        const fruitSnacksInputs = document.querySelectorAll('input[name="receivesFruitSnacks"]');
+        const fruitSnacksInterestGroup = document.getElementById('fruitSnacksInterestGroup');
+
+        fruitSnacksInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value === 'No') {
+                    fruitSnacksInterestGroup.classList.remove('hidden');
+                } else {
+                    fruitSnacksInterestGroup.classList.add('hidden');
+                    document.querySelectorAll('input[name="fruitSnacksInterest"]').forEach(radio => {
+                        radio.checked = false;
+                    });
+                }
+            });
+        });
+
+        // Show delivery feedback field when rating is less than 5
+        const deliveryRatingInputs = document.querySelectorAll('input[name="deliveryRating"]');
+        const deliveryFeedbackGroup = document.getElementById('deliveryFeedbackGroup');
+        const deliveryFeedback = document.getElementById('deliveryFeedback');
+
+        deliveryRatingInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value && parseInt(this.value) < 5) {
+                    deliveryFeedbackGroup.classList.remove('hidden');
+                } else {
+                    deliveryFeedbackGroup.classList.add('hidden');
+                    deliveryFeedback.value = '';
+                }
+            });
+        });
+
+        // Show seasonal details field when "Yes" is selected
+        const seasonalNeedsInputs = document.querySelectorAll('input[name="seasonalNeeds"]');
+        const seasonalDetailsGroup = document.getElementById('seasonalDetailsGroup');
+        const seasonalDetails = document.getElementById('seasonalDetails');
+
+        seasonalNeedsInputs.forEach(input => {
+            input.addEventListener('change', function() {
+                if (this.value === 'Yes') {
+                    seasonalDetailsGroup.classList.remove('hidden');
+                } else {
+                    seasonalDetailsGroup.classList.add('hidden');
+                    seasonalDetails.value = '';
+                }
+            });
+        });
+
         // Progress bar
         const form = document.getElementById('surveyForm');
         const progressFill = document.getElementById('progressFill');
@@ -913,7 +1166,7 @@
         function updateProgress() {
             const requiredInputs = Array.from(allInputs).filter(input => {
                 if (input.type === 'checkbox' || input.type === 'radio') {
-                    return input.required || input.name === 'feedingDays' || input.name === 'donationDays';
+                    return input.required || input.name === 'feedingDays' || input.name === 'donationDays' || input.name === 'contactMethod';
                 }
                 return input.required;
             });
@@ -962,6 +1215,14 @@
 
             const submitBtn = document.getElementById('submitBtn');
             const errorMessage = document.getElementById('errorMessage');
+
+            // Validate at least one contact method is checked
+            const contactMethodsChecked = document.querySelectorAll('input[name="contactMethod"]:checked').length > 0;
+            if (!contactMethodsChecked) {
+                errorMessage.textContent = 'Please select at least one communication method you regularly monitor.';
+                errorMessage.classList.add('show');
+                return;
+            }
 
             // Validate feeding schedule
             const feedingInputType = document.querySelector('input[name="feedingInputType"]:checked').value;
