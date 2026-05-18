@@ -1115,7 +1115,7 @@
             <h2><span class="icon icon-lg icon-calculator icon-primary"></span> Interactive Calculator</h2>
             <!-- Shopping Reminders -->
             <div style="background: #fffbe8; border: 1px solid #f0d060; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px; font-size: 0.93em; line-height: 1.5; color: #5a4b1a;">
-                <strong><span class="icon icon-alert-triangle" style="background-color: #5a4b1a;"></span> Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced American cheese</strong> — not Kraft singles or any individually plastic-wrapped slices.
+                <strong><span class="icon icon-alert-triangle" style="background-color: #5a4b1a;"></span> Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced cheese</strong> (Muenster, Havarti, or Provolone) — not Kraft singles or any individually plastic-wrapped slices. <strong>Please do not use American cheese.</strong>
             </div>
             <div class="shopping-calculator">
                 <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your Sandwich Making Shopping Trip</h3>
@@ -1628,11 +1628,11 @@
     <div class="cheese-guide">
         <div class="cheese-do">
             <strong><span class="icon icon-check-circle" style="background-color: #2E7D32;"></span> Right Cheese</strong>
-            Deli-style sliced American cheese (NOT individually wrapped)
+            Deli-style sliced cheese — Muenster, Havarti, or Provolone (NOT individually wrapped)
         </div>
         <div class="cheese-dont">
             <strong><span class="icon icon-x-circle icon-alert"></span> Wrong Cheese</strong>
-            Kraft singles or any individually plastic-wrapped slices — they're "cheese product" (not real cheese), a pain to unwrap, and turn into a gross mess on sandwiches
+            American cheese, Kraft singles, or any individually plastic-wrapped slices — please do not use American cheese. Kraft singles and similar products are "cheese product" (not real cheese), a pain to unwrap, and turn into a gross mess on sandwiches.
         </div>
     </div>
 </div>
@@ -1831,14 +1831,7 @@
             cheese: [
                 { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)', pricingTitle: 'Finlandia Muenster (Costco)' },
                 { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)', pricingTitle: 'Arla Havarti (Costco)' },
-                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" },
-                { id: 'great-value-american', name: 'Great Value American - Walmart', store: 'Walmart', slices: 24, price: 3.98, cheeseType: 'american', description: '24 slices each', pricingTitle: 'Great Value American', showInPricing: true },
-                { id: 'kroger-american', name: 'Kroger Deli American', store: 'Kroger', slices: 24, price: 4.29, cheeseType: 'american', description: '24 slices each', pricingTitle: 'Kroger Deli American', showInPricing: true },
-                { id: 'kroger-white-american', name: 'Kroger White American', store: 'Kroger', slices: 12, price: 5.00, cheeseType: 'american', dropdownLabel: 'Kroger White American (12 oz, ~12 slices, $5.00)', description: '~12 slices each (12 oz)', pricingTitle: 'Kroger White American' },
-                { id: 'sargento-american', name: 'Sargento Sliced American', store: 'Various', slices: 22, price: 4.99, cheeseType: 'american', description: '22 slices each', pricingTitle: 'Sargento American', showInPricing: true },
-                { id: 'land-o-lakes-american', name: "Land O'Lakes American", store: 'Various', slices: 24, price: 6.49, cheeseType: 'american', description: '24 slices each', pricingTitle: "Land O'Lakes American", showInPricing: true },
-                { id: 'boars-head-american', name: "Boar's Head American", store: 'Various', slices: 24, price: 8.99, cheeseType: 'american', description: '24 slices each', pricingTitle: "Boar's Head American", showInPricing: true },
-                { id: 'members-mark-american', name: "Member's Mark American - Sam's Club", store: "Sam's Club", slices: 80, price: 13.89, cheeseType: 'american', description: '80 slices each', pricingTitle: "Member's Mark American (Sam's Club)" }
+                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" }
             ],
             bread: [
                 { id: 'great-value-white', name: 'Great Value White Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.48, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Great Value White', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.48', pricingNote: '~$0.13/sandwich' },
@@ -1915,8 +1908,8 @@
         function buildCheeseDropdown() {
             const select = document.getElementById('cheeseType');
             select.innerHTML = '<option value="">Choose your cheese</option>';
-            const typeLabels = { american: 'American Cheese (Deli Style)', muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)' };
-            ['muenster', 'havarti', 'provolone', 'american'].forEach(type => {
+            const typeLabels = { muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)' };
+            ['muenster', 'havarti', 'provolone'].forEach(type => {
                 const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type);
                 if (items.length === 0) return;
                 const group = document.createElement('optgroup');
@@ -1990,7 +1983,7 @@
                 const ps = (c.price / c.slices).toFixed(2);
                 const sizeLabel = c.description && c.description.includes('2 lbs') ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
                 const cardClass = 'card-cheese-' + c.cheeseType;
-                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', american: 'AMERICAN' };
+                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE' };
                 return '<div class="price-card ' + cardClass + '">' +
                     '<div class="meat-type-label">' + (typeLabels[c.cheeseType] || '') + '</div>' +
                     '<div class="product-title">' + (c.pricingTitle || c.name) + '</div>' +
@@ -2041,13 +2034,8 @@
                 const sizeNote = m.id === 'turkey' ? '80 slices total (40 per pack)' : (m.weightOz + ' oz / ' + sliceLabel);
                 html += '<tr><td>' + m.name + '</td><td>$' + m.price.toFixed(2) + '</td><td>' + sizeNote + '</td></tr>';
             });
-            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">American Cheese (Deli Style)</td></tr>';
-            PRODUCT_DATA.cheese.filter(c => c.cheeseType === 'american').forEach(c => {
-                const name = c.name.replace(' - Walmart', ' (Walmart)').replace(" - Sam's Club", " (Sam's Club)");
-                html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.slices + ' slices</td></tr>';
-            });
             html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Muenster, Havarti &amp; Provolone (Deli Slices)</td></tr>';
-            PRODUCT_DATA.cheese.filter(c => c.cheeseType !== 'american').forEach(c => {
+            PRODUCT_DATA.cheese.forEach(c => {
                 const name = c.name.replace(' - Costco', ' (Costco)').replace(" - Sam's Club", " (Sam's Club)");
                 html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.description + '</td></tr>';
             });

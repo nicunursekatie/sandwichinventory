@@ -2980,7 +2980,7 @@
 
             <!-- Shopping Reminders -->
             <div style="background: #fffbe8; border: 1px solid #f0d060; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px; font-size: 0.93em; line-height: 1.5; color: #5a4b1a;">
-                <strong>⚠️ Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced American cheese</strong> — not Kraft singles or any individually plastic-wrapped slices.
+                <strong>⚠️ Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced cheese</strong> (Muenster, Havarti, or Provolone) — not Kraft singles or any individually plastic-wrapped slices. <strong>Please do not use American cheese.</strong>
             </div>
 
             <!-- Store Selector - Global Filter -->
@@ -3165,15 +3165,6 @@
                         <div style="display: flex; flex-direction: column; gap: 12px;">
                             <select id="cheeseSelection" onchange="handleCheeseSelection()" style="margin-bottom: 10px;">
                                 <option value="">Choose a cheese package</option>
-                                <optgroup label="🧀 American Cheese (Deli Style)">
-                                    <option value="boars-head-american" data-store="other">Boar's Head American (24 slices, $8.99)</option>
-                                    <option value="land-o-lakes-american" data-store="kroger walmart other">Land O'Lakes American (24 slices, $6.49)</option>
-                                    <option value="sargento-american" data-store="kroger walmart other">Sargento Sliced American (22 slices, $4.99)</option>
-                                    <option value="great-value-american" data-store="walmart">Great Value American - Walmart (24 slices, $3.98)</option>
-                                    <option value="kroger-american" data-store="kroger">Kroger Deli American (24 slices, $4.29)</option>
-                                    <option value="kroger-white-american" data-store="kroger">Kroger White American (12 oz, ~12 slices, $5.00)</option>
-                                    <option value="members-mark-american" data-store="other">Member's Mark American - Sam's Club (80 slices, $13.89)</option>
-                                </optgroup>
                                 <optgroup label="🧀 Muenster Cheese (Deli Slices)">
                                     <option value="finlandia-muenster" data-store="other">Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)</option>
                                 </optgroup>
@@ -3519,11 +3510,11 @@
             <div class="cheese-guide">
                 <div class="cheese-do">
                     <strong>✅ Right Cheese</strong>
-                    Deli-style sliced American cheese (NOT individually wrapped)
+                    Deli-style sliced cheese — Muenster, Havarti, or Provolone (NOT individually wrapped)
                 </div>
                 <div class="cheese-dont">
                     <strong>❌ Wrong Cheese</strong>
-                    Kraft singles or any individually plastic-wrapped slices — they're a pain to unwrap, they're "cheese product" (not real cheese), and they turn into a gross mess on sandwiches
+                    American cheese, Kraft singles, or any individually plastic-wrapped slices — please do not use American cheese. Kraft singles and similar products are a pain to unwrap, they're "cheese product" (not real cheese), and they turn into a gross mess on sandwiches.
                 </div>
             </div>
 
@@ -4437,14 +4428,6 @@
                 'great-value-chicken-9oz': { weightOz: 9, price: 3.48, name: 'Great Value Rotisserie Chicken', type: 'chicken' }
             },
             cheese: {
-                // American cheese options
-                'boars-head-american': { slices: 24, price: 8.99, name: "Boar's Head American" },
-                'land-o-lakes-american': { slices: 24, price: 6.49, name: "Land O'Lakes American" },
-                'sargento-american': { slices: 22, price: 4.99, name: 'Sargento Sliced American' },
-                'great-value-american': { slices: 24, price: 3.98, name: 'Great Value American (Walmart)' },
-                'kroger-american': { slices: 24, price: 4.29, name: 'Kroger Deli American' },
-                'kroger-white-american': { slices: 12, price: 5.00, name: 'Kroger White American' },
-                'members-mark-american': { slices: 80, price: 13.89, name: "Member's Mark American (Sam's Club)" },
                 // Muenster cheese options
                 'finlandia-muenster': { slices: 32, price: 8.96, name: 'Finlandia Muenster Deli Slices (Costco)' },
                 // Havarti cheese options
@@ -4749,14 +4732,6 @@
                             { name: 'Oscar Mayer Deli Fresh Rotisserie Chicken Breast 16 oz', category: 'meat', key: 'oscar-mayer-chicken-rotisserie' },
                             { name: 'Oscar Mayer Blackened Chicken Breast deli meat 8 oz', category: 'meat', key: 'oscar-mayer-chicken-blackened' },
                             { name: 'Great Value Rotisserie Chicken Lunchmeat 9 oz', category: 'meat', key: 'great-value-chicken-9oz' },
-                            // American Cheeses
-                            { name: "Boar's Head American cheese slices deli", category: 'cheese', key: 'boars-head-american' },
-                            { name: "Land O'Lakes American cheese slices", category: 'cheese', key: 'land-o-lakes-american' },
-                            { name: 'Sargento American cheese slices', category: 'cheese', key: 'sargento-american' },
-                            { name: 'Great Value American cheese slices Walmart', category: 'cheese', key: 'great-value-american' },
-                            { name: 'Kroger Deli American cheese slices', category: 'cheese', key: 'kroger-american' },
-                            { name: 'Kroger White American cheese slices', category: 'cheese', key: 'kroger-white-american' },
-                            { name: "Member's Mark American cheese Sam's Club", category: 'cheese', key: 'members-mark-american' },
                             // Muenster Cheese
                             { name: 'Finlandia Muenster deli slices Costco', category: 'cheese', key: 'finlandia-muenster' },
                             // Havarti Cheese
@@ -4957,7 +4932,7 @@
                     ${meatCards}
                 </div>
                 <div class="price-category">
-                    <div class="category-label">AMERICAN CHEESE (Deli Style)</div>
+                    <div class="category-label">CHEESE (Deli Slices)</div>
                     <div class="price-grid">${cheeseCards}</div>
                 </div>
                 <div class="price-category">
