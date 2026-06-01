@@ -1055,11 +1055,16 @@
             }
         }
         /* Midway: calculator toggle */
-        .calc-toggle { display: flex; gap: 8px; max-width: 760px; margin: 0 auto 20px; }
+        .calc-toggle { display: flex; gap: 10px; max-width: 600px; margin: 0 auto; }
         .calc-toggle-btn { flex: 1; padding: 14px 18px; font-size: 1.05em; font-weight: 700; cursor: pointer;
-            border: 2px solid #236383; border-radius: 12px; background: #fff; color: #236383; transition: all 0.15s ease; }
-        .calc-toggle-btn:hover { background: #e8f5f9; }
-        .calc-toggle-btn.active { background: #236383; color: #fff; box-shadow: 0 4px 12px rgba(35,99,131,0.25); }
+            border: 2px solid #236383; border-radius: 12px; background: #fff; color: #236383; transition: all 0.15s ease;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; line-height: 1.2; }
+        .calc-toggle-btn:hover { background: #e8f5f9; transform: translateY(-2px); }
+        .calc-toggle-btn:not(.active)::after { content: 'Tap to view'; display: block; font-size: 0.7em;
+            font-weight: 600; opacity: 0.7; text-transform: uppercase; letter-spacing: 0.04em; }
+        .calc-toggle-btn.active { background: #236383; color: #fff; box-shadow: 0 6px 16px rgba(35,99,131,0.32); }
+        .calc-toggle-btn.active::after { content: '✓ Showing now'; display: block; font-size: 0.7em;
+            font-weight: 600; opacity: 0.85; text-transform: uppercase; letter-spacing: 0.04em; }
         @media (max-width: 600px) { .calc-toggle { flex-direction: column; } }
         /* Midway: reference accordions */
         .ref-section { background: #fff; border: 1px solid #e0e0e0; border-radius: 12px; margin-bottom: 16px;
@@ -1155,9 +1160,13 @@
             <div class="tsp-rule"></div>
         </div>
 
-        <div class="calc-toggle" role="tablist" aria-label="Choose calculator">
-            <button type="button" class="calc-toggle-btn active" id="toggleDeli" role="tab" aria-selected="true" onclick="showCalcType('deli')">🥪 Deli Meat Sandwiches</button>
-            <button type="button" class="calc-toggle-btn" id="togglePBJ" role="tab" aria-selected="false" onclick="showCalcType('pbj')">🥜 PB&amp;J Sandwiches</button>
+        <div class="calc-picker">
+            <div class="calc-picker-heading"><span class="icon icon-sandwich icon-primary"></span> Which sandwiches are you making?</div>
+            <div class="calc-picker-sub">Pick one &mdash; you can switch back and forth anytime.</div>
+            <div class="calc-toggle" role="tablist" aria-label="Choose a calculator">
+                <button type="button" class="calc-toggle-btn active" id="toggleDeli" role="tab" aria-selected="true" onclick="showCalcType('deli')">🥪 Deli Meat Sandwiches</button>
+                <button type="button" class="calc-toggle-btn" id="togglePBJ" role="tab" aria-selected="false" onclick="showCalcType('pbj')">🥜 PB&amp;J Sandwiches</button>
+            </div>
         </div>
 
         <div class="live-price-bar">
@@ -3283,6 +3292,16 @@
         background:var(--tsp-orange); color:#3a2700; font-size:.82rem; font-weight:800;
     }
     @media (max-width:600px){ .tsp-zone{ margin-bottom:18px; } }
+
+    /* ---- Calculator picker: a clearly-labeled card so users know it's a choice ---- */
+    .calc-picker{
+        max-width:640px; margin:0 auto 22px; padding:18px 18px 20px;
+        background:#fff; border:1px solid #e3ebee; border-radius:16px;
+        box-shadow: var(--tsp-shadow); text-align:center; position:relative;
+        border-top:5px solid var(--tsp-teal-bright);
+    }
+    .calc-picker-heading{ font-size:1.18rem; font-weight:800; color:var(--tsp-ink); margin-bottom:4px; }
+    .calc-picker-sub{ font-size:.9rem; color:var(--tsp-muted); margin-bottom:16px; }
 </style>
 </body>
 </html>
