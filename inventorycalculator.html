@@ -5242,39 +5242,54 @@
             
             const totalCostPerSandwich = meatCostPerSandwich + cheeseCostPerSandwich + breadCostPerSandwich + bagCostPerSandwich;
             
+            // Totals are based on actual whole-package costs so the line items
+            // always sum to the headline total (packages round up).
+            const packageTotal = (q) => q.meatCost + q.cheeseCost + q.breadCost + q.bagCost;
+
             let result;
             if (mode === 'sandwiches') {
                 // Calculate cost for target sandwiches
-                const totalCost = totalCostPerSandwich * targetValue;
                 const quantities = calculateQuantities(targetValue, meatPkg, cheesePkg, breadPkg, meatOzPerSandwich);
+                const totalCost = packageTotal(quantities);
                 result = {
                     mode: 'cost',
                     targetSandwiches: targetValue,
                     totalCost: totalCost,
-                    costPerSandwich: totalCostPerSandwich,
+                    costPerSandwich: targetValue > 0 ? totalCost / targetValue : 0,
                     quantities: quantities
                 };
             } else {
-                // Calculate sandwiches for target budget
-                const maxSandwiches = Math.floor(targetValue / totalCostPerSandwich);
-                const actualCost = totalCostPerSandwich * maxSandwiches;
-                const quantities = calculateQuantities(maxSandwiches, meatPkg, cheesePkg, breadPkg, meatOzPerSandwich);
-                result = {
-                    mode: 'budget',
-                    budget: targetValue,
-                    maxSandwiches: maxSandwiches,
-                    actualCost: actualCost,
-                    remaining: targetValue - actualCost,
-                    costPerSandwich: totalCostPerSandwich,
-                    quantities: quantities
-                };
+                // Calculate sandwiches for target budget. Start from the per-sandwich
+                // estimate, then trim until the rounded-up package total fits the budget.
+                let maxSandwiches = Math.floor(targetValue / totalCostPerSandwich);
+                let quantities = calculateQuantities(maxSandwiches, meatPkg, cheesePkg, breadPkg, meatOzPerSandwich);
+                while (maxSandwiches > 0 && packageTotal(quantities) > targetValue) {
+                    maxSandwiches--;
+                    quantities = calculateQuantities(maxSandwiches, meatPkg, cheesePkg, breadPkg, meatOzPerSandwich);
+                }
+                if (maxSandwiches < 1) {
+                    result = { mode: 'budget', budget: targetValue, budgetTooLow: true };
+                } else {
+                    const actualCost = packageTotal(quantities);
+                    result = {
+                        mode: 'budget',
+                        budget: targetValue,
+                        maxSandwiches: maxSandwiches,
+                        actualCost: actualCost,
+                        remaining: targetValue - actualCost,
+                        costPerSandwich: actualCost / maxSandwiches,
+                        quantities: quantities
+                    };
+                }
             }
-            
+
             // Display results immediately
             displayResults(result);
 
-            // Then validate with LLM in the background
-            validateWithLLM(result, meatPkg, cheesePkg, breadPkg);
+            // Then validate with LLM in the background (skip when the budget was too low)
+            if (!result.budgetTooLow) {
+                validateWithLLM(result, meatPkg, cheesePkg, breadPkg);
+            }
         }
 
         // LLM-Powered Calculator API endpoint
@@ -5572,6 +5587,20 @@
             resultDiv.setAttribute('role', 'region');
             resultDiv.setAttribute('aria-label', 'Calculation results');
 
+            // Budget too low to make even one sandwich with the selected ingredients
+            if (result.mode === 'budget' && result.budgetTooLow) {
+                announceToScreenReader(`Your $${result.budget} budget is too low to make a sandwich with the selected ingredients.`);
+                resultDiv.innerHTML = `
+                    <div style="background: rgba(244,67,54,0.15); border: 3px solid #f44336; border-radius: 12px; padding: 16px; text-align: center;">
+                        <p style="color: #ffebee; margin: 0; font-size: 1.1em; font-weight: 600;">
+                            Your <strong>$${result.budget}</strong> budget is too low to make a full sandwich with the selected ingredients.
+                            Try a higher budget or lower-cost options.
+                        </p>
+                    </div>`;
+                resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                return;
+            }
+
             // Announce results to screen readers
             const announcementText = result.mode === 'cost'
                 ? `Calculation complete. ${result.targetSandwiches} sandwiches will cost approximately $${result.totalCost.toFixed(2)}`
@@ -5627,7 +5656,18 @@
                     Estimated total cost: $${(result.mode === 'cost' ? result.totalCost : result.actualCost).toFixed(2)}.
                 </p>
             </div>`;
-            
+
+            html += `<div style="margin-top: 16px; padding: 15px; background: rgba(255,255,255,0.1); border-radius: 8px;">
+                <p style="color: rgba(255,255,255,0.95); margin: 0 0 8px 0; font-weight: 600;">Don't forget — prep supplies (not included in the cost above):</p>
+                <ul style="color: rgba(255,255,255,0.9); margin: 0; padding-left: 20px; font-size: 0.95em; line-height: 1.7;">
+                    <li>Food-safe disposable gloves (multiple boxes)</li>
+                    <li>Hand soap</li>
+                    <li>Paper towels for cleanup</li>
+                    <li>Disinfecting wipes for surfaces</li>
+                    <li>Disposable tablecloths (to cover prep surfaces)</li>
+                </ul>
+            </div>`;
+
             resultDiv.innerHTML = html;
             resultDiv.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
@@ -5766,40 +5806,57 @@
             const bagCostPerSandwich = bagBoxPrice / bagsPerBox;
             const totalCostPerSandwich = pbCostPerSandwich + jellyCostPerSandwich + breadCostPerSandwich + bagCostPerSandwich;
 
-            let pbjCount, totalCost;
-
-            if (mode === 'sandwiches') {
-                // Calculate cost for target sandwiches
-                pbjCount = Math.floor(targetValue);
-                totalCost = pbjCount * totalCostPerSandwich;
-            } else {
-                // Calculate sandwiches for target budget
-                pbjCount = Math.floor(targetValue / totalCostPerSandwich);
-                totalCost = pbjCount * totalCostPerSandwich;
-            }
-
-            // Calculate quantities needed
-            const totalPbTbsp = pbjCount * pbPerSandwich;
-            const totalJellyTbsp = pbjCount * jellyPerSandwich;
-            const totalBreadSlices = pbjCount * breadSlicesPerSandwich;
-
-            const pbJarsNeeded = Math.ceil(totalPbTbsp / pbInfo.tbspPerJar);
-            const jellyJarsNeeded = Math.ceil(totalJellyTbsp / jellyInfo.tbspPerJar);
-            const breadLoavesNeeded = Math.ceil(totalBreadSlices / usableBreadSlicesPerLoaf);
-            const bagBoxesNeeded = Math.ceil(pbjCount / bagsPerBox);
-
-            // Calculate actual costs based on whole packages
-            const pbCost = pbJarsNeeded * pbInfo.price;
-            const jellyCost = jellyJarsNeeded * jellyInfo.price;
-            const breadCost = breadLoavesNeeded * breadPrice;
-            const bagCost = bagBoxesNeeded * bagBoxPrice;
-
-            // Spatula calculation
+            // Spatula calculation (optional add-on, independent of sandwich count)
             const includeSpatulas = document.getElementById('includeSpatulas').checked;
             const spatulaPackPrice = 5.99;
             const spatulasPerPack = 4;
             const spatulaPackCount = includeSpatulas ? Math.max(1, parseInt(document.getElementById('spatulaPackCount').value) || 1) : 0;
             const spatulaCost = spatulaPackCount * spatulaPackPrice;
+
+            // Whole-package ingredient cost for a given sandwich count
+            const pbjPackageCost = (count) => {
+                const pbJars = Math.ceil((count * pbPerSandwich) / pbInfo.tbspPerJar);
+                const jellyJars = Math.ceil((count * jellyPerSandwich) / jellyInfo.tbspPerJar);
+                const breadLoaves = Math.ceil((count * breadSlicesPerSandwich) / usableBreadSlicesPerLoaf);
+                const bagBoxes = Math.ceil(count / bagsPerBox);
+                return pbJars * pbInfo.price + jellyJars * jellyInfo.price + breadLoaves * breadPrice + bagBoxes * bagBoxPrice;
+            };
+
+            let pbjCount;
+            if (mode === 'sandwiches') {
+                pbjCount = Math.floor(targetValue);
+            } else {
+                // Start from the per-sandwich estimate, then trim until the real
+                // rounded-up package total (including spatulas) fits the budget.
+                pbjCount = Math.floor(targetValue / totalCostPerSandwich);
+                while (pbjCount > 0 && pbjPackageCost(pbjCount) + spatulaCost > targetValue) {
+                    pbjCount--;
+                }
+            }
+
+            if (pbjCount < 1) {
+                const hintDiv = document.getElementById('pbjValidationHint');
+                hintDiv.textContent = mode === 'budget'
+                    ? 'That budget is too low to make a full PB&J sandwich with these ingredients. Try a higher budget.'
+                    : 'Please enter at least 1 sandwich.';
+                hintDiv.style.display = 'block';
+                const pbjResultEl = document.getElementById('pbjResult');
+                pbjResultEl.innerHTML = '';
+                pbjResultEl.style.display = 'none';
+                return;
+            }
+
+            // Calculate quantities needed (whole packages)
+            const pbJarsNeeded = Math.ceil((pbjCount * pbPerSandwich) / pbInfo.tbspPerJar);
+            const jellyJarsNeeded = Math.ceil((pbjCount * jellyPerSandwich) / jellyInfo.tbspPerJar);
+            const breadLoavesNeeded = Math.ceil((pbjCount * breadSlicesPerSandwich) / usableBreadSlicesPerLoaf);
+            const bagBoxesNeeded = Math.ceil(pbjCount / bagsPerBox);
+
+            // Actual costs based on whole packages
+            const pbCost = pbJarsNeeded * pbInfo.price;
+            const jellyCost = jellyJarsNeeded * jellyInfo.price;
+            const breadCost = breadLoavesNeeded * breadPrice;
+            const bagCost = bagBoxesNeeded * bagBoxPrice;
 
             const actualTotalCost = Math.round((pbCost + jellyCost + breadCost + bagCost + spatulaCost) * 100) / 100;
 
