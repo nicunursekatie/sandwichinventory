@@ -1082,12 +1082,21 @@
         .live-price-meta { font-size: 0.85em; color: #8a6d3b; }
         .live-price-status { max-width: 760px; margin: 0 auto 16px; padding: 12px 16px; border-radius: 10px;
             text-align: center; font-size: 0.92em; }
+        /* Midway: small-screen tightening */
+        @media (max-width: 600px) {
+            .ref-section { padding: 0 14px; }
+            .ref-section[open] { padding-bottom: 18px; }
+            .ref-section > .ref-summary { font-size: 1.12em; padding: 16px 0; }
+            .live-price-bar { padding: 10px 12px; gap: 8px; }
+            .live-price-meta { font-size: 0.8em; }
+            #pricing-summary-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 500px; width: 100%; height: auto; margin-bottom: 20px;">
+            <img src="tsp-logo-web.jpg" width="1200" height="406" decoding="async" fetchpriority="high" alt="The Sandwich Project Logo" style="max-width: 500px; width: 100%; height: auto; margin-bottom: 20px;">
             <p>Interactive Group Event Planning Guide</p>
         </div>
 
@@ -1300,7 +1309,7 @@
                         <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
                                 <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer">
-                                    <img src="pb-spreaders.png" alt="4-Piece Silicone Jar Spatula Set - Long handle for reaching bottom of jars" style="max-width: 120px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer;">
+                                    <img src="pb-spreaders-web.jpg" width="360" height="515" loading="lazy" decoding="async" alt="4-Piece Silicone Jar Spatula Set - Long handle for reaching bottom of jars" style="max-width: 120px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer;">
                                 </a>
                                 <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer" style="font-size: 0.8em; color: #FF9900; font-weight: 600; text-decoration: none;">Order on Amazon</a>
                             </div>
@@ -2087,6 +2096,74 @@
         // ===============================================================
         const API_BASE = 'https://api-dusky-alpha.vercel.app';
         const LIVE_PRICE_ENDPOINT = API_BASE + '/api/live-prices';
+        const LIVE_PRICE_CACHE_KEY = 'tspLivePrices';
+        const LIVE_PRICE_CACHE_MAX_AGE_MS = 12 * 60 * 60 * 1000; // 12 hours
+        const LIVE_PRICE_TIMEOUT_MS = 15000;
+
+        // Apply a prices map to PRODUCT_DATA — but ONLY values that genuinely came from a live
+        // store lookup. Unmapped items (specialty cheeses, warehouse-club packs) come back with a
+        // generic default; we leave those at our maintained TSP prices. Returns store counts.
+        function applyLivePrices(prices) {
+            let krogerCount = 0, walmartCount = 0;
+            for (const [key, info] of Object.entries(prices)) {
+                if (!info || !info.price) continue;
+                const isKroger = info.source === 'Kroger API';
+                const isWalmart = info.source === 'Walmart API';
+                if (!isKroger && !isWalmart) continue;
+                for (const category of ['meat', 'cheese', 'bread']) {
+                    const item = PRODUCT_DATA[category].find(p => p.id === key);
+                    if (item) {
+                        item.price = info.price;
+                        if (category === 'bread') {
+                            item.pricingPrice = '$' + info.price.toFixed(2);
+                            item.pricingNote = '~$' + (info.price / item.sandwichesPerLoaf).toFixed(2) + '/sandwich';
+                        }
+                        if (isKroger) krogerCount++; else walmartCount++;
+                    }
+                }
+            }
+            return { krogerCount, walmartCount };
+        }
+
+        // Re-render every display that reads PRODUCT_DATA, preserving the user's current selections.
+        function refreshPriceDisplays() {
+            const ids = ['meatType', 'cheeseType', 'breadType', 'pbjBreadType'];
+            const sel = {};
+            ids.forEach(id => { const el = document.getElementById(id); if (el) sel[id] = el.value; });
+            buildMeatDropdown();
+            buildCheeseDropdown();
+            buildBreadDropdowns();
+            buildPricingCards();
+            buildPricingSummaryTable();
+            ids.forEach(id => { const el = document.getElementById(id); if (el && sel[id] !== undefined) el.value = sel[id]; });
+        }
+
+        function liveCountParts(counts) {
+            const parts = [];
+            if (counts.krogerCount > 0) parts.push(counts.krogerCount + ' Kroger');
+            if (counts.walmartCount > 0) parts.push(counts.walmartCount + ' Walmart');
+            return parts;
+        }
+
+        // On load, reapply the most recent live prices (if fresh) so returning users keep the
+        // numbers they last saw, without waiting on the network.
+        function restoreCachedLivePrices() {
+            try {
+                const raw = localStorage.getItem(LIVE_PRICE_CACHE_KEY);
+                if (!raw) return;
+                const cached = JSON.parse(raw);
+                if (!cached || !cached.prices || !cached.time) return;
+                if (Date.now() - cached.time > LIVE_PRICE_CACHE_MAX_AGE_MS) return;
+                const counts = applyLivePrices(cached.prices);
+                if (counts.krogerCount + counts.walmartCount === 0) return;
+                refreshPriceDisplays();
+                const label = document.getElementById('priceUpdateStatus');
+                if (label) {
+                    const when = new Date(cached.time).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' });
+                    label.innerHTML = 'Showing your last update (' + when + ') • tap to refresh';
+                }
+            } catch (e) { /* ignore cache problems — fall back to stored prices */ }
+        }
 
         async function fetchLivePrices() {
             const btn = document.getElementById('refreshPricesBtn');
@@ -2108,61 +2185,29 @@
             PRODUCT_DATA.cheese.forEach(c => products.push({ name: c.name, category: 'cheese', key: c.id }));
             PRODUCT_DATA.bread.forEach(b => products.push({ name: b.name, category: 'bread', key: b.id }));
 
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), LIVE_PRICE_TIMEOUT_MS);
+
             try {
                 const response = await fetch(LIVE_PRICE_ENDPOINT, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ products: products })
+                    body: JSON.stringify({ products: products }),
+                    signal: controller.signal
                 });
                 if (!response.ok) throw new Error('API error: ' + response.status);
                 const result = await response.json();
                 if (!result.success || !result.prices) throw new Error(result.error || 'Failed to fetch live prices');
 
-                // Only apply prices that genuinely came from a live store lookup. Unmapped items
-                // (specialty cheeses, warehouse-club packs) return a generic default — leave those
-                // at our maintained TSP prices instead of overwriting them.
-                let krogerCount = 0, walmartCount = 0;
-                for (const [key, info] of Object.entries(result.prices)) {
-                    if (!info || !info.price) continue;
-                    const isKroger = info.source === 'Kroger API';
-                    const isWalmart = info.source === 'Walmart API';
-                    if (!isKroger && !isWalmart) continue;
-                    for (const category of ['meat', 'cheese', 'bread']) {
-                        const item = PRODUCT_DATA[category].find(p => p.id === key);
-                        if (item) {
-                            item.price = info.price;
-                            if (category === 'bread') {
-                                item.pricingPrice = '$' + info.price.toFixed(2);
-                                item.pricingNote = '~$' + (info.price / item.sandwichesPerLoaf).toFixed(2) + '/sandwich';
-                            }
-                            if (isKroger) krogerCount++; else walmartCount++;
-                        }
-                    }
-                }
+                const counts = applyLivePrices(result.prices);
+                refreshPriceDisplays();
 
-                // Re-render every display that reads PRODUCT_DATA, preserving the user's selections.
-                const sel = {
-                    meat: document.getElementById('meatType').value,
-                    cheese: document.getElementById('cheeseType').value,
-                    bread: document.getElementById('breadType').value,
-                    pbjBread: document.getElementById('pbjBreadType') ? document.getElementById('pbjBreadType').value : ''
-                };
-                buildMeatDropdown();
-                buildCheeseDropdown();
-                buildBreadDropdowns();
-                buildPricingCards();
-                buildPricingSummaryTable();
-                document.getElementById('meatType').value = sel.meat;
-                document.getElementById('cheeseType').value = sel.cheese;
-                document.getElementById('breadType').value = sel.bread;
-                if (document.getElementById('pbjBreadType')) document.getElementById('pbjBreadType').value = sel.pbjBread;
+                // Cache the raw response so a page reload can restore these prices instantly.
+                try { localStorage.setItem(LIVE_PRICE_CACHE_KEY, JSON.stringify({ prices: result.prices, time: Date.now() })); } catch (e) { /* storage may be unavailable */ }
 
-                const liveCount = krogerCount + walmartCount;
-                const now = new Date();
-                const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
-                const parts = [];
-                if (krogerCount > 0) parts.push(krogerCount + ' Kroger');
-                if (walmartCount > 0) parts.push(walmartCount + ' Walmart');
+                const liveCount = counts.krogerCount + counts.walmartCount;
+                const parts = liveCountParts(counts);
+                const timeStr = new Date().toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
                 if (updateLabel) {
                     updateLabel.innerHTML = liveCount > 0
                         ? '✅ Updated ' + timeStr + ' • ' + parts.join(', ') + ' live • others use stored prices'
@@ -2177,12 +2222,16 @@
                 }
             } catch (error) {
                 console.error('Live price fetch error:', error);
+                const timedOut = error.name === 'AbortError';
                 if (statusDiv) {
                     statusDiv.style.background = 'rgba(211, 47, 47, 0.1)';
                     statusDiv.style.color = '#dc2626';
-                    statusDiv.innerHTML = '<strong>⚠️ Could not fetch live prices.</strong> Using stored prices instead. (' + error.message + ')';
+                    statusDiv.innerHTML = timedOut
+                        ? '<strong>⏱️ Live prices timed out.</strong> The price service is slow right now — using stored prices instead.'
+                        : '<strong>⚠️ Could not fetch live prices.</strong> Using stored prices instead. (' + error.message + ')';
                 }
             } finally {
+                clearTimeout(timeoutId);
                 if (btn) { btn.disabled = false; btn.innerHTML = '🔄 Update Live Prices'; }
             }
         }
@@ -2213,6 +2262,7 @@
             buildPricingCards();
             buildPricingSummaryTable();
             showCalcType('deli');
+            restoreCachedLivePrices();
         });
 
         // ===============================================================
@@ -2668,7 +2718,7 @@
 
                     <!-- Header with teal bar -->
                     <div style="background: linear-gradient(135deg, #236383 0%, #007E8C 100%); padding: 28px 30px; border-radius: 12px 12px 0 0; text-align: center;">
-                        <img src="CMYK_PRINT_TSP-01-01.jpg" alt="The Sandwich Project Logo" style="max-width: 240px; width: 100%; height: auto; margin-bottom: 10px;">
+                        <img src="tsp-logo-web.jpg" width="1200" height="406" loading="lazy" decoding="async" alt="The Sandwich Project Logo" style="max-width: 240px; width: 100%; height: auto; margin-bottom: 10px;">
                         <div style="color: white; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">Sandwich Planning Guide</div>
                         <div style="color: rgba(255,255,255,0.75); font-size: 12px; margin-top: 4px;">Generated ${date}</div>
                     </div>
