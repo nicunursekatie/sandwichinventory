@@ -66,7 +66,7 @@
             color: #2c3e50;
             background: linear-gradient(135deg, #236383 0%, #007E8C 100%);
             min-height: 100vh;
-            font-size: 16px;
+            font-size: 18px;
         }
         
         h1 {
@@ -3306,6 +3306,14 @@
         transition:border-color .15s ease, box-shadow .15s ease; }
     .plan-mode-label:has(input:checked){ border-color:var(--tsp-teal) !important;
         box-shadow:0 2px 10px rgba(35,99,131,.14); }
+
+    /* Readability floor for presbyopia: keep helper/secondary text legible */
+    .calc-input-group > span{ font-size:1.02em !important; color:rgba(255,255,255,0.96) !important; line-height:1.45; }
+    .live-price-meta{ font-size:0.95em !important; }
+    .plan-mode-label{ font-size:1.1em !important; }
+    .calc-input-group label{ font-size:1.02em !important; }
+    #intro-section p{ font-size:1.05em !important; }
+    .plan-mode-label input[type="radio"]{ width:20px; height:20px; flex:0 0 auto; }
 </style>
 </body>
 </html>
