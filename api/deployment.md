@@ -40,7 +40,7 @@ Your main site is hosted on **GitHub Pages**, which only serves static files. Th
 
 ### Step 2: Update Your HTML File
 
-In `redesignedinventorycalculator.html`, find line ~3083 and update:
+In `inventorycalculator.html`, find line ~3083 and update:
 
 ```javascript
 const API_ENDPOINT = 'https://your-api-name.vercel.app/api/parse-package';
