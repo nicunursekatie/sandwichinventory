@@ -1070,6 +1070,18 @@
         .ref-section > .ref-summary::after { content: '▸'; margin-left: auto; transition: transform 0.2s ease; color: #A31C41; }
         .ref-section[open] > .ref-summary::after { transform: rotate(90deg); }
         .ref-section[open] { padding-bottom: 24px; }
+        /* Midway: live prices */
+        .live-price-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; justify-content: center;
+            max-width: 760px; margin: 0 auto 14px; padding: 12px 16px; background: #fff7ec;
+            border: 1px solid #FBAD3F; border-radius: 12px; }
+        .live-price-btn { padding: 10px 18px; font-size: 0.98em; font-weight: 700; cursor: pointer; color: #333;
+            border: none; border-radius: 20px; background: linear-gradient(135deg, #FBAD3F, #f59e0b);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.15s ease; }
+        .live-price-btn:hover:not(:disabled) { transform: scale(1.04); }
+        .live-price-btn:disabled { opacity: 0.7; cursor: default; }
+        .live-price-meta { font-size: 0.85em; color: #8a6d3b; }
+        .live-price-status { max-width: 760px; margin: 0 auto 16px; padding: 12px 16px; border-radius: 10px;
+            text-align: center; font-size: 0.92em; }
     </style>
 </head>
 <body>
@@ -1130,6 +1142,12 @@
             <button type="button" class="calc-toggle-btn active" id="toggleDeli" role="tab" aria-selected="true" onclick="showCalcType('deli')">🥪 Deli Meat Sandwiches</button>
             <button type="button" class="calc-toggle-btn" id="togglePBJ" role="tab" aria-selected="false" onclick="showCalcType('pbj')">🥜 PB&amp;J Sandwiches</button>
         </div>
+
+        <div class="live-price-bar">
+            <button type="button" id="refreshPricesBtn" class="live-price-btn" onclick="fetchLivePrices()">🔄 Update Live Prices</button>
+            <span id="priceUpdateStatus" class="live-price-meta">Prices last updated 9/17/2025 • vary by location</span>
+        </div>
+        <div id="livePriceStatus" class="live-price-status" style="display: none;"></div>
 
         <!-- Interactive Calculator Section -->
         <div class="section" id="calculator">
@@ -2062,6 +2080,111 @@
             html += '<tr><td>Zip-lock Sandwich Bags</td><td>$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</td><td>' + PRODUCT_DATA.bags.countPerBox + ' count</td></tr>';
             html += '</table>';
             container.innerHTML = html;
+        }
+
+        // ===============================================================
+        // LIVE PRICES (real-time Kroger + Walmart prices via TSP price API)
+        // ===============================================================
+        const API_BASE = 'https://api-dusky-alpha.vercel.app';
+        const LIVE_PRICE_ENDPOINT = API_BASE + '/api/live-prices';
+
+        async function fetchLivePrices() {
+            const btn = document.getElementById('refreshPricesBtn');
+            const statusDiv = document.getElementById('livePriceStatus');
+            const updateLabel = document.getElementById('priceUpdateStatus');
+
+            if (btn) { btn.disabled = true; btn.innerHTML = '⏳ Checking prices…'; }
+            if (statusDiv) {
+                statusDiv.style.display = 'block';
+                statusDiv.style.background = 'rgba(251, 173, 63, 0.18)';
+                statusDiv.style.color = '#92400e';
+                statusDiv.innerHTML = '🔍 Fetching current prices from Kroger &amp; Walmart…';
+            }
+
+            // Build the product list from our single source of truth (PRODUCT_DATA).
+            // The API matches by key; keys here equal PRODUCT_DATA ids. PB&J keeps stored prices (no store mapping).
+            const products = [];
+            PRODUCT_DATA.meat.filter(m => m.group !== 'hidden').forEach(m => products.push({ name: m.name, category: 'meat', key: m.id }));
+            PRODUCT_DATA.cheese.forEach(c => products.push({ name: c.name, category: 'cheese', key: c.id }));
+            PRODUCT_DATA.bread.forEach(b => products.push({ name: b.name, category: 'bread', key: b.id }));
+
+            try {
+                const response = await fetch(LIVE_PRICE_ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ products: products })
+                });
+                if (!response.ok) throw new Error('API error: ' + response.status);
+                const result = await response.json();
+                if (!result.success || !result.prices) throw new Error(result.error || 'Failed to fetch live prices');
+
+                // Only apply prices that genuinely came from a live store lookup. Unmapped items
+                // (specialty cheeses, warehouse-club packs) return a generic default — leave those
+                // at our maintained TSP prices instead of overwriting them.
+                let krogerCount = 0, walmartCount = 0;
+                for (const [key, info] of Object.entries(result.prices)) {
+                    if (!info || !info.price) continue;
+                    const isKroger = info.source === 'Kroger API';
+                    const isWalmart = info.source === 'Walmart API';
+                    if (!isKroger && !isWalmart) continue;
+                    for (const category of ['meat', 'cheese', 'bread']) {
+                        const item = PRODUCT_DATA[category].find(p => p.id === key);
+                        if (item) {
+                            item.price = info.price;
+                            if (category === 'bread') {
+                                item.pricingPrice = '$' + info.price.toFixed(2);
+                                item.pricingNote = '~$' + (info.price / item.sandwichesPerLoaf).toFixed(2) + '/sandwich';
+                            }
+                            if (isKroger) krogerCount++; else walmartCount++;
+                        }
+                    }
+                }
+
+                // Re-render every display that reads PRODUCT_DATA, preserving the user's selections.
+                const sel = {
+                    meat: document.getElementById('meatType').value,
+                    cheese: document.getElementById('cheeseType').value,
+                    bread: document.getElementById('breadType').value,
+                    pbjBread: document.getElementById('pbjBreadType') ? document.getElementById('pbjBreadType').value : ''
+                };
+                buildMeatDropdown();
+                buildCheeseDropdown();
+                buildBreadDropdowns();
+                buildPricingCards();
+                buildPricingSummaryTable();
+                document.getElementById('meatType').value = sel.meat;
+                document.getElementById('cheeseType').value = sel.cheese;
+                document.getElementById('breadType').value = sel.bread;
+                if (document.getElementById('pbjBreadType')) document.getElementById('pbjBreadType').value = sel.pbjBread;
+
+                const liveCount = krogerCount + walmartCount;
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+                const parts = [];
+                if (krogerCount > 0) parts.push(krogerCount + ' Kroger');
+                if (walmartCount > 0) parts.push(walmartCount + ' Walmart');
+                if (updateLabel) {
+                    updateLabel.innerHTML = liveCount > 0
+                        ? '✅ Updated ' + timeStr + ' • ' + parts.join(', ') + ' live • others use stored prices'
+                        : 'Live lookup unavailable just now • showing stored prices';
+                }
+                if (statusDiv) {
+                    statusDiv.style.background = 'rgba(0, 126, 140, 0.15)';
+                    statusDiv.style.color = '#007E8C';
+                    statusDiv.innerHTML = liveCount > 0
+                        ? '<strong>✅ Prices updated!</strong> ' + liveCount + ' product' + (liveCount !== 1 ? 's' : '') + ' refreshed with real prices (' + parts.join(' + ') + '). Specialty cheeses and warehouse-club items keep their stored prices. Prices vary by location.'
+                        : '<strong>Showing stored prices.</strong> No live store prices were available just now — your numbers still reflect the TSP-maintained prices.';
+                }
+            } catch (error) {
+                console.error('Live price fetch error:', error);
+                if (statusDiv) {
+                    statusDiv.style.background = 'rgba(211, 47, 47, 0.1)';
+                    statusDiv.style.color = '#dc2626';
+                    statusDiv.innerHTML = '<strong>⚠️ Could not fetch live prices.</strong> Using stored prices instead. (' + error.message + ')';
+                }
+            } finally {
+                if (btn) { btn.disabled = false; btn.innerHTML = '🔄 Update Live Prices'; }
+            }
         }
 
         // ===============================================================
