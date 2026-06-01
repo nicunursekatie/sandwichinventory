@@ -1113,8 +1113,9 @@
         </div>
 
 
-        <div class="section" id="intro-section" style="margin-bottom: 28px; background: linear-gradient(135deg, #f8f9fa 80%, #e3f6f9 100%); border: 2px solid #FBAD3F; box-shadow: 0 4px 16px #FBAD3F22;">
-            <h2 style="color: #A31C41; font-size: 1.7em; font-weight: 700; margin-bottom: 10px;">Welcome to the Sandwich Project Planning Tool!</h2>
+        <div class="section" id="intro-section" style="margin-bottom: 28px;">
+            <div class="tsp-card-eyebrow"><span class="tsp-step-inline">1</span> Start Here</div>
+            <h2 style="font-size: 1.9em; font-weight: 700; margin-bottom: 10px;">Welcome to the Sandwich Project Planning Tool!</h2>
             <p style="font-size: 1.05em; color: #236383; margin-bottom: 14px; line-height: 1.5;">
                 Enter a sandwich count or budget, pick your brands, and get a full shopping list with quantities and costs.
             </p>
@@ -1145,6 +1146,13 @@
             <p style="font-size: 0.9em; color: #888; margin-bottom: 0;">
                 All pricing is based on recent retail pricing at various stores (Kroger, Walmart, Costco, etc.) and may vary by location.
             </p>
+        </div>
+
+        <div class="tsp-zone">
+            <div class="tsp-step">2</div>
+            <h2>Plan Your Shopping Trip</h2>
+            <p>Enter a sandwich count or a budget, choose deli or PB&amp;J, and get an exact shopping list with quantities and costs.</p>
+            <div class="tsp-rule"></div>
         </div>
 
         <div class="calc-toggle" role="tablist" aria-label="Choose calculator">
@@ -1364,12 +1372,19 @@
         </div>
 
         <!-- Move Pricing Information section down here -->
+        <div class="tsp-zone">
+            <div class="tsp-step">3</div>
+            <h2>Guides &amp; Reference</h2>
+            <p>Prices, quantities, the sandwich recipe, and food-safety basics &mdash; open any card for the details.</p>
+            <div class="tsp-rule"></div>
+        </div>
+
         <details class="ref-section" id="pricing-info" style="margin-bottom: 32px;">
             <summary class="ref-summary"><span class="icon icon-lg icon-chart icon-primary"></span> Pricing &amp; Ingredient Cost Guide</summary>
 
             <!-- Important shopping notes - NOT a hazmat warning -->
             <div style="background: #fffbf0; border: 2px solid #f4a261; border-radius: 10px; padding: 20px; margin-bottom: 24px;">
-                <h3 style="color: #d97706; font-size: 1.2em; margin-bottom: 16px; font-weight: 600;">
+                <h3 style="color: #236383; font-size: 1.2em; margin-bottom: 16px; font-weight: 600;">
                     <span class="icon icon-clipboard icon-primary"></span> Important Shopping Notes
                 </h3>
                 <div style="display: flex; flex-direction: column; gap: 14px; color: #555; font-size: 1.05em;">
@@ -3194,6 +3209,81 @@
         </div>
     </details>
 </div>
+<style>
+    /* =====================================================================
+       MIDWAY DESIGN SYSTEM
+       A single governing layer applied to every NON-calculator section so the
+       whole page reads as one intentional flow. Loaded last so it overrides the
+       ad-hoc inline/section styling that accumulated above. Palette: teal canvas
+       (#236383/#007E8C) + orange accent (#FBAD3F); maroon/amber demoted.
+       ===================================================================== */
+    :root{
+        --tsp-teal:#236383; --tsp-teal-dark:#1a4d66; --tsp-teal-bright:#47B3CB; --tsp-teal-deep:#007E8C;
+        --tsp-orange:#FBAD3F; --tsp-maroon:#A31C41;
+        --tsp-ink:#173b49; --tsp-muted:#6f8893;
+        --tsp-shadow:0 14px 34px rgba(10,40,52,.16);
+        --tsp-radius:16px;
+    }
+
+    /* One consistent card surface for every section */
+    .container .section,
+    .ref-section{
+        border-radius: var(--tsp-radius) !important;
+        box-shadow: var(--tsp-shadow) !important;
+    }
+
+    /* One heading system: teal ink, consistent weight/spacing */
+    .container .section h2,
+    #intro-section h2,
+    .pricing-header h2{
+        color: var(--tsp-ink) !important;
+        letter-spacing: -.01em;
+    }
+
+    /* Demote the stray accents (maroon arrow / amber notes) into the palette */
+    .ref-section > .ref-summary::after{ color: var(--tsp-teal) !important; }
+
+    /* Intro: clean white card with an orange top accent (was an orange gradient) */
+    #intro-section{
+        background:#fff !important;
+        border:1px solid #eef2f4 !important;
+        border-top:5px solid var(--tsp-orange) !important;
+        box-shadow: var(--tsp-shadow) !important;
+    }
+    #intro-section h2{ font-size:1.9em !important; }
+
+    /* ---- Zone framing: the visible governing structure ---- */
+    .tsp-zone{ max-width:760px; margin:6px auto 24px; padding:0 16px; text-align:center; }
+    .tsp-step{
+        display:inline-flex; align-items:center; justify-content:center;
+        width:36px; height:36px; border-radius:50%;
+        background:var(--tsp-orange); color:#3a2700;
+        font-weight:800; font-size:1.1rem; margin-bottom:14px;
+        box-shadow:0 5px 16px rgba(251,173,63,.5);
+    }
+    .tsp-zone h2{
+        color:#fff !important; font-size:clamp(1.6rem,4.5vw,2.2rem); font-weight:800;
+        margin:0 0 8px !important; border:none !important; padding:0 !important;
+        text-shadow:0 2px 14px rgba(0,0,0,.22);
+    }
+    .tsp-zone p{ color:rgba(255,255,255,.92); font-size:1.04rem; line-height:1.55; margin:0 auto; max-width:620px; }
+    .tsp-rule{ width:66px; height:4px; border-radius:4px; margin:16px auto 0;
+        background:linear-gradient(90deg,var(--tsp-orange),var(--tsp-teal-bright)); }
+
+    /* Numbered eyebrow chip used inside the intro card (on white) */
+    .tsp-card-eyebrow{
+        display:inline-flex; align-items:center; gap:9px;
+        background:rgba(35,99,131,.1); color:var(--tsp-teal);
+        font-weight:800; letter-spacing:.08em; text-transform:uppercase; font-size:.72rem;
+        padding:6px 14px 6px 6px; border-radius:999px; margin-bottom:14px;
+    }
+    .tsp-card-eyebrow .tsp-step-inline{
+        display:inline-flex; align-items:center; justify-content:center;
+        width:24px; height:24px; border-radius:50%;
+        background:var(--tsp-orange); color:#3a2700; font-size:.82rem; font-weight:800;
+    }
+    @media (max-width:600px){ .tsp-zone{ margin-bottom:18px; } }
+</style>
 </body>
 </html>
 
