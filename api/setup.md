@@ -72,7 +72,7 @@ node api/parse-package.js
 
 Since your site is on GitHub Pages, update the API endpoint to point to your separately deployed API:
 
-**In `redesignedinventorycalculator.html`**, find this line (around line 3080):
+**In `inventorycalculator.html`**, find this line (around line 3080):
 
 ```javascript
 const API_ENDPOINT = '/api/parse-package';

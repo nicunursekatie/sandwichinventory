@@ -12,7 +12,7 @@
 
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY;
 
-// Product database — synced with frontend packageData in redesignedinventorycalculator.html
+// Product database — synced with frontend packageData in inventorycalculator.html
 const PRODUCT_DATABASE = {
     meat: {
         // Turkey options
