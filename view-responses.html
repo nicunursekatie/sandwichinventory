@@ -413,6 +413,8 @@
 
                 // Merge data from all responses (latest takes precedence)
                 const mergedData = mergeResponses(responses);
+                const primaryContactMethod = mergedData.primaryContactMethod || mergedData.contactMethod;
+                const backupContactMethod = mergedData.backupContactMethod;
 
                 let html = `
                     <div class="card-header" onclick="toggleCard(this)">
@@ -511,10 +513,16 @@
                                     <span>${mergedData.backupContactPhone} (Backup)</span>
                                 </div>
                             ` : ''}
-                            ${mergedData.contactMethod ? `
+                            ${primaryContactMethod ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">💬</span>
-                                    <span><strong>Preferred:</strong> ${mergedData.contactMethod}</span>
+                                    <span><strong>Primary preferred:</strong> ${primaryContactMethod}</span>
+                                </div>
+                            ` : ''}
+                            ${backupContactMethod ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">💬</span>
+                                    <span><strong>Backup preferred:</strong> ${backupContactMethod}</span>
                                 </div>
                             ` : ''}
                         </div>
@@ -585,6 +593,57 @@
                         ` : ''}
                         ${!mergedData.populationFocus && !mergedData.avgPeopleServed && !mergedData.frequency ?
                             '<div class="info-value empty">No operations info provided</div>' : ''}
+                    </div>
+                `;
+
+                // Distribution & Storage Section
+                const hasDistributionStorage = mergedData.distributionMethod ||
+                    mergedData.takeHomeQuantity ||
+                    mergedData.immediateRefrigeration ||
+                    mergedData.refrigeratedUntilEaten ||
+                    mergedData.freezeSandwiches ||
+                    mergedData.freezeReason ||
+                    mergedData.freezeDuration;
+                html += `
+                    <div class="info-section">
+                        <div class="info-section-title">🥪 Distribution & Storage</div>
+                        ${mergedData.distributionMethod ? `
+                            <div class="info-item">
+                                <strong>Distribution Method:</strong> ${mergedData.distributionMethod}
+                            </div>
+                        ` : ''}
+                        ${mergedData.takeHomeQuantity ? `
+                            <div class="info-item">
+                                <strong>Take-home Quantity:</strong> ${mergedData.takeHomeQuantity}
+                            </div>
+                        ` : ''}
+                        ${mergedData.immediateRefrigeration ? `
+                            <div class="info-item">
+                                <strong>Refrigerated Immediately:</strong> ${mergedData.immediateRefrigeration}
+                            </div>
+                        ` : ''}
+                        ${mergedData.refrigeratedUntilEaten ? `
+                            <div class="info-item">
+                                <strong>Refrigerated Until Eaten/Distributed:</strong> ${mergedData.refrigeratedUntilEaten}
+                            </div>
+                        ` : ''}
+                        ${mergedData.freezeSandwiches ? `
+                            <div class="info-item">
+                                <strong>Freezes Sandwiches:</strong> ${mergedData.freezeSandwiches}
+                            </div>
+                        ` : ''}
+                        ${mergedData.freezeReason ? `
+                            <div class="info-item">
+                                <strong>Freeze Reason:</strong> ${mergedData.freezeReason}
+                            </div>
+                        ` : ''}
+                        ${mergedData.freezeDuration ? `
+                            <div class="info-item">
+                                <strong>Freeze Duration:</strong> ${mergedData.freezeDuration}
+                            </div>
+                        ` : ''}
+                        ${!hasDistributionStorage ?
+                            '<div class="info-value empty">No distribution or storage info provided</div>' : ''}
                     </div>
                 `;
 
@@ -782,7 +841,8 @@ P.S. - We're always here if you need anything!`;
                 'Backup Contact Name',
                 'Backup Contact Email',
                 'Backup Contact Phone',
-                'Preferred Contact Method',
+                'Primary Preferred Contact Method',
+                'Backup Preferred Contact Method',
                 'Street Address',
                 'Address Line 2',
                 'City',
@@ -794,8 +854,17 @@ P.S. - We're always here if you need anything!`;
                 'Population Focus',
                 'Meal Distribution Schedule',
                 'Donation Acceptance Schedule',
+                'Meal Schedule Input Type',
+                'Donation Schedule Input Type',
                 'Avg. People Served',
                 'Frequency',
+                'Distribution Method',
+                'Take-home Quantity',
+                'Refrigerated Immediately',
+                'Refrigerated Until Eaten/Distributed',
+                'Freezes Sandwiches',
+                'Freeze Reason',
+                'Freeze Duration',
                 'Partnership Length',
                 'Receives Fruit & Snacks',
                 'Interest in Fruit & Snacks',
@@ -819,6 +888,8 @@ P.S. - We're always here if you need anything!`;
                 const responses = organizationData[orgName];
                 const mergedData = mergeResponses(responses);
                 const latestResponse = responses[0];
+                const primaryContactMethod = mergedData.primaryContactMethod || mergedData.contactMethod;
+                const backupContactMethod = mergedData.backupContactMethod;
 
                 const escapeCSV = (value) => {
                     if (!value) return '';
@@ -837,7 +908,8 @@ P.S. - We're always here if you need anything!`;
                     escapeCSV(mergedData.backupContactName),
                     escapeCSV(mergedData.backupContactEmail),
                     escapeCSV(mergedData.backupContactPhone),
-                    escapeCSV(mergedData.contactMethod),
+                    escapeCSV(primaryContactMethod),
+                    escapeCSV(backupContactMethod),
                     escapeCSV(mergedData.streetAddress),
                     escapeCSV(mergedData.addressLine2),
                     escapeCSV(mergedData.city),
@@ -849,8 +921,17 @@ P.S. - We're always here if you need anything!`;
                     escapeCSV(mergedData.populationFocus),
                     escapeCSV(mergedData.feedingSchedule),
                     escapeCSV(mergedData.donationSchedule),
+                    escapeCSV(mergedData.feedingScheduleInputType),
+                    escapeCSV(mergedData.donationScheduleInputType),
                     escapeCSV(mergedData.avgPeopleServed),
                     escapeCSV(mergedData.frequency),
+                    escapeCSV(mergedData.distributionMethod),
+                    escapeCSV(mergedData.takeHomeQuantity),
+                    escapeCSV(mergedData.immediateRefrigeration),
+                    escapeCSV(mergedData.refrigeratedUntilEaten),
+                    escapeCSV(mergedData.freezeSandwiches),
+                    escapeCSV(mergedData.freezeReason),
+                    escapeCSV(mergedData.freezeDuration),
                     escapeCSV(mergedData.yearsReceivingSandwiches),
                     escapeCSV(mergedData.receivesFruitSnacks),
                     escapeCSV(mergedData.fruitSnacksInterest),
