@@ -977,7 +977,7 @@
             <h2 style="color: #236383;">🎉 Thank you so much!</h2>
             <p style="margin-bottom: 15px; font-size: 18px; font-weight: 600; color: #007E8C;">Your response has been submitted successfully!</p>
             <p style="margin-bottom: 12px; line-height: 1.6;">We're so grateful for the time you took to share this information with us. Your insights help us serve you better and demonstrate the incredible impact of this partnership to our supporters and funders.</p>
-            <p style="margin-bottom: 12px; line-height: 1.which; color: #236383; font-weight: 500;">The work you do in your community is invaluable, and we're honored to support your efforts!</p>
+            <p style="margin-bottom: 12px; line-height: 1.6; color: #236383; font-weight: 500;">The work you do in your community is invaluable, and we're honored to support your efforts!</p>
             <p style="font-size: 14px; color: #666; line-height: 1.6;">We'll review your responses and reach out if we have any questions. Need to make changes or share additional information? Just email us at <a href="mailto:info@sandwichproject.org" style="color: #007E8C; font-weight: 600;">info@sandwichproject.org</a></p>
         </div>
 
@@ -1421,6 +1421,18 @@
             const errors = [];
             let firstErrorElement = null;
 
+            const collectScheduleRows = (listId) => {
+                return Array.from(document.querySelectorAll(`#${listId} .day-time-row`)).map(row => ({
+                    day: row.querySelector('select').value,
+                    start: row.querySelectorAll('input[type="time"]')[0].value,
+                    end: row.querySelectorAll('input[type="time"]')[1].value
+                }));
+            };
+
+            const formatScheduleRows = (rows) => {
+                return rows.map(row => `${row.day} ${row.start} to ${row.end}`).join('; ');
+            };
+
             // Validate primary contact method
             const primaryContactMethodChecked = document.querySelector('input[name="primaryContactMethod"]:checked');
             if (!primaryContactMethodChecked) {
@@ -1440,11 +1452,14 @@
 
             // Validate feeding schedule
             const feedingInputType = document.querySelector('input[name="feedingInputType"]:checked').value;
+            const feedingScheduleRows = collectScheduleRows('feedingDaysList');
             if (feedingInputType === 'structured') {
-                const feedingRows = document.querySelectorAll('#feedingDaysList .day-time-row').length;
-                if (feedingRows === 0) {
+                if (feedingScheduleRows.length === 0) {
                     errors.push('Add at least one day/time for when you serve meals');
                     if (!firstErrorElement) firstErrorElement = document.getElementById('addFeedingDay');
+                } else if (feedingScheduleRows.some(row => !row.day || !row.start || !row.end)) {
+                    errors.push('Complete every meal service day, start time, and end time');
+                    if (!firstErrorElement) firstErrorElement = document.querySelector('#feedingDaysList .day-time-row select, #feedingDaysList .day-time-row input');
                 }
             } else {
                 const feedingTextValue = document.getElementById('feedingScheduleText').value.trim();
@@ -1456,11 +1471,14 @@
 
             // Validate donation schedule
             const donationInputType = document.querySelector('input[name="donationInputType"]:checked').value;
+            const donationScheduleRows = collectScheduleRows('donationDaysList');
             if (donationInputType === 'structured') {
-                const donationRows = document.querySelectorAll('#donationDaysList .day-time-row').length;
-                if (donationRows === 0) {
+                if (donationScheduleRows.length === 0) {
                     errors.push('Add at least one day/time for when you can accept donations');
                     if (!firstErrorElement) firstErrorElement = document.getElementById('addDonationDay');
+                } else if (donationScheduleRows.some(row => !row.day || !row.start || !row.end)) {
+                    errors.push('Complete every donation acceptance day, start time, and end time');
+                    if (!firstErrorElement) firstErrorElement = document.querySelector('#donationDaysList .day-time-row select, #donationDaysList .day-time-row input');
                 }
             } else {
                 const donationTextValue = document.getElementById('donationScheduleText').value.trim();
@@ -1478,7 +1496,7 @@
                 errorMessage.classList.add('show');
                 if (firstErrorElement) {
                     firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    if (firstErrorElement.tagName === 'INPUT' || firstErrorElement.tagName === 'TEXTAREA') {
+                    if (firstErrorElement.tagName === 'INPUT' || firstErrorElement.tagName === 'TEXTAREA' || firstErrorElement.tagName === 'SELECT') {
                         setTimeout(() => firstErrorElement.focus(), 500);
                     }
                 }
@@ -1530,63 +1548,36 @@
                 }
             });
 
-            // Format feeding schedule
+            // Store both a readable schedule summary and the complete structured/text input.
+            data.feedingScheduleInputType = feedingInputType;
             if (feedingInputType === 'structured') {
-                let feedingDays = data['feedingDay[]'] || [];
-                let feedingStarts = data['feedingStart[]'] || [];
-                let feedingEnds = data['feedingEnd[]'] || [];
-
-                // Ensure they're arrays
-                if (!Array.isArray(feedingDays)) feedingDays = [feedingDays];
-                if (!Array.isArray(feedingStarts)) feedingStarts = [feedingStarts];
-                if (!Array.isArray(feedingEnds)) feedingEnds = [feedingEnds];
-
-                const feedingSchedule = feedingDays.map((day, index) =>
-                    `${day} ${feedingStarts[index]} to ${feedingEnds[index]}`
-                ).join('; ');
-
-                data.feedingSchedule = feedingSchedule;
+                data.feedingScheduleRows = feedingScheduleRows;
+                data.feedingSchedule = formatScheduleRows(feedingScheduleRows);
                 delete data['feedingDay[]'];
                 delete data['feedingStart[]'];
                 delete data['feedingEnd[]'];
             } else {
-                // Text mode: use feedingScheduleText as feedingSchedule
                 data.feedingSchedule = data.feedingScheduleText || '';
-                delete data.feedingScheduleText;
             }
 
-            // Format donation schedule
+            data.donationScheduleInputType = donationInputType;
             if (donationInputType === 'structured') {
-                let donationDays = data['donationDay[]'] || [];
-                let donationStarts = data['donationStart[]'] || [];
-                let donationEnds = data['donationEnd[]'] || [];
-
-                // Ensure they're arrays
-                if (!Array.isArray(donationDays)) donationDays = [donationDays];
-                if (!Array.isArray(donationStarts)) donationStarts = [donationStarts];
-                if (!Array.isArray(donationEnds)) donationEnds = [donationEnds];
-
-                const donationSchedule = donationDays.map((day, index) =>
-                    `${day} ${donationStarts[index]} to ${donationEnds[index]}`
-                ).join('; ');
-
-                data.donationSchedule = donationSchedule;
+                data.donationScheduleRows = donationScheduleRows;
+                data.donationSchedule = formatScheduleRows(donationScheduleRows);
                 delete data['donationDay[]'];
                 delete data['donationStart[]'];
                 delete data['donationEnd[]'];
             } else {
-                // Text mode: use donationScheduleText as donationSchedule
                 data.donationSchedule = data.donationScheduleText || '';
-                delete data.donationScheduleText;
             }
 
-            // Clean up input type selectors (not needed in submission)
+            // Keep readable field names in Firebase and avoid invalid [] keys.
             delete data.feedingInputType;
             delete data.donationInputType;
 
-            // Convert arrays to comma-separated strings for easier storage
+            // Convert simple checkbox arrays to readable strings, but keep structured rows intact.
             Object.keys(data).forEach(key => {
-                if (Array.isArray(data[key])) {
+                if (Array.isArray(data[key]) && data[key].every(value => typeof value !== 'object')) {
                     data[key] = data[key].join(', ');
                 }
             });

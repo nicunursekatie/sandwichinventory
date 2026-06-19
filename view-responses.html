@@ -349,6 +349,35 @@
         let allResponses = [];
         let organizationData = {};
 
+        function escapeHTML(value) {
+            if (value === null || value === undefined) return '';
+            return value.toString().replace(/[&<>"']/g, char => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#39;'
+            }[char]));
+        }
+
+        function safeWebsiteUrl(value) {
+            if (!value) return '';
+
+            const raw = value.toString().trim();
+            const urlWithProtocol = /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(raw) ? raw : `https://${raw}`;
+
+            try {
+                const url = new URL(urlWithProtocol);
+                if (url.protocol === 'http:' || url.protocol === 'https:') {
+                    return url.href;
+                }
+            } catch (error) {
+                return '';
+            }
+
+            return '';
+        }
+
         function loadResponses() {
             const container = document.getElementById('responseContainer');
             container.innerHTML = '<div class="loading">Loading responses...</div>';
@@ -387,7 +416,7 @@
                     displayResponses();
                 })
                 .catch(error => {
-                    container.innerHTML = `<div class="error">Error loading responses: ${error.message}</div>`;
+                    container.innerHTML = `<div class="error">Error loading responses: ${escapeHTML(error.message)}</div>`;
                 });
         }
 
@@ -413,15 +442,18 @@
 
                 // Merge data from all responses (latest takes precedence)
                 const mergedData = mergeResponses(responses);
+                const primaryContactMethod = mergedData.primaryContactMethod || mergedData.contactMethod;
+                const backupContactMethod = mergedData.backupContactMethod;
+                const websiteUrl = safeWebsiteUrl(mergedData.website);
 
                 let html = `
                     <div class="card-header" onclick="toggleCard(this)">
                         <div>
-                            <div class="org-title">${orgName}</div>
+                            <div class="org-title">${escapeHTML(orgName)}</div>
                             <div class="response-count">${responses.length} response${responses.length > 1 ? 's' : ''}</div>
                         </div>
                         <div class="header-actions">
-                            <button class="email-button" onclick="event.stopPropagation(); sendThankYouEmail('${orgName.replace(/'/g, "\\'")}', '${mergedData.contactEmail || ''}', '${(mergedData.contactName || '').replace(/'/g, "\\'")}')">
+                            <button class="email-button" data-org-name="${escapeHTML(orgName)}" data-email="${escapeHTML(mergedData.contactEmail || '')}" data-contact-name="${escapeHTML(mergedData.contactName || '')}" onclick="event.stopPropagation(); sendThankYouEmailFromButton(this)">
                                 ✉️ Send Thank You
                             </button>
                             <div class="expand-icon">▼</div>
@@ -455,13 +487,13 @@
                             ${mergedData.feedingSchedule ? `
                                 <div class="schedule-item">
                                     <div class="schedule-label">Meal Distribution</div>
-                                    <div class="schedule-value">${mergedData.feedingSchedule}</div>
+                                    <div class="schedule-value">${escapeHTML(mergedData.feedingSchedule)}</div>
                                 </div>
                             ` : ''}
                             ${mergedData.donationSchedule ? `
                                 <div class="schedule-item">
                                     <div class="schedule-label">Donation Acceptance</div>
-                                    <div class="schedule-value">${mergedData.donationSchedule}</div>
+                                    <div class="schedule-value">${escapeHTML(mergedData.donationSchedule)}</div>
                                 </div>
                             ` : ''}
                             ${!mergedData.feedingSchedule && !mergedData.donationSchedule ?
@@ -478,43 +510,49 @@
                             ${mergedData.contactName ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">👤</span>
-                                    <span>${mergedData.contactName}</span>
+                                    <span>${escapeHTML(mergedData.contactName)}</span>
                                 </div>
                             ` : ''}
                             ${mergedData.contactEmail ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">✉️</span>
-                                    <span>${mergedData.contactEmail}</span>
+                                    <span>${escapeHTML(mergedData.contactEmail)}</span>
                                 </div>
                             ` : ''}
                             ${mergedData.contactPhone ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">📱</span>
-                                    <span>${mergedData.contactPhone}</span>
+                                    <span>${escapeHTML(mergedData.contactPhone)}</span>
                                 </div>
                             ` : ''}
                             ${mergedData.backupContactName ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">👤</span>
-                                    <span>${mergedData.backupContactName} (Backup)</span>
+                                    <span>${escapeHTML(mergedData.backupContactName)} (Backup)</span>
                                 </div>
                             ` : ''}
                             ${mergedData.backupContactEmail ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">✉️</span>
-                                    <span>${mergedData.backupContactEmail} (Backup)</span>
+                                    <span>${escapeHTML(mergedData.backupContactEmail)} (Backup)</span>
                                 </div>
                             ` : ''}
                             ${mergedData.backupContactPhone ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">📱</span>
-                                    <span>${mergedData.backupContactPhone} (Backup)</span>
+                                    <span>${escapeHTML(mergedData.backupContactPhone)} (Backup)</span>
                                 </div>
                             ` : ''}
-                            ${mergedData.contactMethod ? `
+                            ${primaryContactMethod ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">💬</span>
-                                    <span><strong>Preferred:</strong> ${mergedData.contactMethod}</span>
+                                    <span><strong>Primary preferred:</strong> ${escapeHTML(primaryContactMethod)}</span>
+                                </div>
+                            ` : ''}
+                            ${backupContactMethod ? `
+                                <div class="contact-item">
+                                    <span class="contact-icon">💬</span>
+                                    <span><strong>Backup preferred:</strong> ${escapeHTML(backupContactMethod)}</span>
                                 </div>
                             ` : ''}
                         </div>
@@ -528,14 +566,14 @@
                         <div class="info-section-title">📍 Location</div>
                         ${hasAddress ? `
                             <div class="info-item">
-                                ${mergedData.streetAddress || ''}<br>
-                                ${mergedData.addressLine2 ? mergedData.addressLine2 + '<br>' : ''}
-                                ${mergedData.city || ''}${mergedData.city && mergedData.state ? ', ' : ''}${mergedData.state || ''} ${mergedData.zipCode || ''}
+                                ${escapeHTML(mergedData.streetAddress || '')}<br>
+                                ${mergedData.addressLine2 ? escapeHTML(mergedData.addressLine2) + '<br>' : ''}
+                                ${escapeHTML(mergedData.city || '')}${mergedData.city && mergedData.state ? ', ' : ''}${escapeHTML(mergedData.state || '')} ${escapeHTML(mergedData.zipCode || '')}
                             </div>
                         ` : '<div class="info-value empty">No address provided</div>'}
                         ${mergedData.serviceArea ? `
                             <div class="info-item">
-                                <strong>Service Area:</strong> ${mergedData.serviceArea}
+                                <strong>Service Area:</strong> ${escapeHTML(mergedData.serviceArea)}
                             </div>
                         ` : ''}
                     </div>
@@ -549,13 +587,13 @@
                             ${mergedData.website ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">🔗</span>
-                                    <a href="${mergedData.website}" target="_blank">${mergedData.website}</a>
+                                    ${websiteUrl ? `<a href="${escapeHTML(websiteUrl)}" target="_blank" rel="noopener noreferrer">${escapeHTML(mergedData.website)}</a>` : `<span>${escapeHTML(mergedData.website)}</span>`}
                                 </div>
                             ` : ''}
                             ${mergedData.socialMedia ? `
                                 <div class="contact-item">
                                     <span class="contact-icon">📱</span>
-                                    <span>${mergedData.socialMedia}</span>
+                                    <span>${escapeHTML(mergedData.socialMedia)}</span>
                                 </div>
                             ` : ''}
                             ${!mergedData.website && !mergedData.socialMedia ?
@@ -570,21 +608,72 @@
                         <div class="info-section-title">📊 Operations</div>
                         ${mergedData.populationFocus ? `
                             <div class="info-item">
-                                <strong>Population Focus:</strong> ${mergedData.populationFocus}
+                                <strong>Population Focus:</strong> ${escapeHTML(mergedData.populationFocus)}
                             </div>
                         ` : ''}
                         ${mergedData.avgPeopleServed ? `
                             <div class="info-item">
-                                <strong>Avg. People Served:</strong> ${mergedData.avgPeopleServed}
+                                <strong>Avg. People Served:</strong> ${escapeHTML(mergedData.avgPeopleServed)}
                             </div>
                         ` : ''}
                         ${mergedData.frequency ? `
                             <div class="info-item">
-                                <strong>Frequency:</strong> ${mergedData.frequency}
+                                <strong>Frequency:</strong> ${escapeHTML(mergedData.frequency)}
                             </div>
                         ` : ''}
                         ${!mergedData.populationFocus && !mergedData.avgPeopleServed && !mergedData.frequency ?
                             '<div class="info-value empty">No operations info provided</div>' : ''}
+                    </div>
+                `;
+
+                // Distribution & Storage Section
+                const hasDistributionStorage = mergedData.distributionMethod ||
+                    mergedData.takeHomeQuantity ||
+                    mergedData.immediateRefrigeration ||
+                    mergedData.refrigeratedUntilEaten ||
+                    mergedData.freezeSandwiches ||
+                    mergedData.freezeReason ||
+                    mergedData.freezeDuration;
+                html += `
+                    <div class="info-section">
+                        <div class="info-section-title">🥪 Distribution & Storage</div>
+                        ${mergedData.distributionMethod ? `
+                            <div class="info-item">
+                                <strong>Distribution Method:</strong> ${escapeHTML(mergedData.distributionMethod)}
+                            </div>
+                        ` : ''}
+                        ${mergedData.takeHomeQuantity ? `
+                            <div class="info-item">
+                                <strong>Take-home Quantity:</strong> ${escapeHTML(mergedData.takeHomeQuantity)}
+                            </div>
+                        ` : ''}
+                        ${mergedData.immediateRefrigeration ? `
+                            <div class="info-item">
+                                <strong>Refrigerated Immediately:</strong> ${escapeHTML(mergedData.immediateRefrigeration)}
+                            </div>
+                        ` : ''}
+                        ${mergedData.refrigeratedUntilEaten ? `
+                            <div class="info-item">
+                                <strong>Refrigerated Until Eaten/Distributed:</strong> ${escapeHTML(mergedData.refrigeratedUntilEaten)}
+                            </div>
+                        ` : ''}
+                        ${mergedData.freezeSandwiches ? `
+                            <div class="info-item">
+                                <strong>Freezes Sandwiches:</strong> ${escapeHTML(mergedData.freezeSandwiches)}
+                            </div>
+                        ` : ''}
+                        ${mergedData.freezeReason ? `
+                            <div class="info-item">
+                                <strong>Freeze Reason:</strong> ${escapeHTML(mergedData.freezeReason)}
+                            </div>
+                        ` : ''}
+                        ${mergedData.freezeDuration ? `
+                            <div class="info-item">
+                                <strong>Freeze Duration:</strong> ${escapeHTML(mergedData.freezeDuration)}
+                            </div>
+                        ` : ''}
+                        ${!hasDistributionStorage ?
+                            '<div class="info-value empty">No distribution or storage info provided</div>' : ''}
                     </div>
                 `;
 
@@ -594,32 +683,32 @@
                         <div class="info-section-title">🤝 Partnership</div>
                         ${mergedData.yearsReceivingSandwiches ? `
                             <div class="info-item">
-                                <strong>Partnership Length:</strong> ${mergedData.yearsReceivingSandwiches}
+                                <strong>Partnership Length:</strong> ${escapeHTML(mergedData.yearsReceivingSandwiches)}
                             </div>
                         ` : ''}
                         ${mergedData.receivesFruitSnacks ? `
                             <div class="info-item">
-                                <strong>Receives Fruit & Snacks:</strong> ${mergedData.receivesFruitSnacks}
+                                <strong>Receives Fruit & Snacks:</strong> ${escapeHTML(mergedData.receivesFruitSnacks)}
                             </div>
                         ` : ''}
                         ${mergedData.fruitSnacksInterest ? `
                             <div class="info-item">
-                                <strong>Interest in Fruit & Snacks:</strong> ${mergedData.fruitSnacksInterest}
+                                <strong>Interest in Fruit & Snacks:</strong> ${escapeHTML(mergedData.fruitSnacksInterest)}
                             </div>
                         ` : ''}
                         ${mergedData.deliveryRating ? `
                             <div class="info-item">
-                                <strong>Delivery Rating:</strong> ${mergedData.deliveryRating}
+                                <strong>Delivery Rating:</strong> ${escapeHTML(mergedData.deliveryRating)}
                             </div>
                         ` : ''}
                         ${mergedData.deliveryFeedback ? `
                             <div class="info-item">
-                                <strong>Delivery Feedback:</strong> ${mergedData.deliveryFeedback}
+                                <strong>Delivery Feedback:</strong> ${escapeHTML(mergedData.deliveryFeedback)}
                             </div>
                         ` : ''}
                         ${mergedData.grantInterest ? `
                             <div class="info-item">
-                                <strong>Grant Interest:</strong> ${mergedData.grantInterest}
+                                <strong>Grant Interest:</strong> ${escapeHTML(mergedData.grantInterest)}
                             </div>
                         ` : ''}
                     </div>
@@ -634,12 +723,12 @@
                             <div class="info-section-title">🌡️ Seasonal Information</div>
                             ${mergedData.seasonalNeeds ? `
                                 <div class="info-item">
-                                    <strong>Seasonal Needs Change:</strong> ${mergedData.seasonalNeeds}
+                                    <strong>Seasonal Needs Change:</strong> ${escapeHTML(mergedData.seasonalNeeds)}
                                 </div>
                             ` : ''}
                             ${mergedData.seasonalDetails ? `
                                 <div class="info-item">
-                                    <strong>Details:</strong> ${mergedData.seasonalDetails}
+                                    <strong>Details:</strong> ${escapeHTML(mergedData.seasonalDetails)}
                                 </div>
                             ` : ''}
                         </div>
@@ -652,12 +741,12 @@
                             <div class="info-section-title">⚠️ Restrictions</div>
                             ${mergedData.cannotServeSandwich ? `
                                 <div class="info-item">
-                                    <strong>Cannot Serve Sandwiches:</strong> ${mergedData.cannotServeSandwich}
+                                    <strong>Cannot Serve Sandwiches:</strong> ${escapeHTML(mergedData.cannotServeSandwich)}
                                 </div>
                             ` : ''}
                             ${mergedData.restrictionReason ? `
                                 <div class="info-item">
-                                    <strong>Reason:</strong> ${mergedData.restrictionReason}
+                                    <strong>Reason:</strong> ${escapeHTML(mergedData.restrictionReason)}
                                 </div>
                             ` : ''}
                         </div>
@@ -668,7 +757,7 @@
                     html += `
                         <div class="info-section" style="margin-top: 20px;">
                             <div class="info-section-title">🔗 Referrals</div>
-                            <div class="info-item">${mergedData.orgReferrals}</div>
+                            <div class="info-item">${escapeHTML(mergedData.orgReferrals)}</div>
                         </div>
                     `;
                 }
@@ -677,10 +766,10 @@
                     html += `
                         <div class="impact-story">
                             <div class="impact-story-title">💫 Impact Story</div>
-                            <div class="impact-story-text">${mergedData.impactStory}</div>
+                            <div class="impact-story-text">${escapeHTML(mergedData.impactStory)}</div>
                             ${mergedData.impactPhotos ? `
                                 <div style="margin-top: 12px;">
-                                    <strong>📷 Photos:</strong> ${mergedData.impactPhotos}
+                                    <strong>📷 Photos:</strong> ${escapeHTML(mergedData.impactPhotos)}
                                 </div>
                             ` : ''}
                         </div>
@@ -691,7 +780,7 @@
                     html += `
                         <div class="info-section" style="margin-top: 20px;">
                             <div class="info-section-title">ℹ️ Additional Information</div>
-                            <div class="info-item">${mergedData.additionalInfo}</div>
+                            <div class="info-item">${escapeHTML(mergedData.additionalInfo)}</div>
                         </div>
                     `;
                 }
@@ -731,6 +820,14 @@
 
             body.classList.toggle('expanded');
             icon.classList.toggle('expanded');
+        }
+
+        function sendThankYouEmailFromButton(button) {
+            sendThankYouEmail(
+                button.dataset.orgName || '',
+                button.dataset.email || '',
+                button.dataset.contactName || ''
+            );
         }
 
         function sendThankYouEmail(orgName, email, contactName) {
@@ -782,7 +879,8 @@ P.S. - We're always here if you need anything!`;
                 'Backup Contact Name',
                 'Backup Contact Email',
                 'Backup Contact Phone',
-                'Preferred Contact Method',
+                'Primary Preferred Contact Method',
+                'Backup Preferred Contact Method',
                 'Street Address',
                 'Address Line 2',
                 'City',
@@ -794,8 +892,17 @@ P.S. - We're always here if you need anything!`;
                 'Population Focus',
                 'Meal Distribution Schedule',
                 'Donation Acceptance Schedule',
+                'Meal Schedule Input Type',
+                'Donation Schedule Input Type',
                 'Avg. People Served',
                 'Frequency',
+                'Distribution Method',
+                'Take-home Quantity',
+                'Refrigerated Immediately',
+                'Refrigerated Until Eaten/Distributed',
+                'Freezes Sandwiches',
+                'Freeze Reason',
+                'Freeze Duration',
                 'Partnership Length',
                 'Receives Fruit & Snacks',
                 'Interest in Fruit & Snacks',
@@ -819,10 +926,16 @@ P.S. - We're always here if you need anything!`;
                 const responses = organizationData[orgName];
                 const mergedData = mergeResponses(responses);
                 const latestResponse = responses[0];
+                const primaryContactMethod = mergedData.primaryContactMethod || mergedData.contactMethod;
+                const backupContactMethod = mergedData.backupContactMethod;
 
                 const escapeCSV = (value) => {
                     if (!value) return '';
-                    const str = value.toString().replace(/"/g, '""');
+                    let str = value.toString();
+                    if (/^[=+\-@]/.test(str.trimStart())) {
+                        str = `'${str}`;
+                    }
+                    str = str.replace(/"/g, '""');
                     const needsQuotes = str.includes(',') || str.includes('\n') || str.includes('\r') || str.includes('"');
                     return needsQuotes ? `"${str}"` : str;
                 };
@@ -837,7 +950,8 @@ P.S. - We're always here if you need anything!`;
                     escapeCSV(mergedData.backupContactName),
                     escapeCSV(mergedData.backupContactEmail),
                     escapeCSV(mergedData.backupContactPhone),
-                    escapeCSV(mergedData.contactMethod),
+                    escapeCSV(primaryContactMethod),
+                    escapeCSV(backupContactMethod),
                     escapeCSV(mergedData.streetAddress),
                     escapeCSV(mergedData.addressLine2),
                     escapeCSV(mergedData.city),
@@ -849,8 +963,17 @@ P.S. - We're always here if you need anything!`;
                     escapeCSV(mergedData.populationFocus),
                     escapeCSV(mergedData.feedingSchedule),
                     escapeCSV(mergedData.donationSchedule),
+                    escapeCSV(mergedData.feedingScheduleInputType),
+                    escapeCSV(mergedData.donationScheduleInputType),
                     escapeCSV(mergedData.avgPeopleServed),
                     escapeCSV(mergedData.frequency),
+                    escapeCSV(mergedData.distributionMethod),
+                    escapeCSV(mergedData.takeHomeQuantity),
+                    escapeCSV(mergedData.immediateRefrigeration),
+                    escapeCSV(mergedData.refrigeratedUntilEaten),
+                    escapeCSV(mergedData.freezeSandwiches),
+                    escapeCSV(mergedData.freezeReason),
+                    escapeCSV(mergedData.freezeDuration),
                     escapeCSV(mergedData.yearsReceivingSandwiches),
                     escapeCSV(mergedData.receivesFruitSnacks),
                     escapeCSV(mergedData.fruitSnacksInterest),
