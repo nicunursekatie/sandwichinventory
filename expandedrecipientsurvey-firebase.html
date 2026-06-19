@@ -1496,7 +1496,7 @@
                 errorMessage.classList.add('show');
                 if (firstErrorElement) {
                     firstErrorElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    if (firstErrorElement.tagName === 'INPUT' || firstErrorElement.tagName === 'TEXTAREA') {
+                    if (firstErrorElement.tagName === 'INPUT' || firstErrorElement.tagName === 'TEXTAREA' || firstErrorElement.tagName === 'SELECT') {
                         setTimeout(() => firstErrorElement.focus(), 500);
                     }
                 }
