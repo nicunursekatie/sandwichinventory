@@ -769,25 +769,44 @@
             <h2 class="section-header">Food Preferences</h2>
 
             <div class="form-group">
-                <label>Are there any sandwiches you can NOT serve?</label>
-                <p class="helper-text">Check all that apply (leave blank if you can serve all types)</p>
+                <label>Which types of sandwiches can you accept? *</label>
+                <p class="helper-text">We offer Turkey, Chicken, and Peanut Butter &amp; Jelly. Check every type you're able to serve.</p>
                 <div class="checkbox-group">
                     <div class="checkbox-item">
-                        <label><input type="checkbox" name="cannotServeSandwich" value="Turkey" class="sandwich-checkbox"> Turkey</label>
+                        <label><input type="checkbox" name="canServeSandwich" value="Turkey" class="canserve-checkbox"> Turkey</label>
                     </div>
                     <div class="checkbox-item">
-                        <label><input type="checkbox" name="cannotServeSandwich" value="Chicken" class="sandwich-checkbox"> Chicken</label>
+                        <label><input type="checkbox" name="canServeSandwich" value="Chicken" class="canserve-checkbox"> Chicken</label>
                     </div>
                     <div class="checkbox-item">
-                        <label><input type="checkbox" name="cannotServeSandwich" value="Peanut Butter & Jelly" class="sandwich-checkbox"> Peanut Butter & Jelly</label>
+                        <label><input type="checkbox" name="canServeSandwich" value="Peanut Butter & Jelly" class="canserve-checkbox"> Peanut Butter &amp; Jelly</label>
                     </div>
                 </div>
             </div>
 
             <div class="form-group hidden" id="restrictionReasonGroup" style="margin-left: 28px; padding-left: 12px; border-left: 3px solid #47B3CB; background: #f7fafc;">
-                <label for="restrictionReason">Why can't you serve these sandwiches?</label>
+                <label for="restrictionReason">For the type(s) you didn't check — why can't you serve them?</label>
                 <p class="helper-text">This helps us understand and plan better for future partnerships.</p>
                 <textarea id="restrictionReason" name="restrictionReason" placeholder="E.g., Religious dietary laws, allergy concerns in our facility, cultural preferences of our community, etc." rows="2"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="desiredQuantity">About how many sandwiches would you like to receive? *</label>
+                <p class="helper-text">Your best estimate per delivery. If it varies, a range is fine (e.g., 50–75).</p>
+                <div style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+                    <input type="text" id="desiredQuantity" name="desiredQuantity" placeholder="e.g., 60 or 50-75" required style="flex: 0 0 150px; margin-bottom: 0;" pattern="[0-9–\-\s]+" title="Enter a number or range (e.g., 60 or 50-75)">
+                    <div class="radio-group" style="margin-top: 0; display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+                        <div class="radio-item" style="margin-bottom: 0;">
+                            <label><input type="radio" name="desiredQuantityFrequency" value="Per Delivery" required> Per Delivery</label>
+                        </div>
+                        <div class="radio-item" style="margin-bottom: 0;">
+                            <label><input type="radio" name="desiredQuantityFrequency" value="Per Week"> Per Week</label>
+                        </div>
+                        <div class="radio-item" style="margin-bottom: 0;">
+                            <label><input type="radio" name="desiredQuantityFrequency" value="Per Month"> Per Month</label>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Distribution & Storage -->
@@ -1260,15 +1279,17 @@
         });
 
 
-        // Show/hide restriction reason field when sandwich restrictions are checked
-        const sandwichCheckboxes = document.querySelectorAll('.sandwich-checkbox');
+        // Show/hide restriction reason field. The reason is relevant only when there's at
+        // least one type the recipient did NOT check (i.e. a type they can't serve).
+        const canServeCheckboxes = document.querySelectorAll('.canserve-checkbox');
         const restrictionReasonGroup = document.getElementById('restrictionReasonGroup');
         const restrictionReason = document.getElementById('restrictionReason');
 
-        sandwichCheckboxes.forEach(checkbox => {
+        canServeCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
-                const anyChecked = Array.from(sandwichCheckboxes).some(cb => cb.checked);
-                if (anyChecked) {
+                const checkedCount = Array.from(canServeCheckboxes).filter(cb => cb.checked).length;
+                const hasUnservedType = checkedCount > 0 && checkedCount < canServeCheckboxes.length;
+                if (hasUnservedType) {
                     restrictionReasonGroup.classList.remove('hidden');
                 } else {
                     restrictionReasonGroup.classList.add('hidden');
@@ -1440,9 +1461,14 @@
                 if (!firstErrorElement) firstErrorElement = document.querySelector('input[name="primaryContactMethod"]');
             }
 
-            // Validate sandwich restrictions reason
-            const sandwichRestrictionsChecked = document.querySelectorAll('input[name="cannotServeSandwich"]:checked').length > 0;
-            if (sandwichRestrictionsChecked) {
+            // Validate sandwich types: at least one type must be selected.
+            const canServeBoxes = document.querySelectorAll('input[name="canServeSandwich"]');
+            const canServeCheckedCount = document.querySelectorAll('input[name="canServeSandwich"]:checked').length;
+            if (canServeCheckedCount === 0) {
+                errors.push('Select at least one type of sandwich you can accept');
+                if (!firstErrorElement) firstErrorElement = canServeBoxes[0];
+            } else if (canServeCheckedCount < canServeBoxes.length) {
+                // They can't serve every type — require a reason for the unchecked one(s).
                 const restrictionReason = document.getElementById('restrictionReason').value.trim();
                 if (!restrictionReason) {
                     errors.push('Explain why you cannot serve certain sandwiches');
@@ -1574,6 +1600,13 @@
             // Keep readable field names in Firebase and avoid invalid [] keys.
             delete data.feedingInputType;
             delete data.donationInputType;
+
+            // Derive the inverse (types they can NOT serve) from the unchecked boxes, so
+            // reporting keeps a direct "cannot serve" view and stays comparable to older data.
+            const cannotServe = Array.from(document.querySelectorAll('input[name="canServeSandwich"]'))
+                .filter(cb => !cb.checked)
+                .map(cb => cb.value);
+            data.cannotServeSandwich = cannotServe;
 
             // Convert simple checkbox arrays to readable strings, but keep structured rows intact.
             Object.keys(data).forEach(key => {
