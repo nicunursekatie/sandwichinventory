@@ -621,7 +621,12 @@
                                 <strong>Frequency:</strong> ${escapeHTML(mergedData.frequency)}
                             </div>
                         ` : ''}
-                        ${!mergedData.populationFocus && !mergedData.avgPeopleServed && !mergedData.frequency ?
+                        ${mergedData.desiredQuantity ? `
+                            <div class="info-item">
+                                <strong>Desired Quantity:</strong> ${escapeHTML(mergedData.desiredQuantity)}${mergedData.desiredQuantityFrequency ? ' ' + escapeHTML(mergedData.desiredQuantityFrequency) : ''}
+                            </div>
+                        ` : ''}
+                        ${!mergedData.populationFocus && !mergedData.avgPeopleServed && !mergedData.frequency && !mergedData.desiredQuantity ?
                             '<div class="info-value empty">No operations info provided</div>' : ''}
                     </div>
                 `;
@@ -735,10 +740,15 @@
                     `;
                 }
 
-                if (mergedData.cannotServeSandwich || mergedData.restrictionReason) {
+                if (mergedData.canServeSandwich || mergedData.cannotServeSandwich || mergedData.restrictionReason) {
                     html += `
                         <div class="info-section" style="margin-top: 20px;">
-                            <div class="info-section-title">⚠️ Restrictions</div>
+                            <div class="info-section-title">🥪 Sandwich Types</div>
+                            ${mergedData.canServeSandwich ? `
+                                <div class="info-item">
+                                    <strong>Can Serve:</strong> ${escapeHTML(mergedData.canServeSandwich)}
+                                </div>
+                            ` : ''}
                             ${mergedData.cannotServeSandwich ? `
                                 <div class="info-item">
                                     <strong>Cannot Serve Sandwiches:</strong> ${escapeHTML(mergedData.cannotServeSandwich)}
@@ -896,6 +906,9 @@ P.S. - We're always here if you need anything!`;
                 'Donation Schedule Input Type',
                 'Avg. People Served',
                 'Frequency',
+                'Desired Sandwich Quantity',
+                'Desired Quantity Frequency',
+                'Can Serve Sandwiches',
                 'Distribution Method',
                 'Take-home Quantity',
                 'Refrigerated Immediately',
@@ -967,6 +980,9 @@ P.S. - We're always here if you need anything!`;
                     escapeCSV(mergedData.donationScheduleInputType),
                     escapeCSV(mergedData.avgPeopleServed),
                     escapeCSV(mergedData.frequency),
+                    escapeCSV(mergedData.desiredQuantity),
+                    escapeCSV(mergedData.desiredQuantityFrequency),
+                    escapeCSV(mergedData.canServeSandwich),
                     escapeCSV(mergedData.distributionMethod),
                     escapeCSV(mergedData.takeHomeQuantity),
                     escapeCSV(mergedData.immediateRefrigeration),
