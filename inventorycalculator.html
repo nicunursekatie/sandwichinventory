@@ -1723,6 +1723,11 @@
         box-shadow: 0 3px 8px rgba(163, 28, 65, 0.25);
     }
 
+    .card-cheese-variety {
+        background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);
+        box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
+    }
+
     .card-cheese-american {
         background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);
         box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
@@ -2076,7 +2081,8 @@
             cheese: [
                 { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)', pricingTitle: 'Finlandia Muenster (Costco)' },
                 { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)', pricingTitle: 'Arla Havarti (Costco)' },
-                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" }
+                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" },
+                { id: 'finlandia-variety', name: 'Finlandia Premium Cheese Slices Variety Pack - Costco', store: 'Costco', slices: 40, price: 8.99, cheeseType: 'variety', dropdownLabel: 'Finlandia Premium Cheese Slices Variety Pack - Costco (2 lbs, ~40 slices, $8.99)', description: '~40 slices each (2 lbs)', pricingTitle: 'Finlandia Variety Pack (Costco)' }
             ],
             bread: [
                 { id: 'great-value-white', name: 'Great Value White Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.48, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Great Value White', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.48', pricingNote: '~$0.13/sandwich' },
@@ -2153,8 +2159,8 @@
         function buildCheeseDropdown() {
             const select = document.getElementById('cheeseType');
             select.innerHTML = '<option value="">Choose your cheese</option>';
-            const typeLabels = { muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)' };
-            ['muenster', 'havarti', 'provolone'].forEach(type => {
+            const typeLabels = { muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)', variety: 'Variety Pack (Deli Slices)' };
+            ['muenster', 'havarti', 'provolone', 'variety'].forEach(type => {
                 const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type);
                 if (items.length === 0) return;
                 const group = document.createElement('optgroup');
@@ -2228,7 +2234,7 @@
                 const ps = (c.price / c.slices).toFixed(2);
                 const sizeLabel = c.description && c.description.includes('2 lbs') ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
                 const cardClass = 'card-cheese-' + c.cheeseType;
-                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE' };
+                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', variety: 'VARIETY' };
                 return '<div class="price-card ' + cardClass + '">' +
                     '<div class="meat-type-label">' + (typeLabels[c.cheeseType] || '') + '</div>' +
                     '<div class="product-title">' + (c.pricingTitle || c.name) + '</div>' +
@@ -2279,7 +2285,7 @@
                 const sizeNote = m.id === 'turkey' ? '80 slices total (40 per pack)' : (m.weightOz + ' oz / ' + sliceLabel);
                 html += '<tr><td>' + m.name + '</td><td>$' + m.price.toFixed(2) + '</td><td>' + sizeNote + '</td></tr>';
             });
-            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Muenster, Havarti &amp; Provolone (Deli Slices)</td></tr>';
+            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Cheese (Deli Slices)</td></tr>';
             PRODUCT_DATA.cheese.forEach(c => {
                 const name = c.name.replace(' - Costco', ' (Costco)').replace(" - Sam's Club", " (Sam's Club)");
                 html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.description + '</td></tr>';
