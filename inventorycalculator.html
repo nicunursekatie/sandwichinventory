@@ -1339,7 +1339,7 @@
             <h2><span class="icon icon-lg icon-calculator icon-primary"></span> Interactive Calculator</h2>
             <!-- Shopping Reminders -->
             <div style="background: #fffbe8; border: 1px solid #f0d060; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px; font-size: 0.93em; line-height: 1.5; color: #5a4b1a;">
-                <strong><span class="icon icon-alert-triangle" style="background-color: #5a4b1a;"></span> Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced cheese</strong> (Muenster, Havarti, or Provolone) — not Kraft singles or any individually plastic-wrapped slices. <strong>Please do not use American cheese.</strong>
+                <strong><span class="icon icon-alert-triangle" style="background-color: #5a4b1a;"></span> Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced cheese</strong> (Muenster, Havarti, Provolone, or a deli variety pack) — not Kraft singles or any individually plastic-wrapped slices. <strong>Please do not use American cheese.</strong>
             </div>
             <div class="shopping-calculator" id="deliCalculatorForm">
                 <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your Sandwich Making Shopping Trip</h3>
@@ -1413,7 +1413,7 @@
                             <option value="">Choose your cheese</option>
                             <!-- Options populated dynamically by buildCheeseDropdown() -->
                         </select>
-                        <div class="cheese-restriction-note">Use deli-style sliced cheese only — Muenster, Havarti, or Provolone. No Kraft singles, American cheese, or individually wrapped slices.</div>
+                        <div class="cheese-restriction-note">Use deli-style sliced cheese only — Muenster, Havarti, Provolone, or a deli variety pack. No Kraft singles, American cheese, or individually wrapped slices.</div>
                     </div>
 
                     <div class="calc-input-group ingredient-card">
@@ -1723,6 +1723,11 @@
         box-shadow: 0 3px 8px rgba(163, 28, 65, 0.25);
     }
 
+    .card-cheese-variety {
+        background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);
+        box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
+    }
+
     .card-cheese-american {
         background: linear-gradient(135deg, #236383 0%, #1a4d66 100%);
         box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
@@ -1873,7 +1878,7 @@
     <div class="cheese-guide">
         <div class="cheese-do">
             <strong><span class="icon icon-check-circle" style="background-color: #2E7D32;"></span> Right Cheese</strong>
-            Deli-style sliced cheese — Muenster, Havarti, or Provolone (NOT individually wrapped)
+            Deli-style sliced cheese — Muenster, Havarti, Provolone, or a deli variety pack (NOT individually wrapped)
         </div>
         <div class="cheese-dont">
             <strong><span class="icon icon-x-circle icon-alert"></span> Wrong Cheese</strong>
@@ -2062,21 +2067,22 @@
         const PRODUCT_DATA = {
             metadata: { lastUpdated: "2025-09-17", version: "1.0" },
             meat: [
-                { id: 'kroger-chicken-thin', name: 'Kroger Chicken Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 4.99, meatType: 'chicken', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Chicken Thin', pricingSize: '9 oz \u2022 18 slices' },
-                { id: 'publix-turkey', name: 'Publix Turkey Breast, Thin Sliced', store: 'Publix', weightOz: 16, slices: 32, price: 7.07, meatType: 'turkey', group: 'popular', description: '16 oz packages', pricingTitle: 'Publix Turkey Breast', pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'main' },
+                { id: 'kroger-chicken-thin', name: 'Kroger Chicken Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 3.99, meatType: 'chicken', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Chicken Thin', pricingSize: '9 oz \u2022 18 slices' },
+                { id: 'publix-turkey', name: 'Publix Turkey Breast, Thin Sliced', store: 'Publix', weightOz: 16, slices: 32, price: 8.27, meatType: 'turkey', group: 'popular', description: '16 oz packages', pricingTitle: 'Publix Turkey Breast', pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'main' },
                 { id: 'kroger-turkey-thin', name: 'Kroger Turkey Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 3.99, meatType: 'turkey', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Turkey Thin Sliced', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'main' },
-                { id: 'kroger-turkey-family', name: 'Kroger Turkey Family Size', store: 'Kroger', weightOz: 16, slices: 31, price: 4.39, meatType: 'turkey', group: 'popular', description: '1 lb packages (16 oz)', dropdownSliceLabel: '30-32 slices', pricingTitle: 'Kroger Turkey Family Size', pricingSize: '1 lb \u2022 30-32 slices', showInPricing: true, pricingGroup: 'main' },
-                { id: 'turkey', name: 'Kirkland Turkey', store: 'Costco', weightOz: 40, slices: 80, price: 13.99, meatType: 'turkey', group: 'more', description: '2-packs (~40 oz total)', pricingTitle: 'Kirkland Turkey', pricingSize: '2-pack \u2022 40 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'hillshire-turkey', name: 'Hillshire Farm Ultra Thin Turkey', store: 'Various', weightOz: 9, slices: 18, price: 6.07, meatType: 'turkey', group: 'more', description: '9 oz packages', pricingTitle: 'Hillshire Farm Ultra Thin Turkey', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'land-o-frost-turkey', name: "Land O'Frost Premium Turkey", store: 'Various', weightOz: 16, slices: 32, price: 9.53, meatType: 'turkey', group: 'more', description: '16 oz packages', pricingTitle: "Land O'Frost Premium Turkey", pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'kroger-turkey-regular', name: 'Kroger Private Selection\u00AE Turkey', store: 'Kroger', weightOz: 8, slices: 11.5, price: 6.49, meatType: 'turkey', group: 'more', description: '8 oz packages', dropdownSliceLabel: '11-12 slices', pricingTitle: 'Kroger Private Selection\u00AE Turkey', pricingSize: '8 oz \u2022 11-12 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'oscar-mayer-chicken-rotisserie', name: 'Oscar Mayer Rotisserie Chicken', store: 'Various', weightOz: 16, slices: 32, price: 7.99, meatType: 'chicken', group: 'more', description: '16 oz packages', pricingTitle: 'Oscar Mayer Rotisserie Chicken', pricingSize: '16 oz \u2022 32 slices' },
+                { id: 'kroger-turkey-family', name: 'Kroger Turkey Family Size', store: 'Kroger', weightOz: 16, slices: 48, price: 5.99, meatType: 'turkey', group: 'popular', description: '1 lb packages (16 oz)', dropdownSliceLabel: '48 slices', pricingTitle: 'Kroger Turkey Family Size', pricingSize: '1 lb \u2022 48 slices', showInPricing: true, pricingGroup: 'main' },
+                { id: 'turkey', name: 'Kirkland Turkey', store: 'Costco', weightOz: 40, slices: 40, price: 13.99, meatType: 'turkey', group: 'more', description: '2-packs (~40 oz total)', pricingTitle: 'Kirkland Turkey', pricingSize: '2 \u00d7 20 oz \u2022 ~40 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'hillshire-turkey', name: 'Hillshire Farm Ultra Thin Turkey', store: 'Various', weightOz: 9, slices: 18, price: 4.99, meatType: 'turkey', group: 'more', description: '9 oz packages', pricingTitle: 'Hillshire Farm Ultra Thin Turkey', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'land-o-frost-turkey', name: "Land O'Frost Premium Turkey", store: 'Various', weightOz: 16, slices: 32, price: 7.99, meatType: 'turkey', group: 'more', description: '14\u201316 oz packages', pricingTitle: "Land O'Frost Premium Turkey", pricingSize: '14\u201316 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'kroger-turkey-regular', name: 'Kroger Private Selection\u00AE Turkey', store: 'Kroger', weightOz: 8, slices: 11.5, price: 7.99, meatType: 'turkey', group: 'more', description: '8 oz packages', dropdownSliceLabel: '11-12 slices', pricingTitle: 'Kroger Private Selection\u00AE Turkey', pricingSize: '8 oz \u2022 11-12 slices', showInPricing: true, pricingGroup: 'more' },
+                { id: 'oscar-mayer-chicken-rotisserie', name: 'Oscar Mayer Rotisserie Chicken', store: 'Various', weightOz: 16, slices: 48, price: 7.99, meatType: 'chicken', group: 'more', description: '16 oz packages', pricingTitle: 'Oscar Mayer Rotisserie Chicken', pricingSize: '1 lb \u2022 48 slices' },
                 { id: 'oscar-mayer-chicken-blackened', name: 'Oscar Mayer Blackened Chicken', store: 'Various', weightOz: 8, slices: 16, price: 4.49, meatType: 'chicken', group: 'hidden', description: '8 oz packages' }
             ],
             cheese: [
                 { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)', pricingTitle: 'Finlandia Muenster (Costco)' },
                 { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)', pricingTitle: 'Arla Havarti (Costco)' },
-                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" }
+                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" },
+                { id: 'finlandia-variety', name: 'Finlandia Premium Cheese Slices Variety Pack - Costco', store: 'Costco', slices: 40, price: 8.99, cheeseType: 'variety', dropdownLabel: 'Finlandia Premium Cheese Slices Variety Pack - Costco (2 lbs, ~40 slices, $8.99)', description: '~40 slices each (2 lbs)', pricingTitle: 'Finlandia Variety Pack (Costco)' }
             ],
             bread: [
                 { id: 'great-value-white', name: 'Great Value White Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.48, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Great Value White', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.48', pricingNote: '~$0.13/sandwich' },
@@ -2128,7 +2134,7 @@
                 const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
                 const perSlice = (m.price / m.slices).toFixed(2);
                 if (m.id === 'turkey') {
-                    return 'Kirkland Turkey (2-pack, 40 slices each / 80 total, $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
+                    return 'Kirkland Turkey (2 \u00d7 20 oz / ~40 slices total, $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
                 }
                 const sizeLabel = m.weightOz >= 16 ? (m.weightOz === 16 ? '1 lb' : m.weightOz + ' oz') : m.weightOz + ' oz';
                 return m.name + ' (' + sizeLabel + ' / ' + sliceLabel + ', $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
@@ -2153,8 +2159,8 @@
         function buildCheeseDropdown() {
             const select = document.getElementById('cheeseType');
             select.innerHTML = '<option value="">Choose your cheese</option>';
-            const typeLabels = { muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)' };
-            ['muenster', 'havarti', 'provolone'].forEach(type => {
+            const typeLabels = { muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)', variety: 'Variety Pack (Deli Slices)' };
+            ['muenster', 'havarti', 'provolone', 'variety'].forEach(type => {
                 const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type);
                 if (items.length === 0) return;
                 const group = document.createElement('optgroup');
@@ -2228,7 +2234,7 @@
                 const ps = (c.price / c.slices).toFixed(2);
                 const sizeLabel = c.description && c.description.includes('2 lbs') ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
                 const cardClass = 'card-cheese-' + c.cheeseType;
-                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE' };
+                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', variety: 'VARIETY' };
                 return '<div class="price-card ' + cardClass + '">' +
                     '<div class="meat-type-label">' + (typeLabels[c.cheeseType] || '') + '</div>' +
                     '<div class="product-title">' + (c.pricingTitle || c.name) + '</div>' +
@@ -2276,10 +2282,10 @@
             html += '<tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>';
             PRODUCT_DATA.meat.filter(m => m.group !== 'hidden').forEach(m => {
                 const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
-                const sizeNote = m.id === 'turkey' ? '80 slices total (40 per pack)' : (m.weightOz + ' oz / ' + sliceLabel);
+                const sizeNote = m.id === 'turkey' ? '~40 slices total (2 \u00d7 20 oz)' : (m.weightOz + ' oz / ' + sliceLabel);
                 html += '<tr><td>' + m.name + '</td><td>$' + m.price.toFixed(2) + '</td><td>' + sizeNote + '</td></tr>';
             });
-            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Muenster, Havarti &amp; Provolone (Deli Slices)</td></tr>';
+            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Cheese (Deli Slices)</td></tr>';
             PRODUCT_DATA.cheese.forEach(c => {
                 const name = c.name.replace(' - Costco', ' (Costco)').replace(" - Sam's Club", " (Sam's Club)");
                 html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.description + '</td></tr>';

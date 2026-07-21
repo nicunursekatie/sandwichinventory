@@ -77,18 +77,18 @@ const NON_KROGER_PRODUCTS = new Set([
 // Fallback prices if Kroger API fails (last known good prices maintained by TSP)
 const FALLBACK_PRICES = {
     // Meats
-    'kroger-turkey-family': { price: 4.39, source: 'TSP stored' },
+    'kroger-turkey-family': { price: 5.99, source: 'TSP stored' },
     'kirkland-turkey': { price: 13.99, source: 'TSP stored' },
     'kirkland-ham': { price: 9.89, source: 'TSP stored' },
     'oscar-mayer-turkey': { price: 9.97, source: 'TSP stored' },
     'kroger-turkey-thin': { price: 3.99, source: 'TSP stored' },
-    'publix-turkey': { price: 7.07, source: 'TSP stored' },
-    'land-o-frost-turkey': { price: 9.53, source: 'TSP stored' },
-    'hillshire-turkey': { price: 6.07, source: 'TSP stored' },
+    'publix-turkey': { price: 8.27, source: 'TSP stored' },
+    'land-o-frost-turkey': { price: 7.99, source: 'TSP stored' },
+    'hillshire-turkey': { price: 4.99, source: 'TSP stored' },
     'great-value-turkey-9oz': { price: 3.48, source: 'TSP stored' },
     'kroger-ham': { price: 4.99, source: 'TSP stored' },
     'hillshire-ham': { price: 5.49, source: 'TSP stored' },
-    'kroger-chicken-thin': { price: 4.99, source: 'TSP stored' },
+    'kroger-chicken-thin': { price: 3.99, source: 'TSP stored' },
     'kroger-chicken-deli': { price: 4.99, source: 'TSP stored' },
     'great-value-chicken-9oz': { price: 3.48, source: 'TSP stored' },
     'oscar-mayer-chicken-rotisserie': { price: 7.99, source: 'TSP stored' },

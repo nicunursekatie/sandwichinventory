@@ -3044,7 +3044,7 @@
 
             <!-- Shopping Reminders -->
             <div style="background: #fffbe8; border: 1px solid #f0d060; border-radius: 10px; padding: 12px 18px; margin-bottom: 16px; font-size: 0.93em; line-height: 1.5; color: #5a4b1a;">
-                <strong>⚠️ Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced cheese</strong> (Muenster, Havarti, or Provolone) — not Kraft singles or any individually plastic-wrapped slices. <strong>Please do not use American cheese.</strong>
+                <strong>⚠️ Reminders:</strong> Use <strong>pre-packaged deli meat only</strong> (not sliced at the deli counter). For cheese, use <strong>deli-style sliced cheese</strong> (Muenster, Havarti, Provolone, or a deli variety pack) — not Kraft singles or any individually plastic-wrapped slices. <strong>Please do not use American cheese.</strong>
             </div>
 
             <!-- Store Selector - Global Filter -->
@@ -3176,16 +3176,16 @@
                         <select id="meatSelection" onchange="handleMeatSelection()">
                             <option value="">First select a meat type above</option>
                             <!-- Turkey options (hidden until turkey tab selected) -->
-                            <option value="kroger-turkey-family" data-type="turkey" data-store="kroger" style="display: none;">Kroger Turkey Family Size (16 oz) - $4.39</option>
+                            <option value="kroger-turkey-family" data-type="turkey" data-store="kroger" style="display: none;">Kroger Turkey Family Size (16 oz) - $5.99</option>
                             <option value="kroger-turkey-thin" data-type="turkey" data-store="kroger" style="display: none;">Kroger Turkey Thin Sliced (9 oz) - $3.99</option>
-                            <option value="publix-turkey" data-type="turkey" data-store="other" style="display: none;">Publix Turkey Breast (16 oz) - $7.07</option>
-                            <option value="kirkland-turkey" data-type="turkey" data-store="other" style="display: none;">Kirkland Turkey (2-pack, ~40 oz total) - $13.99</option>
-                            <option value="land-o-frost-turkey" data-type="turkey" data-store="kroger other" style="display: none;">Land O'Frost Turkey (16 oz) - $9.53</option>
-                            <option value="hillshire-turkey" data-type="turkey" data-store="kroger walmart other" style="display: none;">Hillshire Farm Turkey (9 oz) - $6.07</option>
+                            <option value="publix-turkey" data-type="turkey" data-store="other" style="display: none;">Publix Turkey Breast (16 oz) - $8.27</option>
+                            <option value="kirkland-turkey" data-type="turkey" data-store="other" style="display: none;">Kirkland Turkey (2 × 20 oz, ~40 slices total) - $13.99</option>
+                            <option value="land-o-frost-turkey" data-type="turkey" data-store="kroger other" style="display: none;">Land O'Frost Turkey (14–16 oz) - $7.99</option>
+                            <option value="hillshire-turkey" data-type="turkey" data-store="kroger walmart other" style="display: none;">Hillshire Farm Turkey (9 oz) - $4.99</option>
                             <option value="oscar-mayer-turkey" data-type="turkey" data-store="kroger walmart other" style="display: none;">Oscar Mayer Turkey (2 lb) - $9.97</option>
                             <option value="great-value-turkey-9oz" data-type="turkey" data-store="walmart" style="display: none;">Great Value Oven Roasted Turkey (9 oz) - $3.48</option>
                             <!-- Chicken options (hidden until chicken tab selected) -->
-                            <option value="kroger-chicken-thin" data-type="chicken" data-store="kroger" style="display: none;">Kroger Chicken Thin (9 oz) - $4.99</option>
+                            <option value="kroger-chicken-thin" data-type="chicken" data-store="kroger" style="display: none;">Kroger Chicken Thin (9 oz) - $3.99</option>
                             <option value="kroger-chicken-deli" data-type="chicken" data-store="kroger" style="display: none;">Kroger Deli Style Chicken (16 oz) - $4.99</option>
                             <option value="oscar-mayer-chicken-rotisserie" data-type="chicken" data-store="kroger walmart other" style="display: none;">Oscar Mayer Rotisserie Chicken (16 oz) - $7.99</option>
                             <option value="oscar-mayer-chicken-blackened" data-type="chicken" data-store="kroger walmart other" style="display: none;">Oscar Mayer Blackened Chicken (8 oz) - $4.49</option>
@@ -3250,9 +3250,12 @@
                                 <optgroup label="🧀 Provolone Cheese (Deli Slices)">
                                     <option value="members-mark-provolone" data-store="other">Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)</option>
                                 </optgroup>
+                                <optgroup label="🧀 Variety Pack (Deli Slices)">
+                                    <option value="finlandia-variety" data-store="other">Finlandia Premium Cheese Slices Variety Pack - Costco (2 lbs, ~40 slices, $8.99)</option>
+                                </optgroup>
                                 <option value="custom">Enter custom package →</option>
                             </select>
-                            <div class="cheese-restriction-note">Use deli-style sliced cheese only — Muenster, Havarti, or Provolone. No Kraft singles, American cheese, or individually wrapped slices.</div>
+                            <div class="cheese-restriction-note">Use deli-style sliced cheese only — Muenster, Havarti, Provolone, or a deli variety pack. No Kraft singles, American cheese, or individually wrapped slices.</div>
                             <div id="cheeseCustomEntry" style="display: none;">
                                 <input type="text" id="cheeseCustomText" placeholder="Paste package description" style="width: 100%; padding: 12px; border-radius: 8px; border: 2px solid #e9ecef; background: white; margin-bottom: 10px; color: #2c3e50;">
                                 <div style="display: flex; gap: 10px; align-items: center;">
@@ -3587,7 +3590,7 @@
             <div class="cheese-guide">
                 <div class="cheese-do">
                     <strong>✅ Right Cheese</strong>
-                    Deli-style sliced cheese — Muenster, Havarti, or Provolone (NOT individually wrapped)
+                    Deli-style sliced cheese — Muenster, Havarti, Provolone, or a deli variety pack (NOT individually wrapped)
                 </div>
                 <div class="cheese-dont">
                     <strong>❌ Wrong Cheese</strong>
@@ -4489,16 +4492,16 @@
         const packageData = {
             meat: {
                 // Turkey options
-                'kroger-turkey-family': { weightOz: 16, price: 4.39, name: 'Kroger Turkey Family Size', type: 'turkey' },
+                'kroger-turkey-family': { weightOz: 16, price: 5.99, name: 'Kroger Turkey Family Size', type: 'turkey' },
                 'kroger-turkey-thin': { weightOz: 9, price: 3.99, name: 'Kroger Turkey Thin Sliced', type: 'turkey' },
-                'publix-turkey': { weightOz: 16, price: 7.07, name: 'Publix Turkey Breast', type: 'turkey' },
+                'publix-turkey': { weightOz: 16, price: 8.27, name: 'Publix Turkey Breast', type: 'turkey' },
                 'kirkland-turkey': { weightOz: 40, price: 13.99, name: 'Kirkland Turkey', type: 'turkey' },
-                'land-o-frost-turkey': { weightOz: 16, price: 9.53, name: "Land O'Frost Turkey", type: 'turkey' },
-                'hillshire-turkey': { weightOz: 9, price: 6.07, name: 'Hillshire Farm Turkey', type: 'turkey' },
+                'land-o-frost-turkey': { weightOz: 16, price: 7.99, name: "Land O'Frost Turkey", type: 'turkey' },
+                'hillshire-turkey': { weightOz: 9, price: 4.99, name: 'Hillshire Farm Turkey', type: 'turkey' },
                 'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: 'Oscar Mayer Turkey', type: 'turkey' },
                 'great-value-turkey-9oz': { weightOz: 9, price: 3.48, name: 'Great Value Oven Roasted Turkey', type: 'turkey' },
                 // Chicken options
-                'kroger-chicken-thin': { weightOz: 9, price: 4.99, name: 'Kroger Chicken Thin', type: 'chicken' },
+                'kroger-chicken-thin': { weightOz: 9, price: 3.99, name: 'Kroger Chicken Thin', type: 'chicken' },
                 'kroger-chicken-deli': { weightOz: 16, price: 4.99, name: 'Kroger Deli Style Chicken', type: 'chicken' },
                 'oscar-mayer-chicken-rotisserie': { weightOz: 16, price: 7.99, name: 'Oscar Mayer Rotisserie Chicken', type: 'chicken' },
                 'oscar-mayer-chicken-blackened': { weightOz: 8, price: 4.49, name: 'Oscar Mayer Blackened Chicken', type: 'chicken' },
@@ -4510,7 +4513,9 @@
                 // Havarti cheese options
                 'arla-havarti': { slices: 32, price: 10.20, name: 'Arla Havarti Cheese Slices (Costco)' },
                 // Provolone cheese options
-                'members-mark-provolone': { slices: 42, price: 6.96, name: "Member's Mark Smoked Provolone (Sam's Club)" }
+                'members-mark-provolone': { slices: 42, price: 6.96, name: "Member's Mark Smoked Provolone (Sam's Club)" },
+                // Variety pack options
+                'finlandia-variety': { slices: 40, price: 8.99, name: 'Finlandia Premium Cheese Slices Variety Pack (Costco)' }
             },
             bread: {
                 'great-value-white': { sandwiches: 11, price: 1.48, name: 'Great Value White' },
@@ -4815,6 +4820,8 @@
                             { name: 'Arla Havarti cheese slices Costco', category: 'cheese', key: 'arla-havarti' },
                             // Provolone Cheese
                             { name: "Member's Mark Smoked Provolone Sam's Club", category: 'cheese', key: 'members-mark-provolone' },
+                            // Variety Pack Cheese
+                            { name: 'Finlandia Premium Cheese Slices Variety Pack Costco', category: 'cheese', key: 'finlandia-variety' },
                             // Bread
                             { name: 'Great Value White bread loaf', category: 'bread', key: 'great-value-white' },
                             { name: 'Kroger White Sandwich bread loaf', category: 'bread', key: 'kroger-white' },
