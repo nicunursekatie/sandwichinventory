@@ -4495,7 +4495,7 @@
                 'kroger-turkey-family': { weightOz: 16, price: 5.99, name: 'Kroger Turkey Family Size', type: 'turkey' },
                 'kroger-turkey-thin': { weightOz: 9, price: 3.99, name: 'Kroger Turkey Thin Sliced', type: 'turkey' },
                 'publix-turkey': { weightOz: 16, price: 8.27, name: 'Publix Turkey Breast', type: 'turkey' },
-                'kirkland-turkey': { weightOz: 40, slices: 36, price: 13.99, name: 'Kirkland Turkey', type: 'turkey' },
+                'kirkland-turkey': { weightOz: 40, slices: 36, price: 13.99, name: 'Kirkland Turkey', type: 'turkey', sizeLabel: '2 \u00d7 20 oz \u2022 36 slices' },
                 'land-o-frost-turkey': { weightOz: 16, price: 7.99, name: "Land O'Frost Turkey", type: 'turkey' },
                 'hillshire-turkey': { weightOz: 9, price: 4.99, name: 'Hillshire Farm Turkey', type: 'turkey' },
                 'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: 'Oscar Mayer Turkey', type: 'turkey' },
@@ -4696,7 +4696,10 @@
                 customEntry.style.display = 'none';
                 const pkg = packageData.meat[selection];
                 selectedPackages.meat = pkg;
-                meatInfoText.textContent = `${pkg.name} - ${pkg.weightOz ? pkg.weightOz + ' oz' : pkg.slices + ' slices'}, $${pkg.price}`;
+                const meatSizeLabel = pkg.sizeLabel
+                    || (pkg.weightOz && pkg.slices ? `${pkg.weightOz} oz \u2022 ${pkg.slices} slices`
+                        : pkg.weightOz ? `${pkg.weightOz} oz` : `${pkg.slices} slices`);
+                meatInfoText.textContent = `${pkg.name} - ${meatSizeLabel}, $${pkg.price}`;
                 meatInfo.style.display = 'block';
             } else {
                 customEntry.style.display = 'none';
@@ -4949,7 +4952,9 @@
                 const perSandwich = pkg.weightOz
                     ? (pkg.price / (pkg.weightOz / ozPerSandwich))
                     : (pkg.price / (pkg.slices / 3));
-                const sizeText = pkg.weightOz ? `${pkg.weightOz} oz` : `${pkg.slices} slices`;
+                const sizeText = pkg.sizeLabel
+                    || (pkg.weightOz && pkg.slices ? `${pkg.weightOz} oz \u2022 ${pkg.slices} slices`
+                        : pkg.weightOz ? `${pkg.weightOz} oz` : `${pkg.slices} slices`);
                 return { key, pkg, perSandwich, perOz, sizeText, emoji: typeEmoji[pkg.type] || '🥩', type: pkg.type };
             });
 
