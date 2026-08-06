@@ -4495,7 +4495,7 @@
                 'kroger-turkey-family': { weightOz: 16, price: 5.99, name: 'Kroger Turkey Family Size', type: 'turkey' },
                 'kroger-turkey-thin': { weightOz: 9, price: 3.99, name: 'Kroger Turkey Thin Sliced', type: 'turkey' },
                 'publix-turkey': { weightOz: 16, price: 8.27, name: 'Publix Turkey Breast', type: 'turkey' },
-                'kirkland-turkey': { weightOz: 40, slices: 36, price: 13.99, name: 'Kirkland Turkey', type: 'turkey', sizeLabel: '2 \u00d7 20 oz \u2022 36 slices' },
+                'kirkland-turkey': { weightOz: 40, slices: 36, slicesPerSandwich: 2, price: 13.99, name: 'Kirkland Turkey', type: 'turkey', sizeLabel: '2 \u00d7 20 oz \u2022 36 slices' },
                 'land-o-frost-turkey': { weightOz: 16, price: 7.99, name: "Land O'Frost Turkey", type: 'turkey' },
                 'hillshire-turkey': { weightOz: 9, price: 4.99, name: 'Hillshire Farm Turkey', type: 'turkey' },
                 'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: 'Oscar Mayer Turkey', type: 'turkey' },
@@ -4949,9 +4949,8 @@
             const meatEntries = Object.entries(packageData.meat).map(([key, pkg]) => {
                 const ozPerSandwich = 2;
                 const perOz = pkg.weightOz ? (pkg.price / pkg.weightOz) : null;
-                const perSandwich = pkg.weightOz
-                    ? (pkg.price / (pkg.weightOz / ozPerSandwich))
-                    : (pkg.price / (pkg.slices / 3));
+                const sandwichesPerPkg = getMeatSandwichesPerPackage(pkg, ozPerSandwich);
+                const perSandwich = sandwichesPerPkg ? (pkg.price / sandwichesPerPkg) : 0;
                 const sizeText = pkg.sizeLabel
                     || (pkg.weightOz && pkg.slices ? `${pkg.weightOz} oz \u2022 ${pkg.slices} slices`
                         : pkg.weightOz ? `${pkg.weightOz} oz` : `${pkg.slices} slices`);
@@ -5401,9 +5400,7 @@
                 const meatOzPerSandwich = parseFloat(document.getElementById('meatOzPerSandwich').value) || 2;
 
                 // Compute per-package sandwich counts (matching calculateQuantities math)
-                const meatSandwichesPerPkg = meatPkg.weightOz
-                    ? meatPkg.weightOz / meatOzPerSandwich
-                    : meatPkg.slices / 3;
+                const meatSandwichesPerPkg = getMeatSandwichesPerPackage(meatPkg, meatOzPerSandwich);
                 const cheeseSandwichesPerPkg = cheesePkg.slices / 2;
                 const breadSandwichesPerPkg = breadPkg.sandwiches;
 
@@ -5613,17 +5610,23 @@
             return null;
         }
 
-        function calculateMeatCostPerSandwich(meatPkg, ozPerSandwich) {
+        // Prefer slice math when slicesPerSandwich is set (e.g. Kirkland turkey = 2 slices/sandwich)
+        function getMeatSandwichesPerPackage(meatPkg, ozPerSandwich) {
+            if (meatPkg.slices && meatPkg.slicesPerSandwich) {
+                return meatPkg.slices / meatPkg.slicesPerSandwich;
+            }
             if (meatPkg.weightOz) {
-                // Weight-based calculation
-                const sandwichesPerPackage = meatPkg.weightOz / ozPerSandwich;
-                return meatPkg.price / sandwichesPerPackage;
-            } else if (meatPkg.slices) {
-                // Slice-based calculation (fallback)
-                const sandwichesPerPackage = meatPkg.slices / 3; // 3 slices per sandwich
-                return meatPkg.price / sandwichesPerPackage;
+                return meatPkg.weightOz / ozPerSandwich;
+            }
+            if (meatPkg.slices) {
+                return meatPkg.slices / 3; // fallback for slice-only meats
             }
             return 0;
+        }
+
+        function calculateMeatCostPerSandwich(meatPkg, ozPerSandwich) {
+            const sandwichesPerPackage = getMeatSandwichesPerPackage(meatPkg, ozPerSandwich);
+            return sandwichesPerPackage ? meatPkg.price / sandwichesPerPackage : 0;
         }
 
         function calculateCheeseCostPerSandwich(cheesePkg) {
@@ -5636,20 +5639,13 @@
         }
 
         function calculateQuantities(targetSandwiches, meatPkg, cheesePkg, breadPkg, meatOzPerSandwich) {
-            let meatPackages, cheesePackages, breadPackages;
-            
-            if (meatPkg.weightOz) {
-                const sandwichesPerMeatPackage = meatPkg.weightOz / meatOzPerSandwich;
-                meatPackages = Math.ceil(targetSandwiches / sandwichesPerMeatPackage);
-            } else {
-                const sandwichesPerMeatPackage = meatPkg.slices / 3;
-                meatPackages = Math.ceil(targetSandwiches / sandwichesPerMeatPackage);
-            }
+            const sandwichesPerMeatPackage = getMeatSandwichesPerPackage(meatPkg, meatOzPerSandwich);
+            const meatPackages = Math.ceil(targetSandwiches / sandwichesPerMeatPackage);
             
             const sandwichesPerCheesePackage = cheesePkg.slices / 2;
-            cheesePackages = Math.ceil(targetSandwiches / sandwichesPerCheesePackage);
+            const cheesePackages = Math.ceil(targetSandwiches / sandwichesPerCheesePackage);
             
-            breadPackages = Math.ceil(targetSandwiches / breadPkg.sandwiches);
+            const breadPackages = Math.ceil(targetSandwiches / breadPkg.sandwiches);
             
             const bagPackages = Math.ceil(targetSandwiches / 480);
             
