@@ -2134,7 +2134,7 @@
                 const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
                 const perSlice = (m.price / m.slices).toFixed(2);
                 if (m.id === 'turkey') {
-                    return 'Kirkland Turkey (2 \u00d7 20 oz / 36 slices total, $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
+                    return 'Kirkland Turkey (2 \u00d7 20 oz, $' + m.price.toFixed(2) + ')';
                 }
                 const sizeLabel = m.weightOz >= 16 ? (m.weightOz === 16 ? '1 lb' : m.weightOz + ' oz') : m.weightOz + ' oz';
                 return m.name + ' (' + sizeLabel + ' / ' + sliceLabel + ', $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
