@@ -78,7 +78,7 @@ const NON_KROGER_PRODUCTS = new Set([
 const FALLBACK_PRICES = {
     // Meats
     'kroger-turkey-family': { price: 5.99, source: 'TSP stored' },
-    'kirkland-turkey': { price: 13.99, source: 'TSP stored' },
+    'kirkland-turkey': { price: 14.99, source: 'TSP stored' },
     'kirkland-ham': { price: 9.89, source: 'TSP stored' },
     'oscar-mayer-turkey': { price: 9.97, source: 'TSP stored' },
     'kroger-turkey-thin': { price: 3.99, source: 'TSP stored' },
