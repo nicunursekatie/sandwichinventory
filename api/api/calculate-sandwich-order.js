@@ -20,7 +20,7 @@ const PRODUCT_DATABASE = {
         'kroger-turkey-family': { weightOz: 16, price: 5.99, name: 'Kroger Turkey Family Size', type: 'turkey', store: 'Kroger' },
         'kroger-turkey-thin': { weightOz: 9, price: 3.99, name: 'Kroger Turkey Thin Sliced', type: 'turkey', store: 'Kroger' },
         'publix-turkey': { weightOz: 16, price: 8.27, name: 'Publix Turkey Breast', type: 'turkey', store: 'Publix' },
-        'kirkland-turkey': { weightOz: 40, slices: 36, price: 14.99, name: 'Kirkland Turkey', type: 'turkey', store: "Sam's Club/Costco" },
+        'kirkland-turkey': { weightOz: 40, slices: 40, price: 14.99, name: 'Kirkland Turkey', type: 'turkey', store: "Sam's Club/Costco" },
         'land-o-frost-turkey': { weightOz: 16, price: 7.99, name: "Land O'Frost Turkey", type: 'turkey', store: 'Various' },
         'hillshire-turkey': { weightOz: 9, price: 4.99, name: 'Hillshire Farm Turkey', type: 'turkey', store: 'Various' },
         'oscar-mayer-turkey': { weightOz: 32, price: 9.97, name: "Oscar Mayer Turkey (Sam's Club)", type: 'turkey', store: "Sam's Club" },
