@@ -1295,7 +1295,12 @@
                 <a href="#pricing-info" class="nav-link"><span class="icon icon-chart icon-accent"></span> Pricing Info</a>
                 <a href="#recipe" class="nav-link"><span class="icon icon-sandwich icon-primary"></span> Recipes</a>
                 <a href="#food-safety" class="nav-link"><span class="icon icon-shield icon-alert"></span> Food Safety</a>
+                <a href="admin.html" class="nav-link"><span class="icon icon-clipboard icon-accent"></span> Edit products</a>
             </div>
+        </div>
+        <div id="catalog-banner" hidden style="max-width: 1100px; margin: 0 auto 16px auto; background: #fff8eb; border: 2px solid #FBAD3F; color: #236383; border-radius: 10px; padding: 12px 16px; font-weight: 600;">
+            This browser is using the product list saved from Edit products.
+            <a href="admin.html" style="color: #007E8C; margin-left: 8px;">Open product admin</a>
         </div>
 
 
@@ -2060,55 +2065,83 @@
         </div>
     </div>
     
+    <script src="product-catalog.js"></script>
     <script>
         // ===============================================================
         // PRODUCT DATA - Single source of truth for all product info
         // ===============================================================
-        const PRODUCT_DATA = {
-            metadata: { lastUpdated: "2025-09-17", version: "1.0" },
-            meat: [
-                { id: 'kroger-chicken-thin', name: 'Kroger Chicken Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 3.99, meatType: 'chicken', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Chicken Thin', pricingSize: '9 oz \u2022 18 slices' },
-                { id: 'publix-turkey', name: 'Publix Turkey Breast, Thin Sliced', store: 'Publix', weightOz: 16, slices: 32, price: 8.27, meatType: 'turkey', group: 'popular', description: '16 oz packages', pricingTitle: 'Publix Turkey Breast', pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'main' },
-                { id: 'kroger-turkey-thin', name: 'Kroger Turkey Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 3.99, meatType: 'turkey', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Turkey Thin Sliced', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'main' },
-                { id: 'kroger-turkey-family', name: 'Kroger Turkey Family Size', store: 'Kroger', weightOz: 16, slices: 48, price: 5.99, meatType: 'turkey', group: 'popular', description: '1 lb packages (16 oz)', dropdownSliceLabel: '48 slices', pricingTitle: 'Kroger Turkey Family Size', pricingSize: '1 lb \u2022 48 slices', showInPricing: true, pricingGroup: 'main' },
-                { id: 'turkey', name: 'Kirkland Turkey', store: 'Costco', weightOz: 40, slices: 40, price: 14.99, meatType: 'turkey', group: 'more', description: '2-packs (~40 oz total)', pricingTitle: 'Kirkland Turkey', pricingSize: '2 \u00d7 20 oz \u2022 40 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'hillshire-turkey', name: 'Hillshire Farm Ultra Thin Turkey', store: 'Various', weightOz: 9, slices: 18, price: 4.99, meatType: 'turkey', group: 'more', description: '9 oz packages', pricingTitle: 'Hillshire Farm Ultra Thin Turkey', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'land-o-frost-turkey', name: "Land O'Frost Premium Turkey", store: 'Various', weightOz: 16, slices: 32, price: 7.99, meatType: 'turkey', group: 'more', description: '14\u201316 oz packages', pricingTitle: "Land O'Frost Premium Turkey", pricingSize: '14\u201316 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'kroger-turkey-regular', name: 'Kroger Private Selection\u00AE Turkey', store: 'Kroger', weightOz: 8, slices: 11.5, price: 7.99, meatType: 'turkey', group: 'more', description: '8 oz packages', dropdownSliceLabel: '11-12 slices', pricingTitle: 'Kroger Private Selection\u00AE Turkey', pricingSize: '8 oz \u2022 11-12 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'oscar-mayer-chicken-rotisserie', name: 'Oscar Mayer Rotisserie Chicken', store: 'Various', weightOz: 16, slices: 48, price: 7.99, meatType: 'chicken', group: 'more', description: '16 oz packages', pricingTitle: 'Oscar Mayer Rotisserie Chicken', pricingSize: '1 lb \u2022 48 slices' },
-                { id: 'oscar-mayer-chicken-blackened', name: 'Oscar Mayer Blackened Chicken', store: 'Various', weightOz: 8, slices: 16, price: 4.49, meatType: 'chicken', group: 'hidden', description: '8 oz packages' }
-            ],
-            cheese: [
-                { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)', pricingTitle: 'Finlandia Muenster (Costco)' },
-                { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)', pricingTitle: 'Arla Havarti (Costco)' },
-                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" },
-                { id: 'finlandia-variety', name: 'Finlandia Premium Cheese Slices Variety Pack - Costco', store: 'Costco', slices: 40, price: 8.99, cheeseType: 'variety', dropdownLabel: 'Finlandia Premium Cheese Slices Variety Pack - Costco (2 lbs, ~40 slices, $8.99)', description: '~40 slices each (2 lbs)', pricingTitle: 'Finlandia Variety Pack (Costco)' }
-            ],
-            bread: [
-                { id: 'great-value-white', name: 'Great Value White Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.48, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Great Value White', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.48', pricingNote: '~$0.13/sandwich' },
-                { id: 'kroger-white', name: 'Kroger White Sandwich Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.50, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Kroger White Sandwich', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.00\u2013$1.99', pricingNote: '~$0.09\u2013$0.18/sandwich' },
-                { id: 'wonder-classic', name: 'Wonder Bread Classic White \u2014 Regular Loaf', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.63, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Wonder Bread Classic White \u2014 Regular Loaf', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$2.47\u2013$4.79', pricingNote: '~$0.25\u2013$0.48/sandwich' },
-                { id: 'wonder-giant', name: 'Wonder Bread Giant White \u2014 Large Loaf', weightOz: 24, sandwichesPerLoaf: 11, usableSlices: 22, price: 4.64, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Wonder Bread Giant White \u2014 Large Loaf', pricingSize: '24 oz \u2022 ~11 sandwiches', pricingPrice: '$3.99\u2013$5.29', pricingNote: '~$0.36\u2013$0.48/sandwich' },
-                { id: 'sara-lee-butter', name: 'Sara Lee Butter Bread', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.14, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Sara Lee Butter Bread', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$2.98\u2013$3.29', pricingNote: '~$0.30\u2013$0.33/sandwich' },
-                { id: 'sara-lee-classic', name: 'Sara Lee Classic White Bread', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.99, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Sara Lee Classic White', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$3.48\u2013$4.49', pricingNote: '~$0.35\u2013$0.45/sandwich' },
-                { id: 'natures-own-honey-wheat-2pk', name: "Nature's Own Honey Wheat 2-Pack", weightOz: 40, sandwichesPerLoaf: 20, usableSlices: 40, price: 5.98, description: '2-packs (~20 sandwiches each)', dropdownWeightLabel: '2x 20 oz', pricingTitle: "Nature's Own Honey Wheat (2-Pack)", pricingSize: '2x 20 oz \u2022 ~20 sandwiches', pricingPrice: '$5.98', pricingNote: '~$0.30/sandwich' }
-            ],
-            peanutButter: [
-                { id: 'great-value-pb-16', name: 'Great Value Creamy Peanut Butter 16 oz', sizeOz: 16, tablespoons: 30, price: 2.18, description: 'Great Value Creamy 16 oz', sizeLabel: '454g' },
-                { id: 'kroger-pb-16', name: 'Kroger Creamy Peanut Butter 16 oz', sizeOz: 16, tablespoons: 30, price: 2.49, description: 'Kroger Creamy 16 oz', sizeLabel: '454g' },
-                { id: 'peter-pan-16', name: 'Peter Pan Creamy Peanut Butter 16.3 oz', sizeOz: 16.3, tablespoons: 31, price: 3.29, description: 'Peter Pan Creamy 16.3 oz', sizeLabel: '462g' },
-                { id: 'jif-16', name: 'Jif Creamy Peanut Butter 16 oz', sizeOz: 16, tablespoons: 30, price: 3.59, description: 'Jif Creamy 16 oz', sizeLabel: '454g' },
-                { id: 'skippy-16', name: 'Skippy Creamy Peanut Butter 16.3 oz', sizeOz: 16.3, tablespoons: 31, price: 3.59, description: 'Skippy Creamy 16.3 oz', sizeLabel: '462g' }
-            ],
-            jelly: [
-                { id: 'great-value-grape-12', name: "Great Value Grape Jelly 12 oz", sizeOz: 12, tablespoons: 23, price: 1.78, description: "Great Value Grape Jelly 12 oz" },
-                { id: 'smuckers-grape-12', name: "Smucker's Grape Jelly 12 oz", sizeOz: 12, tablespoons: 23, price: 3.29, description: "Smucker's Grape Jelly 12 oz" },
-                { id: 'welchs-grape-15', name: "Welch's Grape Jelly 15 oz", sizeOz: 15, tablespoons: 28, price: 3.49, description: "Welch's Grape Jelly 15 oz" },
-                { id: 'welchs-squeeze-18', name: "Welch's Natural Concord Grape Squeeze 18 oz", sizeOz: 18, tablespoons: 34, price: 3.83, description: "Welch's Squeeze Grape Jelly 18 oz" }
-            ],
-            bags: { countPerBox: 480, pricePerBox: 7.99 },
-            spatulas: { pricePerPack: 5.99, countPerPack: 4, amazonUrl: "https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" }
-        };
+        const CATALOG_STORAGE_KEY = 'tspInventoryCatalog';
+        const PRODUCT_DATA = JSON.parse(JSON.stringify(window.TSP_DEFAULT_CATALOG || {}));
+
+        function isVisibleProduct(item) {
+            return item && item.hidden !== true && item.group !== 'hidden';
+        }
+
+        function applyCatalog(catalog) {
+            if (!catalog) return;
+            ['meat', 'cheese', 'bread', 'peanutButter', 'jelly'].forEach(function(key) {
+                if (Array.isArray(catalog[key])) PRODUCT_DATA[key] = catalog[key];
+            });
+            if (catalog.bags) PRODUCT_DATA.bags = catalog.bags;
+            if (catalog.spatulas) PRODUCT_DATA.spatulas = catalog.spatulas;
+            if (catalog.metadata) PRODUCT_DATA.metadata = catalog.metadata;
+            buildProductIndex();
+        }
+
+        async function loadPublishedCatalog() {
+            try {
+                const response = await fetch('product-catalog.json', { cache: 'no-store' });
+                if (!response.ok) return;
+                applyCatalog(await response.json());
+            } catch (error) {
+                console.warn('Published product list could not be loaded.', error);
+            }
+        }
+
+        function loadSavedCatalog() {
+            const banner = document.getElementById('catalog-banner');
+            try {
+                const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
+                if (!raw) {
+                    if (banner) banner.hidden = true;
+                    return false;
+                }
+                applyCatalog(JSON.parse(raw));
+                if (banner) banner.hidden = false;
+                return true;
+            } catch (error) {
+                console.warn('Saved product list could not be loaded.', error);
+                return false;
+            }
+        }
+
+        function refreshProductViews() {
+            const meatSelect = document.getElementById('meatType');
+            const cheeseSelect = document.getElementById('cheeseType');
+            const breadSelect = document.getElementById('breadType');
+            const pbSelect = document.getElementById('pbType');
+            const jellySelect = document.getElementById('jellyType');
+            const selected = {
+                meat: meatSelect ? meatSelect.value : '',
+                cheese: cheeseSelect ? cheeseSelect.value : '',
+                bread: breadSelect ? breadSelect.value : '',
+                pb: pbSelect ? pbSelect.value : '',
+                jelly: jellySelect ? jellySelect.value : ''
+            };
+            buildMeatDropdown();
+            buildCheeseDropdown();
+            buildBreadDropdowns();
+            buildPBDropdown();
+            buildJellyDropdown();
+            buildPricingCards();
+            buildPricingSummaryTable();
+            if (meatSelect && selected.meat) meatSelect.value = selected.meat;
+            if (cheeseSelect && selected.cheese) cheeseSelect.value = selected.cheese;
+            if (breadSelect && selected.bread) breadSelect.value = selected.bread;
+            if (pbSelect && selected.pb) pbSelect.value = selected.pb;
+            if (jellySelect && selected.jelly) jellySelect.value = selected.jelly;
+        }
+
 
         // ===============================================================
         // PRODUCT INDEX - Flat lookup by category + id
@@ -2128,8 +2161,8 @@
         function buildMeatDropdown() {
             const select = document.getElementById('meatType');
             select.innerHTML = '<option value="">Choose your meat</option>';
-            const popular = PRODUCT_DATA.meat.filter(m => m.group === 'popular');
-            const more = PRODUCT_DATA.meat.filter(m => m.group === 'more');
+            const popular = PRODUCT_DATA.meat.filter(m => m.group === 'popular' && isVisibleProduct(m));
+            const more = PRODUCT_DATA.meat.filter(m => m.group === 'more' && isVisibleProduct(m));
             function meatOptionLabel(m) {
                 const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
                 const perSlice = (m.price / m.slices).toFixed(2);
@@ -2139,14 +2172,18 @@
                 const sizeLabel = m.weightOz >= 16 ? (m.weightOz === 16 ? '1 lb' : m.weightOz + ' oz') : m.weightOz + ' oz';
                 return m.name + ' (' + sizeLabel + ' / ' + sliceLabel + ', $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
             }
-            const popularGroup = document.createElement('optgroup');
-            popularGroup.label = 'Popular Options';
-            popular.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); popularGroup.appendChild(opt); });
-            select.appendChild(popularGroup);
-            const moreGroup = document.createElement('optgroup');
-            moreGroup.label = 'More Options';
-            more.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); moreGroup.appendChild(opt); });
-            select.appendChild(moreGroup);
+            if (popular.length) {
+                const popularGroup = document.createElement('optgroup');
+                popularGroup.label = 'Popular Options';
+                popular.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); popularGroup.appendChild(opt); });
+                select.appendChild(popularGroup);
+            }
+            if (more.length) {
+                const moreGroup = document.createElement('optgroup');
+                moreGroup.label = 'More Options';
+                more.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); moreGroup.appendChild(opt); });
+                select.appendChild(moreGroup);
+            }
             const customGroup = document.createElement('optgroup');
             customGroup.label = 'Custom';
             const customOpt = document.createElement('option');
@@ -2160,11 +2197,15 @@
             const select = document.getElementById('cheeseType');
             select.innerHTML = '<option value="">Choose your cheese</option>';
             const typeLabels = { muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)', variety: 'Variety Pack (Deli Slices)' };
-            ['muenster', 'havarti', 'provolone', 'variety'].forEach(type => {
-                const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type);
+            const cheeseTypes = ['muenster', 'havarti', 'provolone', 'variety'].filter(type => PRODUCT_DATA.cheese.some(c => c.cheeseType === type && isVisibleProduct(c)));
+            PRODUCT_DATA.cheese.forEach(c => {
+                if (isVisibleProduct(c) && cheeseTypes.indexOf(c.cheeseType) === -1) cheeseTypes.push(c.cheeseType);
+            });
+            cheeseTypes.forEach(type => {
+                const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type && isVisibleProduct(c));
                 if (items.length === 0) return;
                 const group = document.createElement('optgroup');
-                group.label = typeLabels[type];
+                group.label = typeLabels[type] || (type + ' Cheese (Deli Slices)');
                 items.forEach(c => {
                     const opt = document.createElement('option');
                     opt.value = c.id;
@@ -2179,7 +2220,7 @@
             [document.getElementById('breadType'), document.getElementById('pbjBreadType')].forEach(select => {
                 if (!select) return;
                 select.innerHTML = '<option value="">Choose your bread</option>';
-                PRODUCT_DATA.bread.forEach(b => {
+                PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => {
                     const opt = document.createElement('option');
                     opt.value = b.id;
                     const wLabel = b.dropdownWeightLabel || (b.weightOz + ' oz');
@@ -2192,7 +2233,7 @@
         function buildPBDropdown() {
             const select = document.getElementById('pbType');
             select.innerHTML = '';
-            PRODUCT_DATA.peanutButter.forEach(pb => {
+            PRODUCT_DATA.peanutButter.filter(isVisibleProduct).forEach(pb => {
                 const opt = document.createElement('option');
                 opt.value = pb.id;
                 opt.textContent = pb.name + ' (' + pb.sizeLabel + ', ~' + pb.tablespoons + ' tbsp) - $' + pb.price.toFixed(2);
@@ -2203,7 +2244,7 @@
         function buildJellyDropdown() {
             const select = document.getElementById('jellyType');
             select.innerHTML = '';
-            PRODUCT_DATA.jelly.forEach(j => {
+            PRODUCT_DATA.jelly.filter(isVisibleProduct).forEach(j => {
                 const opt = document.createElement('option');
                 opt.value = j.id;
                 opt.textContent = j.name + ' (~' + j.tablespoons + ' tbsp) - $' + j.price.toFixed(2);
@@ -2245,17 +2286,17 @@
 
             // Meat — all visible products, no collapse
             let meatHTML = '<div class="price-category"><div class="category-label">DELI MEAT</div><div class="price-grid">';
-            PRODUCT_DATA.meat.filter(m => m.group !== 'hidden').forEach(m => { meatHTML += meatCard(m); });
+            PRODUCT_DATA.meat.filter(isVisibleProduct).forEach(m => { meatHTML += meatCard(m); });
             meatHTML += '</div></div>';
 
             // Cheese — all types
             let cheeseHTML = '<div class="price-category"><div class="category-label">CHEESE (Deli Slices)</div><div class="price-grid">';
-            PRODUCT_DATA.cheese.forEach(c => { cheeseHTML += cheeseCard(c); });
+            PRODUCT_DATA.cheese.filter(isVisibleProduct).forEach(c => { cheeseHTML += cheeseCard(c); });
             cheeseHTML += '</div></div>';
 
             // Bread
             let breadHTML = '<div class="price-category"><div class="category-label">BREAD</div><div class="price-grid">';
-            PRODUCT_DATA.bread.forEach(b => {
+            PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => {
                 breadHTML += '<div class="price-card card-bread">' +
                     '<div class="product-title">' + b.pricingTitle + '</div>' +
                     '<div class="product-size">' + b.pricingSize + '</div>' +
@@ -2280,17 +2321,19 @@
             if (!container) return;
             let html = '<table style="width:100%; margin-top: 10px; border-collapse: collapse;">';
             html += '<tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>';
-            PRODUCT_DATA.meat.filter(m => m.group !== 'hidden').forEach(m => {
+            PRODUCT_DATA.meat.filter(isVisibleProduct).forEach(m => {
                 const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
-                const sizeNote = m.id === 'turkey' ? '40 slices total (2 \u00d7 20 oz, 20 per pack)' : (m.weightOz + ' oz / ' + sliceLabel);
+                const sizeNote = m.id === 'turkey'
+                    ? (m.slices + ' slices total (2 \u00d7 ' + (m.weightOz / 2) + ' oz, ' + (m.slices / 2) + ' per pack)')
+                    : (m.weightOz + ' oz / ' + sliceLabel);
                 html += '<tr><td>' + m.name + '</td><td>$' + m.price.toFixed(2) + '</td><td>' + sizeNote + '</td></tr>';
             });
             html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Cheese (Deli Slices)</td></tr>';
-            PRODUCT_DATA.cheese.forEach(c => {
+            PRODUCT_DATA.cheese.filter(isVisibleProduct).forEach(c => {
                 const name = c.name.replace(' - Costco', ' (Costco)').replace(" - Sam's Club", " (Sam's Club)");
                 html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.description + '</td></tr>';
             });
-            PRODUCT_DATA.bread.forEach(b => { html += '<tr><td>' + b.pricingTitle + '</td><td>' + b.pricingPrice + '</td><td>~' + b.sandwichesPerLoaf + ' sandwiches</td></tr>'; });
+            PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => { html += '<tr><td>' + b.pricingTitle + '</td><td>' + b.pricingPrice + '</td><td>~' + b.sandwichesPerLoaf + ' sandwiches</td></tr>'; });
             html += '<tr><td>Zip-lock Sandwich Bags</td><td>$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</td><td>' + PRODUCT_DATA.bags.countPerBox + ' count</td></tr>';
             html += '</table>';
             container.innerHTML = html;
@@ -2299,16 +2342,20 @@
         // ===============================================================
         // INITIALIZATION
         // ===============================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            buildMeatDropdown();
-            buildCheeseDropdown();
-            buildBreadDropdowns();
-            buildPBDropdown();
-            buildJellyDropdown();
-            buildPricingCards();
-            buildPricingSummaryTable();
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadPublishedCatalog();
+            loadSavedCatalog();
+            refreshProductViews();
             setupCalculatorGuidance();
             updateDeliGuidance();
+            window.addEventListener('storage', function(event) {
+                if (event.key !== CATALOG_STORAGE_KEY) return;
+                applyCatalog(JSON.parse(JSON.stringify(window.TSP_DEFAULT_CATALOG || {})));
+                loadPublishedCatalog().then(function() {
+                    loadSavedCatalog();
+                    refreshProductViews();
+                });
+            });
         });
 
         // ===============================================================

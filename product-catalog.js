@@ -1,0 +1,382 @@
+window.TSP_DEFAULT_CATALOG = {
+  "metadata": {
+    "lastUpdated": "2025-09-17",
+    "version": "1.0"
+  },
+  "meat": [
+    {
+      "id": "kroger-chicken-thin",
+      "name": "Kroger Chicken Thin Sliced",
+      "store": "Kroger",
+      "weightOz": 9,
+      "slices": 18,
+      "price": 3.99,
+      "meatType": "chicken",
+      "group": "popular",
+      "description": "9 oz packages",
+      "pricingTitle": "Kroger Chicken Thin",
+      "pricingSize": "9 oz • 18 slices"
+    },
+    {
+      "id": "publix-turkey",
+      "name": "Publix Turkey Breast, Thin Sliced",
+      "store": "Publix",
+      "weightOz": 16,
+      "slices": 32,
+      "price": 8.27,
+      "meatType": "turkey",
+      "group": "popular",
+      "description": "16 oz packages",
+      "pricingTitle": "Publix Turkey Breast",
+      "pricingSize": "16 oz • 32 slices",
+      "showInPricing": true,
+      "pricingGroup": "main"
+    },
+    {
+      "id": "kroger-turkey-thin",
+      "name": "Kroger Turkey Thin Sliced",
+      "store": "Kroger",
+      "weightOz": 9,
+      "slices": 18,
+      "price": 3.99,
+      "meatType": "turkey",
+      "group": "popular",
+      "description": "9 oz packages",
+      "pricingTitle": "Kroger Turkey Thin Sliced",
+      "pricingSize": "9 oz • 18 slices",
+      "showInPricing": true,
+      "pricingGroup": "main"
+    },
+    {
+      "id": "kroger-turkey-family",
+      "name": "Kroger Turkey Family Size",
+      "store": "Kroger",
+      "weightOz": 16,
+      "slices": 48,
+      "price": 5.99,
+      "meatType": "turkey",
+      "group": "popular",
+      "description": "1 lb packages (16 oz)",
+      "dropdownSliceLabel": "48 slices",
+      "pricingTitle": "Kroger Turkey Family Size",
+      "pricingSize": "1 lb • 48 slices",
+      "showInPricing": true,
+      "pricingGroup": "main"
+    },
+    {
+      "id": "turkey",
+      "name": "Kirkland Turkey",
+      "store": "Costco",
+      "weightOz": 40,
+      "slices": 40,
+      "price": 14.99,
+      "meatType": "turkey",
+      "group": "more",
+      "description": "2-packs (~40 oz total)",
+      "pricingTitle": "Kirkland Turkey",
+      "pricingSize": "2 × 20 oz • 40 slices",
+      "showInPricing": true,
+      "pricingGroup": "more"
+    },
+    {
+      "id": "hillshire-turkey",
+      "name": "Hillshire Farm Ultra Thin Turkey",
+      "store": "Various",
+      "weightOz": 9,
+      "slices": 18,
+      "price": 4.99,
+      "meatType": "turkey",
+      "group": "more",
+      "description": "9 oz packages",
+      "pricingTitle": "Hillshire Farm Ultra Thin Turkey",
+      "pricingSize": "9 oz • 18 slices",
+      "showInPricing": true,
+      "pricingGroup": "more"
+    },
+    {
+      "id": "land-o-frost-turkey",
+      "name": "Land O'Frost Premium Turkey",
+      "store": "Various",
+      "weightOz": 16,
+      "slices": 32,
+      "price": 7.99,
+      "meatType": "turkey",
+      "group": "more",
+      "description": "14–16 oz packages",
+      "pricingTitle": "Land O'Frost Premium Turkey",
+      "pricingSize": "14–16 oz • 32 slices",
+      "showInPricing": true,
+      "pricingGroup": "more"
+    },
+    {
+      "id": "kroger-turkey-regular",
+      "name": "Kroger Private Selection® Turkey",
+      "store": "Kroger",
+      "weightOz": 8,
+      "slices": 11.5,
+      "price": 7.99,
+      "meatType": "turkey",
+      "group": "more",
+      "description": "8 oz packages",
+      "dropdownSliceLabel": "11-12 slices",
+      "pricingTitle": "Kroger Private Selection® Turkey",
+      "pricingSize": "8 oz • 11-12 slices",
+      "showInPricing": true,
+      "pricingGroup": "more"
+    },
+    {
+      "id": "oscar-mayer-chicken-rotisserie",
+      "name": "Oscar Mayer Rotisserie Chicken",
+      "store": "Various",
+      "weightOz": 16,
+      "slices": 48,
+      "price": 7.99,
+      "meatType": "chicken",
+      "group": "more",
+      "description": "16 oz packages",
+      "pricingTitle": "Oscar Mayer Rotisserie Chicken",
+      "pricingSize": "1 lb • 48 slices"
+    },
+    {
+      "id": "oscar-mayer-chicken-blackened",
+      "name": "Oscar Mayer Blackened Chicken",
+      "store": "Various",
+      "weightOz": 8,
+      "slices": 16,
+      "price": 4.49,
+      "meatType": "chicken",
+      "group": "hidden",
+      "description": "8 oz packages"
+    }
+  ],
+  "cheese": [
+    {
+      "id": "finlandia-muenster",
+      "name": "Finlandia Muenster Deli Slices - Costco",
+      "store": "Costco",
+      "slices": 32,
+      "price": 8.96,
+      "cheeseType": "muenster",
+      "dropdownLabel": "Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)",
+      "description": "~32 slices each (2 lbs)",
+      "pricingTitle": "Finlandia Muenster (Costco)"
+    },
+    {
+      "id": "arla-havarti",
+      "name": "Arla Havarti Cheese Slices - Costco",
+      "store": "Costco",
+      "slices": 32,
+      "price": 10.2,
+      "cheeseType": "havarti",
+      "dropdownLabel": "Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)",
+      "description": "~32 slices each (2 lbs)",
+      "pricingTitle": "Arla Havarti (Costco)"
+    },
+    {
+      "id": "members-mark-provolone",
+      "name": "Member's Mark Smoked Provolone - Sam's Club",
+      "store": "Sam's Club",
+      "slices": 42,
+      "price": 6.96,
+      "cheeseType": "provolone",
+      "dropdownLabel": "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)",
+      "description": "~42 slices each (2 lbs)",
+      "pricingTitle": "Member's Mark Provolone (Sam's Club)"
+    },
+    {
+      "id": "finlandia-variety",
+      "name": "Finlandia Premium Cheese Slices Variety Pack - Costco",
+      "store": "Costco",
+      "slices": 40,
+      "price": 8.99,
+      "cheeseType": "variety",
+      "dropdownLabel": "Finlandia Premium Cheese Slices Variety Pack - Costco (2 lbs, ~40 slices, $8.99)",
+      "description": "~40 slices each (2 lbs)",
+      "pricingTitle": "Finlandia Variety Pack (Costco)"
+    }
+  ],
+  "bread": [
+    {
+      "id": "great-value-white",
+      "name": "Great Value White Bread",
+      "weightOz": 20,
+      "sandwichesPerLoaf": 11,
+      "usableSlices": 22,
+      "price": 1.48,
+      "description": "loaves (~11 sandwiches each)",
+      "pricingTitle": "Great Value White",
+      "pricingSize": "20 oz • ~11 sandwiches",
+      "pricingPrice": "$1.48",
+      "pricingNote": "~$0.13/sandwich"
+    },
+    {
+      "id": "kroger-white",
+      "name": "Kroger White Sandwich Bread",
+      "weightOz": 20,
+      "sandwichesPerLoaf": 11,
+      "usableSlices": 22,
+      "price": 1.5,
+      "description": "loaves (~11 sandwiches each)",
+      "pricingTitle": "Kroger White Sandwich",
+      "pricingSize": "20 oz • ~11 sandwiches",
+      "pricingPrice": "$1.00–$1.99",
+      "pricingNote": "~$0.09–$0.18/sandwich"
+    },
+    {
+      "id": "wonder-classic",
+      "name": "Wonder Bread Classic White — Regular Loaf",
+      "weightOz": 20,
+      "sandwichesPerLoaf": 10,
+      "usableSlices": 20,
+      "price": 3.63,
+      "description": "loaves (~10 sandwiches each)",
+      "pricingTitle": "Wonder Bread Classic White — Regular Loaf",
+      "pricingSize": "20 oz • ~10 sandwiches",
+      "pricingPrice": "$2.47–$4.79",
+      "pricingNote": "~$0.25–$0.48/sandwich"
+    },
+    {
+      "id": "wonder-giant",
+      "name": "Wonder Bread Giant White — Large Loaf",
+      "weightOz": 24,
+      "sandwichesPerLoaf": 11,
+      "usableSlices": 22,
+      "price": 4.64,
+      "description": "loaves (~11 sandwiches each)",
+      "pricingTitle": "Wonder Bread Giant White — Large Loaf",
+      "pricingSize": "24 oz • ~11 sandwiches",
+      "pricingPrice": "$3.99–$5.29",
+      "pricingNote": "~$0.36–$0.48/sandwich"
+    },
+    {
+      "id": "sara-lee-butter",
+      "name": "Sara Lee Butter Bread",
+      "weightOz": 20,
+      "sandwichesPerLoaf": 10,
+      "usableSlices": 20,
+      "price": 3.14,
+      "description": "loaves (~10 sandwiches each)",
+      "pricingTitle": "Sara Lee Butter Bread",
+      "pricingSize": "20 oz • ~10 sandwiches",
+      "pricingPrice": "$2.98–$3.29",
+      "pricingNote": "~$0.30–$0.33/sandwich"
+    },
+    {
+      "id": "sara-lee-classic",
+      "name": "Sara Lee Classic White Bread",
+      "weightOz": 20,
+      "sandwichesPerLoaf": 10,
+      "usableSlices": 20,
+      "price": 3.99,
+      "description": "loaves (~10 sandwiches each)",
+      "pricingTitle": "Sara Lee Classic White",
+      "pricingSize": "20 oz • ~10 sandwiches",
+      "pricingPrice": "$3.48–$4.49",
+      "pricingNote": "~$0.35–$0.45/sandwich"
+    },
+    {
+      "id": "natures-own-honey-wheat-2pk",
+      "name": "Nature's Own Honey Wheat 2-Pack",
+      "weightOz": 40,
+      "sandwichesPerLoaf": 20,
+      "usableSlices": 40,
+      "price": 5.98,
+      "description": "2-packs (~20 sandwiches each)",
+      "dropdownWeightLabel": "2x 20 oz",
+      "pricingTitle": "Nature's Own Honey Wheat (2-Pack)",
+      "pricingSize": "2x 20 oz • ~20 sandwiches",
+      "pricingPrice": "$5.98",
+      "pricingNote": "~$0.30/sandwich"
+    }
+  ],
+  "peanutButter": [
+    {
+      "id": "great-value-pb-16",
+      "name": "Great Value Creamy Peanut Butter 16 oz",
+      "sizeOz": 16,
+      "tablespoons": 30,
+      "price": 2.18,
+      "description": "Great Value Creamy 16 oz",
+      "sizeLabel": "454g"
+    },
+    {
+      "id": "kroger-pb-16",
+      "name": "Kroger Creamy Peanut Butter 16 oz",
+      "sizeOz": 16,
+      "tablespoons": 30,
+      "price": 2.49,
+      "description": "Kroger Creamy 16 oz",
+      "sizeLabel": "454g"
+    },
+    {
+      "id": "peter-pan-16",
+      "name": "Peter Pan Creamy Peanut Butter 16.3 oz",
+      "sizeOz": 16.3,
+      "tablespoons": 31,
+      "price": 3.29,
+      "description": "Peter Pan Creamy 16.3 oz",
+      "sizeLabel": "462g"
+    },
+    {
+      "id": "jif-16",
+      "name": "Jif Creamy Peanut Butter 16 oz",
+      "sizeOz": 16,
+      "tablespoons": 30,
+      "price": 3.59,
+      "description": "Jif Creamy 16 oz",
+      "sizeLabel": "454g"
+    },
+    {
+      "id": "skippy-16",
+      "name": "Skippy Creamy Peanut Butter 16.3 oz",
+      "sizeOz": 16.3,
+      "tablespoons": 31,
+      "price": 3.59,
+      "description": "Skippy Creamy 16.3 oz",
+      "sizeLabel": "462g"
+    }
+  ],
+  "jelly": [
+    {
+      "id": "great-value-grape-12",
+      "name": "Great Value Grape Jelly 12 oz",
+      "sizeOz": 12,
+      "tablespoons": 23,
+      "price": 1.78,
+      "description": "Great Value Grape Jelly 12 oz"
+    },
+    {
+      "id": "smuckers-grape-12",
+      "name": "Smucker's Grape Jelly 12 oz",
+      "sizeOz": 12,
+      "tablespoons": 23,
+      "price": 3.29,
+      "description": "Smucker's Grape Jelly 12 oz"
+    },
+    {
+      "id": "welchs-grape-15",
+      "name": "Welch's Grape Jelly 15 oz",
+      "sizeOz": 15,
+      "tablespoons": 28,
+      "price": 3.49,
+      "description": "Welch's Grape Jelly 15 oz"
+    },
+    {
+      "id": "welchs-squeeze-18",
+      "name": "Welch's Natural Concord Grape Squeeze 18 oz",
+      "sizeOz": 18,
+      "tablespoons": 34,
+      "price": 3.83,
+      "description": "Welch's Squeeze Grape Jelly 18 oz"
+    }
+  ],
+  "bags": {
+    "countPerBox": 480,
+    "pricePerBox": 7.99
+  },
+  "spatulas": {
+    "pricePerPack": 5.99,
+    "countPerPack": 4,
+    "amazonUrl": "https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58"
+  }
+};
