@@ -2322,14 +2322,37 @@
         // ===============================================================
         // PRICING SECTION BUILDERS
         // ===============================================================
+        function textEl(tag, className, text) {
+            const node = document.createElement(tag);
+            if (className) node.className = className;
+            node.textContent = text == null ? '' : String(text);
+            return node;
+        }
+
+        function priceCategory(label, cards) {
+            const category = document.createElement('div');
+            category.className = 'price-category';
+            category.appendChild(textEl('div', 'category-label', label));
+            const grid = document.createElement('div');
+            grid.className = 'price-grid';
+            cards.forEach(function(card) { grid.appendChild(card); });
+            category.appendChild(grid);
+            return category;
+        }
+
+        function priceCard(className, rows) {
+            const card = document.createElement('div');
+            card.className = 'price-card' + (className ? ' ' + className : '');
+            rows.forEach(function(row) { card.appendChild(textEl('div', row.className, row.text)); });
+            return card;
+        }
+
         function buildPricingCards() {
             const container = document.getElementById('pricing-cards-container');
             if (!container) return;
 
-            function meatCard(m) {
-                const ps = Number(m.slices) ? (m.price / m.slices).toFixed(2) : '';
-                const cardClass = m.meatType === 'chicken' ? 'card-chicken' : 'card-turkey';
-                const typeLabel = m.meatType === 'chicken' ? 'CHICKEN' : 'TURKEY';
+            const meatCards = PRODUCT_DATA.meat.filter(isVisibleProduct).map(function(m) {
+                const perSlice = Number(m.slices) ? (m.price / m.slices).toFixed(2) : '';
                 const title = (m.pricingTitle && !changedFromDefault('meat', m, ['name'])) ? m.pricingTitle : (m.name || '');
                 let size = m.pricingSize || ((m.weightOz || '') + ' oz');
                 if (changedFromDefault('meat', m, ['weightOz', 'slices']) || !m.pricingSize) {
@@ -2337,90 +2360,123 @@
                         ? ('2 × ' + (Number(m.weightOz) / 2) + ' oz • ' + m.slices + ' slices')
                         : [m.weightOz ? m.weightOz + ' oz' : '', meatSliceLabel(m)].filter(Boolean).join(' • ');
                 }
-                return '<div class="price-card ' + cardClass + '">' +
-                    '<div class="meat-type-label">' + typeLabel + '</div>' +
-                    '<div class="product-title">' + escapeHtml(title) + '</div>' +
-                    '<div class="product-size">' + escapeHtml(size) + '</div>' +
-                    '<div class="product-price">' + escapeHtml(money(m.price)) + '</div>' +
-                    '<div class="price-note">' + escapeHtml(ps ? '~$' + ps + '/slice' : '') + '</div></div>';
-            }
-
-            function cheeseCard(c) {
-                const ps = Number(c.slices) ? (c.price / c.slices).toFixed(2) : '';
-                const keepPackNote = !changedFromDefault('cheese', c, ['slices']) && c.description && c.description.includes('2 lbs');
-                const sizeLabel = keepPackNote ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
-                const cardClass = 'card-cheese-' + String(c.cheeseType || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
-                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', variety: 'VARIETY' };
-                const title = (c.pricingTitle && !changedFromDefault('cheese', c, ['name'])) ? c.pricingTitle : (c.name || '');
-                return '<div class="price-card ' + cardClass + '">' +
-                    '<div class="meat-type-label">' + escapeHtml(typeLabels[c.cheeseType] || c.cheeseType || '') + '</div>' +
-                    '<div class="product-title">' + escapeHtml(title) + '</div>' +
-                    '<div class="product-size">' + escapeHtml(sizeLabel) + '</div>' +
-                    '<div class="product-price">' + escapeHtml(money(c.price)) + '</div>' +
-                    '<div class="price-note">' + escapeHtml(ps ? '~$' + ps + '/slice' : '') + '</div></div>';
-            }
-
-            // Meat — all visible products, no collapse
-            let meatHTML = '<div class="price-category"><div class="category-label">DELI MEAT</div><div class="price-grid">';
-            PRODUCT_DATA.meat.filter(isVisibleProduct).forEach(m => { meatHTML += meatCard(m); });
-            meatHTML += '</div></div>';
-
-            // Cheese — all types
-            let cheeseHTML = '<div class="price-category"><div class="category-label">CHEESE (Deli Slices)</div><div class="price-grid">';
-            PRODUCT_DATA.cheese.filter(isVisibleProduct).forEach(c => { cheeseHTML += cheeseCard(c); });
-            cheeseHTML += '</div></div>';
-
-            // Bread
-            let breadHTML = '<div class="price-category"><div class="category-label">BREAD</div><div class="price-grid">';
-            PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => {
-                const display = breadDisplay(b);
-                breadHTML += '<div class="price-card card-bread">' +
-                    '<div class="product-title">' + escapeHtml(display.title) + '</div>' +
-                    '<div class="product-size">' + escapeHtml(display.size) + '</div>' +
-                    '<div class="product-price">' + escapeHtml(display.price) + '</div>' +
-                    '<div class="price-note">' + escapeHtml(display.note) + '</div></div>';
+                return priceCard(m.meatType === 'chicken' ? 'card-chicken' : 'card-turkey', [
+                    { className: 'meat-type-label', text: m.meatType === 'chicken' ? 'CHICKEN' : 'TURKEY' },
+                    { className: 'product-title', text: title },
+                    { className: 'product-size', text: size },
+                    { className: 'product-price', text: money(m.price) },
+                    { className: 'price-note', text: perSlice ? '~$' + perSlice + '/slice' : '' }
+                ]);
             });
-            breadHTML += '</div></div>';
 
-            // Supplies
-            let suppliesHTML = '<div class="price-category"><div class="category-label">SUPPLIES</div><div class="price-grid">' +
-                '<div class="price-card card-supplies">' +
-                '<div class="product-title">Sandwich Bags</div>' +
-                '<div class="product-size">' + PRODUCT_DATA.bags.countPerBox + ' count</div>' +
-                '<div class="product-price">$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</div>' +
-                '<div class="price-note">~$' + (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) + '/bag</div></div></div></div>';
+            const cheeseTypeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', variety: 'VARIETY' };
+            const cheeseCards = PRODUCT_DATA.cheese.filter(isVisibleProduct).map(function(c) {
+                const perSlice = Number(c.slices) ? (c.price / c.slices).toFixed(2) : '';
+                const keepPackNote = !changedFromDefault('cheese', c, ['slices']) && c.description && c.description.includes('2 lbs');
+                const title = (c.pricingTitle && !changedFromDefault('cheese', c, ['name'])) ? c.pricingTitle : (c.name || '');
+                const cheeseClass = 'card-cheese-' + String(c.cheeseType || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
+                return priceCard(cheeseClass, [
+                    { className: 'meat-type-label', text: cheeseTypeLabels[c.cheeseType] || c.cheeseType || '' },
+                    { className: 'product-title', text: title },
+                    { className: 'product-size', text: keepPackNote ? c.slices + ' slices (2 lbs)' : c.slices + ' slices' },
+                    { className: 'product-price', text: money(c.price) },
+                    { className: 'price-note', text: perSlice ? '~$' + perSlice + '/slice' : '' }
+                ]);
+            });
 
-            container.innerHTML = meatHTML + cheeseHTML + breadHTML + suppliesHTML;
+            const breadCards = PRODUCT_DATA.bread.filter(isVisibleProduct).map(function(b) {
+                const display = breadDisplay(b);
+                return priceCard('card-bread', [
+                    { className: 'product-title', text: display.title },
+                    { className: 'product-size', text: display.size },
+                    { className: 'product-price', text: display.price },
+                    { className: 'price-note', text: display.note }
+                ]);
+            });
+
+            const perBag = PRODUCT_DATA.bags.countPerBox ? (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) : '';
+            const supplyCards = [priceCard('card-supplies', [
+                { className: 'product-title', text: 'Sandwich Bags' },
+                { className: 'product-size', text: PRODUCT_DATA.bags.countPerBox + ' count' },
+                { className: 'product-price', text: money(PRODUCT_DATA.bags.pricePerBox) },
+                { className: 'price-note', text: perBag ? '~$' + perBag + '/bag' : '' }
+            ])];
+
+            container.replaceChildren(
+                priceCategory('DELI MEAT', meatCards),
+                priceCategory('CHEESE (Deli Slices)', cheeseCards),
+                priceCategory('BREAD', breadCards),
+                priceCategory('SUPPLIES', supplyCards)
+            );
         }
 
         function buildPricingSummaryTable() {
             const container = document.getElementById('pricing-summary-table');
             if (!container) return;
-            let html = '<table style="width:100%; margin-top: 10px; border-collapse: collapse;">';
-            html += '<tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>';
-            PRODUCT_DATA.meat.filter(isVisibleProduct).forEach(m => {
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.marginTop = '10px';
+            table.style.borderCollapse = 'collapse';
+
+            function addRow(cells, options) {
+                const row = document.createElement('tr');
+                if (options && options.header) {
+                    row.style.background = '#fff3d1';
+                    row.style.color = '#b97a1a';
+                }
+                cells.forEach(function(cell) {
+                    const node = document.createElement(cell.header ? 'th' : 'td');
+                    node.textContent = cell.text == null ? '' : String(cell.text);
+                    if (cell.header) {
+                        node.style.textAlign = 'left';
+                        node.style.padding = '6px 10px';
+                    }
+                    if (cell.colspan) node.colSpan = cell.colspan;
+                    if (cell.section) {
+                        node.style.background = '#e3f2fd';
+                        node.style.fontWeight = '600';
+                    }
+                    row.appendChild(node);
+                });
+                table.appendChild(row);
+            }
+
+            addRow([
+                { text: 'Item', header: true },
+                { text: 'Price', header: true },
+                { text: 'Notes', header: true }
+            ], { header: true });
+            PRODUCT_DATA.meat.filter(isVisibleProduct).forEach(function(m) {
                 const sliceLabel = meatSliceLabel(m);
                 const sizeNote = m.id === 'turkey' && !m.slicesPerSandwich
                     ? (m.slices + ' slices total (2 × ' + (m.weightOz / 2) + ' oz, ' + (m.slices / 2) + ' per pack)')
                     : (m.weightOz + ' oz / ' + sliceLabel);
                 const storeNote = m.store && changedFromDefault('meat', m, ['store']) ? ' • ' + m.store : '';
-                html += '<tr><td>' + escapeHtml(m.name) + '</td><td>' + escapeHtml(money(m.price)) + '</td><td>' + escapeHtml(sizeNote + storeNote) + '</td></tr>';
+                addRow([
+                    { text: m.name },
+                    { text: money(m.price) },
+                    { text: sizeNote + storeNote }
+                ]);
             });
-            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Cheese (Deli Slices)</td></tr>';
-            PRODUCT_DATA.cheese.filter(isVisibleProduct).forEach(c => {
+            addRow([{ text: 'Cheese (Deli Slices)', colspan: 3, section: true }]);
+            PRODUCT_DATA.cheese.filter(isVisibleProduct).forEach(function(c) {
                 const name = c.name.replace(' - Costco', ' (Costco)').replace(" - Sam's Club", " (Sam's Club)");
                 const note = changedFromDefault('cheese', c, ['slices', 'store', 'name'])
                     ? ('~' + c.slices + ' slices' + (c.store ? ' (' + c.store + ')' : ''))
                     : (c.description || '');
-                html += '<tr><td>' + escapeHtml(name) + '</td><td>' + escapeHtml(money(c.price)) + '</td><td>' + escapeHtml(note) + '</td></tr>';
+                addRow([{ text: name }, { text: money(c.price) }, { text: note }]);
             });
-            PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => {
+            PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(function(b) {
                 const display = breadDisplay(b);
-                html += '<tr><td>' + escapeHtml(display.title) + '</td><td>' + escapeHtml(display.price) + '</td><td>' + escapeHtml('~' + b.sandwichesPerLoaf + ' sandwiches' + (b.store && changedFromDefault('bread', b, ['store']) ? ' • ' + b.store : '')) + '</td></tr>';
+                const note = '~' + b.sandwichesPerLoaf + ' sandwiches' + (b.store && changedFromDefault('bread', b, ['store']) ? ' • ' + b.store : '');
+                addRow([{ text: display.title }, { text: display.price }, { text: note }]);
             });
-            html += '<tr><td>Zip-lock Sandwich Bags</td><td>$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</td><td>' + PRODUCT_DATA.bags.countPerBox + ' count</td></tr>';
-            html += '</table>';
-            container.innerHTML = html;
+            addRow([
+                { text: 'Zip-lock Sandwich Bags' },
+                { text: money(PRODUCT_DATA.bags.pricePerBox) },
+                { text: PRODUCT_DATA.bags.countPerBox + ' count' }
+            ]);
+            container.replaceChildren(table);
         }
 
         // ===============================================================
