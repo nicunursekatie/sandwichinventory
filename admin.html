@@ -45,7 +45,7 @@
     <main>
         <section id="loginPanel" class="login toolbar">
             <h2>Admin login</h2>
-            <p>Enter the admin password to edit names, stores, amounts, and prices.</p>
+            <p>Enter the password to edit names, stores, amounts, and prices. This only keeps the menu closed in this browser. It is not a server login, and anyone can still use the calculator.</p>
             <form id="loginForm">
                 <label>Password
                     <input id="adminPassword" type="password" autocomplete="current-password" required>
@@ -93,6 +93,67 @@
         let savedCopy = null;
 
         function clone(value) { return JSON.parse(JSON.stringify(value)); }
+
+        function catalogDefault(category, id) {
+            const source = window.TSP_DEFAULT_CATALOG || {};
+            const list = source[category] || [];
+            return list.find(function(item) { return item.id === id; }) || null;
+        }
+
+        function changedFromDefault(category, item, keys) {
+            const original = catalogDefault(category, item.id);
+            if (!original) return true;
+            return keys.some(function(key) {
+                return String(item[key] == null ? '' : item[key]) !== String(original[key] == null ? '' : original[key]);
+            });
+        }
+
+        function money(value) {
+            const amount = Number(value);
+            return Number.isFinite(amount) ? '$' + amount.toFixed(2) : '';
+        }
+
+        function refreshDerived(item, category) {
+            if (changedFromDefault(category, item, ['name'])) item.pricingTitle = item.name;
+            if (category === 'meat' && changedFromDefault(category, item, ['weightOz', 'slices', 'name', 'store'])) {
+                if (changedFromDefault(category, item, ['slices'])) item.dropdownSliceLabel = item.slices + ' slices';
+                if (item.id === 'turkey' && !item.slicesPerSandwich) {
+                    item.pricingSize = '2 × ' + (Number(item.weightOz) / 2) + ' oz • ' + item.slices + ' slices';
+                    item.description = '2-packs (~' + item.weightOz + ' oz total)';
+                } else {
+                    item.pricingSize = [item.weightOz ? item.weightOz + ' oz' : '', item.dropdownSliceLabel || (item.slices + ' slices')].filter(Boolean).join(' • ');
+                    item.description = (item.weightOz ? item.weightOz + ' oz packages' : (item.slices + ' slices')) + (item.store ? ' • ' + item.store : '');
+                }
+            }
+            if (category === 'cheese' && changedFromDefault(category, item, ['name', 'store', 'slices', 'price'])) {
+                const bits = [item.store, item.slices === '' || item.slices == null ? '' : '~' + item.slices + ' slices', money(item.price)].filter(Boolean);
+                item.dropdownLabel = item.name + (bits.length ? ' (' + bits.join(', ') + ')' : '');
+                item.description = (item.slices === '' || item.slices == null ? item.name : '~' + item.slices + ' slices each') + (item.store ? ' (' + item.store + ')' : '');
+                item.pricingTitle = item.name;
+            }
+            if (category === 'bread') {
+                if (item.sandwichesPerLoaf !== '') item.usableSlices = Number(item.sandwichesPerLoaf) * 2;
+                if (changedFromDefault(category, item, ['name', 'store', 'weightOz', 'sandwichesPerLoaf', 'price']) || !item.pricingPrice) {
+                    const weightLabel = item.dropdownWeightLabel || (item.weightOz + ' oz');
+                    const perSandwich = Number(item.sandwichesPerLoaf) ? Number(item.price) / Number(item.sandwichesPerLoaf) : NaN;
+                    item.pricingTitle = item.name;
+                    item.pricingSize = weightLabel + ' • ~' + item.sandwichesPerLoaf + ' sandwiches';
+                    item.pricingPrice = money(item.price);
+                    item.pricingNote = Number.isFinite(perSandwich) ? '~$' + perSandwich.toFixed(2) + '/sandwich' : '';
+                    item.description = 'loaves (~' + item.sandwichesPerLoaf + ' sandwiches each)' + (item.store ? ' • ' + item.store : '');
+                }
+            }
+            if (category === 'peanutButter' && item.sizeOz !== '' && (changedFromDefault(category, item, ['sizeOz']) || !item.sizeLabel)) {
+                item.sizeLabel = item.sizeOz + ' oz';
+            }
+            if (category === 'peanutButter' && changedFromDefault(category, item, ['name', 'store', 'sizeOz'])) {
+                item.description = item.name + (item.store ? ' • ' + item.store : '');
+            }
+            if (category === 'jelly' && changedFromDefault(category, item, ['name', 'store', 'sizeOz'])) {
+                item.description = item.name + (item.store ? ' • ' + item.store : '');
+            }
+            if (!item.description) item.description = item.name || '';
+        }
         function num(value) {
             if (value === '') return '';
             const parsed = Number(value);
@@ -211,15 +272,7 @@
             catalog.metadata.lastUpdated = new Date().toISOString().slice(0, 10);
             SECTIONS.forEach(function(section) {
                 catalog[section.key].forEach(function(item) {
-                    if (section.key === 'bread' && item.sandwichesPerLoaf !== '' && item.usableSlices === '') {
-                        item.usableSlices = Number(item.sandwichesPerLoaf) * 2;
-                    }
-                    if (section.key === 'peanutButter' && item.sizeOz !== '') item.sizeLabel = item.sizeOz + ' oz';
-                    if (!item.description) {
-                        if (item.slices) item.description = item.slices + ' slices';
-                        else if (item.sandwichesPerLoaf) item.description = 'loaves (~' + item.sandwichesPerLoaf + ' sandwiches each)';
-                        else if (item.tablespoons) item.description = item.name;
-                    }
+                    refreshDerived(item, section.key);
                 });
             });
             localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));

@@ -2077,6 +2077,78 @@
             return item && item.hidden !== true && item.group !== 'hidden';
         }
 
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function money(value) {
+            const amount = Number(value);
+            return Number.isFinite(amount) ? '$' + amount.toFixed(2) : '';
+        }
+
+        function catalogDefault(category, id) {
+            const source = window.TSP_DEFAULT_CATALOG || {};
+            const list = source[category] || [];
+            return list.find(function(item) { return item.id === id; }) || null;
+        }
+
+        function changedFromDefault(category, item, keys) {
+            const original = catalogDefault(category, item.id);
+            if (!original) return true;
+            return keys.some(function(key) {
+                return String(item[key] == null ? '' : item[key]) !== String(original[key] == null ? '' : original[key]);
+            });
+        }
+
+        function meatSliceLabel(m) {
+            if (m.dropdownSliceLabel && !changedFromDefault('meat', m, ['slices'])) return m.dropdownSliceLabel;
+            return m.slices + ' slices';
+        }
+
+        function meatOptionLabel(m) {
+            const price = money(m.price);
+            const sliceLabel = meatSliceLabel(m);
+            const perSlice = Number(m.slices) ? (Number(m.price) / Number(m.slices)).toFixed(2) : '';
+            const turkeyPack = m.id === 'turkey' && !m.slicesPerSandwich;
+            if (turkeyPack && !changedFromDefault('meat', m, ['name', 'store', 'weightOz'])) {
+                return m.name + ' (2 × ' + (Number(m.weightOz) / 2) + ' oz packages, ' + price + ' total)';
+            }
+            if (turkeyPack) {
+                const bits = [m.store, '2 × ' + (Number(m.weightOz) / 2) + ' oz packages', price ? price + ' total' : ''].filter(Boolean);
+                return m.name + ' (' + bits.join(', ') + ')';
+            }
+            const sizeLabel = Number(m.weightOz) >= 16 ? (Number(m.weightOz) === 16 ? '1 lb' : m.weightOz + ' oz') : (m.weightOz + ' oz');
+            const storeBit = m.store && (changedFromDefault('meat', m, ['store']) || !catalogDefault('meat', m.id)) ? m.store + ', ' : '';
+            const perBit = perSlice ? ' - $' + perSlice + '/slice' : '';
+            return m.name + ' (' + storeBit + sizeLabel + ' / ' + sliceLabel + ', ' + price + ')' + perBit;
+        }
+
+        function cheeseOptionLabel(c) {
+            if (c.dropdownLabel && !changedFromDefault('cheese', c, ['name', 'store', 'slices', 'price'])) return c.dropdownLabel;
+            const bits = [c.store, (c.slices === '' || c.slices == null ? '' : '~' + c.slices + ' slices'), money(c.price)].filter(Boolean);
+            return c.name + (bits.length ? ' (' + bits.join(', ') + ')' : '');
+        }
+
+        function breadDisplay(b) {
+            const edited = changedFromDefault('bread', b, ['name', 'store', 'weightOz', 'sandwichesPerLoaf', 'price']);
+            if (!edited && b.pricingTitle) {
+                return { title: b.pricingTitle, size: b.pricingSize || '', price: b.pricingPrice || money(b.price), note: b.pricingNote || '' };
+            }
+            const perSandwich = Number(b.sandwichesPerLoaf) ? Number(b.price) / Number(b.sandwichesPerLoaf) : NaN;
+            const weightLabel = b.dropdownWeightLabel || (b.weightOz + ' oz');
+            return {
+                title: b.name || '',
+                size: weightLabel + ' • ~' + b.sandwichesPerLoaf + ' sandwiches',
+                price: money(b.price),
+                note: Number.isFinite(perSandwich) ? '~$' + perSandwich.toFixed(2) + '/sandwich' : ''
+            };
+        }
+
         function applyCatalog(catalog) {
             if (!catalog) return;
             ['meat', 'cheese', 'bread', 'peanutButter', 'jelly'].forEach(function(key) {
@@ -2163,15 +2235,6 @@
             select.innerHTML = '<option value="">Choose your meat</option>';
             const popular = PRODUCT_DATA.meat.filter(m => m.group === 'popular' && isVisibleProduct(m));
             const more = PRODUCT_DATA.meat.filter(m => m.group === 'more' && isVisibleProduct(m));
-            function meatOptionLabel(m) {
-                const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
-                const perSlice = (m.price / m.slices).toFixed(2);
-                if (m.id === 'turkey') {
-                    return 'Kirkland Turkey (2 \u00d7 20 oz packages, $' + m.price.toFixed(2) + ' total)';
-                }
-                const sizeLabel = m.weightOz >= 16 ? (m.weightOz === 16 ? '1 lb' : m.weightOz + ' oz') : m.weightOz + ' oz';
-                return m.name + ' (' + sizeLabel + ' / ' + sliceLabel + ', $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
-            }
             if (popular.length) {
                 const popularGroup = document.createElement('optgroup');
                 popularGroup.label = 'Popular Options';
@@ -2209,7 +2272,7 @@
                 items.forEach(c => {
                     const opt = document.createElement('option');
                     opt.value = c.id;
-                    opt.textContent = c.dropdownLabel ? c.dropdownLabel : c.name + ' (' + c.slices + ' slices, $' + c.price.toFixed(2) + ')';
+                    opt.textContent = cheeseOptionLabel(c);
                     group.appendChild(opt);
                 });
                 select.appendChild(group);
@@ -2224,7 +2287,8 @@
                     const opt = document.createElement('option');
                     opt.value = b.id;
                     const wLabel = b.dropdownWeightLabel || (b.weightOz + ' oz');
-                    opt.textContent = b.name + ' (' + wLabel + ', ~' + b.sandwichesPerLoaf + ' sandwiches, $' + b.price.toFixed(2) + ')';
+                    const storeBit = b.store && (changedFromDefault('bread', b, ['store']) || !catalogDefault('bread', b.id)) ? b.store + ', ' : '';
+                    opt.textContent = b.name + ' (' + storeBit + wLabel + ', ~' + b.sandwichesPerLoaf + ' sandwiches, ' + money(b.price) + ')';
                     select.appendChild(opt);
                 });
             });
@@ -2236,7 +2300,9 @@
             PRODUCT_DATA.peanutButter.filter(isVisibleProduct).forEach(pb => {
                 const opt = document.createElement('option');
                 opt.value = pb.id;
-                opt.textContent = pb.name + ' (' + pb.sizeLabel + ', ~' + pb.tablespoons + ' tbsp) - $' + pb.price.toFixed(2);
+                const sizeLabel = (changedFromDefault('peanutButter', pb, ['sizeOz']) || !pb.sizeLabel) ? (pb.sizeOz + ' oz') : pb.sizeLabel;
+                const storeBit = pb.store ? pb.store + ', ' : '';
+                opt.textContent = pb.name + ' (' + storeBit + sizeLabel + ', ~' + pb.tablespoons + ' tbsp) - ' + money(pb.price);
                 select.appendChild(opt);
             });
         }
@@ -2247,7 +2313,8 @@
             PRODUCT_DATA.jelly.filter(isVisibleProduct).forEach(j => {
                 const opt = document.createElement('option');
                 opt.value = j.id;
-                opt.textContent = j.name + ' (~' + j.tablespoons + ' tbsp) - $' + j.price.toFixed(2);
+                const storeBit = j.store ? j.store + ', ' : '';
+                opt.textContent = j.name + ' (' + storeBit + '~' + j.tablespoons + ' tbsp) - ' + money(j.price);
                 select.appendChild(opt);
             });
         }
@@ -2260,28 +2327,37 @@
             if (!container) return;
 
             function meatCard(m) {
-                const ps = (m.price / m.slices).toFixed(2);
+                const ps = Number(m.slices) ? (m.price / m.slices).toFixed(2) : '';
                 const cardClass = m.meatType === 'chicken' ? 'card-chicken' : 'card-turkey';
                 const typeLabel = m.meatType === 'chicken' ? 'CHICKEN' : 'TURKEY';
+                const title = (m.pricingTitle && !changedFromDefault('meat', m, ['name'])) ? m.pricingTitle : (m.name || '');
+                let size = m.pricingSize || ((m.weightOz || '') + ' oz');
+                if (changedFromDefault('meat', m, ['weightOz', 'slices']) || !m.pricingSize) {
+                    size = m.id === 'turkey' && !m.slicesPerSandwich
+                        ? ('2 × ' + (Number(m.weightOz) / 2) + ' oz • ' + m.slices + ' slices')
+                        : [m.weightOz ? m.weightOz + ' oz' : '', meatSliceLabel(m)].filter(Boolean).join(' • ');
+                }
                 return '<div class="price-card ' + cardClass + '">' +
                     '<div class="meat-type-label">' + typeLabel + '</div>' +
-                    '<div class="product-title">' + (m.pricingTitle || m.name) + '</div>' +
-                    '<div class="product-size">' + (m.pricingSize || (m.weightOz + ' oz')) + '</div>' +
-                    '<div class="product-price">$' + m.price.toFixed(2) + '</div>' +
-                    '<div class="price-note">~$' + ps + '/slice</div></div>';
+                    '<div class="product-title">' + escapeHtml(title) + '</div>' +
+                    '<div class="product-size">' + escapeHtml(size) + '</div>' +
+                    '<div class="product-price">' + escapeHtml(money(m.price)) + '</div>' +
+                    '<div class="price-note">' + escapeHtml(ps ? '~$' + ps + '/slice' : '') + '</div></div>';
             }
 
             function cheeseCard(c) {
-                const ps = (c.price / c.slices).toFixed(2);
-                const sizeLabel = c.description && c.description.includes('2 lbs') ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
-                const cardClass = 'card-cheese-' + c.cheeseType;
+                const ps = Number(c.slices) ? (c.price / c.slices).toFixed(2) : '';
+                const keepPackNote = !changedFromDefault('cheese', c, ['slices']) && c.description && c.description.includes('2 lbs');
+                const sizeLabel = keepPackNote ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
+                const cardClass = 'card-cheese-' + String(c.cheeseType || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
                 const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', variety: 'VARIETY' };
+                const title = (c.pricingTitle && !changedFromDefault('cheese', c, ['name'])) ? c.pricingTitle : (c.name || '');
                 return '<div class="price-card ' + cardClass + '">' +
-                    '<div class="meat-type-label">' + (typeLabels[c.cheeseType] || '') + '</div>' +
-                    '<div class="product-title">' + (c.pricingTitle || c.name) + '</div>' +
-                    '<div class="product-size">' + sizeLabel + '</div>' +
-                    '<div class="product-price">$' + c.price.toFixed(2) + '</div>' +
-                    '<div class="price-note">~$' + ps + '/slice</div></div>';
+                    '<div class="meat-type-label">' + escapeHtml(typeLabels[c.cheeseType] || c.cheeseType || '') + '</div>' +
+                    '<div class="product-title">' + escapeHtml(title) + '</div>' +
+                    '<div class="product-size">' + escapeHtml(sizeLabel) + '</div>' +
+                    '<div class="product-price">' + escapeHtml(money(c.price)) + '</div>' +
+                    '<div class="price-note">' + escapeHtml(ps ? '~$' + ps + '/slice' : '') + '</div></div>';
             }
 
             // Meat — all visible products, no collapse
@@ -2297,11 +2373,12 @@
             // Bread
             let breadHTML = '<div class="price-category"><div class="category-label">BREAD</div><div class="price-grid">';
             PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => {
+                const display = breadDisplay(b);
                 breadHTML += '<div class="price-card card-bread">' +
-                    '<div class="product-title">' + b.pricingTitle + '</div>' +
-                    '<div class="product-size">' + b.pricingSize + '</div>' +
-                    '<div class="product-price">' + b.pricingPrice + '</div>' +
-                    '<div class="price-note">' + b.pricingNote + '</div></div>';
+                    '<div class="product-title">' + escapeHtml(display.title) + '</div>' +
+                    '<div class="product-size">' + escapeHtml(display.size) + '</div>' +
+                    '<div class="product-price">' + escapeHtml(display.price) + '</div>' +
+                    '<div class="price-note">' + escapeHtml(display.note) + '</div></div>';
             });
             breadHTML += '</div></div>';
 
@@ -2322,18 +2399,25 @@
             let html = '<table style="width:100%; margin-top: 10px; border-collapse: collapse;">';
             html += '<tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>';
             PRODUCT_DATA.meat.filter(isVisibleProduct).forEach(m => {
-                const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
-                const sizeNote = m.id === 'turkey'
-                    ? (m.slices + ' slices total (2 \u00d7 ' + (m.weightOz / 2) + ' oz, ' + (m.slices / 2) + ' per pack)')
+                const sliceLabel = meatSliceLabel(m);
+                const sizeNote = m.id === 'turkey' && !m.slicesPerSandwich
+                    ? (m.slices + ' slices total (2 × ' + (m.weightOz / 2) + ' oz, ' + (m.slices / 2) + ' per pack)')
                     : (m.weightOz + ' oz / ' + sliceLabel);
-                html += '<tr><td>' + m.name + '</td><td>$' + m.price.toFixed(2) + '</td><td>' + sizeNote + '</td></tr>';
+                const storeNote = m.store && changedFromDefault('meat', m, ['store']) ? ' • ' + m.store : '';
+                html += '<tr><td>' + escapeHtml(m.name) + '</td><td>' + escapeHtml(money(m.price)) + '</td><td>' + escapeHtml(sizeNote + storeNote) + '</td></tr>';
             });
             html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Cheese (Deli Slices)</td></tr>';
             PRODUCT_DATA.cheese.filter(isVisibleProduct).forEach(c => {
                 const name = c.name.replace(' - Costco', ' (Costco)').replace(" - Sam's Club", " (Sam's Club)");
-                html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.description + '</td></tr>';
+                const note = changedFromDefault('cheese', c, ['slices', 'store', 'name'])
+                    ? ('~' + c.slices + ' slices' + (c.store ? ' (' + c.store + ')' : ''))
+                    : (c.description || '');
+                html += '<tr><td>' + escapeHtml(name) + '</td><td>' + escapeHtml(money(c.price)) + '</td><td>' + escapeHtml(note) + '</td></tr>';
             });
-            PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => { html += '<tr><td>' + b.pricingTitle + '</td><td>' + b.pricingPrice + '</td><td>~' + b.sandwichesPerLoaf + ' sandwiches</td></tr>'; });
+            PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => {
+                const display = breadDisplay(b);
+                html += '<tr><td>' + escapeHtml(display.title) + '</td><td>' + escapeHtml(display.price) + '</td><td>' + escapeHtml('~' + b.sandwichesPerLoaf + ' sandwiches' + (b.store && changedFromDefault('bread', b, ['store']) ? ' • ' + b.store : '')) + '</td></tr>';
+            });
             html += '<tr><td>Zip-lock Sandwich Bags</td><td>$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</td><td>' + PRODUCT_DATA.bags.countPerBox + ' count</td></tr>';
             html += '</table>';
             container.innerHTML = html;
@@ -2483,6 +2567,11 @@
                     meatWeightOz = meat.weightOz;
                     meatPrice = meat.price;
                     meatDescription = meat.description;
+                    if (changedFromDefault('meat', meat, ['name', 'store', 'weightOz', 'slices'])) {
+                        meatDescription = meat.id === 'turkey' && !meat.slicesPerSandwich
+                            ? ('2-packs (~' + meat.weightOz + ' oz total)')
+                            : ((meat.weightOz ? meat.weightOz + ' oz packages' : meat.slices + ' slices') + (meat.store ? ' • ' + meat.store : ''));
+                    }
                     meatSlices = meat.slices;
                     meatSlicesPerSandwich = meat.slicesPerSandwich;
                 } else {
@@ -2511,6 +2600,9 @@
                 cheesePerPackage = cheese.slices;
                 cheesePrice = cheese.price;
                 cheeseDescription = cheese.description || (cheese.slices + ' slices each');
+                if (changedFromDefault('cheese', cheese, ['name', 'store', 'slices'])) {
+                    cheeseDescription = '~' + cheese.slices + ' slices each' + (cheese.store ? ' (' + cheese.store + ')' : '');
+                }
             } else {
                 cheesePerPackage = 24;
                 cheesePrice = 3.98;
@@ -2522,6 +2614,9 @@
             if (bread) {
                 breadSandwichesPerPackage = bread.sandwichesPerLoaf;
                 breadDescription = bread.description;
+                if (changedFromDefault('bread', bread, ['name', 'store', 'weightOz', 'sandwichesPerLoaf'])) {
+                    breadDescription = 'loaves (~' + bread.sandwichesPerLoaf + ' sandwiches each)' + (bread.store ? ' • ' + bread.store : '');
+                }
                 breadPrice = bread.price;
             } else {
                 breadSandwichesPerPackage = 11;
@@ -2747,17 +2842,17 @@
                     <div class="package-tile">
                         <div class="pkg-label">Meat</div>
                         <div class="pkg-count">${meatPackages}</div>
-                        <div class="pkg-product">${meatGridName}</div>
+                        <div class="pkg-product">${escapeHtml(meatGridName)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Cheese</div>
                         <div class="pkg-count">${cheesePackages}</div>
-                        <div class="pkg-product">${cheeseGridName}</div>
+                        <div class="pkg-product">${escapeHtml(cheeseGridName)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Bread</div>
                         <div class="pkg-count">${breadPackages}</div>
-                        <div class="pkg-product">${breadGridName}</div>
+                        <div class="pkg-product">${escapeHtml(breadGridName)}</div>
                     </div>
                 </div>
                 <ul class="shopping-receipt">
@@ -2765,8 +2860,8 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${meatPackages} × ${meatName}</div>
-                            <div class="item-meta">${meatDescription}</div>
+                            <div class="item-name">${meatPackages} × ${escapeHtml(meatName)}</div>
+                            <div class="item-meta">${escapeHtml(meatDescription)}</div>
                         </div>
                         <div class="item-price">$${meatCost.toFixed(2)}</div>
                     </li>
@@ -2774,8 +2869,8 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${cheesePackages} × ${cheeseName}</div>
-                            <div class="item-meta">${cheeseDescription}</div>
+                            <div class="item-name">${cheesePackages} × ${escapeHtml(cheeseName)}</div>
+                            <div class="item-meta">${escapeHtml(cheeseDescription)}</div>
                         </div>
                         <div class="item-price">$${cheeseCost.toFixed(2)}</div>
                     </li>
@@ -2783,8 +2878,8 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${breadPackages} × ${breadName}</div>
-                            <div class="item-meta">${breadDescription}</div>
+                            <div class="item-name">${breadPackages} × ${escapeHtml(breadName)}</div>
+                            <div class="item-meta">${escapeHtml(breadDescription)}</div>
                         </div>
                         <div class="item-price">$${breadCost.toFixed(2)}</div>
                     </li>
@@ -2880,8 +2975,8 @@
             const totalMeatLbs = (totalMeatOz / 16).toFixed(1);
             const totalMeatSlices = r.useSliceMath ? (r.meatPackages * r.meatSlices) : null;
             const meatQtyNote = r.useSliceMath
-                ? `${r.meatDescription} &mdash; ${totalMeatSlices} slices total (${r.meatSlicesPerSandwich} per sandwich)`
-                : `${r.meatDescription} &mdash; ${totalMeatOz} oz total (${totalMeatLbs} lbs)`;
+                ? `${escapeHtml(r.meatDescription)} &mdash; ${totalMeatSlices} slices total (${escapeHtml(r.meatSlicesPerSandwich)} per sandwich)`
+                : `${escapeHtml(r.meatDescription)} &mdash; ${totalMeatOz} oz total (${totalMeatLbs} lbs)`;
             const totalCheeseSlices = r.meatPackages ? r.cheesePackages * r.cheesePerPackage : 0;
             const totalBreadSandwiches = r.breadPackages * r.breadSandwichesPerPackage;
             const totalBags = r.bagPackages * PRODUCT_DATA.bags.countPerBox;
@@ -2919,7 +3014,7 @@
                             <tbody>
                                 <tr>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                        <strong style="color: #236383;">${cleanMeat}</strong>
+                                        <strong style="color: #236383;">${escapeHtml(cleanMeat)}</strong>
                                         <div style="font-size: 11px; color: #007E8C;">${meatQtyNote}</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.meatPackages}</td>
@@ -2927,16 +3022,16 @@
                                 </tr>
                                 <tr style="background: #f8fcfd;">
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                        <strong style="color: #236383;">${cleanCheese}</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">${r.cheeseDescription} &mdash; ${totalCheeseSlices} slices total</div>
+                                        <strong style="color: #236383;">${escapeHtml(cleanCheese)}</strong>
+                                        <div style="font-size: 11px; color: #007E8C;">${escapeHtml(r.cheeseDescription)} &mdash; ${totalCheeseSlices} slices total</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.cheesePackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.cheeseCost.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                        <strong style="color: #236383;">${cleanBread}</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">${r.breadDescription} &mdash; covers ~${totalBreadSandwiches} sandwiches total</div>
+                                        <strong style="color: #236383;">${escapeHtml(cleanBread)}</strong>
+                                        <div style="font-size: 11px; color: #007E8C;">${escapeHtml(r.breadDescription)} &mdash; covers ~${totalBreadSandwiches} sandwiches total</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.breadPackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.breadCost.toFixed(2)}</td>
@@ -2961,9 +3056,9 @@
                         <!-- Shopping Checklist -->
                         <h3 style="color: #236383; font-size: 15px; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 3px solid #47B3CB;">Shopping Checklist</h3>
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 13px;">
-                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.meatPackages}</strong> × ${cleanMeat}</td></tr>
-                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.cheesePackages}</strong> × ${cleanCheese}</td></tr>
-                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.breadPackages}</strong> × ${cleanBread}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.meatPackages}</strong> × ${escapeHtml(cleanMeat)}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.cheesePackages}</strong> × ${escapeHtml(cleanCheese)}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.breadPackages}</strong> × ${escapeHtml(cleanBread)}</td></tr>
                             <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.bagPackages}</strong> × Zip-lock sandwich bags (${PRODUCT_DATA.bags.countPerBox} count)</td></tr>
                         </table>
 
@@ -3065,7 +3160,9 @@
                 pbJarSize = pb.sizeOz;
                 pbTbspPerJar = pb.tablespoons;
                 pbJarPrice = pb.price;
-                pbDescription = pb.description;
+                pbDescription = (!changedFromDefault('peanutButter', pb, ['name', 'store', 'sizeOz']) && pb.description)
+                    ? pb.description
+                    : (pb.name + (pb.store ? ' • ' + pb.store : ''));
             } else {
                 pbJarSize = 16;
                 pbTbspPerJar = 30;
@@ -3080,7 +3177,9 @@
                 jellyJarSize = jelly.sizeOz;
                 jellyTbspPerJar = jelly.tablespoons;
                 jellyJarPrice = jelly.price;
-                jellyDescription = jelly.description;
+                jellyDescription = (!changedFromDefault('jelly', jelly, ['name', 'store', 'sizeOz']) && jelly.description)
+                    ? jelly.description
+                    : (jelly.name + (jelly.store ? ' • ' + jelly.store : ''));
             } else {
                 jellyJarSize = 12;
                 jellyTbspPerJar = 23;
@@ -3262,17 +3361,17 @@
                     <div class="package-tile">
                         <div class="pkg-label">Peanut Butter</div>
                         <div class="pkg-count">${pbJarsNeeded}</div>
-                        <div class="pkg-product">${pbDescription}</div>
+                        <div class="pkg-product">${escapeHtml(pbDescription)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Jelly</div>
                         <div class="pkg-count">${jellyJarsNeeded}</div>
-                        <div class="pkg-product">${jellyDescription}</div>
+                        <div class="pkg-product">${escapeHtml(jellyDescription)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Bread</div>
                         <div class="pkg-count">${breadLoavesNeeded}</div>
-                        <div class="pkg-product">${pbjBreadGridName}</div>
+                        <div class="pkg-product">${escapeHtml(pbjBreadGridName)}</div>
                     </div>
                 </div>
                 <ul class="shopping-receipt">
@@ -3280,7 +3379,7 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${pbJarsNeeded} × ${pbDescription}</div>
+                            <div class="item-name">${pbJarsNeeded} × ${escapeHtml(pbDescription)}</div>
                             <div class="item-meta">~${pbTbspPerJar} tbsp per jar</div>
                         </div>
                         <div class="item-price">$${pbCost.toFixed(2)}</div>
@@ -3289,7 +3388,7 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${jellyJarsNeeded} × ${jellyDescription}</div>
+                            <div class="item-name">${jellyJarsNeeded} × ${escapeHtml(jellyDescription)}</div>
                             <div class="item-meta">~${jellyTbspPerJar} tbsp per jar</div>
                         </div>
                         <div class="item-price">$${jellyCost.toFixed(2)}</div>
@@ -3298,7 +3397,7 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${breadLoavesNeeded} × ${pbjBreadName}</div>
+                            <div class="item-name">${breadLoavesNeeded} × ${escapeHtml(pbjBreadName)}</div>
                             <div class="item-meta">${usableBreadSlicesPerLoaf} usable slices per loaf</div>
                         </div>
                         <div class="item-price">$${breadCost.toFixed(2)}</div>
