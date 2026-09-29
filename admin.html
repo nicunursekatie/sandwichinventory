@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit sandwich products</title>
+    <script src="product-catalog.js"></script>
+    <style>
+        :root { --navy: #236383; --teal: #007E8C; --gold: #FBAD3F; --ink: #1f3340; --line: #d5e3ea; }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: #f4f7f8; }
+        header { background: var(--navy); color: white; padding: 20px 16px; }
+        header a { color: #d7f3f6; }
+        h1 { margin: 0 0 6px; font-size: 1.6rem; }
+        header p, .note { margin: 0; line-height: 1.45; }
+        main { max-width: 1100px; margin: 0 auto; padding: 16px; }
+        .toolbar, .status, section { background: white; border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+        .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; position: sticky; top: 8px; z-index: 2; }
+        button { border: 0; border-radius: 8px; padding: 8px 12px; font-weight: 700; cursor: pointer; background: #e8f2f5; color: var(--navy); }
+        button.primary { background: var(--gold); color: #1f1a12; }
+        h2 { margin: 0 0 10px; color: var(--navy); font-size: 1.15rem; }
+        .product { display: grid; grid-template-columns: 1.6fr 0.8fr repeat(auto-fit, minmax(110px, 0.7fr)) auto; gap: 8px; align-items: end; padding: 10px 0; border-top: 1px solid var(--line); }
+        .product.hidden-product { opacity: 0.55; }
+        label { display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; font-weight: 700; color: #3e6272; }
+        input[type="text"], input[type="number"], input[type="password"] { width: 100%; border: 1px solid #c5d6de; border-radius: 8px; padding: 8px; font: inherit; color: var(--ink); }
+        .login { max-width: 420px; }
+        .login p { color: #456674; line-height: 1.45; }
+        .login label { font-size: 0.85rem; margin: 12px 0; }
+        #loginError { color: #A31C41; font-weight: 700; min-height: 1.2em; }
+        .hide { align-items: center; flex-direction: row; gap: 6px; font-size: 0.85rem; padding-bottom: 8px; }
+        .status { background: #fff8eb; border-color: #f3d7a1; }
+        .add { margin-top: 8px; }
+        @media (max-width: 800px) {
+            .product { grid-template-columns: 1fr 1fr; }
+            .toolbar { position: static; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Sandwich product menu</h1>
+        <p>Sign in to change the products in the sandwich calculator dropdowns.</p>
+        <p style="margin-top: 8px;"><a href="inventorycalculator.html">Back to the calculator</a></p>
+    </header>
+    <main>
+        <section id="loginPanel" class="login toolbar">
+            <h2>Admin login</h2>
+            <p>Enter the password to edit names, stores, amounts, and prices. This only keeps the menu closed in this browser. It is not a server login, and anyone can still use the calculator.</p>
+            <form id="loginForm">
+                <label>Password
+                    <input id="adminPassword" type="password" autocomplete="current-password" required>
+                </label>
+                <p id="loginError"></p>
+                <button class="primary" type="submit">Sign in</button>
+            </form>
+        </section>
+        <div id="editor" hidden>
+        <div class="toolbar">
+            <button class="primary" id="saveBtn" type="button">Save changes</button>
+            <button id="resetBtn" type="button">Undo unsaved edits</button>
+            <button id="logoutBtn" type="button">Log out</button>
+        </div>
+        <div id="status" class="status">Loading products…</div>
+        <div id="sections"></div>
+        </div>
+    </main>
+    <script>
+        const STORAGE_KEY = 'tspInventoryCatalog';
+        const AUTH_KEY = 'tspAdminSession';
+        const ADMIN_PASSWORD_HASH = '3ffca04cc6f976acedfa7c5cc77d44363d28370166a1a1728a25b582ee37b14e';
+        const SECTIONS = [
+            { key: 'meat', title: 'Deli meat', amounts: [
+                { key: 'weightOz', label: 'Weight (oz)' },
+                { key: 'slices', label: 'Slices' }
+            ]},
+            { key: 'cheese', title: 'Cheese', amounts: [
+                { key: 'slices', label: 'Slices' }
+            ]},
+            { key: 'bread', title: 'Bread', amounts: [
+                { key: 'weightOz', label: 'Weight (oz)' },
+                { key: 'sandwichesPerLoaf', label: 'Sandwiches per loaf' }
+            ]},
+            { key: 'peanutButter', title: 'Peanut butter', amounts: [
+                { key: 'sizeOz', label: 'Jar weight (oz)' },
+                { key: 'tablespoons', label: 'Tablespoons' }
+            ]},
+            { key: 'jelly', title: 'Jelly', amounts: [
+                { key: 'sizeOz', label: 'Jar weight (oz)' },
+                { key: 'tablespoons', label: 'Tablespoons' }
+            ]}
+        ];
+        let catalog = null;
+        let savedCopy = null;
+
+        function clone(value) { return JSON.parse(JSON.stringify(value)); }
+
+        function catalogDefault(category, id) {
+            const source = window.TSP_DEFAULT_CATALOG || {};
+            const list = source[category] || [];
+            return list.find(function(item) { return item.id === id; }) || null;
+        }
+
+        function changedFromDefault(category, item, keys) {
+            const original = catalogDefault(category, item.id);
+            if (!original) return true;
+            return keys.some(function(key) {
+                return String(item[key] == null ? '' : item[key]) !== String(original[key] == null ? '' : original[key]);
+            });
+        }
+
+        function money(value) {
+            const amount = Number(value);
+            return Number.isFinite(amount) ? '$' + amount.toFixed(2) : '';
+        }
+
+        function refreshDerived(item, category) {
+            if (changedFromDefault(category, item, ['name'])) item.pricingTitle = item.name;
+            if (category === 'meat' && changedFromDefault(category, item, ['weightOz', 'slices', 'name', 'store'])) {
+                if (changedFromDefault(category, item, ['slices'])) item.dropdownSliceLabel = item.slices + ' slices';
+                if (item.id === 'turkey' && !item.slicesPerSandwich) {
+                    item.pricingSize = '2 × ' + (Number(item.weightOz) / 2) + ' oz • ' + item.slices + ' slices';
+                    item.description = '2-packs (~' + item.weightOz + ' oz total)';
+                } else {
+                    item.pricingSize = [item.weightOz ? item.weightOz + ' oz' : '', item.dropdownSliceLabel || (item.slices + ' slices')].filter(Boolean).join(' • ');
+                    item.description = (item.weightOz ? item.weightOz + ' oz packages' : (item.slices + ' slices')) + (item.store ? ' • ' + item.store : '');
+                }
+            }
+            if (category === 'cheese' && changedFromDefault(category, item, ['name', 'store', 'slices', 'price'])) {
+                const bits = [item.store, item.slices === '' || item.slices == null ? '' : '~' + item.slices + ' slices', money(item.price)].filter(Boolean);
+                item.dropdownLabel = item.name + (bits.length ? ' (' + bits.join(', ') + ')' : '');
+                item.description = (item.slices === '' || item.slices == null ? item.name : '~' + item.slices + ' slices each') + (item.store ? ' (' + item.store + ')' : '');
+                item.pricingTitle = item.name;
+            }
+            if (category === 'bread') {
+                if (item.sandwichesPerLoaf !== '') item.usableSlices = Number(item.sandwichesPerLoaf) * 2;
+                if (changedFromDefault(category, item, ['name', 'store', 'weightOz', 'sandwichesPerLoaf', 'price']) || !item.pricingPrice) {
+                    const weightLabel = item.dropdownWeightLabel || (item.weightOz + ' oz');
+                    const perSandwich = Number(item.sandwichesPerLoaf) ? Number(item.price) / Number(item.sandwichesPerLoaf) : NaN;
+                    item.pricingTitle = item.name;
+                    item.pricingSize = weightLabel + ' • ~' + item.sandwichesPerLoaf + ' sandwiches';
+                    item.pricingPrice = money(item.price);
+                    item.pricingNote = Number.isFinite(perSandwich) ? '~$' + perSandwich.toFixed(2) + '/sandwich' : '';
+                    item.description = 'loaves (~' + item.sandwichesPerLoaf + ' sandwiches each)' + (item.store ? ' • ' + item.store : '');
+                }
+            }
+            if (category === 'peanutButter' && item.sizeOz !== '' && (changedFromDefault(category, item, ['sizeOz']) || !item.sizeLabel)) {
+                item.sizeLabel = item.sizeOz + ' oz';
+            }
+            if (category === 'peanutButter' && changedFromDefault(category, item, ['name', 'store', 'sizeOz'])) {
+                item.description = item.name + (item.store ? ' • ' + item.store : '');
+            }
+            if (category === 'jelly' && changedFromDefault(category, item, ['name', 'store', 'sizeOz'])) {
+                item.description = item.name + (item.store ? ' • ' + item.store : '');
+            }
+            if (!item.description) item.description = item.name || '';
+        }
+        function num(value) {
+            if (value === '') return '';
+            const parsed = Number(value);
+            return Number.isFinite(parsed) ? parsed : '';
+        }
+        function isHidden(item) { return item.hidden === true || item.group === 'hidden'; }
+        function setStatus(message) { document.getElementById('status').textContent = message; }
+
+        function setHidden(item, hidden) {
+            item.hidden = hidden;
+            if (hidden) {
+                if (item.group && item.group !== 'hidden') item.savedGroup = item.group;
+                if (item.group) item.group = 'hidden';
+            } else if (item.group === 'hidden') {
+                item.group = item.savedGroup && item.savedGroup !== 'hidden' ? item.savedGroup : 'more';
+            }
+        }
+
+        function input(label, value, onInput, numeric) {
+            const wrap = document.createElement('label');
+            wrap.textContent = label;
+            const field = document.createElement('input');
+            field.type = numeric ? 'number' : 'text';
+            if (numeric) field.step = 'any';
+            field.value = value == null ? '' : value;
+            field.addEventListener('input', function() { onInput(field.value); });
+            wrap.appendChild(field);
+            return wrap;
+        }
+
+        function render() {
+            const root = document.getElementById('sections');
+            root.innerHTML = '';
+            SECTIONS.forEach(function(section) {
+                const block = document.createElement('section');
+                const title = document.createElement('h2');
+                title.textContent = section.title;
+                block.appendChild(title);
+                catalog[section.key].forEach(function(item) {
+                    const row = document.createElement('div');
+                    row.className = 'product' + (isHidden(item) ? ' hidden-product' : '');
+                    row.appendChild(input('Name', item.name, function(value) {
+                        item.name = value;
+                        item.pricingTitle = value;
+                    }));
+                    row.appendChild(input('Store', item.store || '', function(value) { item.store = value; }));
+                    section.amounts.forEach(function(amount) {
+                        row.appendChild(input(amount.label, item[amount.key], function(value) {
+                            item[amount.key] = num(value);
+                            if (amount.key === 'weightOz') item.dropdownWeightLabel = value === '' ? '' : (value + ' oz');
+                        }, true));
+                    });
+                    if (section.key === 'meat') {
+                        row.appendChild(input('Slices per sandwich', item.slicesPerSandwich, function(value) {
+                            const parsed = num(value);
+                            if (parsed === '') delete item.slicesPerSandwich;
+                            else item.slicesPerSandwich = parsed;
+                        }, true));
+                        row.appendChild(input('Meat type', item.meatType || 'turkey', function(value) {
+                            item.meatType = value.trim() || 'turkey';
+                        }));
+                    }
+                    if (section.key === 'cheese') {
+                        row.appendChild(input('Cheese type', item.cheeseType || '', function(value) {
+                            item.cheeseType = value.trim();
+                        }));
+                    }
+                    row.appendChild(input('Price', item.price, function(value) { item.price = num(value); }, true));
+                    const hide = document.createElement('label');
+                    hide.className = 'hide';
+                    const box = document.createElement('input');
+                    box.type = 'checkbox';
+                    box.checked = isHidden(item);
+                    box.addEventListener('change', function() {
+                        setHidden(item, box.checked);
+                        row.className = 'product' + (box.checked ? ' hidden-product' : '');
+                    });
+                    hide.append(box, document.createTextNode('Hide'));
+                    row.appendChild(hide);
+                    block.appendChild(row);
+                });
+                const add = document.createElement('button');
+                add.type = 'button';
+                add.className = 'add';
+                add.textContent = 'Add ' + section.title.toLowerCase();
+                add.addEventListener('click', function() {
+                    catalog[section.key].push(blankProduct(section.key));
+                    render();
+                });
+                block.appendChild(add);
+                root.appendChild(block);
+            });
+        }
+
+        function blankProduct(category) {
+            const id = category + '-' + Date.now();
+            if (category === 'meat') return { id: id, name: '', store: '', price: '', weightOz: '', slices: '', meatType: 'turkey', group: 'more', description: '', pricingTitle: '', pricingSize: '' };
+            if (category === 'cheese') return { id: id, name: '', store: '', price: '', slices: '', cheeseType: 'muenster', description: '', pricingTitle: '' };
+            if (category === 'bread') return { id: id, name: '', store: '', price: '', weightOz: '', sandwichesPerLoaf: '', usableSlices: '', description: '', pricingTitle: '', pricingSize: '' };
+            if (category === 'peanutButter') return { id: id, name: '', store: '', price: '', sizeOz: '', tablespoons: '', sizeLabel: '', description: '' };
+            return { id: id, name: '', store: '', price: '', sizeOz: '', tablespoons: '', description: '' };
+        }
+
+        function save() {
+            const problem = [];
+            SECTIONS.forEach(function(section) {
+                catalog[section.key].forEach(function(item) {
+                    if (!String(item.name || '').trim()) problem.push(section.title);
+                });
+            });
+            if (problem.length) {
+                setStatus('Add a name before saving. A ' + problem[0].toLowerCase() + ' row is blank.');
+                return;
+            }
+            catalog.metadata = catalog.metadata || {};
+            catalog.metadata.lastUpdated = new Date().toISOString().slice(0, 10);
+            SECTIONS.forEach(function(section) {
+                catalog[section.key].forEach(function(item) {
+                    refreshDerived(item, section.key);
+                });
+            });
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
+            savedCopy = clone(catalog);
+            setStatus('Saved. The calculator on this computer now uses this product list.');
+        }
+
+        async function loadCatalog() {
+            catalog = clone(window.TSP_DEFAULT_CATALOG);
+            try {
+                const response = await fetch('product-catalog.json', { cache: 'no-store' });
+                if (response.ok) catalog = await response.json();
+            } catch (error) { /* Use the embedded list. */ }
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (saved) {
+                try { catalog = JSON.parse(saved); } catch (error) { /* Keep the shared list. */ }
+            }
+            savedCopy = clone(catalog);
+            render();
+            setStatus(saved ? 'Showing products saved on this computer.' : 'Showing the current calculator products.');
+        }
+
+        async function passwordHash(password) {
+            const bytes = new TextEncoder().encode(password);
+            const digest = await crypto.subtle.digest('SHA-256', bytes);
+            return Array.from(new Uint8Array(digest)).map(function(byte) {
+                return byte.toString(16).padStart(2, '0');
+            }).join('');
+        }
+
+        function showEditor() {
+            document.getElementById('loginPanel').hidden = true;
+            document.getElementById('editor').hidden = false;
+            if (!catalog) loadCatalog();
+        }
+
+        function showLogin() {
+            document.getElementById('loginPanel').hidden = false;
+            document.getElementById('editor').hidden = true;
+            document.getElementById('adminPassword').value = '';
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+            const error = document.getElementById('loginError');
+            const entered = document.getElementById('adminPassword').value;
+            const hash = await passwordHash(entered);
+            if (hash !== ADMIN_PASSWORD_HASH) {
+                error.textContent = 'That password is not correct.';
+                return;
+            }
+            error.textContent = '';
+            sessionStorage.setItem(AUTH_KEY, 'signed-in');
+            showEditor();
+        });
+
+        document.getElementById('saveBtn').addEventListener('click', save);
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            catalog = clone(savedCopy);
+            render();
+            setStatus('Undid unsaved edits.');
+        });
+        document.getElementById('logoutBtn').addEventListener('click', function() {
+            sessionStorage.removeItem(AUTH_KEY);
+            showLogin();
+        });
+        if (sessionStorage.getItem(AUTH_KEY) === 'signed-in') showEditor();
+    </script>
+</body>
+</html>

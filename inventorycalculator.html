@@ -1295,7 +1295,12 @@
                 <a href="#pricing-info" class="nav-link"><span class="icon icon-chart icon-accent"></span> Pricing Info</a>
                 <a href="#recipe" class="nav-link"><span class="icon icon-sandwich icon-primary"></span> Recipes</a>
                 <a href="#food-safety" class="nav-link"><span class="icon icon-shield icon-alert"></span> Food Safety</a>
+                <a href="admin.html" class="nav-link"><span class="icon icon-clipboard icon-accent"></span> Edit products</a>
             </div>
+        </div>
+        <div id="catalog-banner" hidden style="max-width: 1100px; margin: 0 auto 16px auto; background: #fff8eb; border: 2px solid #FBAD3F; color: #236383; border-radius: 10px; padding: 12px 16px; font-weight: 600;">
+            This browser is using the product list saved from Edit products.
+            <a href="admin.html" style="color: #007E8C; margin-left: 8px;">Open product admin</a>
         </div>
 
 
@@ -2060,55 +2065,155 @@
         </div>
     </div>
     
+    <script src="product-catalog.js"></script>
     <script>
         // ===============================================================
         // PRODUCT DATA - Single source of truth for all product info
         // ===============================================================
-        const PRODUCT_DATA = {
-            metadata: { lastUpdated: "2025-09-17", version: "1.0" },
-            meat: [
-                { id: 'kroger-chicken-thin', name: 'Kroger Chicken Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 3.99, meatType: 'chicken', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Chicken Thin', pricingSize: '9 oz \u2022 18 slices' },
-                { id: 'publix-turkey', name: 'Publix Turkey Breast, Thin Sliced', store: 'Publix', weightOz: 16, slices: 32, price: 8.27, meatType: 'turkey', group: 'popular', description: '16 oz packages', pricingTitle: 'Publix Turkey Breast', pricingSize: '16 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'main' },
-                { id: 'kroger-turkey-thin', name: 'Kroger Turkey Thin Sliced', store: 'Kroger', weightOz: 9, slices: 18, price: 3.99, meatType: 'turkey', group: 'popular', description: '9 oz packages', pricingTitle: 'Kroger Turkey Thin Sliced', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'main' },
-                { id: 'kroger-turkey-family', name: 'Kroger Turkey Family Size', store: 'Kroger', weightOz: 16, slices: 48, price: 5.99, meatType: 'turkey', group: 'popular', description: '1 lb packages (16 oz)', dropdownSliceLabel: '48 slices', pricingTitle: 'Kroger Turkey Family Size', pricingSize: '1 lb \u2022 48 slices', showInPricing: true, pricingGroup: 'main' },
-                { id: 'turkey', name: 'Kirkland Turkey', store: 'Costco', weightOz: 40, slices: 40, price: 14.99, meatType: 'turkey', group: 'more', description: '2-packs (~40 oz total)', pricingTitle: 'Kirkland Turkey', pricingSize: '2 \u00d7 20 oz \u2022 40 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'hillshire-turkey', name: 'Hillshire Farm Ultra Thin Turkey', store: 'Various', weightOz: 9, slices: 18, price: 4.99, meatType: 'turkey', group: 'more', description: '9 oz packages', pricingTitle: 'Hillshire Farm Ultra Thin Turkey', pricingSize: '9 oz \u2022 18 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'land-o-frost-turkey', name: "Land O'Frost Premium Turkey", store: 'Various', weightOz: 16, slices: 32, price: 7.99, meatType: 'turkey', group: 'more', description: '14\u201316 oz packages', pricingTitle: "Land O'Frost Premium Turkey", pricingSize: '14\u201316 oz \u2022 32 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'kroger-turkey-regular', name: 'Kroger Private Selection\u00AE Turkey', store: 'Kroger', weightOz: 8, slices: 11.5, price: 7.99, meatType: 'turkey', group: 'more', description: '8 oz packages', dropdownSliceLabel: '11-12 slices', pricingTitle: 'Kroger Private Selection\u00AE Turkey', pricingSize: '8 oz \u2022 11-12 slices', showInPricing: true, pricingGroup: 'more' },
-                { id: 'oscar-mayer-chicken-rotisserie', name: 'Oscar Mayer Rotisserie Chicken', store: 'Various', weightOz: 16, slices: 48, price: 7.99, meatType: 'chicken', group: 'more', description: '16 oz packages', pricingTitle: 'Oscar Mayer Rotisserie Chicken', pricingSize: '1 lb \u2022 48 slices' },
-                { id: 'oscar-mayer-chicken-blackened', name: 'Oscar Mayer Blackened Chicken', store: 'Various', weightOz: 8, slices: 16, price: 4.49, meatType: 'chicken', group: 'hidden', description: '8 oz packages' }
-            ],
-            cheese: [
-                { id: 'finlandia-muenster', name: 'Finlandia Muenster Deli Slices - Costco', store: 'Costco', slices: 32, price: 8.96, cheeseType: 'muenster', dropdownLabel: 'Finlandia Muenster Deli Slices - Costco (2 lbs, ~32 slices, $8.96)', description: '~32 slices each (2 lbs)', pricingTitle: 'Finlandia Muenster (Costco)' },
-                { id: 'arla-havarti', name: 'Arla Havarti Cheese Slices - Costco', store: 'Costco', slices: 32, price: 10.20, cheeseType: 'havarti', dropdownLabel: 'Arla Havarti Cheese Slices - Costco (2 lbs, ~32 slices, $10.20)', description: '~32 slices each (2 lbs)', pricingTitle: 'Arla Havarti (Costco)' },
-                { id: 'members-mark-provolone', name: "Member's Mark Smoked Provolone - Sam's Club", store: "Sam's Club", slices: 42, price: 6.96, cheeseType: 'provolone', dropdownLabel: "Member's Mark Smoked Provolone - Sam's Club (2 lbs, ~42 slices, $6.96)", description: '~42 slices each (2 lbs)', pricingTitle: "Member's Mark Provolone (Sam's Club)" },
-                { id: 'finlandia-variety', name: 'Finlandia Premium Cheese Slices Variety Pack - Costco', store: 'Costco', slices: 40, price: 8.99, cheeseType: 'variety', dropdownLabel: 'Finlandia Premium Cheese Slices Variety Pack - Costco (2 lbs, ~40 slices, $8.99)', description: '~40 slices each (2 lbs)', pricingTitle: 'Finlandia Variety Pack (Costco)' }
-            ],
-            bread: [
-                { id: 'great-value-white', name: 'Great Value White Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.48, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Great Value White', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.48', pricingNote: '~$0.13/sandwich' },
-                { id: 'kroger-white', name: 'Kroger White Sandwich Bread', weightOz: 20, sandwichesPerLoaf: 11, usableSlices: 22, price: 1.50, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Kroger White Sandwich', pricingSize: '20 oz \u2022 ~11 sandwiches', pricingPrice: '$1.00\u2013$1.99', pricingNote: '~$0.09\u2013$0.18/sandwich' },
-                { id: 'wonder-classic', name: 'Wonder Bread Classic White \u2014 Regular Loaf', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.63, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Wonder Bread Classic White \u2014 Regular Loaf', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$2.47\u2013$4.79', pricingNote: '~$0.25\u2013$0.48/sandwich' },
-                { id: 'wonder-giant', name: 'Wonder Bread Giant White \u2014 Large Loaf', weightOz: 24, sandwichesPerLoaf: 11, usableSlices: 22, price: 4.64, description: 'loaves (~11 sandwiches each)', pricingTitle: 'Wonder Bread Giant White \u2014 Large Loaf', pricingSize: '24 oz \u2022 ~11 sandwiches', pricingPrice: '$3.99\u2013$5.29', pricingNote: '~$0.36\u2013$0.48/sandwich' },
-                { id: 'sara-lee-butter', name: 'Sara Lee Butter Bread', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.14, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Sara Lee Butter Bread', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$2.98\u2013$3.29', pricingNote: '~$0.30\u2013$0.33/sandwich' },
-                { id: 'sara-lee-classic', name: 'Sara Lee Classic White Bread', weightOz: 20, sandwichesPerLoaf: 10, usableSlices: 20, price: 3.99, description: 'loaves (~10 sandwiches each)', pricingTitle: 'Sara Lee Classic White', pricingSize: '20 oz \u2022 ~10 sandwiches', pricingPrice: '$3.48\u2013$4.49', pricingNote: '~$0.35\u2013$0.45/sandwich' },
-                { id: 'natures-own-honey-wheat-2pk', name: "Nature's Own Honey Wheat 2-Pack", weightOz: 40, sandwichesPerLoaf: 20, usableSlices: 40, price: 5.98, description: '2-packs (~20 sandwiches each)', dropdownWeightLabel: '2x 20 oz', pricingTitle: "Nature's Own Honey Wheat (2-Pack)", pricingSize: '2x 20 oz \u2022 ~20 sandwiches', pricingPrice: '$5.98', pricingNote: '~$0.30/sandwich' }
-            ],
-            peanutButter: [
-                { id: 'great-value-pb-16', name: 'Great Value Creamy Peanut Butter 16 oz', sizeOz: 16, tablespoons: 30, price: 2.18, description: 'Great Value Creamy 16 oz', sizeLabel: '454g' },
-                { id: 'kroger-pb-16', name: 'Kroger Creamy Peanut Butter 16 oz', sizeOz: 16, tablespoons: 30, price: 2.49, description: 'Kroger Creamy 16 oz', sizeLabel: '454g' },
-                { id: 'peter-pan-16', name: 'Peter Pan Creamy Peanut Butter 16.3 oz', sizeOz: 16.3, tablespoons: 31, price: 3.29, description: 'Peter Pan Creamy 16.3 oz', sizeLabel: '462g' },
-                { id: 'jif-16', name: 'Jif Creamy Peanut Butter 16 oz', sizeOz: 16, tablespoons: 30, price: 3.59, description: 'Jif Creamy 16 oz', sizeLabel: '454g' },
-                { id: 'skippy-16', name: 'Skippy Creamy Peanut Butter 16.3 oz', sizeOz: 16.3, tablespoons: 31, price: 3.59, description: 'Skippy Creamy 16.3 oz', sizeLabel: '462g' }
-            ],
-            jelly: [
-                { id: 'great-value-grape-12', name: "Great Value Grape Jelly 12 oz", sizeOz: 12, tablespoons: 23, price: 1.78, description: "Great Value Grape Jelly 12 oz" },
-                { id: 'smuckers-grape-12', name: "Smucker's Grape Jelly 12 oz", sizeOz: 12, tablespoons: 23, price: 3.29, description: "Smucker's Grape Jelly 12 oz" },
-                { id: 'welchs-grape-15', name: "Welch's Grape Jelly 15 oz", sizeOz: 15, tablespoons: 28, price: 3.49, description: "Welch's Grape Jelly 15 oz" },
-                { id: 'welchs-squeeze-18', name: "Welch's Natural Concord Grape Squeeze 18 oz", sizeOz: 18, tablespoons: 34, price: 3.83, description: "Welch's Squeeze Grape Jelly 18 oz" }
-            ],
-            bags: { countPerBox: 480, pricePerBox: 7.99 },
-            spatulas: { pricePerPack: 5.99, countPerPack: 4, amazonUrl: "https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" }
-        };
+        const CATALOG_STORAGE_KEY = 'tspInventoryCatalog';
+        const PRODUCT_DATA = JSON.parse(JSON.stringify(window.TSP_DEFAULT_CATALOG || {}));
+
+        function isVisibleProduct(item) {
+            return item && item.hidden !== true && item.group !== 'hidden';
+        }
+
+        function escapeHtml(value) {
+            return String(value == null ? '' : value)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
+        function money(value) {
+            const amount = Number(value);
+            return Number.isFinite(amount) ? '$' + amount.toFixed(2) : '';
+        }
+
+        function catalogDefault(category, id) {
+            const source = window.TSP_DEFAULT_CATALOG || {};
+            const list = source[category] || [];
+            return list.find(function(item) { return item.id === id; }) || null;
+        }
+
+        function changedFromDefault(category, item, keys) {
+            const original = catalogDefault(category, item.id);
+            if (!original) return true;
+            return keys.some(function(key) {
+                return String(item[key] == null ? '' : item[key]) !== String(original[key] == null ? '' : original[key]);
+            });
+        }
+
+        function meatSliceLabel(m) {
+            if (m.dropdownSliceLabel && !changedFromDefault('meat', m, ['slices'])) return m.dropdownSliceLabel;
+            return m.slices + ' slices';
+        }
+
+        function meatOptionLabel(m) {
+            const price = money(m.price);
+            const sliceLabel = meatSliceLabel(m);
+            const perSlice = Number(m.slices) ? (Number(m.price) / Number(m.slices)).toFixed(2) : '';
+            const turkeyPack = m.id === 'turkey' && !m.slicesPerSandwich;
+            if (turkeyPack && !changedFromDefault('meat', m, ['name', 'store', 'weightOz'])) {
+                return m.name + ' (2 × ' + (Number(m.weightOz) / 2) + ' oz packages, ' + price + ' total)';
+            }
+            if (turkeyPack) {
+                const bits = [m.store, '2 × ' + (Number(m.weightOz) / 2) + ' oz packages', price ? price + ' total' : ''].filter(Boolean);
+                return m.name + ' (' + bits.join(', ') + ')';
+            }
+            const sizeLabel = Number(m.weightOz) >= 16 ? (Number(m.weightOz) === 16 ? '1 lb' : m.weightOz + ' oz') : (m.weightOz + ' oz');
+            const storeBit = m.store && (changedFromDefault('meat', m, ['store']) || !catalogDefault('meat', m.id)) ? m.store + ', ' : '';
+            const perBit = perSlice ? ' - $' + perSlice + '/slice' : '';
+            return m.name + ' (' + storeBit + sizeLabel + ' / ' + sliceLabel + ', ' + price + ')' + perBit;
+        }
+
+        function cheeseOptionLabel(c) {
+            if (c.dropdownLabel && !changedFromDefault('cheese', c, ['name', 'store', 'slices', 'price'])) return c.dropdownLabel;
+            const bits = [c.store, (c.slices === '' || c.slices == null ? '' : '~' + c.slices + ' slices'), money(c.price)].filter(Boolean);
+            return c.name + (bits.length ? ' (' + bits.join(', ') + ')' : '');
+        }
+
+        function breadDisplay(b) {
+            const edited = changedFromDefault('bread', b, ['name', 'store', 'weightOz', 'sandwichesPerLoaf', 'price']);
+            if (!edited && b.pricingTitle) {
+                return { title: b.pricingTitle, size: b.pricingSize || '', price: b.pricingPrice || money(b.price), note: b.pricingNote || '' };
+            }
+            const perSandwich = Number(b.sandwichesPerLoaf) ? Number(b.price) / Number(b.sandwichesPerLoaf) : NaN;
+            const weightLabel = b.dropdownWeightLabel || (b.weightOz + ' oz');
+            return {
+                title: b.name || '',
+                size: weightLabel + ' • ~' + b.sandwichesPerLoaf + ' sandwiches',
+                price: money(b.price),
+                note: Number.isFinite(perSandwich) ? '~$' + perSandwich.toFixed(2) + '/sandwich' : ''
+            };
+        }
+
+        function applyCatalog(catalog) {
+            if (!catalog) return;
+            ['meat', 'cheese', 'bread', 'peanutButter', 'jelly'].forEach(function(key) {
+                if (Array.isArray(catalog[key])) PRODUCT_DATA[key] = catalog[key];
+            });
+            if (catalog.bags) PRODUCT_DATA.bags = catalog.bags;
+            if (catalog.spatulas) PRODUCT_DATA.spatulas = catalog.spatulas;
+            if (catalog.metadata) PRODUCT_DATA.metadata = catalog.metadata;
+            buildProductIndex();
+        }
+
+        async function loadPublishedCatalog() {
+            try {
+                const response = await fetch('product-catalog.json', { cache: 'no-store' });
+                if (!response.ok) return;
+                applyCatalog(await response.json());
+            } catch (error) {
+                console.warn('Published product list could not be loaded.', error);
+            }
+        }
+
+        function loadSavedCatalog() {
+            const banner = document.getElementById('catalog-banner');
+            try {
+                const raw = localStorage.getItem(CATALOG_STORAGE_KEY);
+                if (!raw) {
+                    if (banner) banner.hidden = true;
+                    return false;
+                }
+                applyCatalog(JSON.parse(raw));
+                if (banner) banner.hidden = false;
+                return true;
+            } catch (error) {
+                console.warn('Saved product list could not be loaded.', error);
+                return false;
+            }
+        }
+
+        function refreshProductViews() {
+            const meatSelect = document.getElementById('meatType');
+            const cheeseSelect = document.getElementById('cheeseType');
+            const breadSelect = document.getElementById('breadType');
+            const pbSelect = document.getElementById('pbType');
+            const jellySelect = document.getElementById('jellyType');
+            const selected = {
+                meat: meatSelect ? meatSelect.value : '',
+                cheese: cheeseSelect ? cheeseSelect.value : '',
+                bread: breadSelect ? breadSelect.value : '',
+                pb: pbSelect ? pbSelect.value : '',
+                jelly: jellySelect ? jellySelect.value : ''
+            };
+            buildMeatDropdown();
+            buildCheeseDropdown();
+            buildBreadDropdowns();
+            buildPBDropdown();
+            buildJellyDropdown();
+            buildPricingCards();
+            buildPricingSummaryTable();
+            if (meatSelect && selected.meat) meatSelect.value = selected.meat;
+            if (cheeseSelect && selected.cheese) cheeseSelect.value = selected.cheese;
+            if (breadSelect && selected.bread) breadSelect.value = selected.bread;
+            if (pbSelect && selected.pb) pbSelect.value = selected.pb;
+            if (jellySelect && selected.jelly) jellySelect.value = selected.jelly;
+        }
+
 
         // ===============================================================
         // PRODUCT INDEX - Flat lookup by category + id
@@ -2128,25 +2233,20 @@
         function buildMeatDropdown() {
             const select = document.getElementById('meatType');
             select.innerHTML = '<option value="">Choose your meat</option>';
-            const popular = PRODUCT_DATA.meat.filter(m => m.group === 'popular');
-            const more = PRODUCT_DATA.meat.filter(m => m.group === 'more');
-            function meatOptionLabel(m) {
-                const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
-                const perSlice = (m.price / m.slices).toFixed(2);
-                if (m.id === 'turkey') {
-                    return 'Kirkland Turkey (2 \u00d7 20 oz packages, $' + m.price.toFixed(2) + ' total)';
-                }
-                const sizeLabel = m.weightOz >= 16 ? (m.weightOz === 16 ? '1 lb' : m.weightOz + ' oz') : m.weightOz + ' oz';
-                return m.name + ' (' + sizeLabel + ' / ' + sliceLabel + ', $' + m.price.toFixed(2) + ') - $' + perSlice + '/slice';
+            const popular = PRODUCT_DATA.meat.filter(m => m.group === 'popular' && isVisibleProduct(m));
+            const more = PRODUCT_DATA.meat.filter(m => m.group === 'more' && isVisibleProduct(m));
+            if (popular.length) {
+                const popularGroup = document.createElement('optgroup');
+                popularGroup.label = 'Popular Options';
+                popular.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); popularGroup.appendChild(opt); });
+                select.appendChild(popularGroup);
             }
-            const popularGroup = document.createElement('optgroup');
-            popularGroup.label = 'Popular Options';
-            popular.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); popularGroup.appendChild(opt); });
-            select.appendChild(popularGroup);
-            const moreGroup = document.createElement('optgroup');
-            moreGroup.label = 'More Options';
-            more.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); moreGroup.appendChild(opt); });
-            select.appendChild(moreGroup);
+            if (more.length) {
+                const moreGroup = document.createElement('optgroup');
+                moreGroup.label = 'More Options';
+                more.forEach(m => { const opt = document.createElement('option'); opt.value = m.id; opt.textContent = meatOptionLabel(m); moreGroup.appendChild(opt); });
+                select.appendChild(moreGroup);
+            }
             const customGroup = document.createElement('optgroup');
             customGroup.label = 'Custom';
             const customOpt = document.createElement('option');
@@ -2160,15 +2260,19 @@
             const select = document.getElementById('cheeseType');
             select.innerHTML = '<option value="">Choose your cheese</option>';
             const typeLabels = { muenster: 'Muenster Cheese (Deli Slices)', havarti: 'Havarti Cheese (Deli Slices)', provolone: 'Provolone Cheese (Deli Slices)', variety: 'Variety Pack (Deli Slices)' };
-            ['muenster', 'havarti', 'provolone', 'variety'].forEach(type => {
-                const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type);
+            const cheeseTypes = ['muenster', 'havarti', 'provolone', 'variety'].filter(type => PRODUCT_DATA.cheese.some(c => c.cheeseType === type && isVisibleProduct(c)));
+            PRODUCT_DATA.cheese.forEach(c => {
+                if (isVisibleProduct(c) && cheeseTypes.indexOf(c.cheeseType) === -1) cheeseTypes.push(c.cheeseType);
+            });
+            cheeseTypes.forEach(type => {
+                const items = PRODUCT_DATA.cheese.filter(c => c.cheeseType === type && isVisibleProduct(c));
                 if (items.length === 0) return;
                 const group = document.createElement('optgroup');
-                group.label = typeLabels[type];
+                group.label = typeLabels[type] || (type + ' Cheese (Deli Slices)');
                 items.forEach(c => {
                     const opt = document.createElement('option');
                     opt.value = c.id;
-                    opt.textContent = c.dropdownLabel ? c.dropdownLabel : c.name + ' (' + c.slices + ' slices, $' + c.price.toFixed(2) + ')';
+                    opt.textContent = cheeseOptionLabel(c);
                     group.appendChild(opt);
                 });
                 select.appendChild(group);
@@ -2179,11 +2283,12 @@
             [document.getElementById('breadType'), document.getElementById('pbjBreadType')].forEach(select => {
                 if (!select) return;
                 select.innerHTML = '<option value="">Choose your bread</option>';
-                PRODUCT_DATA.bread.forEach(b => {
+                PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => {
                     const opt = document.createElement('option');
                     opt.value = b.id;
                     const wLabel = b.dropdownWeightLabel || (b.weightOz + ' oz');
-                    opt.textContent = b.name + ' (' + wLabel + ', ~' + b.sandwichesPerLoaf + ' sandwiches, $' + b.price.toFixed(2) + ')';
+                    const storeBit = b.store && (changedFromDefault('bread', b, ['store']) || !catalogDefault('bread', b.id)) ? b.store + ', ' : '';
+                    opt.textContent = b.name + ' (' + storeBit + wLabel + ', ~' + b.sandwichesPerLoaf + ' sandwiches, ' + money(b.price) + ')';
                     select.appendChild(opt);
                 });
             });
@@ -2192,10 +2297,12 @@
         function buildPBDropdown() {
             const select = document.getElementById('pbType');
             select.innerHTML = '';
-            PRODUCT_DATA.peanutButter.forEach(pb => {
+            PRODUCT_DATA.peanutButter.filter(isVisibleProduct).forEach(pb => {
                 const opt = document.createElement('option');
                 opt.value = pb.id;
-                opt.textContent = pb.name + ' (' + pb.sizeLabel + ', ~' + pb.tablespoons + ' tbsp) - $' + pb.price.toFixed(2);
+                const sizeLabel = (changedFromDefault('peanutButter', pb, ['sizeOz']) || !pb.sizeLabel) ? (pb.sizeOz + ' oz') : pb.sizeLabel;
+                const storeBit = pb.store ? pb.store + ', ' : '';
+                opt.textContent = pb.name + ' (' + storeBit + sizeLabel + ', ~' + pb.tablespoons + ' tbsp) - ' + money(pb.price);
                 select.appendChild(opt);
             });
         }
@@ -2203,10 +2310,11 @@
         function buildJellyDropdown() {
             const select = document.getElementById('jellyType');
             select.innerHTML = '';
-            PRODUCT_DATA.jelly.forEach(j => {
+            PRODUCT_DATA.jelly.filter(isVisibleProduct).forEach(j => {
                 const opt = document.createElement('option');
                 opt.value = j.id;
-                opt.textContent = j.name + ' (~' + j.tablespoons + ' tbsp) - $' + j.price.toFixed(2);
+                const storeBit = j.store ? j.store + ', ' : '';
+                opt.textContent = j.name + ' (' + storeBit + '~' + j.tablespoons + ' tbsp) - ' + money(j.price);
                 select.appendChild(opt);
             });
         }
@@ -2214,101 +2322,180 @@
         // ===============================================================
         // PRICING SECTION BUILDERS
         // ===============================================================
+        function textEl(tag, className, text) {
+            const node = document.createElement(tag);
+            if (className) node.className = className;
+            node.textContent = text == null ? '' : String(text);
+            return node;
+        }
+
+        function priceCategory(label, cards) {
+            const category = document.createElement('div');
+            category.className = 'price-category';
+            category.appendChild(textEl('div', 'category-label', label));
+            const grid = document.createElement('div');
+            grid.className = 'price-grid';
+            cards.forEach(function(card) { grid.appendChild(card); });
+            category.appendChild(grid);
+            return category;
+        }
+
+        function priceCard(className, rows) {
+            const card = document.createElement('div');
+            card.className = 'price-card' + (className ? ' ' + className : '');
+            rows.forEach(function(row) { card.appendChild(textEl('div', row.className, row.text)); });
+            return card;
+        }
+
         function buildPricingCards() {
             const container = document.getElementById('pricing-cards-container');
             if (!container) return;
 
-            function meatCard(m) {
-                const ps = (m.price / m.slices).toFixed(2);
-                const cardClass = m.meatType === 'chicken' ? 'card-chicken' : 'card-turkey';
-                const typeLabel = m.meatType === 'chicken' ? 'CHICKEN' : 'TURKEY';
-                return '<div class="price-card ' + cardClass + '">' +
-                    '<div class="meat-type-label">' + typeLabel + '</div>' +
-                    '<div class="product-title">' + (m.pricingTitle || m.name) + '</div>' +
-                    '<div class="product-size">' + (m.pricingSize || (m.weightOz + ' oz')) + '</div>' +
-                    '<div class="product-price">$' + m.price.toFixed(2) + '</div>' +
-                    '<div class="price-note">~$' + ps + '/slice</div></div>';
-            }
-
-            function cheeseCard(c) {
-                const ps = (c.price / c.slices).toFixed(2);
-                const sizeLabel = c.description && c.description.includes('2 lbs') ? c.slices + ' slices (2 lbs)' : c.slices + ' slices';
-                const cardClass = 'card-cheese-' + c.cheeseType;
-                const typeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', variety: 'VARIETY' };
-                return '<div class="price-card ' + cardClass + '">' +
-                    '<div class="meat-type-label">' + (typeLabels[c.cheeseType] || '') + '</div>' +
-                    '<div class="product-title">' + (c.pricingTitle || c.name) + '</div>' +
-                    '<div class="product-size">' + sizeLabel + '</div>' +
-                    '<div class="product-price">$' + c.price.toFixed(2) + '</div>' +
-                    '<div class="price-note">~$' + ps + '/slice</div></div>';
-            }
-
-            // Meat — all visible products, no collapse
-            let meatHTML = '<div class="price-category"><div class="category-label">DELI MEAT</div><div class="price-grid">';
-            PRODUCT_DATA.meat.filter(m => m.group !== 'hidden').forEach(m => { meatHTML += meatCard(m); });
-            meatHTML += '</div></div>';
-
-            // Cheese — all types
-            let cheeseHTML = '<div class="price-category"><div class="category-label">CHEESE (Deli Slices)</div><div class="price-grid">';
-            PRODUCT_DATA.cheese.forEach(c => { cheeseHTML += cheeseCard(c); });
-            cheeseHTML += '</div></div>';
-
-            // Bread
-            let breadHTML = '<div class="price-category"><div class="category-label">BREAD</div><div class="price-grid">';
-            PRODUCT_DATA.bread.forEach(b => {
-                breadHTML += '<div class="price-card card-bread">' +
-                    '<div class="product-title">' + b.pricingTitle + '</div>' +
-                    '<div class="product-size">' + b.pricingSize + '</div>' +
-                    '<div class="product-price">' + b.pricingPrice + '</div>' +
-                    '<div class="price-note">' + b.pricingNote + '</div></div>';
+            const meatCards = PRODUCT_DATA.meat.filter(isVisibleProduct).map(function(m) {
+                const perSlice = Number(m.slices) ? (m.price / m.slices).toFixed(2) : '';
+                const title = (m.pricingTitle && !changedFromDefault('meat', m, ['name'])) ? m.pricingTitle : (m.name || '');
+                let size = m.pricingSize || ((m.weightOz || '') + ' oz');
+                if (changedFromDefault('meat', m, ['weightOz', 'slices']) || !m.pricingSize) {
+                    size = m.id === 'turkey' && !m.slicesPerSandwich
+                        ? ('2 × ' + (Number(m.weightOz) / 2) + ' oz • ' + m.slices + ' slices')
+                        : [m.weightOz ? m.weightOz + ' oz' : '', meatSliceLabel(m)].filter(Boolean).join(' • ');
+                }
+                return priceCard(m.meatType === 'chicken' ? 'card-chicken' : 'card-turkey', [
+                    { className: 'meat-type-label', text: m.meatType === 'chicken' ? 'CHICKEN' : 'TURKEY' },
+                    { className: 'product-title', text: title },
+                    { className: 'product-size', text: size },
+                    { className: 'product-price', text: money(m.price) },
+                    { className: 'price-note', text: perSlice ? '~$' + perSlice + '/slice' : '' }
+                ]);
             });
-            breadHTML += '</div></div>';
 
-            // Supplies
-            let suppliesHTML = '<div class="price-category"><div class="category-label">SUPPLIES</div><div class="price-grid">' +
-                '<div class="price-card card-supplies">' +
-                '<div class="product-title">Sandwich Bags</div>' +
-                '<div class="product-size">' + PRODUCT_DATA.bags.countPerBox + ' count</div>' +
-                '<div class="product-price">$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</div>' +
-                '<div class="price-note">~$' + (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) + '/bag</div></div></div></div>';
+            const cheeseTypeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', variety: 'VARIETY' };
+            const cheeseCards = PRODUCT_DATA.cheese.filter(isVisibleProduct).map(function(c) {
+                const perSlice = Number(c.slices) ? (c.price / c.slices).toFixed(2) : '';
+                const keepPackNote = !changedFromDefault('cheese', c, ['slices']) && c.description && c.description.includes('2 lbs');
+                const title = (c.pricingTitle && !changedFromDefault('cheese', c, ['name'])) ? c.pricingTitle : (c.name || '');
+                const cheeseClass = 'card-cheese-' + String(c.cheeseType || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
+                return priceCard(cheeseClass, [
+                    { className: 'meat-type-label', text: cheeseTypeLabels[c.cheeseType] || c.cheeseType || '' },
+                    { className: 'product-title', text: title },
+                    { className: 'product-size', text: keepPackNote ? c.slices + ' slices (2 lbs)' : c.slices + ' slices' },
+                    { className: 'product-price', text: money(c.price) },
+                    { className: 'price-note', text: perSlice ? '~$' + perSlice + '/slice' : '' }
+                ]);
+            });
 
-            container.innerHTML = meatHTML + cheeseHTML + breadHTML + suppliesHTML;
+            const breadCards = PRODUCT_DATA.bread.filter(isVisibleProduct).map(function(b) {
+                const display = breadDisplay(b);
+                return priceCard('card-bread', [
+                    { className: 'product-title', text: display.title },
+                    { className: 'product-size', text: display.size },
+                    { className: 'product-price', text: display.price },
+                    { className: 'price-note', text: display.note }
+                ]);
+            });
+
+            const perBag = PRODUCT_DATA.bags.countPerBox ? (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) : '';
+            const supplyCards = [priceCard('card-supplies', [
+                { className: 'product-title', text: 'Sandwich Bags' },
+                { className: 'product-size', text: PRODUCT_DATA.bags.countPerBox + ' count' },
+                { className: 'product-price', text: money(PRODUCT_DATA.bags.pricePerBox) },
+                { className: 'price-note', text: perBag ? '~$' + perBag + '/bag' : '' }
+            ])];
+
+            container.replaceChildren(
+                priceCategory('DELI MEAT', meatCards),
+                priceCategory('CHEESE (Deli Slices)', cheeseCards),
+                priceCategory('BREAD', breadCards),
+                priceCategory('SUPPLIES', supplyCards)
+            );
         }
 
         function buildPricingSummaryTable() {
             const container = document.getElementById('pricing-summary-table');
             if (!container) return;
-            let html = '<table style="width:100%; margin-top: 10px; border-collapse: collapse;">';
-            html += '<tr style="background:#fff3d1; color:#b97a1a;"><th style="text-align:left; padding: 6px 10px;">Item</th><th style="text-align:left; padding: 6px 10px;">Price</th><th style="text-align:left; padding: 6px 10px;">Notes</th></tr>';
-            PRODUCT_DATA.meat.filter(m => m.group !== 'hidden').forEach(m => {
-                const sliceLabel = m.dropdownSliceLabel || (m.slices + ' slices');
-                const sizeNote = m.id === 'turkey' ? '40 slices total (2 \u00d7 20 oz, 20 per pack)' : (m.weightOz + ' oz / ' + sliceLabel);
-                html += '<tr><td>' + m.name + '</td><td>$' + m.price.toFixed(2) + '</td><td>' + sizeNote + '</td></tr>';
+            const table = document.createElement('table');
+            table.style.width = '100%';
+            table.style.marginTop = '10px';
+            table.style.borderCollapse = 'collapse';
+
+            function addRow(cells, options) {
+                const row = document.createElement('tr');
+                if (options && options.header) {
+                    row.style.background = '#fff3d1';
+                    row.style.color = '#b97a1a';
+                }
+                cells.forEach(function(cell) {
+                    const node = document.createElement(cell.header ? 'th' : 'td');
+                    node.textContent = cell.text == null ? '' : String(cell.text);
+                    if (cell.header) {
+                        node.style.textAlign = 'left';
+                        node.style.padding = '6px 10px';
+                    }
+                    if (cell.colspan) node.colSpan = cell.colspan;
+                    if (cell.section) {
+                        node.style.background = '#e3f2fd';
+                        node.style.fontWeight = '600';
+                    }
+                    row.appendChild(node);
+                });
+                table.appendChild(row);
+            }
+
+            addRow([
+                { text: 'Item', header: true },
+                { text: 'Price', header: true },
+                { text: 'Notes', header: true }
+            ], { header: true });
+            PRODUCT_DATA.meat.filter(isVisibleProduct).forEach(function(m) {
+                const sliceLabel = meatSliceLabel(m);
+                const sizeNote = m.id === 'turkey' && !m.slicesPerSandwich
+                    ? (m.slices + ' slices total (2 × ' + (m.weightOz / 2) + ' oz, ' + (m.slices / 2) + ' per pack)')
+                    : (m.weightOz + ' oz / ' + sliceLabel);
+                const storeNote = m.store && changedFromDefault('meat', m, ['store']) ? ' • ' + m.store : '';
+                addRow([
+                    { text: m.name },
+                    { text: money(m.price) },
+                    { text: sizeNote + storeNote }
+                ]);
             });
-            html += '<tr><td colspan="3" style="background: #e3f2fd; font-weight: 600;">Cheese (Deli Slices)</td></tr>';
-            PRODUCT_DATA.cheese.forEach(c => {
+            addRow([{ text: 'Cheese (Deli Slices)', colspan: 3, section: true }]);
+            PRODUCT_DATA.cheese.filter(isVisibleProduct).forEach(function(c) {
                 const name = c.name.replace(' - Costco', ' (Costco)').replace(" - Sam's Club", " (Sam's Club)");
-                html += '<tr><td>' + name + '</td><td>$' + c.price.toFixed(2) + '</td><td>' + c.description + '</td></tr>';
+                const note = changedFromDefault('cheese', c, ['slices', 'store', 'name'])
+                    ? ('~' + c.slices + ' slices' + (c.store ? ' (' + c.store + ')' : ''))
+                    : (c.description || '');
+                addRow([{ text: name }, { text: money(c.price) }, { text: note }]);
             });
-            PRODUCT_DATA.bread.forEach(b => { html += '<tr><td>' + b.pricingTitle + '</td><td>' + b.pricingPrice + '</td><td>~' + b.sandwichesPerLoaf + ' sandwiches</td></tr>'; });
-            html += '<tr><td>Zip-lock Sandwich Bags</td><td>$' + PRODUCT_DATA.bags.pricePerBox.toFixed(2) + '</td><td>' + PRODUCT_DATA.bags.countPerBox + ' count</td></tr>';
-            html += '</table>';
-            container.innerHTML = html;
+            PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(function(b) {
+                const display = breadDisplay(b);
+                const note = '~' + b.sandwichesPerLoaf + ' sandwiches' + (b.store && changedFromDefault('bread', b, ['store']) ? ' • ' + b.store : '');
+                addRow([{ text: display.title }, { text: display.price }, { text: note }]);
+            });
+            addRow([
+                { text: 'Zip-lock Sandwich Bags' },
+                { text: money(PRODUCT_DATA.bags.pricePerBox) },
+                { text: PRODUCT_DATA.bags.countPerBox + ' count' }
+            ]);
+            container.replaceChildren(table);
         }
 
         // ===============================================================
         // INITIALIZATION
         // ===============================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            buildMeatDropdown();
-            buildCheeseDropdown();
-            buildBreadDropdowns();
-            buildPBDropdown();
-            buildJellyDropdown();
-            buildPricingCards();
-            buildPricingSummaryTable();
+        document.addEventListener('DOMContentLoaded', async function() {
+            await loadPublishedCatalog();
+            loadSavedCatalog();
+            refreshProductViews();
             setupCalculatorGuidance();
             updateDeliGuidance();
+            window.addEventListener('storage', function(event) {
+                if (event.key !== CATALOG_STORAGE_KEY) return;
+                applyCatalog(JSON.parse(JSON.stringify(window.TSP_DEFAULT_CATALOG || {})));
+                loadPublishedCatalog().then(function() {
+                    loadSavedCatalog();
+                    refreshProductViews();
+                });
+            });
         });
 
         // ===============================================================
@@ -2436,6 +2623,11 @@
                     meatWeightOz = meat.weightOz;
                     meatPrice = meat.price;
                     meatDescription = meat.description;
+                    if (changedFromDefault('meat', meat, ['name', 'store', 'weightOz', 'slices'])) {
+                        meatDescription = meat.id === 'turkey' && !meat.slicesPerSandwich
+                            ? ('2-packs (~' + meat.weightOz + ' oz total)')
+                            : ((meat.weightOz ? meat.weightOz + ' oz packages' : meat.slices + ' slices') + (meat.store ? ' • ' + meat.store : ''));
+                    }
                     meatSlices = meat.slices;
                     meatSlicesPerSandwich = meat.slicesPerSandwich;
                 } else {
@@ -2464,6 +2656,9 @@
                 cheesePerPackage = cheese.slices;
                 cheesePrice = cheese.price;
                 cheeseDescription = cheese.description || (cheese.slices + ' slices each');
+                if (changedFromDefault('cheese', cheese, ['name', 'store', 'slices'])) {
+                    cheeseDescription = '~' + cheese.slices + ' slices each' + (cheese.store ? ' (' + cheese.store + ')' : '');
+                }
             } else {
                 cheesePerPackage = 24;
                 cheesePrice = 3.98;
@@ -2475,6 +2670,9 @@
             if (bread) {
                 breadSandwichesPerPackage = bread.sandwichesPerLoaf;
                 breadDescription = bread.description;
+                if (changedFromDefault('bread', bread, ['name', 'store', 'weightOz', 'sandwichesPerLoaf'])) {
+                    breadDescription = 'loaves (~' + bread.sandwichesPerLoaf + ' sandwiches each)' + (bread.store ? ' • ' + bread.store : '');
+                }
                 breadPrice = bread.price;
             } else {
                 breadSandwichesPerPackage = 11;
@@ -2700,17 +2898,17 @@
                     <div class="package-tile">
                         <div class="pkg-label">Meat</div>
                         <div class="pkg-count">${meatPackages}</div>
-                        <div class="pkg-product">${meatGridName}</div>
+                        <div class="pkg-product">${escapeHtml(meatGridName)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Cheese</div>
                         <div class="pkg-count">${cheesePackages}</div>
-                        <div class="pkg-product">${cheeseGridName}</div>
+                        <div class="pkg-product">${escapeHtml(cheeseGridName)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Bread</div>
                         <div class="pkg-count">${breadPackages}</div>
-                        <div class="pkg-product">${breadGridName}</div>
+                        <div class="pkg-product">${escapeHtml(breadGridName)}</div>
                     </div>
                 </div>
                 <ul class="shopping-receipt">
@@ -2718,8 +2916,8 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${meatPackages} × ${meatName}</div>
-                            <div class="item-meta">${meatDescription}</div>
+                            <div class="item-name">${meatPackages} × ${escapeHtml(meatName)}</div>
+                            <div class="item-meta">${escapeHtml(meatDescription)}</div>
                         </div>
                         <div class="item-price">$${meatCost.toFixed(2)}</div>
                     </li>
@@ -2727,8 +2925,8 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${cheesePackages} × ${cheeseName}</div>
-                            <div class="item-meta">${cheeseDescription}</div>
+                            <div class="item-name">${cheesePackages} × ${escapeHtml(cheeseName)}</div>
+                            <div class="item-meta">${escapeHtml(cheeseDescription)}</div>
                         </div>
                         <div class="item-price">$${cheeseCost.toFixed(2)}</div>
                     </li>
@@ -2736,8 +2934,8 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${breadPackages} × ${breadName}</div>
-                            <div class="item-meta">${breadDescription}</div>
+                            <div class="item-name">${breadPackages} × ${escapeHtml(breadName)}</div>
+                            <div class="item-meta">${escapeHtml(breadDescription)}</div>
                         </div>
                         <div class="item-price">$${breadCost.toFixed(2)}</div>
                     </li>
@@ -2833,8 +3031,8 @@
             const totalMeatLbs = (totalMeatOz / 16).toFixed(1);
             const totalMeatSlices = r.useSliceMath ? (r.meatPackages * r.meatSlices) : null;
             const meatQtyNote = r.useSliceMath
-                ? `${r.meatDescription} &mdash; ${totalMeatSlices} slices total (${r.meatSlicesPerSandwich} per sandwich)`
-                : `${r.meatDescription} &mdash; ${totalMeatOz} oz total (${totalMeatLbs} lbs)`;
+                ? `${escapeHtml(r.meatDescription)} &mdash; ${totalMeatSlices} slices total (${escapeHtml(r.meatSlicesPerSandwich)} per sandwich)`
+                : `${escapeHtml(r.meatDescription)} &mdash; ${totalMeatOz} oz total (${totalMeatLbs} lbs)`;
             const totalCheeseSlices = r.meatPackages ? r.cheesePackages * r.cheesePerPackage : 0;
             const totalBreadSandwiches = r.breadPackages * r.breadSandwichesPerPackage;
             const totalBags = r.bagPackages * PRODUCT_DATA.bags.countPerBox;
@@ -2872,7 +3070,7 @@
                             <tbody>
                                 <tr>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                        <strong style="color: #236383;">${cleanMeat}</strong>
+                                        <strong style="color: #236383;">${escapeHtml(cleanMeat)}</strong>
                                         <div style="font-size: 11px; color: #007E8C;">${meatQtyNote}</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.meatPackages}</td>
@@ -2880,16 +3078,16 @@
                                 </tr>
                                 <tr style="background: #f8fcfd;">
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                        <strong style="color: #236383;">${cleanCheese}</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">${r.cheeseDescription} &mdash; ${totalCheeseSlices} slices total</div>
+                                        <strong style="color: #236383;">${escapeHtml(cleanCheese)}</strong>
+                                        <div style="font-size: 11px; color: #007E8C;">${escapeHtml(r.cheeseDescription)} &mdash; ${totalCheeseSlices} slices total</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.cheesePackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.cheeseCost.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0;">
-                                        <strong style="color: #236383;">${cleanBread}</strong>
-                                        <div style="font-size: 11px; color: #007E8C;">${r.breadDescription} &mdash; covers ~${totalBreadSandwiches} sandwiches total</div>
+                                        <strong style="color: #236383;">${escapeHtml(cleanBread)}</strong>
+                                        <div style="font-size: 11px; color: #007E8C;">${escapeHtml(r.breadDescription)} &mdash; covers ~${totalBreadSandwiches} sandwiches total</div>
                                     </td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: center; font-weight: 600; color: #333;">${r.breadPackages}</td>
                                     <td style="padding: 10px 12px; border-bottom: 1px solid #e2e8f0; text-align: right; color: #333;">$${r.breadCost.toFixed(2)}</td>
@@ -2914,9 +3112,9 @@
                         <!-- Shopping Checklist -->
                         <h3 style="color: #236383; font-size: 15px; margin: 0 0 12px 0; padding-bottom: 8px; border-bottom: 3px solid #47B3CB;">Shopping Checklist</h3>
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 8px; font-size: 13px;">
-                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.meatPackages}</strong> × ${cleanMeat}</td></tr>
-                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.cheesePackages}</strong> × ${cleanCheese}</td></tr>
-                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.breadPackages}</strong> × ${cleanBread}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.meatPackages}</strong> × ${escapeHtml(cleanMeat)}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.cheesePackages}</strong> × ${escapeHtml(cleanCheese)}</td></tr>
+                            <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.breadPackages}</strong> × ${escapeHtml(cleanBread)}</td></tr>
                             <tr><td style="padding: 8px 12px; border-bottom: 1px solid #e2e8f0; background: #f8fcfd; color: #236383;"><span style="color: #FBAD3F; margin-right: 6px;">&#9744;</span> <strong>${r.bagPackages}</strong> × Zip-lock sandwich bags (${PRODUCT_DATA.bags.countPerBox} count)</td></tr>
                         </table>
 
@@ -3018,7 +3216,9 @@
                 pbJarSize = pb.sizeOz;
                 pbTbspPerJar = pb.tablespoons;
                 pbJarPrice = pb.price;
-                pbDescription = pb.description;
+                pbDescription = (!changedFromDefault('peanutButter', pb, ['name', 'store', 'sizeOz']) && pb.description)
+                    ? pb.description
+                    : (pb.name + (pb.store ? ' • ' + pb.store : ''));
             } else {
                 pbJarSize = 16;
                 pbTbspPerJar = 30;
@@ -3033,7 +3233,9 @@
                 jellyJarSize = jelly.sizeOz;
                 jellyTbspPerJar = jelly.tablespoons;
                 jellyJarPrice = jelly.price;
-                jellyDescription = jelly.description;
+                jellyDescription = (!changedFromDefault('jelly', jelly, ['name', 'store', 'sizeOz']) && jelly.description)
+                    ? jelly.description
+                    : (jelly.name + (jelly.store ? ' • ' + jelly.store : ''));
             } else {
                 jellyJarSize = 12;
                 jellyTbspPerJar = 23;
@@ -3215,17 +3417,17 @@
                     <div class="package-tile">
                         <div class="pkg-label">Peanut Butter</div>
                         <div class="pkg-count">${pbJarsNeeded}</div>
-                        <div class="pkg-product">${pbDescription}</div>
+                        <div class="pkg-product">${escapeHtml(pbDescription)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Jelly</div>
                         <div class="pkg-count">${jellyJarsNeeded}</div>
-                        <div class="pkg-product">${jellyDescription}</div>
+                        <div class="pkg-product">${escapeHtml(jellyDescription)}</div>
                     </div>
                     <div class="package-tile">
                         <div class="pkg-label">Bread</div>
                         <div class="pkg-count">${breadLoavesNeeded}</div>
-                        <div class="pkg-product">${pbjBreadGridName}</div>
+                        <div class="pkg-product">${escapeHtml(pbjBreadGridName)}</div>
                     </div>
                 </div>
                 <ul class="shopping-receipt">
@@ -3233,7 +3435,7 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${pbJarsNeeded} × ${pbDescription}</div>
+                            <div class="item-name">${pbJarsNeeded} × ${escapeHtml(pbDescription)}</div>
                             <div class="item-meta">~${pbTbspPerJar} tbsp per jar</div>
                         </div>
                         <div class="item-price">$${pbCost.toFixed(2)}</div>
@@ -3242,7 +3444,7 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${jellyJarsNeeded} × ${jellyDescription}</div>
+                            <div class="item-name">${jellyJarsNeeded} × ${escapeHtml(jellyDescription)}</div>
                             <div class="item-meta">~${jellyTbspPerJar} tbsp per jar</div>
                         </div>
                         <div class="item-price">$${jellyCost.toFixed(2)}</div>
@@ -3251,7 +3453,7 @@
                     <li>
                         <input type="checkbox">
                         <div class="item-details">
-                            <div class="item-name">${breadLoavesNeeded} × ${pbjBreadName}</div>
+                            <div class="item-name">${breadLoavesNeeded} × ${escapeHtml(pbjBreadName)}</div>
                             <div class="item-meta">${usableBreadSlicesPerLoaf} usable slices per loaf</div>
                         </div>
                         <div class="item-price">$${breadCost.toFixed(2)}</div>
