@@ -1428,14 +1428,21 @@
         .field-why summary::-webkit-details-marker { display: none; }
 
         .field-why .why-link {
-            color: var(--tsp-accent);
+            color: var(--tsp-cream);
+            text-decoration: underline;
+            text-decoration-color: var(--tsp-accent);
+            text-underline-offset: 3px;
             font-size: 1em;
             font-weight: 600;
             margin-left: 4px;
             white-space: nowrap;
         }
 
-        .field-why[open] .why-link { text-decoration: underline; }
+        .field-why summary:focus-visible {
+            outline: 3px solid var(--tsp-accent);
+            outline-offset: 2px;
+            border-radius: 4px;
+        }
 
         .field-why > div {
             margin-top: 8px;
@@ -2322,7 +2329,7 @@
             });
             if (basis) {
                 basis.textContent = 'Package counts for common batch sizes, based on ' +
-                    (meat.pricingTitle || meat.name) + ' (' + meat.weightOz + ' oz), ' +
+                    (meat.pricingTitle || meat.name) + ' (' + (positive(meat.weightOz) ? meat.weightOz + ' oz' : meat.slices + ' slices') + '), ' +
                     (cheese.pricingTitle || cheese.name) + ' (' + cheese.slices + ' slices), and ' +
                     (bread.pricingTitle || bread.name) + ' (~' + bread.sandwichesPerLoaf + ' sandwiches per loaf). ' +
                     'Use the calculator above for exact counts with your brands.';
