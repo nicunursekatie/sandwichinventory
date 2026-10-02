@@ -2184,6 +2184,10 @@
         // ===============================================================
         const LIVE_CATALOG_URL = 'https://recipient-survey-default-rtdb.firebaseio.com/product-catalog.json';
         const PRODUCT_DATA = JSON.parse(JSON.stringify(window.TSP_DEFAULT_CATALOG || {}));
+        const MEAT_OZ_PER_SANDWICH = 2;
+        const CHEESE_SLICES_PER_SANDWICH = 2;
+        const PB_TBSP_PER_SANDWICH = 3;
+        const JELLY_TBSP_PER_SANDWICH = 1.5;
 
         function isVisibleProduct(item) {
             return item && item.hidden !== true && item.group !== 'hidden';
@@ -2222,28 +2226,48 @@
             return m.slices + ' slices';
         }
 
+        // Dropdowns use one format everywhere: "Name (Store) · $price · makes N sandwiches".
+        // Package sizes stay in the shopping list, where they help at the store.
+        function productDisplayName(item) {
+            const store = item.store || '';
+            let name = item.name || '';
+            // Some catalog names end in " - Costco"; show the store the same way for every product.
+            const suffix = ' - ' + store;
+            if (store && name.toLowerCase().endsWith(suffix.toLowerCase())) name = name.slice(0, -suffix.length);
+            const showStore = store && store !== 'Various' && name.toLowerCase().indexOf(store.toLowerCase()) === -1;
+            return showStore ? name + ' (' + store + ')' : name;
+        }
+
+        function makesLabel(perPackage) {
+            const n = Number(perPackage);
+            if (!Number.isFinite(n) || n <= 0) return '';
+            const whole = Math.floor(n + 1e-9);
+            if (whole < 1) return 'makes less than 1 sandwich';
+            return 'makes ' + (Math.abs(n - whole) < 1e-9 ? '' : '~') + whole + ' sandwich' + (whole === 1 ? '' : 'es');
+        }
+
+        function productOptionLabel(item, perPackage, priceSuffix) {
+            const price = money(item.price);
+            return [productDisplayName(item), price ? price + (priceSuffix || '') : '', makesLabel(perPackage)]
+                .filter(Boolean).join(' · ');
+        }
+
+        function meatSandwichesPerPackage(m) {
+            if (positive(m.slicesPerSandwich) && positive(m.slices)) return Number(m.slices) / Number(m.slicesPerSandwich);
+            return positive(m.weightOz) ? Number(m.weightOz) / MEAT_OZ_PER_SANDWICH : 0;
+        }
+
         function meatOptionLabel(m) {
-            const price = money(m.price);
-            const sliceLabel = meatSliceLabel(m);
-            const perSlice = Number(m.slices) ? (Number(m.price) / Number(m.slices)).toFixed(2) : '';
-            const turkeyPack = m.id === 'turkey' && !m.slicesPerSandwich;
-            if (turkeyPack && !changedFromDefault('meat', m, ['name', 'store', 'weightOz'])) {
-                return m.name + ' (2 × ' + (Number(m.weightOz) / 2) + ' oz packages, ' + price + ' total)';
-            }
-            if (turkeyPack) {
-                const bits = [m.store, '2 × ' + (Number(m.weightOz) / 2) + ' oz packages', price ? price + ' total' : ''].filter(Boolean);
-                return m.name + ' (' + bits.join(', ') + ')';
-            }
-            const sizeLabel = Number(m.weightOz) >= 16 ? (Number(m.weightOz) === 16 ? '1 lb' : m.weightOz + ' oz') : (m.weightOz + ' oz');
-            const storeBit = m.store && (changedFromDefault('meat', m, ['store']) || !catalogDefault('meat', m.id)) ? m.store + ', ' : '';
-            const perBit = perSlice ? ' - $' + perSlice + '/slice' : '';
-            return m.name + ' (' + storeBit + sizeLabel + ' / ' + sliceLabel + ', ' + price + ')' + perBit;
+            const twoPack = m.id === 'turkey' && !m.slicesPerSandwich;
+            return productOptionLabel(m, meatSandwichesPerPackage(m), twoPack ? ' for a 2-pack' : '');
         }
 
         function cheeseOptionLabel(c) {
-            if (c.dropdownLabel && !changedFromDefault('cheese', c, ['name', 'store', 'slices', 'price'])) return c.dropdownLabel;
-            const bits = [c.store, (c.slices === '' || c.slices == null ? '' : '~' + c.slices + ' slices'), money(c.price)].filter(Boolean);
-            return c.name + (bits.length ? ' (' + bits.join(', ') + ')' : '');
+            return productOptionLabel(c, positive(c.slices) ? Number(c.slices) / CHEESE_SLICES_PER_SANDWICH : 0);
+        }
+
+        function breadOptionLabel(b) {
+            return productOptionLabel(b, b.sandwichesPerLoaf);
         }
 
         function breadDisplay(b) {
@@ -2531,9 +2555,7 @@
                 PRODUCT_DATA.bread.filter(isVisibleProduct).forEach(b => {
                     const opt = document.createElement('option');
                     opt.value = b.id;
-                    const wLabel = b.dropdownWeightLabel || (b.weightOz + ' oz');
-                    const storeBit = b.store && (changedFromDefault('bread', b, ['store']) || !catalogDefault('bread', b.id)) ? b.store + ', ' : '';
-                    opt.textContent = b.name + ' (' + storeBit + wLabel + ', ~' + b.sandwichesPerLoaf + ' sandwiches, ' + money(b.price) + ')';
+                    opt.textContent = breadOptionLabel(b);
                     select.appendChild(opt);
                 });
             });
@@ -2545,9 +2567,7 @@
             PRODUCT_DATA.peanutButter.filter(isVisibleProduct).forEach(pb => {
                 const opt = document.createElement('option');
                 opt.value = pb.id;
-                const sizeLabel = (changedFromDefault('peanutButter', pb, ['sizeOz']) || !pb.sizeLabel) ? (pb.sizeOz + ' oz') : pb.sizeLabel;
-                const storeBit = pb.store ? pb.store + ', ' : '';
-                opt.textContent = pb.name + ' (' + storeBit + sizeLabel + ', ~' + pb.tablespoons + ' tbsp) - ' + money(pb.price);
+                opt.textContent = productOptionLabel(pb, positive(pb.tablespoons) ? Number(pb.tablespoons) / PB_TBSP_PER_SANDWICH : 0);
                 select.appendChild(opt);
             });
         }
@@ -2558,8 +2578,7 @@
             PRODUCT_DATA.jelly.filter(isVisibleProduct).forEach(j => {
                 const opt = document.createElement('option');
                 opt.value = j.id;
-                const storeBit = j.store ? j.store + ', ' : '';
-                opt.textContent = j.name + ' (' + storeBit + '~' + j.tablespoons + ' tbsp) - ' + money(j.price);
+                opt.textContent = productOptionLabel(j, positive(j.tablespoons) ? Number(j.tablespoons) / JELLY_TBSP_PER_SANDWICH : 0);
                 select.appendChild(opt);
             });
         }
@@ -2834,9 +2853,12 @@
             const meatType = meatSelect.value;
             const cheeseType = cheeseSelect.value;
             const breadType = breadSelect.value;
-            const meatName = meatType === 'custom' ? 'Custom Meat' : meatSelect.options[meatSelect.selectedIndex].text;
-            const cheeseName = cheeseSelect.options[cheeseSelect.selectedIndex].text;
-            const breadName = breadSelect.options[breadSelect.selectedIndex].text;
+            const nameFor = (category, id, select) => PRODUCT_INDEX[category][id]
+                ? productDisplayName(PRODUCT_INDEX[category][id])
+                : select.options[select.selectedIndex].text;
+            const meatName = meatType === 'custom' ? 'Custom Meat' : nameFor('meat', meatType, meatSelect);
+            const cheeseName = nameFor('cheese', cheeseType, cheeseSelect);
+            const breadName = nameFor('bread', breadType, breadSelect);
             const meatOzPerSandwich = parseFloat(document.getElementById('meatAmount').value);
 
             const cheesePerSandwich = 2;
@@ -3463,7 +3485,8 @@
             // Bread selection
             const pbjBreadSelect = document.getElementById('pbjBreadType');
             const pbjBreadType = pbjBreadSelect.value;
-            const pbjBreadName = pbjBreadSelect.options[pbjBreadSelect.selectedIndex].text;
+            const pbjBreadProduct = PRODUCT_INDEX.bread[pbjBreadSelect.value];
+            const pbjBreadName = pbjBreadProduct ? productDisplayName(pbjBreadProduct) : pbjBreadSelect.options[pbjBreadSelect.selectedIndex].text;
             let usableBreadSlicesPerLoaf, breadPrice;
             const pbjBread = PRODUCT_INDEX.bread[pbjBreadType];
             if (pbjBread) {
