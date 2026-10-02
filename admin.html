@@ -5,9 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit sandwich products</title>
     <script src="product-catalog.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         :root { --navy: #236383; --teal: #007E8C; --gold: #FBAD3F; --ink: #1f3340; --line: #d5e3ea; }
         * { box-sizing: border-box; }
+        [hidden] { display: none !important; }
         body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: var(--ink); background: #f4f7f8; }
         header { background: var(--navy); color: white; padding: 20px 16px; }
         header a { color: #d7f3f6; }
@@ -19,10 +22,11 @@
         button { border: 0; border-radius: 8px; padding: 8px 12px; font-weight: 700; cursor: pointer; background: #e8f2f5; color: var(--navy); }
         button.primary { background: var(--gold); color: #1f1a12; }
         h2 { margin: 0 0 10px; color: var(--navy); font-size: 1.15rem; }
-        .product { display: grid; grid-template-columns: 1.6fr 0.8fr repeat(auto-fit, minmax(110px, 0.7fr)) auto; gap: 8px; align-items: end; padding: 10px 0; border-top: 1px solid var(--line); }
+        .product { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 8px; align-items: end; padding: 10px 0; border-top: 1px solid var(--line); }
+        .product > label:first-child { grid-column: span 2; }
         .product.hidden-product { opacity: 0.55; }
         label { display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; font-weight: 700; color: #3e6272; }
-        input[type="text"], input[type="number"], input[type="password"] { width: 100%; border: 1px solid #c5d6de; border-radius: 8px; padding: 8px; font: inherit; color: var(--ink); }
+        input[type="text"], input[type="number"], input[type="email"], input[type="password"] { width: 100%; border: 1px solid #c5d6de; border-radius: 8px; padding: 8px; font: inherit; color: var(--ink); }
         .login { max-width: 420px; }
         .login p { color: #456674; line-height: 1.45; }
         .login label { font-size: 0.85rem; margin: 12px 0; }
@@ -45,7 +49,7 @@
     <main>
         <section id="loginPanel" class="login toolbar">
             <h2>Admin login</h2>
-            <p>Enter the password to edit names, stores, amounts, and prices. This only keeps the menu closed in this browser. It is not a server login, and anyone can still use the calculator.</p>
+            <p>Enter the admin password to edit names, stores, amounts, and prices. Saved changes go live in the calculator for everyone.</p>
             <form id="loginForm">
                 <label>Password
                     <input id="adminPassword" type="password" autocomplete="current-password" required>
@@ -65,9 +69,17 @@
         </div>
     </main>
     <script>
-        const STORAGE_KEY = 'tspInventoryCatalog';
+        firebase.initializeApp({
+            apiKey: "AIzaSyBJ9sUwY_gw2bYWXCffV0RKuQkXqRq-hTU",
+            authDomain: "recipient-survey.firebaseapp.com",
+            databaseURL: "https://recipient-survey-default-rtdb.firebaseio.com",
+            projectId: "recipient-survey",
+            storageBucket: "recipient-survey.firebasestorage.app"
+        });
         const AUTH_KEY = 'tspAdminSession';
+        // SHA-256 of the shared admin password. To change it, replace this with the hash of the new one.
         const ADMIN_PASSWORD_HASH = '3ffca04cc6f976acedfa7c5cc77d44363d28370166a1a1728a25b582ee37b14e';
+        const catalogRef = firebase.database().ref('product-catalog');
         const SECTIONS = [
             { key: 'meat', title: 'Deli meat', amounts: [
                 { key: 'weightOz', label: 'Weight (oz)' },
@@ -91,6 +103,21 @@
         ];
         let catalog = null;
         let savedCopy = null;
+        // Revision of the online list this editor was loaded from; saves are refused if it has moved on.
+        let loadedRevision = null;
+        let saving = false;
+
+        function setEditable(enabled) {
+            document.getElementById('saveBtn').disabled = !enabled;
+            document.getElementById('resetBtn').disabled = !enabled;
+            document.querySelectorAll('#sections input, #sections button').forEach(function(el) {
+                el.disabled = !enabled;
+            });
+        }
+
+        function revisionOf(value) {
+            return value && value.metadata && Number(value.metadata.revision) || 0;
+        }
 
         function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
@@ -257,7 +284,8 @@
             return { id: id, name: '', store: '', price: '', sizeOz: '', tablespoons: '', description: '' };
         }
 
-        function save() {
+        async function save() {
+            if (saving || !catalog || loadedRevision === null) return;
             const problem = [];
             SECTIONS.forEach(function(section) {
                 catalog[section.key].forEach(function(item) {
@@ -275,32 +303,72 @@
                     refreshDerived(item, section.key);
                 });
             });
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
-            savedCopy = clone(catalog);
-            setStatus('Saved. The calculator on this computer now uses this product list.');
+            catalog.metadata.revision = loadedRevision + 1;
+            const snapshot = clone(catalog);
+            saving = true;
+            setEditable(false);
+            document.getElementById('logoutBtn').disabled = true;
+            setStatus('Saving…');
+            try {
+                const result = await catalogRef.transaction(function(current) {
+                    // RTDB may call this first with a stale local null; returning a value lets the server
+                    // re-run it with the real data, where the revision check applies.
+                    if (current !== null && revisionOf(current) !== loadedRevision) return;
+                    return snapshot;
+                }, null, false);
+                if (!result.committed) {
+                    catalog.metadata.revision = loadedRevision;
+                    setStatus('Not saved: someone else changed the products since you opened this page. Reload to see their changes, then make your edits again.');
+                    return;
+                }
+                loadedRevision = snapshot.metadata.revision;
+                savedCopy = clone(snapshot);
+                setStatus('Saved. The calculator now uses this product list for everyone.');
+            } catch (error) {
+                console.error(error);
+                catalog.metadata.revision = loadedRevision;
+                setStatus(error && /permission/i.test(String(error.code || error.message))
+                    ? 'Not saved: the database is not accepting product changes. Check the Firebase rules for product-catalog.'
+                    : 'Not saved: could not reach the database. Check your connection and try again.');
+            } finally {
+                saving = false;
+                setEditable(true);
+                document.getElementById('logoutBtn').disabled = false;
+            }
         }
 
         async function loadCatalog() {
-            catalog = clone(window.TSP_DEFAULT_CATALOG);
+            setStatus('Loading products…');
+            document.getElementById('sections').innerHTML = '';
+            setEditable(false);
+            let snapshot;
             try {
-                const response = await fetch('product-catalog.json', { cache: 'no-store' });
-                if (response.ok) catalog = await response.json();
-            } catch (error) { /* Use the embedded list. */ }
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try { catalog = JSON.parse(saved); } catch (error) { /* Keep the shared list. */ }
+                snapshot = await catalogRef.once('value');
+            } catch (error) {
+                console.warn('Saved product list could not be loaded.', error);
+                catalog = null;
+                setStatus('Could not load the online product list. Reload the page to try again. Saving is off so nothing gets overwritten.');
+                return;
             }
+            if (snapshot.exists()) {
+                catalog = snapshot.val();
+            } else {
+                catalog = clone(window.TSP_DEFAULT_CATALOG);
+                try {
+                    const response = await fetch('product-catalog.json', { cache: 'no-store' });
+                    if (response.ok) catalog = await response.json();
+                } catch (error) { /* Use the embedded list. */ }
+            }
+            SECTIONS.forEach(function(section) {
+                if (!Array.isArray(catalog[section.key])) catalog[section.key] = [];
+            });
+            loadedRevision = snapshot.exists() ? revisionOf(catalog) : 0;
             savedCopy = clone(catalog);
             render();
-            setStatus(saved ? 'Showing products saved on this computer.' : 'Showing the current calculator products.');
-        }
-
-        async function passwordHash(password) {
-            const bytes = new TextEncoder().encode(password);
-            const digest = await crypto.subtle.digest('SHA-256', bytes);
-            return Array.from(new Uint8Array(digest)).map(function(byte) {
-                return byte.toString(16).padStart(2, '0');
-            }).join('');
+            setEditable(true);
+            setStatus(snapshot.exists()
+                ? 'Showing the live product list.'
+                : 'Showing the starting product list. Nothing has been saved online yet.');
         }
 
         function showEditor() {
@@ -315,11 +383,18 @@
             document.getElementById('adminPassword').value = '';
         }
 
+        async function passwordHash(password) {
+            const bytes = new TextEncoder().encode(password);
+            const digest = await crypto.subtle.digest('SHA-256', bytes);
+            return Array.from(new Uint8Array(digest)).map(function(byte) {
+                return byte.toString(16).padStart(2, '0');
+            }).join('');
+        }
+
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const error = document.getElementById('loginError');
-            const entered = document.getElementById('adminPassword').value;
-            const hash = await passwordHash(entered);
+            const hash = await passwordHash(document.getElementById('adminPassword').value);
             if (hash !== ADMIN_PASSWORD_HASH) {
                 error.textContent = 'That password is not correct.';
                 return;
@@ -336,7 +411,10 @@
             setStatus('Undid unsaved edits.');
         });
         document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (saving) return;
             sessionStorage.removeItem(AUTH_KEY);
+            catalog = null;
+            loadedRevision = null;
             showLogin();
         });
         if (sessionStorage.getItem(AUTH_KEY) === 'signed-in') showEditor();
