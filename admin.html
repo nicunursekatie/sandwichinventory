@@ -21,7 +21,8 @@
         button { border: 0; border-radius: 8px; padding: 8px 12px; font-weight: 700; cursor: pointer; background: #e8f2f5; color: var(--navy); }
         button.primary { background: var(--gold); color: #1f1a12; }
         h2 { margin: 0 0 10px; color: var(--navy); font-size: 1.15rem; }
-        .product { display: grid; grid-template-columns: 1.6fr 0.8fr repeat(auto-fit, minmax(110px, 0.7fr)) auto; gap: 8px; align-items: end; padding: 10px 0; border-top: 1px solid var(--line); }
+        .product { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 8px; align-items: end; padding: 10px 0; border-top: 1px solid var(--line); }
+        .product > label:first-child { grid-column: span 2; }
         .product.hidden-product { opacity: 0.55; }
         label { display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; font-weight: 700; color: #3e6272; }
         input[type="text"], input[type="number"], input[type="email"], input[type="password"] { width: 100%; border: 1px solid #c5d6de; border-radius: 8px; padding: 8px; font: inherit; color: var(--ink); }
