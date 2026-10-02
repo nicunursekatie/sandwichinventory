@@ -307,35 +307,123 @@
             align-items: stretch;
         }
         
-        /* PB&J Calculator specific layout fixes */
-        #pbj-calculator .calc-form {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 30px;
-            align-items: start;
+        .shopping-calculator > h3 { color: #fff; }
+
+        #pbj-calculator .shopping-calculator {
+            margin-left: auto;
+            margin-right: auto;
         }
-        
-        #pbj-calculator .calc-input-group {
+
+        #pbj-calculator .calc-button-container {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+            margin-top: 2px;
+        }
+
+        #pbj-calculator .calc-button {
+            max-width: none;
+            margin-top: 0;
+        }
+
+        #pbj-calculator #pbjCountGroup,
+        #pbj-calculator #pbjBudgetGroup,
+        #pbj-calculator .spatula-option,
+        #pbj-calculator .before-you-shop,
+        #pbj-calculator .calc-button-container {
+            grid-column: 1 / -1;
+        }
+
+        /* Spatula add-on (PB&J) */
+        .spatula-option {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            gap: 12px 16px;
+            background: rgba(17,65,69,0.35);
+            border-radius: 12px;
+            padding: 14px 16px;
+        }
+
+        .spatula-check {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .spatula-check span { font-size: 1em; }
+
+        .spatula-check input {
+            width: 24px;
+            height: 24px;
+            flex-shrink: 0;
+            accent-color: var(--tsp-accent);
+            cursor: pointer;
+        }
+
+        .spatula-thumb {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            width: 100%;
+            align-items: center;
+            gap: 4px;
+            text-decoration: none;
         }
-        
-        #pbj-calculator .calc-input-group input,
-        #pbj-calculator .calc-input-group select {
-            width: 100%;
-            min-width: 0;
-            box-sizing: border-box;
-        }
-        
-        @media (max-width: 768px) {
-            #pbj-calculator .calc-form {
-                grid-template-columns: 1fr;
-                gap: 25px;
-            }
 
+        .spatula-thumb img {
+            width: 72px;
+            height: auto;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .spatula-thumb span {
+            color: var(--tsp-cream);
+            font-size: 0.8em;
+            font-weight: 600;
+            text-decoration: underline;
+            text-decoration-color: var(--tsp-accent);
+        }
+
+        .spatula-qty {
+            grid-column: 1 / -1;
+        }
+
+        .spatula-qty label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .spatula-qty input {
+            width: 100%;
+            padding: 11px 14px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            font-size: 1.05rem;
+            color: var(--tsp-ink);
+            margin-bottom: 6px;
+        }
+
+        .spatula-qty input:focus {
+            outline: none;
+            border-color: var(--tsp-accent);
+        }
+
+        /* Two recipe cards side by side */
+        .recipe-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(300px, 100%), 1fr));
+            gap: 16px;
+        }
+
+        .recipe-card {
+            background: var(--tsp-primary);
+            border-radius: 16px;
+        }
+
+        @media (max-width: 768px) {
             #calculator .shopping-calculator {
                 padding: 24px;
             }
@@ -740,49 +828,6 @@
             grid-template-columns: repeat(2, 1fr);
             gap: 15px;
             margin-top: 20px;
-        }
-        
-        /* PB&J Calculator ingredient alignment fix */
-        #pbj-calculator .recipe-ingredients {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 20px;
-            max-width: 100%;
-        }
-        
-        @media (max-width: 768px) {
-            #pbj-calculator .recipe-ingredients {
-                grid-template-columns: 1fr;
-            }
-        }
-        
-        /* Additional PB&J Calculator improvements */
-        #pbj-calculator .calc-input-group label {
-            font-size: 1.1em;
-            margin-bottom: 10px;
-            text-align: left;
-        }
-        
-        #pbj-calculator .calc-input-group input,
-        #pbj-calculator .calc-input-group select {
-            padding: 16px 20px;
-            font-size: 1.1em;
-            width: 100%;
-            box-sizing: border-box;
-        }
-        
-        #pbj-calculator .calc-input-group input::placeholder {
-            color: #7f8c8d;
-            font-style: italic;
-        }
-        
-        #pbj-calculator .calc-input-group span {
-            font-size: 0.95em;
-            color: white;
-            margin-top: 5px;
-            line-height: 1.4;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-            font-weight: 500;
         }
         
         .ingredient {
@@ -1320,12 +1365,14 @@
             box-shadow: none;
         }
 
-        #calculator .shopping-calculator {
+        #calculator .shopping-calculator,
+        #pbj-calculator .shopping-calculator {
             max-width: 760px;
             padding: 28px 32px 32px;
         }
 
-        #calculator .shopping-calculator > h3 {
+        #calculator .shopping-calculator > h3,
+        #pbj-calculator .shopping-calculator > h3 {
             max-width: none;
             margin: 0 0 18px;
             font-size: 1.35em;
@@ -1333,14 +1380,16 @@
             text-shadow: none !important;
         }
 
-        #calculator .calc-form {
+        #calculator .calc-form,
+        #pbj-calculator .calc-form {
             max-width: none;
             grid-template-columns: 1fr;
             gap: 20px;
             margin: 0;
         }
 
-        #calculator .calc-input-group label {
+        #calculator .calc-input-group label,
+        #pbj-calculator .calc-input-group label {
             font-size: 1em;
             text-transform: none;
             letter-spacing: 0;
@@ -1350,7 +1399,9 @@
         }
 
         #calculator .calc-input-group input,
-        #calculator .calc-input-group select {
+        #pbj-calculator .calc-input-group input,
+        #calculator .calc-input-group select,
+        #pbj-calculator .calc-input-group select {
             font-size: 1.05rem;
             padding: 13px 14px;
             border-radius: 10px;
@@ -1358,13 +1409,16 @@
             color: var(--tsp-ink);
         }
 
-        #calculator .calc-input-group select {
+        #calculator .calc-input-group select,
+        #pbj-calculator .calc-input-group select {
             padding-right: 36px;
             text-overflow: ellipsis;
         }
 
         #calculator .calc-input-group input:focus,
-        #calculator .calc-input-group select:focus {
+        #pbj-calculator .calc-input-group input:focus,
+        #calculator .calc-input-group select:focus,
+        #pbj-calculator .calc-input-group select:focus {
             transform: none;
             box-shadow: 0 0 0 3px rgba(251,173,63,0.45);
         }
@@ -1454,7 +1508,8 @@
             line-height: 1.55;
         }
 
-        /* The one loud box: every shopping rule, right before Calculate */
+        /* The one loud box: every shopping rule,
+        right before Calculate */
         .before-you-shop {
             background: var(--tsp-cream);
             color: var(--tsp-ink);
@@ -1486,6 +1541,7 @@
         .before-you-shop strong { font-weight: 700; }
 
         #calculator .calc-button,
+        #pbj-calculator .calc-button,
         .calc-button {
             background: var(--tsp-accent);
             color: var(--tsp-ink);
@@ -1495,6 +1551,7 @@
         }
 
         #calculator .calc-button:hover,
+        #pbj-calculator .calc-button:hover,
         .calc-button:hover {
             background: #fff;
             color: var(--tsp-ink);
@@ -1529,7 +1586,8 @@
         }
 
         @media (max-width: 768px) {
-            #calculator .shopping-calculator {
+            #calculator .shopping-calculator,
+            #pbj-calculator .shopping-calculator {
                 padding: 20px 16px 24px;
             }
 
@@ -1677,79 +1735,75 @@
 
         <!-- PB&J Calculator Section -->
         <div class="section" id="pbj-calculator">
-            <h2>Peanut Butter & Jelly Calculator</h2>
+            <h2><span class="icon icon-lg icon-peanut icon-primary"></span> Peanut Butter & Jelly Calculator</h2>
+            <p class="calc-intro">Same idea for PB&J: enter a count or budget, pick your brands, and get a shopping list.</p>
             <div class="shopping-calculator">
-                <h3 style="color: #fff; text-shadow: 0 2px 8px rgba(35,99,131,0.18);">Plan Your PB&J Sandwiches</h3>
-                <div style="margin-bottom: 24px; padding: 18px 32px; background: #f8f9fa; border-radius: 10px; border: 1.5px solid #e0e0e0;">
-                    <label style="font-weight: 600; font-size: 1.1em; display: block; margin-bottom: 10px; color: #236383;">How would you like to plan?</label>
-                    <div style="display: flex; flex-direction: column; gap: 12px; padding-left: 8px; padding-right: 8px;">
-                        <label class="plan-mode-label" style="display: flex; align-items: center; gap: 10px; font-size: 1.05em; cursor:pointer;">
-                            <input type="radio" name="pbjPlanMode" id="pbjPlanBySandwiches" value="sandwiches" checked onchange="togglePBJPlanMode()">
-                            How much will it cost us to make ___ # of PB&J sandwiches?
-                        </label>
-                        <label class="plan-mode-label" style="display: flex; align-items: center; gap: 10px; font-size: 1.05em; cursor:pointer;">
-                            <input type="radio" name="pbjPlanMode" id="pbjPlanByBudget" value="budget" onchange="togglePBJPlanMode()">
-                            How many PB&J sandwiches can we make with a budget of $____?
-                        </label>
-                    </div>
+                <h3>Plan Your PB&J Sandwiches</h3>
+                <div class="plan-toggle" role="radiogroup" aria-label="How would you like to plan?">
+                    <label>
+                        <input type="radio" name="pbjPlanMode" id="pbjPlanBySandwiches" value="sandwiches" checked onchange="togglePBJPlanMode()">
+                        <span>Cost for ___ sandwiches</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="pbjPlanMode" id="pbjPlanByBudget" value="budget" onchange="togglePBJPlanMode()">
+                        <span>Sandwiches for a $___ budget</span>
+                    </label>
                 </div>
                 <div class="calc-form">
                     <div class="calc-input-group" id="pbjCountGroup">
                         <label for="pbjCount">Number of PB&J sandwiches</label>
                         <input type="number" id="pbjCount" min="1" max="2000" placeholder="Enter quantity (e.g., 100)">
-                        <span style="font-size: 0.98em; color: rgba(255,255,255,0.9); margin-top: 2px;">Enter the number of PB&J sandwiches you want to make.</span>
                     </div>
                     <div class="calc-input-group" id="pbjBudgetGroup" style="display: none;">
                         <label for="pbjBudgetAmount">Budget ($)</label>
                         <input type="number" id="pbjBudgetAmount" min="1" max="10000" placeholder="Enter your budget (e.g., 100)">
-                        <span style="font-size: 0.98em; color: rgba(255,255,255,0.9); margin-top: 2px;">Enter the total amount you want to spend on PB&J supplies.</span>
                     </div>
 
                     <div class="calc-input-group">
-                        <label>Peanut butter type</label>
+                        <label for="pbType">Peanut butter type</label>
                         <select id="pbType">
                             <!-- Options populated dynamically by buildPBDropdown() -->
                         </select>
+                        <div class="field-note">3 tbsp per sandwich.</div>
                     </div>
 
                     <div class="calc-input-group">
-                        <label>Jelly type</label>
+                        <label for="jellyType">Jelly type</label>
                         <select id="jellyType">
                             <!-- Options populated dynamically by buildJellyDropdown() -->
                         </select>
-                        <span style="font-size: 0.95em; color: rgba(255,255,255,0.9); margin-top: 4px; font-weight: 600;"><span class="icon icon-alert-triangle icon-white"></span> IMPORTANT: Use JELLY only - no jam, preserves, or fruit spread!</span>
+                        <div class="field-note">1.5 tbsp per sandwich.</div>
                     </div>
 
                     <div class="calc-input-group">
-                        <label>Bread type</label>
+                        <label for="pbjBreadType">Bread type</label>
                         <select id="pbjBreadType">
                             <option value="">Choose your bread</option>
                             <!-- Options populated dynamically by buildBreadDropdowns() -->
                         </select>
                     </div>
 
-                    <!-- Spatula Option -->
-                    <div class="calc-input-group" style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; margin-top: 10px;">
-                        <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 10px;">
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 6px;">
-                                <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer">
-                                    <img src="pb-spreaders.png" alt="4-Piece Silicone Jar Spatula Set - Long handle for reaching bottom of jars" style="max-width: 120px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); cursor: pointer;">
-                                </a>
-                                <a href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer" style="font-size: 0.8em; color: #FF9900; font-weight: 600; text-decoration: none;">Order on Amazon</a>
-                            </div>
-                            <label style="display: flex; align-items: center; gap: 10px; cursor: pointer;">
-                                <input type="checkbox" id="includeSpatulas" onchange="toggleSpatulaQuantity()" style="width: 28px !important; height: 28px !important; min-width: 28px; min-height: 28px; cursor: pointer; accent-color: #FBAD3F; flex-shrink: 0;">
-                                <span>Include spreading spatulas in calculation</span>
-                            </label>
+                    <div class="spatula-option">
+                        <label class="spatula-check">
+                            <input type="checkbox" id="includeSpatulas" onchange="toggleSpatulaQuantity()">
+                            <span>Add spreading spatulas to my list</span>
+                        </label>
+                        <a class="spatula-thumb" href="https://www.amazon.com/4-Piece-Silicone-Jar-Spatula-Set/dp/B0FDGY1R58" target="_blank" rel="noopener noreferrer">
+                            <img src="pb-spreaders.png" alt="4-piece silicone jar spatula set">
+                            <span>Order on Amazon</span>
+                        </a>
+                        <div id="spatulaQuantitySection" class="spatula-qty" style="display: none;">
+                            <label for="spatulaPackCount">How many 4-packs do you need?</label>
+                            <input type="number" id="spatulaPackCount" min="1" value="1" placeholder="1">
+                            <div class="field-note">Plan 2 per table (one for peanut butter, one for jelly). Overnight shipping is available on Amazon.</div>
                         </div>
-                        <div id="spatulaQuantitySection" style="display: none; margin-top: 10px;">
-                            <label for="spatulaPackCount" style="font-size: 0.95em;">How many 4-packs do you need?</label>
-                            <input type="number" id="spatulaPackCount" min="1" value="1" placeholder="1" style="margin-top: 5px;">
-                            <div style="font-size: 0.85em; color: rgba(255,255,255,0.85); margin-top: 8px; padding: 10px; background: rgba(251,173,63,0.2); border-radius: 8px;">
-                                <strong><span class="icon icon-lightbulb" style="background-color: #5a4b1a;"></span> Tip:</strong> You need 2 spatulas per group/table making sandwiches — one for peanut butter and one for jelly. Each pack contains 4 spatulas ($5.99/pack).<br>
-                                <strong><span class="icon icon-package" style="background-color: #5a4b1a;"></span> Overnight shipping available on Amazon!</strong>
-                            </div>
-                        </div>
+                    </div>
+
+                    <div class="before-you-shop" role="note">
+                        <h4><span class="icon icon-alert-triangle" style="background-color: #5a3a00;"></span> Before you shop</h4>
+                        <ul>
+                            <li><strong>Jelly only.</strong> No jam, preserves, or fruit spread.</li>
+                        </ul>
                     </div>
 
                     <div class="calc-button-container">
@@ -1758,24 +1812,6 @@
                 </div>
 
                 <div class="calc-result" id="pbjResult">
-                </div>
-            </div>
-
-            <div class="recipe-card" style="margin-top: 25px;">
-                <h3>Every PB&J Sandwich Contains</h3>
-                <div class="recipe-ingredients">
-                    <div class="ingredient">
-                        <span class="amount">2</span><span class="item">slices bread</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">3</span><span class="item">tbsp peanut butter</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1.5</span><span class="item">tbsp jelly</span>
-                    </div>
-                    <div class="ingredient">
-                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
-                    </div>
                 </div>
             </div>
         </div>
@@ -1933,6 +1969,24 @@
         box-shadow: 0 3px 8px rgba(251, 173, 63, 0.25);
     }
 
+    /* Light cards need dark text to stay readable */
+    .card-bread,
+    .card-cheese-muenster,
+    .card-cheese-havarti {
+        color: #114145;
+    }
+
+    .card-bread .product-title,
+    .card-cheese-muenster .product-title,
+    .card-cheese-havarti .product-title {
+        border-bottom-color: rgba(17,65,69,0.25);
+    }
+
+    .card-pbj {
+        background: #114145;
+        box-shadow: 0 3px 8px rgba(17,65,69, 0.25);
+    }
+
     .card-supplies {
         background: linear-gradient(135deg, #47B3CB 0%, #236383 100%);
         box-shadow: 0 3px 8px rgba(71, 179, 203, 0.25);
@@ -1970,8 +2024,8 @@
     .price-note {
         font-size: 0.8em;
         font-weight: 600;
-        background: rgba(255,255,255,0.2);
-        color: #1a1a2e;
+        background: rgba(255,255,255,0.92);
+        color: #114145;
         padding: 3px 6px;
         border-radius: 4px;
         margin-top: 2px;
@@ -2051,8 +2105,9 @@
 
         <div class="section" id="recipe">
             <h2><span class="icon icon-lg icon-sandwich icon-primary"></span> Perfect Sandwich Recipe</h2>
+            <div class="recipe-grid">
             <div class="recipe-card">
-                <h3>Every Sandwich Contains</h3>
+                <h3>Every Deli Sandwich Contains</h3>
                 <div class="recipe-ingredients">
                     <div class="ingredient">
                         <span class="amount">2</span><span class="item">slices bread (no heels)</span>
@@ -2067,6 +2122,24 @@
                         <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
                     </div>
                 </div>
+            </div>
+            <div class="recipe-card">
+                <h3>Every PB&J Sandwich Contains</h3>
+                <div class="recipe-ingredients">
+                    <div class="ingredient">
+                        <span class="amount">2</span><span class="item">slices bread</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">3</span><span class="item">tbsp peanut butter</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1.5</span><span class="item">tbsp jelly</span>
+                    </div>
+                    <div class="ingredient">
+                        <span class="amount">1</span><span class="item">zip-lock sandwich bag</span>
+                    </div>
+                </div>
+            </div>
             </div>
         </div>
 
@@ -2250,6 +2323,11 @@
             const price = money(item.price);
             return [productDisplayName(item), price ? price + (priceSuffix || '') : '', makesLabel(perPackage)]
                 .filter(Boolean).join(' · ');
+        }
+
+        function perSandwichNote(price, perPackage) {
+            const cost = Number(price) / Number(perPackage);
+            return Number.isFinite(cost) && cost > 0 ? '~$' + cost.toFixed(2) + '/sandwich' : '';
         }
 
         function meatSandwichesPerPackage(m) {
@@ -2616,7 +2694,7 @@
             if (!container) return;
 
             const meatCards = PRODUCT_DATA.meat.filter(isVisibleProduct).map(function(m) {
-                const perSlice = Number(m.slices) ? (m.price / m.slices).toFixed(2) : '';
+                const meatPer = meatSandwichesPerPackage(m);
                 const title = (m.pricingTitle && !changedFromDefault('meat', m, ['name'])) ? m.pricingTitle : (m.name || '');
                 let size = m.pricingSize || ((m.weightOz || '') + ' oz');
                 if (changedFromDefault('meat', m, ['weightOz', 'slices']) || !m.pricingSize) {
@@ -2629,13 +2707,12 @@
                     { className: 'product-title', text: title },
                     { className: 'product-size', text: size },
                     { className: 'product-price', text: money(m.price) },
-                    { className: 'price-note', text: perSlice ? '~$' + perSlice + '/slice' : '' }
+                    { className: 'price-note', text: perSandwichNote(m.price, meatPer) }
                 ]);
             });
 
             const cheeseTypeLabels = { muenster: 'MUENSTER', havarti: 'HAVARTI', provolone: 'PROVOLONE', variety: 'VARIETY' };
             const cheeseCards = PRODUCT_DATA.cheese.filter(isVisibleProduct).map(function(c) {
-                const perSlice = Number(c.slices) ? (c.price / c.slices).toFixed(2) : '';
                 const keepPackNote = !changedFromDefault('cheese', c, ['slices']) && c.description && c.description.includes('2 lbs');
                 const title = (c.pricingTitle && !changedFromDefault('cheese', c, ['name'])) ? c.pricingTitle : (c.name || '');
                 const cheeseClass = 'card-cheese-' + String(c.cheeseType || '').toLowerCase().replace(/[^a-z0-9_-]/g, '');
@@ -2644,7 +2721,7 @@
                     { className: 'product-title', text: title },
                     { className: 'product-size', text: keepPackNote ? c.slices + ' slices (2 lbs)' : c.slices + ' slices' },
                     { className: 'product-price', text: money(c.price) },
-                    { className: 'price-note', text: perSlice ? '~$' + perSlice + '/slice' : '' }
+                    { className: 'price-note', text: perSandwichNote(c.price, positive(c.slices) ? Number(c.slices) / CHEESE_SLICES_PER_SANDWICH : 0) }
                 ]);
             });
 
@@ -2658,6 +2735,19 @@
                 ]);
             });
 
+            const spreadCard = function(item, tbspPerSandwich, label) {
+                const per = positive(item.tablespoons) ? Number(item.tablespoons) / tbspPerSandwich : 0;
+                return priceCard('card-pbj', [
+                    { className: 'meat-type-label', text: label },
+                    { className: 'product-title', text: productDisplayName(item) },
+                    { className: 'product-size', text: [item.sizeOz ? item.sizeOz + ' oz' : '', makesLabel(per)].filter(Boolean).join(' • ') },
+                    { className: 'product-price', text: money(item.price) },
+                    { className: 'price-note', text: perSandwichNote(item.price, per) }
+                ]);
+            };
+            const pbjCards = (PRODUCT_DATA.peanutButter || []).filter(isVisibleProduct).map(function(pb) { return spreadCard(pb, PB_TBSP_PER_SANDWICH, 'PEANUT BUTTER'); })
+                .concat((PRODUCT_DATA.jelly || []).filter(isVisibleProduct).map(function(j) { return spreadCard(j, JELLY_TBSP_PER_SANDWICH, 'JELLY'); }));
+
             const perBag = PRODUCT_DATA.bags.countPerBox ? (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) : '';
             const supplyCards = [priceCard('card-supplies', [
                 { className: 'product-title', text: 'Sandwich Bags' },
@@ -2670,6 +2760,7 @@
                 priceCategory('DELI MEAT', meatCards),
                 priceCategory('CHEESE (Deli Slices)', cheeseCards),
                 priceCategory('BREAD', breadCards),
+                priceCategory('PEANUT BUTTER & JELLY', pbjCards),
                 priceCategory('SUPPLIES', supplyCards)
             );
         }
@@ -2734,6 +2825,15 @@
                 const display = breadDisplay(b);
                 const note = '~' + b.sandwichesPerLoaf + ' sandwiches' + (b.store && changedFromDefault('bread', b, ['store']) ? ' • ' + b.store : '');
                 addRow([{ text: display.title }, { text: display.price }, { text: note }]);
+            });
+            const spreads = [['peanutButter', 'Peanut Butter'], ['jelly', 'Jelly']];
+            spreads.forEach(function(pair) {
+                const items = (PRODUCT_DATA[pair[0]] || []).filter(isVisibleProduct);
+                if (!items.length) return;
+                addRow([{ text: pair[1], colspan: 3, section: true }]);
+                items.forEach(function(item) {
+                    addRow([{ text: productDisplayName(item) }, { text: money(item.price) }, { text: '~' + item.tablespoons + ' tbsp' }]);
+                });
             });
             addRow([
                 { text: 'Zip-lock Sandwich Bags' },
