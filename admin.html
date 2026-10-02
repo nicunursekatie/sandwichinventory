@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit sandwich products</title>
     <script src="product-catalog.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
     <style>
         :root { --navy: #236383; --teal: #007E8C; --gold: #FBAD3F; --ink: #1f3340; --line: #d5e3ea; }
         * { box-sizing: border-box; }
@@ -22,7 +25,7 @@
         .product { display: grid; grid-template-columns: 1.6fr 0.8fr repeat(auto-fit, minmax(110px, 0.7fr)) auto; gap: 8px; align-items: end; padding: 10px 0; border-top: 1px solid var(--line); }
         .product.hidden-product { opacity: 0.55; }
         label { display: flex; flex-direction: column; gap: 4px; font-size: 0.75rem; font-weight: 700; color: #3e6272; }
-        input[type="text"], input[type="number"], input[type="password"] { width: 100%; border: 1px solid #c5d6de; border-radius: 8px; padding: 8px; font: inherit; color: var(--ink); }
+        input[type="text"], input[type="number"], input[type="email"], input[type="password"] { width: 100%; border: 1px solid #c5d6de; border-radius: 8px; padding: 8px; font: inherit; color: var(--ink); }
         .login { max-width: 420px; }
         .login p { color: #456674; line-height: 1.45; }
         .login label { font-size: 0.85rem; margin: 12px 0; }
@@ -45,8 +48,11 @@
     <main>
         <section id="loginPanel" class="login toolbar">
             <h2>Admin login</h2>
-            <p>Enter the password to edit names, stores, amounts, and prices. This only keeps the menu closed in this browser. It is not a server login, and anyone can still use the calculator.</p>
+            <p>Sign in with your admin account to edit names, stores, amounts, and prices. Saved changes go live in the calculator for everyone.</p>
             <form id="loginForm">
+                <label>Email
+                    <input id="adminEmail" type="email" autocomplete="username" required>
+                </label>
                 <label>Password
                     <input id="adminPassword" type="password" autocomplete="current-password" required>
                 </label>
@@ -59,15 +65,22 @@
             <button class="primary" id="saveBtn" type="button">Save changes</button>
             <button id="resetBtn" type="button">Undo unsaved edits</button>
             <button id="logoutBtn" type="button">Log out</button>
+            <span id="signedInAs" class="note"></span>
         </div>
         <div id="status" class="status">Loading products…</div>
         <div id="sections"></div>
         </div>
     </main>
     <script>
-        const STORAGE_KEY = 'tspInventoryCatalog';
-        const AUTH_KEY = 'tspAdminSession';
-        const ADMIN_PASSWORD_HASH = '3ffca04cc6f976acedfa7c5cc77d44363d28370166a1a1728a25b582ee37b14e';
+        firebase.initializeApp({
+            apiKey: "AIzaSyBJ9sUwY_gw2bYWXCffV0RKuQkXqRq-hTU",
+            authDomain: "recipient-survey.firebaseapp.com",
+            databaseURL: "https://recipient-survey-default-rtdb.firebaseio.com",
+            projectId: "recipient-survey",
+            storageBucket: "recipient-survey.firebasestorage.app"
+        });
+        const auth = firebase.auth();
+        const catalogRef = firebase.database().ref('product-catalog');
         const SECTIONS = [
             { key: 'meat', title: 'Deli meat', amounts: [
                 { key: 'weightOz', label: 'Weight (oz)' },
@@ -257,7 +270,7 @@
             return { id: id, name: '', store: '', price: '', sizeOz: '', tablespoons: '', description: '' };
         }
 
-        function save() {
+        async function save() {
             const problem = [];
             SECTIONS.forEach(function(section) {
                 catalog[section.key].forEach(function(item) {
@@ -275,32 +288,48 @@
                     refreshDerived(item, section.key);
                 });
             });
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(catalog));
-            savedCopy = clone(catalog);
-            setStatus('Saved. The calculator on this computer now uses this product list.');
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true;
+            setStatus('Saving…');
+            try {
+                await catalogRef.set(clone(catalog));
+                savedCopy = clone(catalog);
+                setStatus('Saved. The calculator now uses this product list for everyone.');
+            } catch (error) {
+                console.error(error);
+                setStatus(error && error.code === 'PERMISSION_DENIED'
+                    ? 'Not saved: this account is not allowed to change products.'
+                    : 'Not saved: could not reach the database. Check your connection and try again.');
+            } finally {
+                saveBtn.disabled = false;
+            }
         }
 
         async function loadCatalog() {
+            setStatus('Loading products…');
+            let source = 'default';
             catalog = clone(window.TSP_DEFAULT_CATALOG);
             try {
-                const response = await fetch('product-catalog.json', { cache: 'no-store' });
-                if (response.ok) catalog = await response.json();
-            } catch (error) { /* Use the embedded list. */ }
-            const saved = localStorage.getItem(STORAGE_KEY);
-            if (saved) {
-                try { catalog = JSON.parse(saved); } catch (error) { /* Keep the shared list. */ }
+                const snapshot = await catalogRef.once('value');
+                if (snapshot.exists()) {
+                    catalog = snapshot.val();
+                    source = 'firebase';
+                }
+            } catch (error) { console.warn('Saved product list could not be loaded.', error); }
+            if (source !== 'firebase') {
+                try {
+                    const response = await fetch('product-catalog.json', { cache: 'no-store' });
+                    if (response.ok) catalog = await response.json();
+                } catch (error) { /* Use the embedded list. */ }
             }
+            SECTIONS.forEach(function(section) {
+                if (!Array.isArray(catalog[section.key])) catalog[section.key] = [];
+            });
             savedCopy = clone(catalog);
             render();
-            setStatus(saved ? 'Showing products saved on this computer.' : 'Showing the current calculator products.');
-        }
-
-        async function passwordHash(password) {
-            const bytes = new TextEncoder().encode(password);
-            const digest = await crypto.subtle.digest('SHA-256', bytes);
-            return Array.from(new Uint8Array(digest)).map(function(byte) {
-                return byte.toString(16).padStart(2, '0');
-            }).join('');
+            setStatus(source === 'firebase'
+                ? 'Showing the live product list.'
+                : 'Showing the starting product list. Nothing has been saved online yet.');
         }
 
         function showEditor() {
@@ -318,15 +347,17 @@
         document.getElementById('loginForm').addEventListener('submit', async function(event) {
             event.preventDefault();
             const error = document.getElementById('loginError');
-            const entered = document.getElementById('adminPassword').value;
-            const hash = await passwordHash(entered);
-            if (hash !== ADMIN_PASSWORD_HASH) {
-                error.textContent = 'That password is not correct.';
-                return;
-            }
             error.textContent = '';
-            sessionStorage.setItem(AUTH_KEY, 'signed-in');
-            showEditor();
+            try {
+                await auth.signInWithEmailAndPassword(
+                    document.getElementById('adminEmail').value.trim(),
+                    document.getElementById('adminPassword').value
+                );
+            } catch (err) {
+                error.textContent = err && err.code === 'auth/too-many-requests'
+                    ? 'Too many tries. Wait a few minutes and try again.'
+                    : 'That email or password is not correct.';
+            }
         });
 
         document.getElementById('saveBtn').addEventListener('click', save);
@@ -336,10 +367,17 @@
             setStatus('Undid unsaved edits.');
         });
         document.getElementById('logoutBtn').addEventListener('click', function() {
-            sessionStorage.removeItem(AUTH_KEY);
-            showLogin();
+            auth.signOut();
         });
-        if (sessionStorage.getItem(AUTH_KEY) === 'signed-in') showEditor();
+        auth.onAuthStateChanged(function(user) {
+            if (user) {
+                document.getElementById('signedInAs').textContent = 'Signed in as ' + user.email;
+                showEditor();
+            } else {
+                catalog = null;
+                showLogin();
+            }
+        });
     </script>
 </body>
 </html>
