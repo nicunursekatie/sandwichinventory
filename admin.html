@@ -104,6 +104,21 @@
         ];
         let catalog = null;
         let savedCopy = null;
+        // Revision of the online list this editor was loaded from; saves are refused if it has moved on.
+        let loadedRevision = null;
+        let saving = false;
+
+        function setEditable(enabled) {
+            document.getElementById('saveBtn').disabled = !enabled;
+            document.getElementById('resetBtn').disabled = !enabled;
+            document.querySelectorAll('#sections input, #sections button').forEach(function(el) {
+                el.disabled = !enabled;
+            });
+        }
+
+        function revisionOf(value) {
+            return value && value.metadata && Number(value.metadata.revision) || 0;
+        }
 
         function clone(value) { return JSON.parse(JSON.stringify(value)); }
 
@@ -271,6 +286,7 @@
         }
 
         async function save() {
+            if (saving || !catalog || loadedRevision === null) return;
             const problem = [];
             SECTIONS.forEach(function(section) {
                 catalog[section.key].forEach(function(item) {
@@ -288,35 +304,55 @@
                     refreshDerived(item, section.key);
                 });
             });
-            const saveBtn = document.getElementById('saveBtn');
-            saveBtn.disabled = true;
+            catalog.metadata.revision = loadedRevision + 1;
+            const snapshot = clone(catalog);
+            saving = true;
+            setEditable(false);
             setStatus('Saving…');
             try {
-                await catalogRef.set(clone(catalog));
-                savedCopy = clone(catalog);
+                const result = await catalogRef.transaction(function(current) {
+                    // RTDB may call this first with a stale local null; returning a value lets the server
+                    // re-run it with the real data, where the revision check applies.
+                    if (current !== null && revisionOf(current) !== loadedRevision) return;
+                    return snapshot;
+                }, null, false);
+                if (!result.committed) {
+                    catalog.metadata.revision = loadedRevision;
+                    setStatus('Not saved: someone else changed the products since you opened this page. Reload to see their changes, then make your edits again.');
+                    return;
+                }
+                loadedRevision = snapshot.metadata.revision;
+                savedCopy = clone(snapshot);
                 setStatus('Saved. The calculator now uses this product list for everyone.');
             } catch (error) {
                 console.error(error);
-                setStatus(error && error.code === 'PERMISSION_DENIED'
+                catalog.metadata.revision = loadedRevision;
+                setStatus(error && /permission/i.test(String(error.code || error.message))
                     ? 'Not saved: this account is not allowed to change products.'
                     : 'Not saved: could not reach the database. Check your connection and try again.');
             } finally {
-                saveBtn.disabled = false;
+                saving = false;
+                setEditable(true);
             }
         }
 
         async function loadCatalog() {
             setStatus('Loading products…');
-            let source = 'default';
-            catalog = clone(window.TSP_DEFAULT_CATALOG);
+            document.getElementById('sections').innerHTML = '';
+            setEditable(false);
+            let snapshot;
             try {
-                const snapshot = await catalogRef.once('value');
-                if (snapshot.exists()) {
-                    catalog = snapshot.val();
-                    source = 'firebase';
-                }
-            } catch (error) { console.warn('Saved product list could not be loaded.', error); }
-            if (source !== 'firebase') {
+                snapshot = await catalogRef.once('value');
+            } catch (error) {
+                console.warn('Saved product list could not be loaded.', error);
+                catalog = null;
+                setStatus('Could not load the online product list. Reload the page to try again. Saving is off so nothing gets overwritten.');
+                return;
+            }
+            if (snapshot.exists()) {
+                catalog = snapshot.val();
+            } else {
+                catalog = clone(window.TSP_DEFAULT_CATALOG);
                 try {
                     const response = await fetch('product-catalog.json', { cache: 'no-store' });
                     if (response.ok) catalog = await response.json();
@@ -325,9 +361,11 @@
             SECTIONS.forEach(function(section) {
                 if (!Array.isArray(catalog[section.key])) catalog[section.key] = [];
             });
+            loadedRevision = snapshot.exists() ? revisionOf(catalog) : 0;
             savedCopy = clone(catalog);
             render();
-            setStatus(source === 'firebase'
+            setEditable(true);
+            setStatus(snapshot.exists()
                 ? 'Showing the live product list.'
                 : 'Showing the starting product list. Nothing has been saved online yet.');
         }
@@ -375,6 +413,7 @@
                 showEditor();
             } else {
                 catalog = null;
+                loadedRevision = null;
                 showLogin();
             }
         });

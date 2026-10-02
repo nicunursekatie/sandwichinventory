@@ -2503,9 +2503,9 @@
         // INITIALIZATION
         // ===============================================================
         document.addEventListener('DOMContentLoaded', async function() {
-            const liveCatalog = loadLiveCatalog();
-            await loadPublishedCatalog();
-            applyCatalog(await liveCatalog);
+            const liveCatalog = await loadLiveCatalog();
+            if (liveCatalog) applyCatalog(liveCatalog);
+            else await loadPublishedCatalog();
             refreshProductViews();
             setupCalculatorGuidance();
             updateDeliGuidance();
