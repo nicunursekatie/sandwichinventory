@@ -2191,6 +2191,38 @@
             }
         }
 
+        // The live list is publicly writable, so only accept it if every field has the expected type.
+        // Numbers end up in result HTML unescaped; strings are escaped where they're rendered.
+        const CATALOG_NUMBER_KEYS = ['weightOz', 'slices', 'price', 'sandwichesPerLoaf', 'usableSlices', 'sizeOz',
+            'tablespoons', 'countPerBox', 'pricePerBox', 'pricePerPack', 'countPerPack', 'slicesPerSandwich', 'revision'];
+        const CATALOG_BOOLEAN_KEYS = ['showInPricing', 'hidden'];
+
+        function isValidCatalogEntry(entry) {
+            if (!entry || typeof entry !== 'object' || Array.isArray(entry)) return false;
+            return Object.keys(entry).every(function(key) {
+                const value = entry[key];
+                if (CATALOG_NUMBER_KEYS.includes(key)) return value === '' || (typeof value === 'number' && Number.isFinite(value));
+                if (CATALOG_BOOLEAN_KEYS.includes(key)) return typeof value === 'boolean';
+                return typeof value === 'string';
+            });
+        }
+
+        function validLiveCatalog(catalog) {
+            if (!catalog || typeof catalog !== 'object') return null;
+            const lists = ['meat', 'cheese', 'bread', 'peanutButter', 'jelly'];
+            const listsOk = lists.every(function(key) {
+                return catalog[key] === undefined || (Array.isArray(catalog[key]) && catalog[key].every(isValidCatalogEntry));
+            });
+            const objectsOk = ['bags', 'spatulas', 'metadata'].every(function(key) {
+                return catalog[key] === undefined || isValidCatalogEntry(catalog[key]);
+            });
+            if (!listsOk || !objectsOk) {
+                console.warn('Live product list has unexpected data; using the bundled list instead.');
+                return null;
+            }
+            return catalog;
+        }
+
         // Products edited on admin.html are stored in Firebase and override the bundled list.
         async function loadLiveCatalog() {
             const controller = new AbortController();
@@ -2503,7 +2535,7 @@
         // INITIALIZATION
         // ===============================================================
         document.addEventListener('DOMContentLoaded', async function() {
-            const liveCatalog = await loadLiveCatalog();
+            const liveCatalog = validLiveCatalog(await loadLiveCatalog());
             if (liveCatalog) applyCatalog(liveCatalog);
             else await loadPublishedCatalog();
             refreshProductViews();

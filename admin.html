@@ -305,6 +305,7 @@
             const snapshot = clone(catalog);
             saving = true;
             setEditable(false);
+            document.getElementById('logoutBtn').disabled = true;
             setStatus('Saving…');
             try {
                 const result = await catalogRef.transaction(function(current) {
@@ -330,6 +331,7 @@
             } finally {
                 saving = false;
                 setEditable(true);
+                document.getElementById('logoutBtn').disabled = false;
             }
         }
 
@@ -407,6 +409,7 @@
             setStatus('Undid unsaved edits.');
         });
         document.getElementById('logoutBtn').addEventListener('click', function() {
+            if (saving) return;
             sessionStorage.removeItem(AUTH_KEY);
             catalog = null;
             loadedRevision = null;
