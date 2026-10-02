@@ -1597,11 +1597,8 @@
         }
 
         /* Price cards: let long product names wrap instead of widening the page */
-        .price-grid { grid-template-columns: repeat(auto-fill, minmax(min(140px, 100%), 1fr)); }
-        .price-card { min-width: 0; overflow-wrap: anywhere; }
 
         @media (max-width: 768px) {
-            .price-grid { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
             .pricing-section { padding: 16px 0; }
             .calc-result { padding: 16px 10px; }
             .section h2 { font-size: 1.35em; }
@@ -1897,188 +1894,103 @@
     /* Product grid */
     .price-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-        gap: 8px;
+        grid-template-columns: repeat(auto-fill, minmax(min(210px, 100%), 1fr));
+        gap: 14px;
     }
 
+    /* Each card: colored type strip, name, size, then a price footer */
     .price-card {
-        border-radius: 8px;
-        padding: 10px;
-        text-align: center;
-        color: white;
-        transition: transform 0.2s;
-        position: relative;
-        overflow: visible;
+        --accent: #236383;
+        --accent-ink: #fff;
         display: flex;
         flex-direction: column;
-        gap: 2px;
-    }
-
-    .price-card:hover {
-        transform: translateY(-2px);
-    }
-
-    /* Card colors using brand palette */
-    .card-turkey {
-        background: linear-gradient(135deg, #114145 0%, #114145 100%);
-        box-shadow: 0 3px 8px rgba(17,65,69, 0.25);
-    }
-
-    .card-chicken {
-        background: linear-gradient(135deg, #236383 0%, #236383 100%);
-        box-shadow: 0 3px 8px rgba(35,99,131, 0.25);
-    }
-
-    .card-meat {
-        background: linear-gradient(135deg, #114145 0%, #114145 100%);
-        box-shadow: 0 3px 8px rgba(17,65,69, 0.25);
-    }
-
-    .card-cheese {
-        background: linear-gradient(135deg, #236383 0%, #114145 100%);
-        box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
-    }
-
-    .card-cheese-muenster {
-        background: linear-gradient(135deg, #FBAD3F 0%, #e89a2e 100%);
-        box-shadow: 0 3px 8px rgba(251, 173, 63, 0.25);
-    }
-
-    .card-cheese-havarti {
-        background: linear-gradient(135deg, #47B3CB 0%, #3a9bb0 100%);
-        box-shadow: 0 3px 8px rgba(71, 179, 203, 0.25);
-    }
-
-    .card-cheese-provolone {
-        background: linear-gradient(135deg, #114145 0%, #114145 100%);
-        box-shadow: 0 3px 8px rgba(17,65,69, 0.25);
-    }
-
-    .card-cheese-variety {
-        background: linear-gradient(135deg, #236383 0%, #114145 100%);
-        box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
-    }
-
-    .card-cheese-american {
-        background: linear-gradient(135deg, #236383 0%, #114145 100%);
-        box-shadow: 0 3px 8px rgba(35, 99, 131, 0.25);
-    }
-
-    .card-bread {
-        background: linear-gradient(135deg, #FBAD3F 0%, #FBAD3F 100%);
-        box-shadow: 0 3px 8px rgba(251, 173, 63, 0.25);
-    }
-
-    /* Light cards need dark text to stay readable */
-    .card-bread,
-    .card-cheese-muenster,
-    .card-cheese-havarti {
+        min-width: 0;
+        overflow: hidden;
+        overflow-wrap: anywhere;
+        background: #fff;
         color: #114145;
+        border: 1px solid rgba(35,99,131,0.16);
+        border-radius: 12px;
+        box-shadow: 0 1px 2px rgba(17,65,69,0.05), 0 4px 12px rgba(17,65,69,0.06);
+        text-align: left;
     }
 
-    .card-bread .product-title,
-    .card-cheese-muenster .product-title,
-    .card-cheese-havarti .product-title {
-        border-bottom-color: rgba(17,65,69,0.25);
-    }
+    .card-turkey, .card-meat, .card-cheese-provolone, .card-pbj { --accent: #114145; }
+    .card-chicken, .card-cheese, .card-cheese-variety, .card-cheese-american { --accent: #236383; }
+    .card-cheese-muenster, .card-bread { --accent: #FBAD3F; --accent-ink: #114145; }
+    .card-cheese-havarti, .card-supplies { --accent: #47B3CB; --accent-ink: #114145; }
 
-    .card-pbj {
-        background: #114145;
-        box-shadow: 0 3px 8px rgba(17,65,69, 0.25);
-    }
-
-    .card-supplies {
-        background: linear-gradient(135deg, #47B3CB 0%, #236383 100%);
-        box-shadow: 0 3px 8px rgba(71, 179, 203, 0.25);
-    }
-
-    .product-emoji {
-        font-size: 1.2em;
-        margin-bottom: 2px;
+    .meat-type-label {
+        background: var(--accent);
+        color: var(--accent-ink);
+        font-size: 0.8em;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        padding: 8px 16px;
     }
 
     .product-title {
-        font-size: 0.88em;
+        font-size: 1.12em;
         font-weight: 700;
-        line-height: 1.2;
-        border-bottom: 1px solid rgba(255,255,255,0.3);
-        padding-bottom: 5px;
-        margin-bottom: 3px;
+        line-height: 1.3;
+        padding: 14px 16px 0;
     }
 
     .product-size {
-        font-size: 0.78em;
-        opacity: 0.9;
-        margin-bottom: 3px;
-        font-weight: 500;
+        font-size: 0.95em;
+        line-height: 1.4;
+        color: #4a6b78;
+        padding: 6px 16px 14px;
     }
 
     .product-price {
-        font-size: 1.15em;
+        margin-top: auto;
+        background: #E9EFF3;
+        border-top: 1px solid rgba(35,99,131,0.14);
+        font-size: 1.6em;
         font-weight: 800;
-        margin-top: 2px;
-        margin-bottom: 2px;
-        text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        line-height: 1.1;
+        padding: 12px 16px 2px;
     }
 
     .price-note {
-        font-size: 0.8em;
+        background: #E9EFF3;
+        color: #236383;
+        font-size: 0.92em;
         font-weight: 600;
-        background: rgba(255,255,255,0.92);
-        color: #114145;
-        padding: 3px 6px;
-        border-radius: 4px;
-        margin-top: 2px;
+        line-height: 1.4;
+        padding: 0 16px 12px;
     }
 
-    .meat-type-label {
-        font-size: 0.65em;
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        opacity: 0.85;
-        margin-bottom: 2px;
+    .price-note:empty {
+        padding-bottom: 10px;
     }
-    
 
-
-
-
-    
-    /* Mobile responsive */
     @media (max-width: 768px) {
         .price-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 10px;
         }
 
-        .price-card {
-            padding: 10px;
-        }
+        .meat-type-label { padding: 7px 12px; font-size: 0.72em; }
+        .product-title { font-size: 1em; padding: 12px 12px 0; }
+        .product-size { font-size: 0.88em; padding: 4px 12px 12px; }
+        .product-price { font-size: 1.35em; padding: 10px 12px 2px; }
+        .price-note { font-size: 0.85em; padding: 0 12px 10px; }
 
-        .product-title {
-            font-size: 0.85em;
-            word-wrap: break-word;
-            overflow-wrap: break-word;
-        }
-
-        .product-size {
-            font-size: 0.95em;
-            word-wrap: break-word;
-        }
-        
-        .product-price {
-            font-size: 1.4em;
-        }
-        
-        .price-note {
-            font-size: 1.05em;
-            word-wrap: break-word;
-        }
-        
         .requirements-grid {
             grid-template-columns: 1fr;
         }
+    }
+
+    /* Phones: one card per row so names and prices don't break mid-word */
+    @media (max-width: 480px) {
+        .price-grid { grid-template-columns: 1fr; }
+        .price-card { overflow-wrap: break-word; }
+        .product-title { font-size: 1.08em; }
+        .product-price { font-size: 1.5em; }
+        .price-note { font-size: 0.92em; }
     }
 </style>
 
@@ -2728,6 +2640,7 @@
             const breadCards = PRODUCT_DATA.bread.filter(isVisibleProduct).map(function(b) {
                 const display = breadDisplay(b);
                 return priceCard('card-bread', [
+                    { className: 'meat-type-label', text: 'BREAD' },
                     { className: 'product-title', text: display.title },
                     { className: 'product-size', text: display.size },
                     { className: 'product-price', text: display.price },
@@ -2750,6 +2663,7 @@
 
             const perBag = PRODUCT_DATA.bags.countPerBox ? (PRODUCT_DATA.bags.pricePerBox / PRODUCT_DATA.bags.countPerBox).toFixed(2) : '';
             const supplyCards = [priceCard('card-supplies', [
+                { className: 'meat-type-label', text: 'BAGS' },
                 { className: 'product-title', text: 'Sandwich Bags' },
                 { className: 'product-size', text: PRODUCT_DATA.bags.countPerBox + ' count' },
                 { className: 'product-price', text: money(PRODUCT_DATA.bags.pricePerBox) },
