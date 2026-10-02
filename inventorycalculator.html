@@ -1655,7 +1655,7 @@
 
                     <div class="calc-button-container">
                         <button class="calc-button" onclick="calculateNeeds()">Calculate My Order</button>
-                        <div id="validationHint" class="validation-hint" style="display: none;"></div>
+                        <div id="validationHint" class="validation-hint" role="status" aria-live="polite"></div>
                     </div>
                 </div>
                 
@@ -2261,8 +2261,21 @@
             };
         }
 
+        function positive(value) {
+            const n = Number(value);
+            return Number.isFinite(n) && n > 0;
+        }
+
+        // Edit products only requires a name, so skip entries whose quantities can't be divided by.
+        const QUICK_REF_USABLE = {
+            meat: function(m) { return positive(m.slicesPerSandwich) ? positive(m.slices) : positive(m.weightOz); },
+            cheese: function(c) { return positive(c.slices); },
+            bread: function(b) { return positive(b.sandwichesPerLoaf); }
+        };
+
         function firstVisible(category, preferredId) {
-            const list = (PRODUCT_DATA[category] || []).filter(isVisibleProduct);
+            const usable = QUICK_REF_USABLE[category] || function() { return true; };
+            const list = (PRODUCT_DATA[category] || []).filter(function(item) { return isVisibleProduct(item) && usable(item); });
             return list.find(function(item) { return item.id === preferredId; }) || list[0] || null;
         }
 
@@ -2278,7 +2291,7 @@
                 return;
             }
             const meatPacks = function(count) {
-                return meat.slicesPerSandwich && meat.slices
+                return positive(meat.slicesPerSandwich)
                     ? Math.ceil((count * meat.slicesPerSandwich) / meat.slices)
                     : Math.ceil((count * 2) / meat.weightOz);
             };
@@ -2785,8 +2798,9 @@
             if (!breadType) missing.push('bread');
 
             if (validationHint) {
-                validationHint.textContent = missing.length ? 'Still needed: ' + missing.join(', ') : '';
-                validationHint.style.display = missing.length ? 'block' : 'none';
+                const message = missing.length ? 'Still needed: ' + missing.join(', ') : '';
+                // Only write on change so screen readers don't re-announce on every keystroke.
+                if (validationHint.textContent !== message) validationHint.textContent = message;
             }
         }
 
